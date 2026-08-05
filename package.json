@@ -1,0 +1,14 @@
+{
+  "name": "indy-schedule-calendar-sync",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "update-calendar": "node tools/update-calendar-events.mjs"
+  },
+  "dependencies": {
+    "node-ical": "0.27.1"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

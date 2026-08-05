@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indy Schedule</title>
+    <script>
+        try {
+            const savedLunch = (localStorage.getItem('lunchWave') || '').toUpperCase();
+            const setupComplete = localStorage.getItem('indyOnboardingComplete_v2') === 'true';
+            if (!setupComplete || !['A', 'B', 'C'].includes(savedLunch)) {
+                document.documentElement.classList.add('onboarding-pending');
+            }
+        } catch (error) {
+            document.documentElement.classList.add('onboarding-pending');
+        }
+    </script>
+    <style>
+        html.onboarding-pending::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: 9998;
+            background: #050824;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Roboto&family=Source+Sans+Pro&family=Inter&family=Montserrat&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="./styles.css">
+    <link rel="stylesheet" type="text/css" href="./styles2.css">
+    <link rel="icon" type="image/png" sizes="16x16" href="indy_schedule_logo_sizes/indy-schedule-logo-16x16-optimized.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="indy_schedule_logo_sizes/indy-schedule-logo-32x32.png">
+    <link rel="apple-touch-icon" sizes="128x128" href="indy_schedule_logo_sizes/indy-schedule-logo-128x128.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics-compat.js"></script>
+    <!-- Add Firestore compat script -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <!-- Add Firebase Storage compat script to enable Storage APIs for uploads -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
+    <script type="text/javascript" src="auth.js"></script>
+    <script defer src="./gradient.js"></script>
+    <script defer src="./script2.js"></script>
+    <script defer src="./school-calendar.js"></script>
+    <script defer src="./lunch-menu.js"></script>
+    <script defer src="./script.js"></script>
+    <script>
+        // Add message handler before other scripts
+        window.addEventListener('message', (event) => {
+            if (event.origin !== window.location.origin) return;
+            
+            // Reload the page only if authentication was successful
+            if (event.data.type === 'AUTH_SUCCESS') {
+                window.location.reload();
+            }
+        });
+    </script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YS6FHHEGFZ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-YS6FHHEGFZ');
+    </script>
+        <style>
+            .update-notice-body .update-section {
+                margin: 16px 0;
+                padding: 20px 24px 22px 24px;
+                border-radius: 16px;
+                background: rgba(255,255,255,0.06);
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255,255,255,0.1);
+                box-shadow: inset 0 0 0 1px rgba(255,255,255,0.03);
+                width: 100%;
+                box-sizing: border-box;
+            }
+            .update-notice-body .update-section h3 {
+                margin: 0 0 10px 0;
+                font-size: 18px;
+            }
+            .update-notice-body .update-section ul {
+                margin: 0;
+                padding-left: 18px;
+            }
+            .section-title {
+                display: flex;
+                align-items: center;
+                flex-wrap: wrap;
+                gap: 10px;
+                font-weight: 700;
+                margin-bottom: 10px;
+                position: relative;
+            }
+            .section-title .section-divider {
+                flex: 1 1 40%;
+                max-width: 50%;
+                min-width: 80px;
+                height: 1px;
+                background: linear-gradient(90deg, rgba(196,173,98,0.7), rgba(196,173,98,0.05));
+                opacity: 0.9;
+            }
+            .section-title > span:not(.section-icon):not(.section-divider) {
+                color: #f8fafc;
+                line-height: 1.2;
+            }
+            .section-icon {
+                width: 20px;
+                height: 20px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                color: #f5d267;
+                font-size: 14px;
+                filter: drop-shadow(0 0 6px rgba(255,200,0,0.3));
+            }
+            .inline-icon {
+                color: #f5d267;
+                margin-right: 6px;
+                font-size: 14px;
+            }
+
+        </style>
+</head>
+<body>
+    <div class="container">
+        <div class="dashboard-shell">
+            <div class="dashboard-header" role="banner">
+                <div class="dashboard-brand">
+                    <img src="indy_schedule_logo_sizes/indy-schedule-logo-128x128.png" alt="" class="dashboard-logo brand-logo-art">
+                    <div><strong>Indy Schedule</strong><span>Independence High School</span></div>
+                </div>
+                <div class="dashboard-actions">
+                    <div id="sign-in-button" class="dashboard-account is-signed-out">
+                        <button type="button" class="account-trigger" aria-label="Sign in"><span class="account-label">Sign In</span></button>
+                    </div>
+                    <button type="button" class="today-toggle" id="today-toggle" aria-controls="today-at-indy" aria-expanded="false">
+                        <i class="fas fa-calendar-day" aria-hidden="true"></i><span>Today</span>
+                    </button>
+                    <button id="settings-button" class="settings-button dashboard-icon-button" aria-label="Open Settings">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="main-content">
+            <div class="today-card" id="today-at-indy" role="dialog" aria-modal="true" aria-labelledby="today-at-indy-title" hidden>
+                <div class="today-card-header">
+                    <div>
+                        <span class="today-eyebrow">YOUR SCHOOL DAY</span>
+                        <h1 id="today-at-indy-title">Today at Indy</h1>
+                    </div>
+                    <div class="today-card-actions">
+                        <img src="indy_schedule_logo_sizes/indy-schedule-logo-128x128.png" alt="" class="today-card-logo brand-logo-art">
+                        <button type="button" class="today-card-close" id="today-card-close" aria-label="Close Today at Indy"><i class="fas fa-times" aria-hidden="true"></i></button>
+                    </div>
+                </div>
+                <p class="today-disclaimer"><i class="fas fa-circle-exclamation" aria-hidden="true"></i> This is an unofficial page for Independence High School and may contain errors. Verify important information with Indy or WCS.</p>
+                <div class="today-status-row">
+                    <div><span>Date</span><strong id="today-date">—</strong></div>
+                    <div><span>Schedule</span><strong id="today-schedule">—</strong></div>
+                    <div><span>Dismissal</span><strong id="today-dismissal">—</strong></div>
+                </div>
+                <div class="today-now-grid">
+                    <div><span>Current</span><strong id="today-current">—</strong></div>
+                    <div><span>Next</span><strong id="today-next">—</strong></div>
+                </div>
+                <p class="today-notice" id="today-notice" aria-live="polite"><i class="fas fa-bell" aria-hidden="true"></i><span>Loading today’s details…</span></p>
+                <div class="today-events">
+                    <div class="today-section-title">
+                        <i class="fas fa-calendar-check" aria-hidden="true"></i>
+                        <span>Today’s events</span>
+                        <a href="https://ihs.wcs.edu/calendar" target="_blank" rel="noopener">Official calendar</a>
+                    </div>
+                    <div id="today-calendar-events" class="today-events-list" aria-live="polite">Loading events…</div>
+                </div>
+                <div class="today-lunch">
+                    <div class="today-section-title"><i class="fas fa-utensils" aria-hidden="true"></i><span>Today’s lunch</span><small id="today-lunch-time"></small></div>
+                    <div id="today-lunch-menu" class="today-lunch-menu">Loading menu…</div>
+                </div>
+                <div class="tomorrow-preview">
+                    <i class="fas fa-forward" aria-hidden="true"></i>
+                    <div><span>Tomorrow</span><strong id="tomorrow-summary">—</strong></div>
+                </div>
+            </div>
+            <div class="current-period">
+                <span class="schedule-context" id="schedule-context">Regular Schedule</span>
+                <h2 id="countdown-heading" class="countdown-header">Period 1</h2>
+                <div id="current-period-time">00:00</div>
+                <span class="countdown-caption" id="countdown-caption">remaining</span>
+                <div class="period-progress-track" id="period-progress-track" aria-hidden="true"></div>
+                <div class="period-timing-row">
+                    <span id="period-window">—</span>
+                    <span id="next-period-summary">Next: —</span>
+                </div>
+            </div>
+            <div class="schedule-container">
+                <div class="schedule-card-heading">
+                    <div><span>YOUR DAY</span><h1 id="white-box-heading">Today’s Schedule</h1></div>
+                    <small id="schedule-day-summary">Automatic Indy bells</small>
+                </div>
+                <div id="schedule"></div>
+            </div>
+        </div>
+        </div>
+    </div>
+    <div id="settings-sidebar" class="settings-sidebar">
+        <div class="settings-header">
+            <div class="header-left">
+                <!-- use whatever logo you want here -->
+                <img src="indy_schedule_logo_sizes/indy-schedule-logo-128x128.png" alt="Indy Schedule logo" class="settings-logo brand-logo-art">
+            </div>
+
+            <h2 class="settings-title">Settings</h2>
+
+            <button class="close-settings" aria-label="Close Settings">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="settings-content">
+            <div class="settings-nav">
+                <span class="settings-nav-group">Essentials</span>
+                <button class="nav-item active" data-target="schedule">
+                    <i class="fas fa-calendar"></i> Schedule
+                </button>
+                <span class="settings-nav-group">Design</span>
+                <button class="nav-item" data-target="appearance">
+                    <i class="fas fa-paint-brush"></i> Appearance
+                </button>
+                <span class="settings-nav-group">More</span>
+                <button class="nav-item" data-target="about">
+                    <i class="fas fa-info-circle"></i> About
+                </button>
+                <button class="nav-item" data-target="legal">
+                    <i class="fas fa-file-contract"></i> Privacy & Terms
+                </button>
+            
+                <button class="nav-item" data-target="whatsnew">
+                    <i class="fas fa-bolt"></i> What's New
+                </button>
+                <button class="nav-item" data-target="contact">
+                    <i class="fas fa-envelope"></i> Contact Us
+                </button>
+            </div>
+            
+            <div class="settings-panels">
+                <!-- Appearance Panel (merged) -->
+                <div class="settings-panel" id="appearance-panel">
+                    <div class="settings-group gradient-settings-card palette-settings-card">
+                        <div class="card-header">
+                            <div>
+                                <h3><i class="fas fa-palette"></i> Color Palette</h3>
+                                <p class="settings-card-description">Recolor the complete dashboard with a preset or create your own four-color palette.</p>
+                            </div>
+                        </div>
+                        <div class="palette-grid" id="palette-grid" role="radiogroup" aria-label="Color palette">
+                            <div class="palette-grid-label">Featured</div>
+                            <button type="button" class="palette-option" data-palette="indy" role="radio" aria-checked="false">
+                                <span class="palette-swatches" aria-hidden="true"><i style="--swatch:#000035"></i><i style="--swatch:#1B2455"></i><i style="--swatch:#C4AD62"></i><i style="--swatch:#FFFFFF"></i></span>
+                                <span>Indy</span><small>School colors</small>
+                            </button>
+                            <button type="button" class="palette-option" data-palette="ocean" role="radio" aria-checked="false">
+                                <span class="palette-swatches" aria-hidden="true"><i style="--swatch:#112D4E"></i><i style="--swatch:#3F72AF"></i><i style="--swatch:#DBE2EF"></i><i style="--swatch:#F9F7F7"></i></span>
+                                <span>Ocean</span><small>Cool and clear</small>
+                            </button>
+                            <button type="button" class="palette-option" data-palette="dark-teal" role="radio" aria-checked="false">
+                                <span class="palette-swatches" aria-hidden="true"><i style="--swatch:#222831"></i><i style="--swatch:#393E46"></i><i style="--swatch:#00ADB5"></i><i style="--swatch:#EEEEEE"></i></span>
+                                <span>Dark Teal</span><small>Modern contrast</small>
+                            </button>
+                            <button type="button" class="palette-option" data-palette="earth" role="radio" aria-checked="false">
+                                <span class="palette-swatches" aria-hidden="true"><i style="--swatch:#2C3639"></i><i style="--swatch:#3F4E4F"></i><i style="--swatch:#A27B5C"></i><i style="--swatch:#DCD7C9"></i></span>
+                                <span>Earth</span><small>Warm and grounded</small>
+                            </button>
+                            <button type="button" class="palette-option" data-palette="neon" role="radio" aria-checked="false">
+                                <span class="palette-swatches" aria-hidden="true"><i style="--swatch:#252A34"></i><i style="--swatch:#08D9D6"></i><i style="--swatch:#FF2E63"></i><i style="--swatch:#EAEAEA"></i></span>
+                                <span>Neon</span><small>Bright energy</small>
+                            </button>
+                            <button type="button" class="palette-option" data-palette="pastel" role="radio" aria-checked="false">
+                                <span class="palette-swatches" aria-hidden="true"><i style="--swatch:#F38181"></i><i style="--swatch:#95E1D3"></i><i style="--swatch:#FCE38A"></i><i style="--swatch:#EAFFD0"></i></span>
+                                <span>Pastel</span><small>Soft and playful</small>
+                            </button>
+                            <div class="palette-grid-label">Dark palettes</div>
+                            <button type="button" class="palette-option" data-palette="midnight" role="radio" aria-checked="false">
+                                <span class="palette-swatches" aria-hidden="true"><i style="--swatch:#070F2B"></i><i style="--swatch:#1B1A55"></i><i style="--swatch:#9290C3"></i><i style="--swatch:#535C91"></i></span>
+                                <span>Midnight</span><small>Deep blue violet</small>
+                            </button>
+                            <button type="button" class="palette-option" data-palette="dark-plum" role="radio" aria-checked="false">
+                                <span class="palette-swatches" aria-hidden="true"><i style="--swatch:#030637"></i><i style="--swatch:#3C0753"></i><i style="--swatch:#910A67"></i><i style="--swatch:#720455"></i></span>
+                                <span>Dark Plum</span><small>Rich purple night</small>
+                            </button>
+                            <button type="button" class="palette-option" data-palette="graphite" role="radio" aria-checked="false">
+                                <span class="palette-swatches" aria-hidden="true"><i style="--swatch:#222831"></i><i style="--swatch:#76ABAE"></i><i style="--swatch:#EEEEEE"></i><i style="--swatch:#31363F"></i></span>
+                                <span>Graphite</span><small>Charcoal and cyan</small>
+                            </button>
+                            <button type="button" class="palette-option" data-palette="forest-night" role="radio" aria-checked="false">
+                                <span class="palette-swatches" aria-hidden="true"><i style="--swatch:#12372A"></i><i style="--swatch:#ADBC9F"></i><i style="--swatch:#FBFADA"></i><i style="--swatch:#436850"></i></span>
+                                <span>Forest Night</span><small>Deep green calm</small>
+                            </button>
+                            <button type="button" class="palette-option palette-option-custom" data-palette="custom" role="radio" aria-checked="false">
+                                <span class="palette-swatches" id="custom-palette-swatches" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+                                <span>Custom</span><small>Your four colors</small>
+                            </button>
+                        </div>
+                        <div id="gradient-settings" class="gradient-controls">
+                            <div class="custom-palette-heading"><strong>Custom palette</strong><span>Changes appear instantly</span></div>
+                            <div id="gradient-preview" class="gradient-preview" aria-label="Gradient preview"></div>
+                            <div class="slider-row">
+                                <label class="slider-label" for="gradient-angle">Background angle</label>
+                                <input type="range" id="gradient-angle" min="0" max="360" value="90">
+                                <span class="range-value slider-value">90°</span>
+                            </div>
+                            <div class="gradient-main-colors palette-color-fields">
+                                <div class="gradient-stop">
+                                    <input type="color" id="gradient-start-color">
+                                    <div style="display:flex;flex-direction:column;font-size:13px;color:var(--text-muted);">
+                                        <span><strong>Primary</strong></span>
+                                        <span style="font-size:12px;color:var(--text-muted);">Page background</span>
+                                    </div>
+                                    <div class="hex-value" id="gradient-start-hex" style="margin-left:auto;color:var(--text-muted);font-size:13px;">#000035</div>
+                                </div>
+                                <div class="gradient-stop">
+                                    <input type="color" id="gradient-end-color">
+                                    <div style="display:flex;flex-direction:column;font-size:13px;color:var(--text-muted);">
+                                        <span><strong>Secondary</strong></span>
+                                        <span style="font-size:12px;color:var(--text-muted);">Panels and gradient</span>
+                                    </div>
+                                    <div class="hex-value" id="gradient-end-hex" style="margin-left:auto;color:var(--text-muted);font-size:13px;">#C4AD62</div>
+                                </div>
+                                <div class="gradient-stop">
+                                    <input type="color" id="palette-accent-color" value="#C4AD62">
+                                    <div style="display:flex;flex-direction:column;font-size:13px;color:var(--text-muted);">
+                                        <span><strong>Accent</strong></span>
+                                        <span style="font-size:12px;color:var(--text-muted);">Highlights and progress</span>
+                                    </div>
+                                    <div class="hex-value" id="palette-accent-hex" style="margin-left:auto;color:var(--text-muted);font-size:13px;">#C4AD62</div>
+                                </div>
+                                <div class="gradient-stop">
+                                    <input type="color" id="palette-surface-color" value="#FFFFFF">
+                                    <div style="display:flex;flex-direction:column;font-size:13px;color:var(--text-muted);">
+                                        <span><strong>Surface</strong></span>
+                                        <span style="font-size:12px;color:var(--text-muted);">Cards and schedule</span>
+                                    </div>
+                                    <div class="hex-value" id="palette-surface-hex" style="margin-left:auto;color:var(--text-muted);font-size:13px;">#FFFFFF</div>
+                                </div>
+                            </div>
+                            <button type="button" id="reset-gradient" class="text-btn gradient-reset-btn">
+                                <i class="fas fa-rotate-left" aria-hidden="true"></i> Use Indy palette
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Display Panel Content -->
+                    <div class="settings-group legacy-color-setting" hidden>
+                        <h3><i class="fas fa-box"></i> Schedule box</h3>
+                        <div style="display:flex;flex-direction:column;gap:10px;">
+                            <div>
+                                <label for="white-box-color">Background color</label>
+                                <input type="color" id="white-box-color" onchange="updateWhiteBoxColor()">
+                            </div>
+                            <div class="slider-row">
+                                <label class="slider-label" for="white-box-opacity">Opacity</label>
+                                <input type="range" id="white-box-opacity" min="0" max="100" value="90" onchange="updateWhiteBoxColor()">
+                                <span class="range-value slider-value">90%</span>
+                            </div>
+                            <div>
+                                <label for="white-box-text-color">Text color</label>
+                                <input type="color" id="white-box-text-color" onchange="updateWhiteBoxTextColor()">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="settings-group">
+                        <h3><i class="fas fa-arrows-alt"></i> Progress Bar</h3>
+                        <div class="switch-container">
+                            <label class="switch-label" for="progress-bar">Show Progress Bar</label>
+                            <label class="switch">
+                                <input type="checkbox" id="progress-bar" onchange="toggleProgressBar()">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div id="progress-bar-settings" hidden>
+                            <div>
+                                <label for="progress-bar-color">Bar Color:</label>
+                                <input type="color" id="progress-bar-color" value="#CEC57E" onchange="updateProgressBarStyle()">
+                            </div>
+                            <div class="slider-row">
+                                <label class="slider-label" for="progress-bar-opacity">Opacity:</label>
+                                <input type="range" id="progress-bar-opacity" min="0" max="100" value="20" step="5" onchange="updateProgressBarStyle()">
+                                <span class="range-value slider-value">20%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Timer Panel Content -->
+                    <div class="settings-group legacy-color-setting" hidden>
+                        <h3><i class="fas fa-clock"></i> Timer Display</h3>
+                        <div>
+                            <label for="countdown-color">Timer Color:</label>
+                            <input type="color" id="countdown-color" value="#ffffff" onchange="updateCountdownColor()">
+                        </div>
+                    </div>
+                    <!-- Colors & Fonts Panel Content -->
+                    <div class="settings-group legacy-color-setting" hidden>
+                        <h3><i class="fas fa-palette"></i> Colors</h3>
+                        <div>
+                            <label for="font-color">Timer Header Color:</label>
+                            <input type="color" id="font-color" value="#ffffff">
+                        </div>
+                    </div>
+                    <div class="settings-group">
+                        <h3><i class="fas fa-font"></i> Typography</h3>
+                        <div class="font-selector">
+                            <label for="font-family">Font:</label>
+                            <select id="font-family" onchange="updateFont()">
+                                <option value="Arial">Arial</option>
+                                <option value="Helvetica">Helvetica</option>
+                                <option value="'Open Sans'">Open Sans</option>
+                                <option value="Roboto">Roboto</option>
+                                <option value="'Source Sans Pro'">Source Sans Pro</option>
+                                <option value="'SF Pro Text'">SF Pro</option>
+                                <option value="Inter">Inter</option>
+                                <option value="Montserrat">Montserrat</option>
+                                <option value="'Segoe UI'">Segoe UI</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <!-- Schedule Panel -->
+                <div class="settings-panel active" id="schedule-panel">
+                    <select id="grade-level-dropdown" hidden aria-hidden="true">
+                        <option value="highSchool" selected>Independence High School</option>
+                    </select>
+                    <div class="settings-group schedule-selection-card">
+                        <h3><i class="fas fa-calendar-alt"></i> Schedule Selection</h3>
+                        <div class="settings-form-grid">
+                            <div class="settings-field">
+                                <label class="settings-field-label" for="schedule-dropdown">Today’s Schedule</label>
+                                <select id="schedule-dropdown" onchange="switchSchedule(this.value)">
+                                    <option value="normal">Regular Schedule</option>
+                                </select>
+                                <p class="help-text settings-help">Regular, late-start, and half-day schedules are selected automatically from the WCS calendar.</p>
+                            </div>
+                            <div class="settings-field">
+                                <label class="settings-field-label" for="lunch-wave">Fifth-period lunch</label>
+                                <select id="lunch-wave" onchange="setLunchWave(this.value)">
+                                    <option value="">Not set</option>
+                                    <option value="A">A Lunch</option>
+                                    <option value="B">B Lunch</option>
+                                    <option value="C">C Lunch</option>
+                                </select>
+                                <p class="help-text settings-help">Your fifth-period teacher assigns your lunch wave. This choice is remembered on this device and in synced settings.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="settings-group">
+                        <h3><i class="fas fa-edit"></i> Customize Periods</h3>
+                        <div id="rename-periods">
+                            <h3 id="rename-periods-toggle" class="dropdown-toggle">
+                                Rename Periods <span class="triangle">&#9662;</span>
+                            </h3>
+                            <div id="rename-periods-content" class="dropdown-content">
+                                <!-- Will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="settings-group display-options-card">
+                        <h3><i class="fas fa-clock"></i> Display Options</h3>
+                        <div class="switch-container">
+                            <label class="switch-label" for="show-period-times">Show period times next to names</label>
+                            <label class="switch">
+                                <input type="checkbox" id="show-period-times" onchange="toggleShowPeriodTimes(this.checked)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <p class="help-text settings-help">When enabled, each period will display its start and end time next to the period name.</p>
+                    </div>
+                    <div class="settings-group" style="display:none">
+                        <h3><i class="fas fa-plus-circle"></i> Custom Schedule</h3>
+                        <div id="custom-schedule">
+                            <h3 id="custom-schedule-toggle" class="dropdown-toggle">
+                                Custom Schedule <span class="triangle">&#9662;</span>
+                            </h3>
+                            <div id="custom-schedule-content" class="dropdown-content">
+                                <label for="schedule-name">Schedule Name:</label>
+                                <input type="text" id="schedule-name" placeholder="Enter schedule name" />
+                                <label for="num-periods">Number of Periods:</label>
+                                <input type="number" id="num-periods" min="1" onchange="setupCustomSchedule()" />
+                                <div id="period-inputs"></div>
+                                <button id="save-schedule-button" onclick="saveCustomSchedule()">Save Schedule</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-panel" id="about-panel">
+                    <div class="settings-group">
+                        <h3>About</h3>
+                        <div class="about-content">
+                            <h2>Indy Schedule</h2>
+                            <p>Indy Schedule is a fast, lightweight countdown tool built for Independence High School. It highlights the current period, displays a live countdown, and offers customizable visuals with saved user preferences.</p>
+
+                            <h3>Key Features</h3>
+                            <ul class="feature-list">
+                                <li>Live countdown that automatically adjusts based on the selected schedule.</li>
+                                <li>The seven-period Independence High School regular schedule.</li>
+                                <li>Visual customization with gradient themes, color selections, gray panel mode, and timer shadow options.</li>
+                                <li>Optional period start/end times (Settings → Schedule) to display detailed bell information.</li>
+                                <li>Optional Google sign-in (via Firebase) for syncing settings across devices.</li>
+                            </ul>
+
+                            <h3>Getting Started</h3>
+                            <ol>
+                                <li>Open <strong>Settings → Appearance</strong> to customize your background, colors, or theme.</li>
+                                <li>Use <strong>Settings → Schedule</strong> to switch schedules or show period times.</li>
+                                <li>Sign in with Google if you’d like your settings to sync across devices — completely optional.</li>
+                            </ol>
+                            <button type="button" class="replay-onboarding-btn" onclick="localStorage.removeItem('indyOnboardingComplete_v2'); location.reload();">
+                                <i class="fas fa-play"></i> Replay Welcome Tour
+                            </button>
+
+                            <h3>Privacy</h3>
+                            <p>Indy Schedule uses personal data only for authentication and optional settings sync through Firebase. No data is sold or shared beyond this purpose. View the full <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a> for complete details.</p>
+
+                            <h3>Support</h3>
+                            <p>Questions, issues, or feedback? <a href="mailto:ShilohSchedule@outlook.com">Email support</a>.</p>
+
+                            <div class="contact-info">
+                                <p class="version-info">Version 4.0.0</p>
+                                <p class="creator-info">Created by Brady Blackwell</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="settings-panel" id="whatsnew-panel">
+                    <div class="settings-group whatsnew-group">
+                        <div class="whatsnew-header">
+                            <div class="whatsnew-icon">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <div>
+                                <p class="whatsnew-kicker">Release notes</p>
+                                <h3 class="whatsnew-title">What's New</h3>
+                                <p class="whatsnew-subtitle">See the latest improvements to the website.</p>
+                            </div>
+                        </div>
+                        <div class="whatsnew-tabs" role="tablist" aria-label="Update logs">
+                            <button class="whatsnew-tab active" data-wn-target="whatsnew-website" role="tab" aria-selected="true">Website updates</button>
+                        </div>
+
+                        <div id="whatsnew-website" class="whatsnew-log" role="tabpanel">
+                            <div class="wn-entry">
+                                <div class="wn-entry-header">
+                                    <span class="wn-version">v4.0.0</span>
+                                    <span class="wn-date">Aug 4, 2026</span>
+                                    <span class="wn-tag">Welcome to Indy</span>
+                                </div>
+                                <ul>
+                                    <li>Rebuilt the app around Independence High School’s seven-period day.</li>
+                                    <li>Added WCS calendar awareness and Independence’s half-day bell schedule.</li>
+                                    <li>Rebranded the website with Indy’s navy and gold.</li>
+                                    <li>Simplified settings and improved countdown reliability.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="settings-panel" id="contact-panel">
+                    <div class="settings-group contact-shell">
+                        <div class="contact-header-row">
+                            <div class="contact-header-icon"><i class="fas fa-envelope"></i></div>
+                            <h3>Contact Us</h3>
+                        </div>
+                        <div class="about-content contact-card">
+                            <div class="contact-accent-bar"></div>
+                            <div class="support-grid">
+                                <div class="support-col">
+                                    <div class="contact-header">
+                                        <div class="contact-icon">
+                                            <i class="fas fa-paper-plane"></i>
+                                        </div>
+                                        <div>
+                                            <p class="contact-kicker">We usually reply within 1–2 business days.</p>
+                                            <p class="contact-title">Tell us what's going on and we'll help.</p>
+                                        </div>
+                                    </div>
+                                    <a class="contact-btn" href="mailto:ShilohSchedule@outlook.com">
+                                        <i class="fas fa-envelope"></i>
+                                        Email support
+                                    </a>
+                                </div>
+                                <div class="support-col">
+                                    <ul class="contact-list">
+                                        <li><span class="contact-bullet-icon">👤</span><span class="contact-bullet-text"><strong>Name</strong> — your full name.</span></li>
+                                        <li><span class="contact-bullet-icon">🗂️</span><span class="contact-bullet-text"><strong>Topic</strong> — bug/issue, feature request, schedule correction, sign-in problem, general feedback, or other.</span></li>
+                                        <li><span class="contact-bullet-icon">📝</span><span class="contact-bullet-text"><strong>Details</strong> — what happened, what you expected, and what you want added or fixed.</span></li>
+                                        <li><span class="contact-bullet-icon">📎</span><span class="contact-bullet-text"><strong>Screenshots (optional)</strong> — attach any relevant images to speed things up.</span></li>
+                                    </ul>
+                                    <div class="contact-mini-faq">
+                                        <p class="faq-title">Common issues</p>
+                                        <ul>
+                                            <li>Schedule looks off? Check the selected grade and schedule.</li>
+                                            <li>Preferences not syncing? Sign out, refresh the page, and sign in again.</li>
+                                            <li>Need a schedule changed? <a href="mailto:ShilohSchedule@outlook.com">Request a schedule update</a>.</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="contact-footer-note">We typically reply within 1–2 business days.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="settings-panel" id="legal-panel">
+                    <div class="settings-group">
+                        <div class="legal-section">
+                            <h3 class="legal-section-title">Legal</h3>
+                            <div class="legal-cards-row">
+                                <div class="legal-card">
+                                    <div class="legal-card-header">
+                                        <div class="legal-card-icon">
+                                            <i class="fas fa-file-contract"></i>
+                                        </div>
+                                        <div class="legal-card-title">Terms of Service</div>
+                                    </div>
+                                    <div class="legal-card-body">
+                                        Our Terms of Service explain the rules and responsibilities for using Indy Schedule. They cover permitted usage, account handling, and acceptable conduct.
+                                    </div>
+                                    <div class="legal-card-footer">
+                                        <a class="legal-btn" href="terms.html" target="_blank" rel="noopener">View Terms</a>
+                                        <span class="legal-updated">Last updated: Sep 21, 2025</span>
+                                    </div>
+                                </div>
+
+                                <div class="legal-card">
+                                    <div class="legal-card-header">
+                                        <div class="legal-card-icon">
+                                            <i class="fas fa-user-secret"></i>
+                                        </div>
+                                        <div class="legal-card-title">Privacy Policy</div>
+                                    </div>
+                                    <div class="legal-card-body">
+                                        This policy explains what personal data we collect, how it's used, and how we protect your privacy. We minimize data collection and respect user preferences.
+                                    </div>
+                                    <div class="legal-card-footer">
+                                        <a class="legal-btn" href="privacy.html" target="_blank" rel="noopener">View Privacy Policy</a>
+                                        <span class="legal-updated">Last updated: Nov 23, 2025</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="legal-consent">
+                                By using Indy Schedule you agree to our Terms and acknowledge the Privacy Policy. For questions, use the contact section.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="today-card-backdrop" id="today-card-backdrop" hidden></div>
+    <div id="login-modal" class="login-modal">
+        <div class="login-container">
+            <h2>Sign In</h2>
+            <div class="login-content">
+                <p>Sign in with your Google account to continue</p>
+                <div id="google-signin"></div>
+            </div>
+        </div>
+    </div>
+    <!-- First-run onboarding -->
+    <div id="update-notice-backdrop" class="update-notice-backdrop onboarding-backdrop" aria-hidden="true">
+        <div class="update-notice-dialog onboarding-dialog" role="dialog" aria-modal="true" aria-labelledby="update-notice-title">
+            <div class="update-notice-header">
+                <div class="update-title-icon"><img src="indy_schedule_logo_sizes/indy-schedule-logo-128x128.png" alt="Indy Schedule logo" class="brand-logo-art"></div>
+                <div class="update-title-block">
+                    <span class="onboarding-brand">INDY SCHEDULE</span>
+                    <h2 id="update-notice-title">Welcome to Indy</h2>
+                </div>
+                <div class="onboarding-step-count">Step <span id="onboarding-step-number">1</span> of 4</div>
+            </div>
+            <div class="update-notice-body">
+                <div class="onboarding-progress" aria-label="Setup progress">
+                    <span class="onboarding-progress-fill" id="onboarding-progress-fill"></span>
+                </div>
+
+                <div class="onboarding-step active" data-step="0">
+                    <div class="onboarding-hero-mark"><img src="indy_schedule_logo_sizes/indy-schedule-logo-128x128.png" alt="" class="brand-logo-art"></div>
+                    <p class="onboarding-eyebrow">BUILT FOR INDEPENDENCE HIGH SCHOOL</p>
+                    <h1>Your school day,<br><span>right on time.</span></h1>
+                    <p class="onboarding-lead">See the current period, the time remaining, and what comes next—without digging through your schedule.</p>
+                    <div class="onboarding-feature-grid">
+                        <div class="onboarding-feature"><i class="fas fa-clock"></i><strong>Live countdown</strong><span>Always know how much time is left.</span></div>
+                        <div class="onboarding-feature"><i class="fas fa-calendar-check"></i><strong>Calendar aware</strong><span>Late starts and half days switch automatically.</span></div>
+                        <div class="onboarding-feature"><i class="fas fa-palette"></i><strong>Made yours</strong><span>Personalize colors, names, and visuals.</span></div>
+                    </div>
+                </div>
+
+                <div class="onboarding-step" data-step="1" hidden>
+                    <div class="onboarding-step-icon"><i class="fas fa-calendar-alt"></i></div>
+                    <p class="onboarding-eyebrow">AUTOMATIC SCHEDULES</p>
+                    <h1>The right bells,<br><span>every school day.</span></h1>
+                    <p class="onboarding-lead">Indy Schedule follows the 2026–27 WCS calendar in Central Time. You don’t need to switch schedules yourself.</p>
+                    <div class="onboarding-schedule-list">
+                        <div><span class="schedule-dot regular"></span><strong>Regular days</strong><small>Official bells, Homeroom, and Tuesday–Thursday SOAR</small></div>
+                        <div><span class="schedule-dot late"></span><strong>Late-start days</strong><small>All 27 official Monday and Tuesday dates</small></div>
+                        <div><span class="schedule-dot half"></span><strong>Half days</strong><small>Shortened periods and 11:15 dismissal</small></div>
+                        <div><span class="schedule-dot closed"></span><strong>Breaks &amp; weekends</strong><small>Counts down to the next school day</small></div>
+                    </div>
+                </div>
+
+                <div class="onboarding-step" data-step="2" hidden>
+                    <div class="onboarding-step-icon"><i class="fas fa-utensils"></i></div>
+                    <p class="onboarding-eyebrow">ONE QUICK CHOICE</p>
+                    <h1>Which lunch<br><span>do you have?</span></h1>
+                    <p class="onboarding-lead">Your fifth-period teacher assigns A, B, or C lunch. Choose yours so the countdown pauses class time and shows lunch correctly.</p>
+                    <div class="onboarding-lunch-options" id="onboarding-lunch-wave" role="radiogroup" aria-label="Your assigned lunch">
+                        <label class="lunch-choice"><input type="radio" name="onboarding-lunch" value="A"><span class="lunch-letter">A</span><span><strong>A Lunch</strong><small>11:43–12:08 · Late start 11:38–12:06</small></span><i class="fas fa-check"></i></label>
+                        <label class="lunch-choice"><input type="radio" name="onboarding-lunch" value="B"><span class="lunch-letter">B</span><span><strong>B Lunch</strong><small>12:10–12:35 · Late start 12:08–12:36</small></span><i class="fas fa-check"></i></label>
+                        <label class="lunch-choice"><input type="radio" name="onboarding-lunch" value="C"><span class="lunch-letter">C</span><span><strong>C Lunch</strong><small>12:37–1:02 · Late start 12:38–1:06</small></span><i class="fas fa-check"></i></label>
+                    </div>
+                    <p id="onboarding-lunch-error" class="onboarding-field-error" hidden>Please select your assigned lunch before continuing.</p>
+                    <p class="onboarding-hint"><i class="fas fa-circle-info"></i> Not sure? Your fifth-period teacher will tell you. You can change this later in Settings.</p>
+                </div>
+
+                <div class="onboarding-step" data-step="3" hidden>
+                    <div class="onboarding-ready-mark"><i class="fas fa-check"></i></div>
+                    <p class="onboarding-eyebrow">SETUP COMPLETE</p>
+                    <h1>You’re ready<br><span>for Indy.</span></h1>
+                    <p class="onboarding-lead">Your schedule is ready and your lunch is set to <strong id="onboarding-lunch-summary">—</strong>.</p>
+                    <div class="onboarding-ready-card">
+                        <div><i class="fas fa-gear"></i><span><strong>Make it yours</strong><small>Open Settings to rename periods or change the theme.</small></span></div>
+                        <div><i class="fas fa-cloud"></i><span><strong>Optional cloud sync</strong><small>Sign in with Google to carry preferences across devices.</small></span></div>
+                    </div>
+                </div>
+
+                <div class="update-notice-actions onboarding-actions">
+                    <button id="onboarding-back" class="btn onboarding-back" type="button"><i class="fas fa-arrow-left"></i> Back</button>
+                    <button id="onboarding-next" class="btn btn-primary" type="button">Get Started <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Profile visibility switch logic
+            const profileSwitch = document.getElementById('profile-visibility-toggle');
+            if (profileSwitch) {
+                // Set initial state from localStorage
+                profileSwitch.checked = localStorage.getItem('profileHidden') !== 'true';
+                profileSwitch.addEventListener('change', function() {
+                    window.authManager.toggleProfileVisibility();
+                });
+            }
+            function initializeOnboarding() {
+                const completionKey = 'indyOnboardingComplete_v2';
+                const backdrop = document.getElementById('update-notice-backdrop');
+                const steps = Array.from(document.querySelectorAll('.onboarding-step'));
+                const nextButton = document.getElementById('onboarding-next');
+                const backButton = document.getElementById('onboarding-back');
+                const stepNumber = document.getElementById('onboarding-step-number');
+                const progressFill = document.getElementById('onboarding-progress-fill');
+                const lunchError = document.getElementById('onboarding-lunch-error');
+                const lunchSummary = document.getElementById('onboarding-lunch-summary');
+                const lunchChoices = Array.from(document.querySelectorAll('input[name="onboarding-lunch"]'));
+                const savedLunch = (localStorage.getItem('lunchWave') || '').toUpperCase();
+                const hasLunch = ['A', 'B', 'C'].includes(savedLunch);
+                if (!backdrop || !steps.length || !nextButton || !backButton) {
+                    document.documentElement.classList.remove('onboarding-pending');
+                    return;
+                }
+                if (localStorage.getItem(completionKey) && hasLunch) {
+                    document.documentElement.classList.remove('onboarding-pending');
+                    return;
+                }
+
+                let currentStep = 0;
+                if (hasLunch) {
+                    const savedChoice = lunchChoices.find(choice => choice.value === savedLunch);
+                    if (savedChoice) savedChoice.checked = true;
+                }
+
+                function selectedLunch() {
+                    return lunchChoices.find(choice => choice.checked)?.value || '';
+                }
+
+                function renderStep() {
+                    steps.forEach((step, index) => {
+                        const active = index === currentStep;
+                        step.hidden = !active;
+                        step.classList.toggle('active', active);
+                        step.setAttribute('aria-hidden', active ? 'false' : 'true');
+                    });
+                    if (stepNumber) stepNumber.textContent = String(currentStep + 1);
+                    if (progressFill) progressFill.style.width = `${((currentStep + 1) / steps.length) * 100}%`;
+                    backButton.style.visibility = currentStep === 0 ? 'hidden' : 'visible';
+                    nextButton.innerHTML = currentStep === 0
+                        ? 'Begin Setup <i class="fas fa-arrow-right"></i>'
+                        : currentStep === steps.length - 1
+                            ? 'Open Indy Schedule <i class="fas fa-check"></i>'
+                            : 'Continue <i class="fas fa-arrow-right"></i>';
+                    if (currentStep === steps.length - 1 && lunchSummary) {
+                        lunchSummary.textContent = `${selectedLunch()} Lunch`;
+                    }
+                    document.querySelector('.update-notice-body')?.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+
+                function closeOnboarding() {
+                    backdrop.style.display = 'none';
+                    backdrop.setAttribute('aria-hidden', 'true');
+                    backdrop.classList.remove('onboarding-launching');
+                    document.body.classList.remove('onboarding-open');
+                    document.documentElement.classList.remove('onboarding-pending');
+                    document.getElementById('settings-button')?.focus();
+                }
+
+                function finishOnboarding() {
+                    const lunch = selectedLunch();
+                    if (typeof window.setLunchWave === 'function') window.setLunchWave(lunch);
+                    else localStorage.setItem('lunchWave', lunch);
+                    localStorage.setItem(completionKey, 'true');
+                    localStorage.setItem('updateNoticeShown_v4_0_0', 'true');
+                    nextButton.disabled = true;
+                    nextButton.innerHTML = 'Opening Indy <i class="fas fa-circle-notch fa-spin"></i>';
+                    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                        closeOnboarding();
+                        return;
+                    }
+                    backdrop.classList.add('onboarding-launching');
+                    window.setTimeout(closeOnboarding, 1050);
+                }
+
+                nextButton.addEventListener('click', () => {
+                    if (currentStep === 2 && !selectedLunch()) {
+                        if (lunchError) lunchError.hidden = false;
+                        lunchChoices[0]?.focus();
+                        return;
+                    }
+                    if (currentStep === steps.length - 1) {
+                        finishOnboarding();
+                        return;
+                    }
+                    currentStep += 1;
+                    renderStep();
+                });
+
+                backButton.addEventListener('click', () => {
+                    if (currentStep > 0) currentStep -= 1;
+                    renderStep();
+                });
+
+                lunchChoices.forEach(choice => choice.addEventListener('change', () => {
+                    if (lunchError) lunchError.hidden = true;
+                }));
+
+                document.addEventListener('keydown', event => {
+                    if (backdrop.getAttribute('aria-hidden') === 'true') return;
+                    if (event.key === 'Enter' && event.target.tagName !== 'BUTTON') {
+                        event.preventDefault();
+                        nextButton.click();
+                    }
+                    if (event.key === 'ArrowLeft' && currentStep > 0) backButton.click();
+                });
+
+                backdrop.style.display = 'flex';
+                backdrop.setAttribute('aria-hidden', 'false');
+                // The backdrop is now the opaque wall; remove the temporary
+                // preload cover so it cannot sit above the onboarding dialog.
+                document.documentElement.classList.remove('onboarding-pending');
+                document.body.classList.add('onboarding-open');
+                renderStep();
+                nextButton.focus();
+            }
+
+            initializeOnboarding();
+        });
+
+        // Allow scrolling the update notice from anywhere while it is open
+        (function enableGlobalUpdateNoticeScroll() {
+            let lastTouchY = null;
+            let backdropEl = null;
+            let bodyEl = null;
+
+            function cacheElements() {
+                backdropEl = document.getElementById('update-notice-backdrop');
+                bodyEl = backdropEl ? backdropEl.querySelector('.update-notice-body') : null;
+            }
+
+            function isOpen() {
+                return backdropEl && backdropEl.style.display !== 'none' && backdropEl.getAttribute('aria-hidden') !== 'true';
+            }
+
+            function scrollBody(deltaY) {
+                if (!isOpen() || !bodyEl) return;
+                bodyEl.scrollTop += deltaY;
+            }
+
+            function onWheel(e) {
+                if (!isOpen()) return;
+                scrollBody(e.deltaY);
+                e.preventDefault();
+            }
+
+            function onTouchStart(e) {
+                if (!isOpen()) return;
+                lastTouchY = e.touches && e.touches.length ? e.touches[0].clientY : null;
+            }
+
+            function onTouchMove(e) {
+                if (!isOpen() || lastTouchY === null) return;
+                const currentY = e.touches && e.touches.length ? e.touches[0].clientY : lastTouchY;
+                const delta = lastTouchY - currentY;
+                scrollBody(delta);
+                lastTouchY = currentY;
+                e.preventDefault();
+            }
+
+            document.addEventListener('DOMContentLoaded', () => {
+                cacheElements();
+                window.addEventListener('wheel', onWheel, { passive: false });
+                window.addEventListener('touchstart', onTouchStart, { passive: true });
+                window.addEventListener('touchmove', onTouchMove, { passive: false });
+            });
+        })();
+    </script>
+</body>
+</html>
