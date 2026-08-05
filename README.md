@@ -23,7 +23,7 @@ Indy Schedule is an unofficial schedule countdown website for Independence High 
 
 The website itself is static and does not require a build step. Serve the repository root with any local HTTP server, then open `index.html` through that server.
 
-The calendar updater requires Node.js 22 or newer:
+The calendar updater requires Node.js 24 or newer:
 
 ```sh
 npm install
@@ -39,8 +39,9 @@ That command downloads the public IHS calendar feed and writes the browser-frien
 1. Downloads the public Independence High School calendar feed.
 2. Generates `data/ihs-calendar-events.json` for the next 120 days.
 3. Commits the file only when the cached event data changes.
+4. Publishes the refreshed static site through GitHub Pages.
 
-For the workflow to push updates, enable **Read and write permissions** under **Settings → Actions → General → Workflow permissions** in the GitHub repository.
+For the workflow to push updates, enable **Read and write permissions** under **Settings → Actions → General → Workflow permissions** in the GitHub repository. Set the Pages deployment source to **GitHub Actions** under **Settings → Pages**.
 
 When calendar data is unavailable or has not been generated yet, the website falls back to a link to the [official IHS calendar](https://ihs.wcs.edu/calendar).
 
@@ -78,7 +79,7 @@ The tests validate schedule dates and times, lunch placement, display states, ca
 
 Use this directory—the one containing `index.html` and `.github`—as the Git repository root. Do not initialize the parent `Indy Schedule` directory, because it also contains archived versions of the project.
 
-The site can be published with GitHub Pages or another static host. The scheduled calendar workflow must remain enabled so the event cache stays current.
+The site is deployed through GitHub Pages by the calendar workflow. Keep the scheduled workflow enabled so both the event cache and published site stay current.
 
 ## Privacy and Terms
 
@@ -86,4 +87,4 @@ The countdown and most preferences work without an account. Google sign-in is op
 
 ## License
 
-MIT
+Licensed under the [Apache License 2.0](LICENSE).
