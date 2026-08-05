@@ -188,7 +188,7 @@ assert(indexSource.includes('id="lunch-wave"'), 'Lunch-wave selector is availabl
 assert(['A', 'B', 'C'].every((wave) => indexSource.includes(`<option value="${wave}">`)), 'All three lunch-wave options are available');
 assert(indexSource.includes('id="onboarding-lunch-wave"'), 'First-run lunch selection is available');
 assert(indexSource.includes('Please select your assigned lunch before continuing.'), 'First-run lunch selection is required');
-assertEqual((indexSource.match(/class="onboarding-step(?: active)?"/g) || []).length, 4, 'Four-step onboarding flow');
+assertEqual((indexSource.match(/class="onboarding-step(?: active)?"/g) || []).length, 5, 'Five-step onboarding flow');
 assert(indexSource.includes('indyOnboardingComplete_v2'), 'Onboarding completion is persisted');
 assert(indexSource.includes('Replay Welcome Tour'), 'Onboarding can be replayed from settings');
 assert(!indexSource.includes('id="timer-shadow"') && !indexSource.includes('id="shadow-settings-content"'), 'Retired timer-shadow controls are removed from Appearance');
@@ -199,8 +199,10 @@ assertEqual((indexSource.match(/type="radio" name="onboarding-lunch"/g) || []).l
 assert(!indexSource.includes('id="extension-panel"'), 'Extension settings panel removed');
 assert(!indexSource.includes('data-target="extension"'), 'Extension navigation removed');
 assert(!indexSource.includes('EXTENSION_PING'), 'Extension bridge scripts removed');
-assert(indexSource.includes('id="analytics-consent-banner"'), 'Analytics consent choice is shown before visitor tracking');
+assert(indexSource.includes('data-onboarding-analytics') && indexSource.includes('id="onboarding-analytics-decline"'), 'Analytics consent choice is part of onboarding');
+assert(!indexSource.includes('id="analytics-consent-banner"'), 'Analytics consent no longer uses a separate floating banner');
 assert(indexSource.includes('id="analytics-consent-toggle"'), 'Analytics consent can be changed from Settings');
+assert(indexSource.includes("window.setAnalyticsConsent?.(true)") && indexSource.includes("window.setAnalyticsConsent?.(false)"), 'Onboarding saves either analytics choice explicitly');
 assert(!indexSource.includes('G-YS6FHHEGFZ'), 'Retired direct Analytics tag is removed');
 assert(authSource.includes("analytics_storage: granted ? 'granted' : 'denied'"), 'Analytics storage follows the saved visitor choice');
 assert(authSource.includes("ad_storage: 'denied'") && authSource.includes("ad_personalization: 'denied'"), 'Advertising storage and personalization remain disabled');

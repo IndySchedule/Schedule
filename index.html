@@ -195,14 +195,21 @@
     <div id="settings-sidebar" class="settings-sidebar">
         <div class="settings-header">
             <div class="header-left">
-                <!-- use whatever logo you want here -->
                 <img src="indy_schedule_logo_sizes/indy-schedule-logo-128x128.png" alt="Indy Schedule logo" class="settings-logo brand-logo-art">
+                <div class="settings-wordmark">
+                    <strong>Indy Schedule</strong>
+                    <span>Preferences</span>
+                </div>
             </div>
 
-            <h2 class="settings-title">Settings</h2>
+            <div class="settings-heading">
+                <h2 class="settings-title">Settings</h2>
+                <p>Customize your Indy experience</p>
+            </div>
 
             <button class="close-settings" aria-label="Close Settings">
                 <i class="fas fa-times"></i>
+                <span>Done</span>
             </button>
         </div>
         
@@ -235,6 +242,10 @@
             <div class="settings-panels">
                 <!-- Appearance Panel (merged) -->
                 <div class="settings-panel" id="appearance-panel">
+                    <div class="settings-page-header">
+                        <div class="settings-page-icon"><i class="fas fa-paint-brush"></i></div>
+                        <div><span>Design</span><h1>Appearance</h1><p>Choose how Indy Schedule looks and feels across the entire dashboard.</p></div>
+                    </div>
                     <div class="settings-group gradient-settings-card palette-settings-card">
                         <div class="card-header">
                             <div>
@@ -359,7 +370,7 @@
                     <div class="settings-group">
                         <h3><i class="fas fa-arrows-alt"></i> Progress Bar</h3>
                         <div class="switch-container">
-                            <label class="switch-label" for="progress-bar">Show Progress Bar</label>
+                            <div class="settings-control-copy"><label class="switch-label" for="progress-bar">Show progress bar</label><p>Display a visual indicator for the current class period.</p></div>
                             <label class="switch">
                                 <input type="checkbox" id="progress-bar" onchange="toggleProgressBar()">
                                 <span class="slider"></span>
@@ -396,7 +407,7 @@
                     <div class="settings-group">
                         <h3><i class="fas fa-font"></i> Typography</h3>
                         <div class="font-selector">
-                            <label for="font-family">Font:</label>
+                            <div class="settings-control-copy"><label for="font-family">Interface font</label><p>Applied to the dashboard and Settings.</p></div>
                             <select id="font-family" onchange="updateFont()">
                                 <option value="Arial">Arial</option>
                                 <option value="Helvetica">Helvetica</option>
@@ -413,6 +424,10 @@
                 </div>
                 <!-- Schedule Panel -->
                 <div class="settings-panel active" id="schedule-panel">
+                    <div class="settings-page-header">
+                        <div class="settings-page-icon"><i class="fas fa-calendar-alt"></i></div>
+                        <div><span>Essentials</span><h1>Schedule</h1><p>Manage today’s bells, your lunch wave, and how periods are displayed.</p></div>
+                    </div>
                     <select id="grade-level-dropdown" hidden aria-hidden="true">
                         <option value="highSchool" selected>Independence High School</option>
                     </select>
@@ -452,13 +467,12 @@
                     <div class="settings-group display-options-card">
                         <h3><i class="fas fa-clock"></i> Display Options</h3>
                         <div class="switch-container">
-                            <label class="switch-label" for="show-period-times">Show period times next to names</label>
+                            <div class="settings-control-copy"><label class="switch-label" for="show-period-times">Show period times next to names</label><p>Include each period’s start and end time in the schedule.</p></div>
                             <label class="switch">
                                 <input type="checkbox" id="show-period-times" onchange="toggleShowPeriodTimes(this.checked)">
                                 <span class="slider"></span>
                             </label>
                         </div>
-                        <p class="help-text settings-help">When enabled, each period will display its start and end time next to the period name.</p>
                     </div>
                     <div class="settings-group" style="display:none">
                         <h3><i class="fas fa-plus-circle"></i> Custom Schedule</h3>
@@ -479,8 +493,11 @@
                 </div>
 
                 <div class="settings-panel" id="about-panel">
+                    <div class="settings-page-header">
+                        <div class="settings-page-icon"><i class="fas fa-info-circle"></i></div>
+                        <div><span>Information</span><h1>About</h1><p>Learn what Indy Schedule does, how it works, and who maintains it.</p></div>
+                    </div>
                     <div class="settings-group">
-                        <h3>About</h3>
                         <div class="about-content">
                             <h2>Indy Schedule</h2>
                             <p>Indy Schedule is a fast, lightweight countdown tool built for Independence High School. It highlights the current period, displays a live countdown, and offers customizable visuals with saved user preferences.</p>
@@ -518,17 +535,11 @@
                     </div>
                 </div>
                 <div class="settings-panel" id="whatsnew-panel">
+                    <div class="settings-page-header">
+                        <div class="settings-page-icon"><i class="fas fa-bolt"></i></div>
+                        <div><span>Updates</span><h1>What’s New</h1><p>See the latest improvements, fixes, and schedule updates.</p></div>
+                    </div>
                     <div class="settings-group whatsnew-group">
-                        <div class="whatsnew-header">
-                            <div class="whatsnew-icon">
-                                <i class="fas fa-bolt"></i>
-                            </div>
-                            <div>
-                                <p class="whatsnew-kicker">Release notes</p>
-                                <h3 class="whatsnew-title">What's New</h3>
-                                <p class="whatsnew-subtitle">See the latest improvements to the website.</p>
-                            </div>
-                        </div>
                         <div class="whatsnew-tabs" role="tablist" aria-label="Update logs">
                             <button class="whatsnew-tab active" data-wn-target="whatsnew-website" role="tab" aria-selected="true">Website updates</button>
                         </div>
@@ -552,11 +563,11 @@
                     </div>
                 </div>
                 <div class="settings-panel" id="contact-panel">
+                    <div class="settings-page-header">
+                        <div class="settings-page-icon"><i class="fas fa-envelope"></i></div>
+                        <div><span>Support</span><h1>Contact Us</h1><p>Report a problem, suggest an improvement, or request a schedule correction.</p></div>
+                    </div>
                     <div class="settings-group contact-shell">
-                        <div class="contact-header-row">
-                            <div class="contact-header-icon"><i class="fas fa-envelope"></i></div>
-                            <h3>Contact Us</h3>
-                        </div>
                         <div class="about-content contact-card">
                             <div class="contact-accent-bar"></div>
                             <div class="support-grid">
@@ -597,9 +608,12 @@
                     </div>
                 </div>
                 <div class="settings-panel" id="legal-panel">
+                    <div class="settings-page-header">
+                        <div class="settings-page-icon"><i class="fas fa-shield-halved"></i></div>
+                        <div><span>Privacy</span><h1>Privacy &amp; Terms</h1><p>Control optional analytics and review how Indy Schedule handles your data.</p></div>
+                    </div>
                     <div class="settings-group">
                         <div class="legal-section">
-                            <h3 class="legal-section-title">Legal</h3>
                             <div class="analytics-privacy-card">
                                 <div>
                                     <strong><i class="fas fa-chart-line" aria-hidden="true"></i> Visitor analytics</strong>
@@ -653,20 +667,6 @@
         </div>
     </div>
     <div class="today-card-backdrop" id="today-card-backdrop" hidden></div>
-    <aside class="analytics-consent-banner" id="analytics-consent-banner" role="dialog" aria-labelledby="analytics-consent-title" hidden>
-        <div class="analytics-consent-copy">
-            <span class="analytics-consent-icon"><i class="fas fa-chart-simple" aria-hidden="true"></i></span>
-            <div>
-                <strong id="analytics-consent-title">Help improve Indy Schedule</strong>
-                <p>Allow Google Analytics to measure page visits, device type, and feature use. No names, emails, schedules, or lunch choices are sent.</p>
-                <a href="privacy.html" target="_blank" rel="noopener">Read the Privacy Policy</a>
-            </div>
-        </div>
-        <div class="analytics-consent-actions">
-            <button type="button" id="analytics-consent-decline">Continue without analytics</button>
-            <button type="button" id="analytics-consent-accept">Allow analytics</button>
-        </div>
-    </aside>
     <div id="login-modal" class="login-modal">
         <div class="login-container">
             <h2>Sign In</h2>
@@ -685,7 +685,7 @@
                     <span class="onboarding-brand">INDY SCHEDULE</span>
                     <h2 id="update-notice-title">Welcome to Indy</h2>
                 </div>
-                <div class="onboarding-step-count">Step <span id="onboarding-step-number">1</span> of 4</div>
+                <div class="onboarding-step-count">Step <span id="onboarding-step-number">1</span> of 5</div>
             </div>
             <div class="update-notice-body">
                 <div class="onboarding-progress" aria-label="Setup progress">
@@ -731,7 +731,19 @@
                     <p class="onboarding-hint"><i class="fas fa-circle-info"></i> Not sure? Your fifth-period teacher will tell you. You can change this later in Settings.</p>
                 </div>
 
-                <div class="onboarding-step" data-step="3" hidden>
+                <div class="onboarding-step" data-step="3" data-onboarding-analytics hidden>
+                    <div class="onboarding-step-icon"><i class="fas fa-chart-simple"></i></div>
+                    <p class="onboarding-eyebrow">OPTIONAL ANALYTICS</p>
+                    <h1>Help improve<br><span>Indy Schedule.</span></h1>
+                    <p class="onboarding-lead">Allow anonymous usage measurements so we can see what works, catch rough spots, and make the site better for students.</p>
+                    <div class="onboarding-ready-card onboarding-analytics-card">
+                        <div><i class="fas fa-chart-line"></i><span><strong>Useful, limited insights</strong><small>Page visits, device type, and feature use help guide improvements.</small></span></div>
+                        <div><i class="fas fa-user-shield"></i><span><strong>Your school day stays private</strong><small>No names, emails, schedules, period names, or lunch choices are sent.</small></span></div>
+                    </div>
+                    <p class="onboarding-hint onboarding-privacy-hint"><i class="fas fa-lock"></i> Optional and changeable anytime in Settings. <a href="privacy.html" target="_blank" rel="noopener">Read the Privacy Policy</a>.</p>
+                </div>
+
+                <div class="onboarding-step" data-step="4" hidden>
                     <div class="onboarding-ready-mark"><i class="fas fa-check"></i></div>
                     <p class="onboarding-eyebrow">SETUP COMPLETE</p>
                     <h1>You’re ready<br><span>for Indy.</span></h1>
@@ -744,7 +756,10 @@
 
                 <div class="update-notice-actions onboarding-actions">
                     <button id="onboarding-back" class="btn onboarding-back" type="button"><i class="fas fa-arrow-left"></i> Back</button>
-                    <button id="onboarding-next" class="btn btn-primary" type="button">Get Started <i class="fas fa-arrow-right"></i></button>
+                    <div class="onboarding-forward-actions">
+                        <button id="onboarding-analytics-decline" class="btn onboarding-analytics-decline" type="button" hidden>Continue without analytics</button>
+                        <button id="onboarding-next" class="btn btn-primary" type="button">Get Started <i class="fas fa-arrow-right"></i></button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -772,18 +787,25 @@
                 const lunchError = document.getElementById('onboarding-lunch-error');
                 const lunchSummary = document.getElementById('onboarding-lunch-summary');
                 const lunchChoices = Array.from(document.querySelectorAll('input[name="onboarding-lunch"]'));
+                const analyticsDeclineButton = document.getElementById('onboarding-analytics-decline');
+                const analyticsStep = steps.findIndex(step => step.hasAttribute('data-onboarding-analytics'));
                 const savedLunch = (localStorage.getItem('lunchWave') || '').toUpperCase();
                 const hasLunch = ['A', 'B', 'C'].includes(savedLunch);
+                const hasAnalyticsChoice = typeof window.getAnalyticsConsent === 'function'
+                    && window.getAnalyticsConsent() !== null;
                 if (!backdrop || !steps.length || !nextButton || !backButton) {
                     document.documentElement.classList.remove('onboarding-pending');
                     return;
                 }
-                if (localStorage.getItem(completionKey) && hasLunch) {
+                const onboardingComplete = Boolean(localStorage.getItem(completionKey));
+                if (onboardingComplete && hasLunch && hasAnalyticsChoice) {
                     document.documentElement.classList.remove('onboarding-pending');
                     return;
                 }
 
-                let currentStep = 0;
+                let currentStep = onboardingComplete && hasLunch && !hasAnalyticsChoice && analyticsStep >= 0
+                    ? analyticsStep
+                    : 0;
                 if (hasLunch) {
                     const savedChoice = lunchChoices.find(choice => choice.value === savedLunch);
                     if (savedChoice) savedChoice.checked = true;
@@ -803,8 +825,12 @@
                     if (stepNumber) stepNumber.textContent = String(currentStep + 1);
                     if (progressFill) progressFill.style.width = `${((currentStep + 1) / steps.length) * 100}%`;
                     backButton.style.visibility = currentStep === 0 ? 'hidden' : 'visible';
+                    if (analyticsDeclineButton) analyticsDeclineButton.hidden = currentStep !== analyticsStep;
+                    nextButton.classList.toggle('onboarding-analytics-primary', currentStep === analyticsStep);
                     nextButton.innerHTML = currentStep === 0
                         ? 'Begin Setup <i class="fas fa-arrow-right"></i>'
+                        : currentStep === analyticsStep
+                            ? 'Allow analytics <i class="fas fa-chart-line"></i>'
                         : currentStep === steps.length - 1
                             ? 'Open Indy Schedule <i class="fas fa-check"></i>'
                             : 'Continue <i class="fas fa-arrow-right"></i>';
@@ -845,10 +871,22 @@
                         lunchChoices[0]?.focus();
                         return;
                     }
+                    if (currentStep === analyticsStep) {
+                        window.setAnalyticsConsent?.(true);
+                        currentStep += 1;
+                        renderStep();
+                        return;
+                    }
                     if (currentStep === steps.length - 1) {
                         finishOnboarding();
                         return;
                     }
+                    currentStep += 1;
+                    renderStep();
+                });
+
+                analyticsDeclineButton?.addEventListener('click', () => {
+                    window.setAnalyticsConsent?.(false);
                     currentStep += 1;
                     renderStep();
                 });

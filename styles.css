@@ -973,6 +973,16 @@ body.onboarding-open {
 }
 .onboarding-hint i { margin-right: 5px; color: #C4AD62; }
 
+.onboarding-privacy-hint a {
+    color: #e4d080;
+    font-weight: 750;
+    text-underline-offset: 3px;
+}
+
+.onboarding-analytics-card i {
+    font-size: 17px;
+}
+
 .onboarding-ready-mark {
     width: 68px;
     height: 68px;
@@ -1007,6 +1017,43 @@ body.onboarding-open {
     font-weight: 800;
 }
 
+.onboarding-forward-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-left: auto;
+}
+
+.onboarding-analytics-decline {
+    min-width: 0 !important;
+    color: rgba(244,247,255,0.72) !important;
+    background: transparent !important;
+    border-color: rgba(255,255,255,0.14) !important;
+}
+
+.onboarding-analytics-decline:hover {
+    color: #fff !important;
+    border-color: rgba(255,255,255,0.3) !important;
+    background: rgba(255,255,255,0.06) !important;
+}
+
+.onboarding-analytics-decline[hidden] {
+    display: none !important;
+}
+
+#onboarding-next.onboarding-analytics-primary {
+    color: #090d25 !important;
+    background: linear-gradient(135deg, #e3cf80, #b99d42) !important;
+    border-color: rgba(255,255,255,0.28) !important;
+    box-shadow: 0 8px 24px rgba(196,173,98,0.28), 0 0 0 1px rgba(255,255,255,0.18) inset !important;
+}
+
+#onboarding-next.onboarding-analytics-primary:hover {
+    background: linear-gradient(135deg, #f0dc8b, #c9ac4c) !important;
+    box-shadow: 0 12px 28px rgba(196,173,98,0.36), 0 0 0 1px rgba(255,255,255,0.24) inset !important;
+}
+
 .onboarding-back {
     color: rgba(244,247,255,0.75) !important;
     border-color: rgba(255,255,255,0.12) !important;
@@ -1027,7 +1074,10 @@ body.onboarding-open {
     .lunch-choice { min-height: 82px; }
     .onboarding-step-count { font-size: 10px; padding: 6px 9px; }
     .onboarding-brand { display: none; }
+    .onboarding-actions { align-items: flex-start; }
     .onboarding-actions .btn { min-width: 112px; padding: 10px 15px; }
+    .onboarding-forward-actions { flex: 1; flex-direction: column-reverse; align-items: stretch; }
+    .onboarding-forward-actions .btn { width: 100%; }
 }
 .update-notice-actions .btn { background: transparent; border: 1px solid rgba(244,237,226,0.08); color: #E8EEF7; }
 .update-notice-actions.onboarding-actions .btn-primary {

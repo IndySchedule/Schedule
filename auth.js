@@ -46,14 +46,12 @@ function updateAnalyticsConsentUI() {
     const consent = getAnalyticsConsent();
     const toggle = document.getElementById('analytics-consent-toggle');
     const status = document.getElementById('analytics-consent-status');
-    const banner = document.getElementById('analytics-consent-banner');
     if (toggle) toggle.checked = consent === 'granted';
     if (status) {
         status.textContent = consent === 'granted'
             ? 'Visitor analytics are enabled.'
             : 'Visitor analytics are disabled.';
     }
-    if (banner) banner.hidden = consent !== null;
 }
 
 function setAnalyticsConsent(granted) {
@@ -80,13 +78,14 @@ window.trackAnalyticsEvent = function(eventName, parameters = {}) {
 };
 
 function initializeAnalyticsConsentUI() {
-    document.getElementById('analytics-consent-accept')?.addEventListener('click', () => setAnalyticsConsent(true));
-    document.getElementById('analytics-consent-decline')?.addEventListener('click', () => setAnalyticsConsent(false));
     document.getElementById('analytics-consent-toggle')?.addEventListener('change', (event) => {
         setAnalyticsConsent(event.target.checked);
     });
     updateAnalyticsConsentUI();
 }
+
+window.getAnalyticsConsent = getAnalyticsConsent;
+window.setAnalyticsConsent = setAnalyticsConsent;
 
 const TOAST_ICON_KEY = 'toastIconEnabled';
 const BREAD_WORDS = ['bread', 'bagel', 'toast', 'roll', 'waffle', 'pancake', 'brioche', 'wheat', 'rye', 'sourdough', 'bun', 'ciabatta', 'focaccia', 'pita', 'naan', 'baguette', 'flatbread', 'chapati', 'cornbread', 'pain', 'pumpernickel', 'monkey bread', 'pane', 'zopf', 'sweetroll', 'muffin', 'crumpet', 'babka', 'crostini', 'rye bread', 'tortilla', 'pain de mie', 'panettone', 'stollen', 'english muffin', 'breadstick', 'lavash', 'kettle bread', 'soda bread', 'pullman loaf', 'cinnamon roll', 'garlic bread', 'baguette viennoise', 'hardroll', 'soft roll', 'dinner roll', 'pretzel roll', 'coburg', 'rusk', 'tiger bread', 'naan bread', 'challah', 'bretzel', 'polenta bread', 'salt rising bread', 'pumpkin bread', 'beer bread', 'fry bread', 'sourdough baguette', 'brioche loaf', 'whole grain bread', 'gluten-free bread', 'multigrain bread', 'sweet roll', 'bunny bread', 'french toast', 'kvass bread', 'baker\'s bread', 'caraway bread', 'pane Siciliano', 'romano bread', 'cereal bread', 'bamboo bread', 'Miche', 'cinnamon swirl bread', 'oatmeal bread', 'spelt bread', 'seeded bread', 'lavender bread', 'tzatziki bread', 'toasted rye', 'Nordic flatbread', 'pepper bread', 'bakers'];
