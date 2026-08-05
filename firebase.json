@@ -1,0 +1,24 @@
+{
+  "hosting": {
+    "target": "production",
+    "public": ".",
+    "ignore": [
+      "firebase.json",
+      ".firebaserc",
+      ".firebase/**",
+      ".git/**",
+      ".github/**",
+      ".gitignore",
+      ".DS_Store",
+      "**/.DS_Store",
+      "**/.*",
+      "**/node_modules/**",
+      "package.json",
+      "package-lock.json",
+      "README.md",
+      "LICENSE",
+      "tests/**",
+      "tools/**"
+    ]
+  }
+}

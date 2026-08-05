@@ -1,0 +1,15 @@
+{
+  "projects": {
+    "default": "indyschedule-1"
+  },
+  "targets": {
+    "indyschedule-1": {
+      "hosting": {
+        "production": [
+          "indy-schedule"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}
