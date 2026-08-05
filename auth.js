@@ -1,12 +1,12 @@
 // Remove imports and use global Firebase object
 const firebaseConfig = {
-    apiKey: "AIzaSyBC0zw4OfSU7ft9D_cdx1OG1cedAFemZgc",
-    authDomain: "shiloh-schedule.firebaseapp.com",
-    projectId: "shiloh-schedule",
-    storageBucket: "shiloh-schedule.firebasestorage.app",
-    messagingSenderId: "161561389660",
-    appId: "1:161561389660:web:baed586fb33c4961aed499",
-    measurementId: "G-YS6FHHEGFZ"
+    apiKey: "AIzaSyDRa4lGMmm8sqxLpeGARGHjKRCxZ0ODUJs",
+    authDomain: "indyschedule-1.firebaseapp.com",
+    projectId: "indyschedule-1",
+    storageBucket: "indyschedule-1.firebasestorage.app",
+    messagingSenderId: "615676548709",
+    appId: "1:615676548709:web:6de8ebb4b7cf469af5188c",
+    measurementId: "G-Q8H5WCQK3T"
 };
 
 const TOAST_ICON_KEY = 'toastIconEnabled';
