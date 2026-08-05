@@ -271,24 +271,67 @@ function formatCalendarEventTime(event) {
         : `${formatter.format(start)}–${formatter.format(end)}`;
 }
 
+function updateTodayEventBadge(count) {
+    const badge = document.getElementById('today-event-badge');
+    const toggle = document.getElementById('today-toggle');
+    if (!badge || !toggle) return;
+    const safeCount = Math.max(0, Number(count) || 0);
+    badge.hidden = safeCount === 0;
+    badge.textContent = safeCount > 9 ? '9+' : String(safeCount);
+    badge.setAttribute('aria-label', `${safeCount} event${safeCount === 1 ? '' : 's'} today`);
+    toggle.classList.toggle('has-events', safeCount > 0);
+}
+
+function updateTodayCalendarFreshness(data, state = 'ready') {
+    const status = document.getElementById('today-data-status');
+    if (!status) return;
+    status.dataset.state = state;
+    if (state === 'error' || !data?.generatedAt) {
+        status.textContent = 'Calendar unavailable · Use the official links above.';
+        return;
+    }
+    const generatedAt = new Date(data.generatedAt);
+    if (Number.isNaN(generatedAt.getTime())) {
+        status.textContent = 'Calendar sync time unavailable.';
+        return;
+    }
+    const ageHours = Math.max(0, (Date.now() - generatedAt.getTime()) / 3600000);
+    const formatted = new Intl.DateTimeFormat('en-US', {
+        timeZone: 'America/Chicago',
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit'
+    }).format(generatedAt);
+    const outdated = ageHours > 48;
+    status.dataset.state = outdated ? 'outdated' : 'ready';
+    status.textContent = `${outdated ? 'Calendar may be outdated' : 'Calendar updated'} · ${formatted}`;
+}
+
 function renderIhsCalendarEvents(dateKey) {
     const container = document.getElementById('today-calendar-events');
     if (!container || renderedCalendarDateKey === dateKey) return;
     renderedCalendarDateKey = dateKey;
+    container.dataset.state = 'loading';
     container.textContent = 'Loading events…';
+    updateTodayEventBadge(0);
 
     loadIhsCalendarData().then((data) => {
         const todaysEvents = data.events
-            .filter((event) => Array.isArray(event.days) && event.days.includes(dateKey))
-            .slice(0, 4);
+            .filter((event) => Array.isArray(event.days) && event.days.includes(dateKey));
+        const visibleEvents = todaysEvents.slice(0, 4);
+        updateTodayEventBadge(todaysEvents.length);
+        updateTodayCalendarFreshness(data);
         container.replaceChildren();
         if (!todaysEvents.length) {
+            container.dataset.state = 'empty';
             container.textContent = 'No public IHS events are listed for today.';
             return;
         }
 
+        container.dataset.state = 'ready';
         const list = document.createElement('ul');
-        todaysEvents.forEach((event) => {
+        visibleEvents.forEach((event) => {
             const item = document.createElement('li');
             const details = document.createElement('div');
             const title = document.createElement('strong');
@@ -305,7 +348,19 @@ function renderIhsCalendarEvents(dateKey) {
             list.appendChild(item);
         });
         container.appendChild(list);
+        if (todaysEvents.length > visibleEvents.length) {
+            const more = document.createElement('a');
+            more.className = 'today-events-more';
+            more.href = IHS_CALENDAR_PAGE_URL;
+            more.target = '_blank';
+            more.rel = 'noopener';
+            more.textContent = `View ${todaysEvents.length - visibleEvents.length} more on the official calendar`;
+            container.appendChild(more);
+        }
     }).catch(() => {
+        container.dataset.state = 'error';
+        updateTodayEventBadge(0);
+        updateTodayCalendarFreshness(null, 'error');
         container.replaceChildren();
         const message = document.createElement('span');
         const link = document.createElement('a');
@@ -368,8 +423,25 @@ function updateTodayAtIndy(now = new Date()) {
     else if (!currentPeriod && firstStart != null && currentSeconds < firstStart) currentLabel = 'Before school';
     else if (!currentPeriod && lastEnd != null && currentSeconds >= lastEnd) currentLabel = 'School finished';
     else if (!currentPeriod) currentLabel = 'Between classes';
+    let nextLabel = getTimelinePeriodLabel(nextPeriod);
+    if (!nextPeriod) {
+        const nextInstructionalKey = calendar.getNextInstructionalDateKey(dateKey);
+        if (nextInstructionalKey) {
+            const nextScheduleKey = calendar.getScheduleKey(nextInstructionalKey);
+            const nextSchedule = calendar.SCHEDULES[nextScheduleKey] || [];
+            const nextFirst = nextSchedule.find((period) => period.name === 'Period 1') || nextSchedule[0];
+            if (nextFirst) {
+                const nextEpoch = calendar.epochForSchoolTime(nextInstructionalKey, nextFirst.start);
+                const weekday = new Intl.DateTimeFormat('en-US', {
+                    timeZone: calendar.TIME_ZONE,
+                    weekday: 'short'
+                }).format(new Date(nextEpoch));
+                nextLabel = `${getTimelinePeriodLabel(nextFirst)} · ${weekday} ${formatTime12(nextFirst.start)}`;
+            }
+        }
+    }
     setText('today-current', currentLabel);
-    setText('today-next', getTimelinePeriodLabel(nextPeriod));
+    setText('today-next', nextLabel);
 
     const lunch = calendar.getLunchPeriod(scheduleKey, getLunchWave());
     setText('today-lunch-time', dayType !== 'noSchool' && lunch
@@ -391,6 +463,7 @@ function updateTodayAtIndy(now = new Date()) {
     const menuContainer = document.getElementById('today-lunch-menu');
     if (menuContainer) {
         menuContainer.replaceChildren();
+        menuContainer.dataset.state = 'ready';
         const menuService = window.IndyLunchMenu;
         const items = menuService?.getMenu(dateKey);
         if (dayType === 'noSchool') {
@@ -412,6 +485,7 @@ function updateTodayAtIndy(now = new Date()) {
                 menuContainer.appendChild(dailyOptions);
             }
         } else {
+            menuContainer.dataset.state = 'empty';
             const message = document.createElement('span');
             message.textContent = 'A menu has not been uploaded for this date. ';
             const link = document.createElement('a');
@@ -425,17 +499,41 @@ function updateTodayAtIndy(now = new Date()) {
 
     const tomorrowKey = calendar.addDays(dateKey, 1);
     const tomorrowType = calendar.getDayType(tomorrowKey);
-    if (tomorrowType === 'noSchool') {
-        setText('tomorrow-summary', 'No school');
+    const previewKey = tomorrowType === 'noSchool'
+        ? calendar.getNextInstructionalDateKey(dateKey)
+        : tomorrowKey;
+    if (!previewKey) {
+        setText('tomorrow-label', 'Coming up');
+        setText('tomorrow-summary', 'No upcoming school day');
     } else {
-        const tomorrowScheduleKey = calendar.getScheduleKey(tomorrowKey);
-        const tomorrowSchedule = calendar.SCHEDULES[tomorrowScheduleKey] || [];
-        const tomorrowFirst = tomorrowSchedule.find((period) => period.name === 'Period 1');
-        const tomorrowName = scheduleLabels[tomorrowScheduleKey] || 'Regular';
-        setText('tomorrow-summary', tomorrowFirst
-            ? `${tomorrowName} · First bell ${formatTime12(tomorrowFirst.start)}`
-            : tomorrowName);
+        const previewScheduleKey = calendar.getScheduleKey(previewKey);
+        const previewSchedule = calendar.SCHEDULES[previewScheduleKey] || [];
+        const previewFirst = previewSchedule.find((period) => period.name === 'Period 1') || previewSchedule[0];
+        const previewName = scheduleLabels[previewScheduleKey] || 'Regular';
+        const previewEpoch = previewFirst
+            ? calendar.epochForSchoolTime(previewKey, previewFirst.start)
+            : null;
+        const previewDay = previewEpoch ? new Intl.DateTimeFormat('en-US', {
+            timeZone: calendar.TIME_ZONE,
+            weekday: 'long'
+        }).format(new Date(previewEpoch)) : '';
+        setText('tomorrow-label', previewKey === tomorrowKey ? 'Tomorrow' : 'Next school day');
+        setText('tomorrow-summary', previewFirst
+            ? `${previewDay} · ${previewName} · First bell ${formatTime12(previewFirst.start)}`
+            : `${previewDay} · ${previewName}`);
     }
+}
+
+function positionTodayPopup() {
+    const card = document.getElementById('today-at-indy');
+    const toggle = document.getElementById('today-toggle');
+    if (!card || !toggle) return;
+    const toggleRect = toggle.getBoundingClientRect();
+    const mobile = window.innerWidth <= 700;
+    const top = Math.max(10, toggleRect.bottom + 10);
+    const right = mobile ? 12 : Math.max(12, window.innerWidth - toggleRect.right);
+    card.style.setProperty('--today-popover-top', `${top}px`);
+    card.style.setProperty('--today-popover-right', `${right}px`);
 }
 
 function setTodayPopupOpen(open) {
@@ -446,16 +544,21 @@ function setTodayPopupOpen(open) {
 
     const shouldOpen = !!open;
     const wasOpen = !card.hidden;
+    // Resolve the anchor before revealing the dialog so its first painted frame
+    // starts beneath the button instead of at the CSS fallback position.
+    if (shouldOpen) positionTodayPopup();
     card.hidden = !shouldOpen;
     backdrop.hidden = !shouldOpen;
     card.classList.toggle('open', shouldOpen);
     document.body.classList.toggle('today-popup-open', shouldOpen);
+    toggle.classList.toggle('is-open', shouldOpen);
     toggle.setAttribute('aria-expanded', shouldOpen ? 'true' : 'false');
+    toggle.setAttribute('aria-label', shouldOpen ? 'Close Today at Indy' : 'Open Today at Indy');
     if (shouldOpen) {
         updateTodayAtIndy();
         if (!wasOpen) window.trackAnalyticsEvent?.('today_at_indy_open');
         document.getElementById('today-card-close')?.focus();
-    } else {
+    } else if (wasOpen) {
         toggle.focus();
     }
 }
@@ -470,12 +573,33 @@ function initializeTodayPopup() {
     // backdrop-filter stacking context, which would blur the dialog itself.
     if (card?.parentElement !== document.body) document.body.appendChild(card);
     toggle.dataset.bound = 'true';
-    toggle.addEventListener('click', () => setTodayPopupOpen(true));
+    toggle.addEventListener('click', () => setTodayPopupOpen(card?.hidden !== false));
     close?.addEventListener('click', () => setTodayPopupOpen(false));
     backdrop?.addEventListener('click', () => setTodayPopupOpen(false));
+    window.addEventListener('resize', positionTodayPopup);
     document.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape' && !document.getElementById('today-at-indy')?.hidden) {
+        const activeCard = document.getElementById('today-at-indy');
+        if (event.key === 'Escape' && !activeCard?.hidden) {
             setTodayPopupOpen(false);
+            return;
+        }
+        if (event.key === 'Tab' && !activeCard?.hidden) {
+            const focusable = Array.from(activeCard.querySelectorAll('button, a[href], [tabindex]:not([tabindex="-1"])'))
+                .filter((element) => !element.hidden && element.getClientRects().length);
+            if (!focusable.length) {
+                event.preventDefault();
+                activeCard.focus();
+                return;
+            }
+            const first = focusable[0];
+            const last = focusable[focusable.length - 1];
+            if (event.shiftKey && document.activeElement === first) {
+                event.preventDefault();
+                last.focus();
+            } else if (!event.shiftKey && document.activeElement === last) {
+                event.preventDefault();
+                first.focus();
+            }
         }
     });
 }
@@ -2220,12 +2344,23 @@ function updateCountdowns() {
     const captionElement = document.getElementById('countdown-caption');
     const periodWindowElement = document.getElementById('period-window');
     const nextSummaryElement = document.getElementById('next-period-summary');
-    const setHeroText = ({ context, heading, caption, periodWindow, nextSummary }) => {
+    const heroElement = timerElement.closest('.current-period');
+    const scheduleHeadingElement = document.getElementById('white-box-heading');
+    const scheduleSummaryElement = document.getElementById('schedule-day-summary');
+    if (dayType !== 'noSchool' && scheduleHeadingElement) {
+        scheduleHeadingElement.textContent = 'Today’s Schedule';
+    }
+    const setHeroText = ({ context, heading, caption, periodWindow, nextSummary, state = 'idle' }) => {
+        if (heroElement) heroElement.dataset.state = state;
         if (contextElement) contextElement.textContent = context;
         headingElement.textContent = heading;
         if (captionElement) captionElement.textContent = caption;
         if (periodWindowElement) periodWindowElement.textContent = periodWindow;
         if (nextSummaryElement) nextSummaryElement.textContent = nextSummary;
+    };
+    const setTimerText = (text) => {
+        timerElement.textContent = text;
+        timerElement.classList.toggle('is-long-duration', /^\d+d\s/.test(text));
     };
 
     const displayNames = {
@@ -2240,9 +2375,13 @@ function updateCountdowns() {
     };
     const formatDuration = (totalSeconds) => {
         const safe = Math.max(0, totalSeconds);
+        const days = Math.floor(safe / 86400);
         const hours = Math.floor(safe / 3600);
         const minutes = Math.floor((safe % 3600) / 60);
         const seconds = safe % 60;
+        if (days > 0) {
+            return `${days}d ${Math.floor((safe % 86400) / 3600)}h ${minutes}m`;
+        }
         return hours > 0
             ? `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
             : `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
@@ -2270,9 +2409,10 @@ function updateCountdowns() {
             heading: periodName,
             caption: 'remaining',
             periodWindow: `${formatTime12(currentPeriod.start)}–${formatTime12(currentPeriod.end)}`,
-            nextSummary: nextText
+            nextSummary: nextText,
+            state: 'in-class'
         });
-        timerElement.textContent = timeText;
+        setTimerText(timeText);
         updateTabTitle(periodName, timeText);
         return;
     }
@@ -2294,15 +2434,17 @@ function updateCountdowns() {
             heading: 'Between Classes',
             caption: `until ${periodName}`,
             periodWindow: `${formatTime12(previousPeriod.end)}–${formatTime12(upcomingPeriod.start)}`,
-            nextSummary: `Next: ${periodName} at ${formatTime12(upcomingPeriod.start)}`
+            nextSummary: `Next: ${periodName} at ${formatTime12(upcomingPeriod.start)}`,
+            state: 'between-classes'
         } : {
             context: headerName,
             heading: 'School Starts Soon',
             caption: `until ${periodName}`,
             periodWindow: `First bell at ${formatTime12(upcomingPeriod.start)}`,
-            nextSummary: `${periodName} begins the day`
+            nextSummary: `${periodName} begins the day`,
+            state: 'before-school'
         });
-        timerElement.textContent = timeText;
+        setTimerText(timeText);
         updateTabTitle(isPassingPeriod ? 'Between Classes' : 'School Starts Soon', timeText);
         return;
     }
@@ -2315,9 +2457,10 @@ function updateCountdowns() {
             heading: 'School Year Complete',
             caption: 'enjoy your break',
             periodWindow: '—',
-            nextSummary: 'No upcoming school day'
+            nextSummary: 'No upcoming school day',
+            state: 'school-year-complete'
         });
-        timerElement.textContent = '00:00';
+        setTimerText('00:00');
         updateTabTitle('School Year Complete', '00:00');
         return;
     }
@@ -2329,22 +2472,38 @@ function updateCountdowns() {
     const secondsLeft = Math.floor((targetEpoch - now.getTime()) / 1000);
     const timeText = formatDuration(secondsLeft);
     const nextLabel = displayPeriodName(period1);
+    const nextDayName = new Intl.DateTimeFormat('en-US', {
+        timeZone: calendar.TIME_ZONE || 'America/Chicago',
+        weekday: 'long'
+    }).format(new Date(targetEpoch));
+    const nextDayLine = `${nextDayName} at ${formatTime12(period1.start)}`;
 
     const nextScheduleLabel = displayNames[nextScheduleName] || 'Regular Schedule';
+    if (dayType === 'noSchool') {
+        if (currentScheduleName !== nextScheduleName) {
+            currentScheduleName = nextScheduleName;
+            currentSchedule = schedules[nextScheduleName] || schedules.normal;
+            updateScheduleDisplay();
+        }
+        if (scheduleHeadingElement) scheduleHeadingElement.textContent = 'Next School Day';
+        if (scheduleSummaryElement) scheduleSummaryElement.textContent = `${nextDayName} · ${nextScheduleLabel}`;
+    }
     setHeroText(dayType === 'noSchool' ? {
         context: 'No School Today',
-        heading: 'Next School Day',
-        caption: `until ${nextLabel}`,
-        periodWindow: `Starts ${formatTime12(period1.start)}`,
-        nextSummary: nextScheduleLabel
+        heading: `Next class: ${nextLabel}`,
+        caption: nextDayLine,
+        periodWindow: '',
+        nextSummary: '',
+        state: 'no-school'
     } : {
         context: headerName,
         heading: 'School’s Out!',
         caption: 'until the next school day',
         periodWindow: `Dismissed ${formatTime12(timelineSchedule[timelineSchedule.length - 1]?.end)}`,
-        nextSummary: `${nextScheduleLabel} · ${formatTime12(period1.start)}`
+        nextSummary: `Next: ${nextScheduleLabel} · ${nextDayLine}`,
+        state: 'after-school'
     });
-    timerElement.textContent = timeText;
+    setTimerText(timeText);
     updateTabTitle(dayType === 'noSchool' ? 'No School' : 'Free', timeText);
 }
 

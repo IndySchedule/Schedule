@@ -4437,34 +4437,28 @@ body.light-mode {
    overrides earlier conflicting rules.
 ------------------------------------------------------------------ */
 
-/* Active nav pill: navy -> gold gradient */
+/* Active nav pill: follow the currently selected palette. */
 #settings-sidebar .settings-nav .nav-item.active,
 #settings-sidebar .settings-nav .nav-item.active.nav-item,
 #settings-sidebar .nav-item.active {
-    /* Extend gold to the very edge to avoid a sliver of navy at the far right */
-    background: linear-gradient(
-        90deg,
-        #000035ff 0%,
-        #0c1d48 35%,
-        #1b2455 55%,
-        #b08f3a 82%,
-        #c4ad62 100%
-    ) !important;
-    color: #F4EDE2 !important;
+    background:
+        linear-gradient(100deg, rgba(0, 0, 18, 0.48), rgba(0, 0, 18, 0.28)),
+        var(--page-gradient) !important;
+    color: #FFFFFF !important;
     border: none !important;
     background-clip: padding-box !important;
     -webkit-background-clip: padding-box !important;
-    box-shadow: 0 10px 24px rgba(11,12,25,0.35) !important;
-    transform: translateY(-1px) !important;
-    transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.3s ease;
-    animation: pillFloat 2.4s ease-in-out infinite alternate;
+    box-shadow: 0 8px 20px rgba(var(--theme-primary-rgb), 0.24) !important;
+    transform: none !important;
+    transition: box-shadow 0.18s ease, background 0.3s ease;
+    animation: none !important;
 }
 
-/* Ensure icon/text inside active pill are readable (gold/navy theme) */
+/* The dark overlay keeps these readable across both light and dark palettes. */
 #settings-sidebar .settings-nav .nav-item.active i,
 #settings-sidebar .settings-nav .nav-item.active .nav-label {
-    color: #F4EDE2 !important;
-    opacity: 0.8;
+    color: #FFFFFF !important;
+    opacity: 1;
 }
 
 /* Remove any left-side accent bar (white line) that older rules added */
@@ -4479,12 +4473,7 @@ body.light-mode {
 
 /* Also remove any inset left-border visual from less-specific rules */
 #settings-sidebar .settings-nav .nav-item.active {
-    box-shadow: 0 10px 24px rgba(11,12,25,0.35) !important;
-}
-
-@keyframes pillFloat {
-    0% { transform: translateY(-1px); box-shadow: 0 10px 24px rgba(11,12,25,0.35); }
-    100% { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(11,12,25,0.32); }
+    box-shadow: 0 8px 20px rgba(var(--theme-primary-rgb), 0.24) !important;
 }
 
 /* ------------------------------------------------------------------
@@ -4829,10 +4818,6 @@ input[type="range"]::-moz-range-thumb { background: var(--teal) !important; }
     border-radius: 12px !important;
 }
 
-#settings-sidebar #schedule-panel,
-#settings-sidebar #schedule-panel * {
-    color: var(--text-primary) !important;
-}
 #settings-sidebar #schedule-panel .dropdown-toggle,
 #settings-sidebar #schedule-panel .dropdown-content {
     background: var(--card-bg) !important;

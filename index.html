@@ -123,8 +123,10 @@
                     <div id="sign-in-button" class="dashboard-account is-signed-out">
                         <button type="button" class="account-trigger" aria-label="Sign in"><span class="account-label">Sign In</span></button>
                     </div>
-                    <button type="button" class="today-toggle" id="today-toggle" aria-controls="today-at-indy" aria-expanded="false">
-                        <i class="fas fa-calendar-day" aria-hidden="true"></i><span>Today</span>
+                    <button type="button" class="today-toggle" id="today-toggle" aria-controls="today-at-indy" aria-expanded="false" aria-label="Open Today at Indy">
+                        <i class="fas fa-calendar-day" aria-hidden="true"></i>
+                        <span class="today-toggle-label"><span class="today-toggle-wide">Today at Indy</span><span class="today-toggle-short">Today</span></span>
+                        <span class="today-event-badge" id="today-event-badge" aria-label="0 events today" hidden>0</span>
                     </button>
                     <button id="settings-button" class="settings-button dashboard-icon-button" aria-label="Open Settings">
                         <i class="fas fa-cog"></i>
@@ -132,44 +134,59 @@
                 </div>
             </div>
             <div class="main-content">
-            <div class="today-card" id="today-at-indy" role="dialog" aria-modal="true" aria-labelledby="today-at-indy-title" hidden>
+            <div class="today-card" id="today-at-indy" role="dialog" aria-modal="true" aria-labelledby="today-at-indy-title" hidden tabindex="-1">
                 <div class="today-card-header">
                     <div>
                         <span class="today-eyebrow">YOUR SCHOOL DAY</span>
                         <h1 id="today-at-indy-title">Today at Indy</h1>
+                        <p class="today-header-meta"><span id="today-date">—</span><span aria-hidden="true">·</span><strong id="today-schedule">—</strong></p>
                     </div>
                     <div class="today-card-actions">
-                        <img src="indy_schedule_logo_sizes/indy-schedule-logo-128x128.png" alt="" class="today-card-logo brand-logo-art">
                         <button type="button" class="today-card-close" id="today-card-close" aria-label="Close Today at Indy"><i class="fas fa-times" aria-hidden="true"></i></button>
                     </div>
                 </div>
-                <p class="today-disclaimer"><i class="fas fa-circle-exclamation" aria-hidden="true"></i> This is an unofficial page for Independence High School and may contain errors. Verify important information with Indy or WCS.</p>
-                <div class="today-status-row">
-                    <div><span>Date</span><strong id="today-date">—</strong></div>
-                    <div><span>Schedule</span><strong id="today-schedule">—</strong></div>
-                    <div><span>Dismissal</span><strong id="today-dismissal">—</strong></div>
-                </div>
-                <div class="today-now-grid">
-                    <div><span>Current</span><strong id="today-current">—</strong></div>
-                    <div><span>Next</span><strong id="today-next">—</strong></div>
-                </div>
-                <p class="today-notice" id="today-notice" aria-live="polite"><i class="fas fa-bell" aria-hidden="true"></i><span>Loading today’s details…</span></p>
-                <div class="today-events">
-                    <div class="today-section-title">
-                        <i class="fas fa-calendar-check" aria-hidden="true"></i>
-                        <span>Today’s events</span>
-                        <a href="https://ihs.wcs.edu/calendar" target="_blank" rel="noopener">Official calendar</a>
+
+                <section class="today-status-card" aria-labelledby="today-status-title">
+                    <div class="today-status-heading">
+                        <div><i class="fas fa-bell" aria-hidden="true"></i><span>School status</span></div>
+                        <span class="today-dismissal"><span>Dismissal</span><strong id="today-dismissal">—</strong></span>
                     </div>
-                    <div id="today-calendar-events" class="today-events-list" aria-live="polite">Loading events…</div>
+                    <p class="today-notice" id="today-notice" aria-live="polite"><span id="today-status-title">Loading today’s details…</span></p>
+                    <div class="today-now-grid">
+                        <div><span>Current</span><strong id="today-current">—</strong></div>
+                        <div><span>Next</span><strong id="today-next">—</strong></div>
+                    </div>
+                </section>
+
+                <div class="today-info-grid">
+                    <section class="today-events today-info-card">
+                        <div class="today-section-title">
+                            <i class="fas fa-calendar-check" aria-hidden="true"></i>
+                            <span>Today’s events</span>
+                            <a href="https://ihs.wcs.edu/calendar" target="_blank" rel="noopener">Official calendar</a>
+                        </div>
+                        <div id="today-calendar-events" class="today-events-list" data-state="loading" aria-live="polite">Loading events…</div>
+                    </section>
+                    <section class="today-lunch today-info-card">
+                        <div class="today-section-title">
+                            <i class="fas fa-utensils" aria-hidden="true"></i>
+                            <span>Today’s lunch</span>
+                            <small id="today-lunch-time"></small>
+                            <a href="https://www.wcs.edu/about-us/menus-nutrition" target="_blank" rel="noopener">Official menu</a>
+                        </div>
+                        <div id="today-lunch-menu" class="today-lunch-menu" data-state="loading">Loading menu…</div>
+                    </section>
                 </div>
-                <div class="today-lunch">
-                    <div class="today-section-title"><i class="fas fa-utensils" aria-hidden="true"></i><span>Today’s lunch</span><small id="today-lunch-time"></small></div>
-                    <div id="today-lunch-menu" class="today-lunch-menu">Loading menu…</div>
-                </div>
+
                 <div class="tomorrow-preview">
                     <i class="fas fa-forward" aria-hidden="true"></i>
-                    <div><span>Tomorrow</span><strong id="tomorrow-summary">—</strong></div>
+                    <div><span id="tomorrow-label">Tomorrow</span><strong id="tomorrow-summary">—</strong></div>
                 </div>
+
+                <footer class="today-card-footer">
+                    <span class="today-disclaimer"><i class="fas fa-circle-exclamation" aria-hidden="true"></i> An unofficial page for Independence High School · Information may contain errors.</span>
+                    <span class="today-data-status" id="today-data-status">Checking calendar freshness…</span>
+                </footer>
             </div>
             <div class="current-period">
                 <span class="schedule-context" id="schedule-context">Regular Schedule</span>
@@ -196,15 +213,10 @@
         <div class="settings-header">
             <div class="header-left">
                 <img src="indy_schedule_logo_sizes/indy-schedule-logo-128x128.png" alt="Indy Schedule logo" class="settings-logo brand-logo-art">
-                <div class="settings-wordmark">
-                    <strong>Indy Schedule</strong>
-                    <span>Preferences</span>
+                <div class="settings-heading">
+                    <h2 class="settings-title">Settings</h2>
+                    <p>Customize your Indy experience</p>
                 </div>
-            </div>
-
-            <div class="settings-heading">
-                <h2 class="settings-title">Settings</h2>
-                <p>Customize your Indy experience</p>
             </div>
 
             <button class="close-settings" aria-label="Close Settings">
@@ -247,11 +259,10 @@
                         <div><span>Design</span><h1>Appearance</h1><p>Choose how Indy Schedule looks and feels across the entire dashboard.</p></div>
                     </div>
                     <div class="settings-group gradient-settings-card palette-settings-card">
-                        <div class="card-header">
-                            <div>
-                                <h3><i class="fas fa-palette"></i> Color Palette</h3>
-                                <p class="settings-card-description">Recolor the complete dashboard with a preset or create your own four-color palette.</p>
-                            </div>
+                        <div class="card-header settings-section-heading">
+                            <div class="settings-section-icon"><i class="fas fa-palette" aria-hidden="true"></i></div>
+                            <div><h3>Color palette</h3><p class="settings-card-description">Recolor the complete dashboard with a preset or create your own four-color palette.</p></div>
+                            <span class="settings-status-pill"><i class="fas fa-eye" aria-hidden="true"></i> Live preview</span>
                         </div>
                         <div class="palette-grid" id="palette-grid" role="radiogroup" aria-label="Color palette">
                             <div class="palette-grid-label">Featured</div>
@@ -367,24 +378,49 @@
                             </div>
                         </div>
                     </div>
-                    <div class="settings-group">
-                        <h3><i class="fas fa-arrows-alt"></i> Progress Bar</h3>
-                        <div class="switch-container">
-                            <div class="settings-control-copy"><label class="switch-label" for="progress-bar">Show progress bar</label><p>Display a visual indicator for the current class period.</p></div>
-                            <label class="switch">
-                                <input type="checkbox" id="progress-bar" onchange="toggleProgressBar()">
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-                        <div id="progress-bar-settings" hidden>
-                            <div>
-                                <label for="progress-bar-color">Bar Color:</label>
-                                <input type="color" id="progress-bar-color" value="#CEC57E" onchange="updateProgressBarStyle()">
+                    <div class="appearance-tools-grid">
+                        <div class="settings-group appearance-control-card">
+                            <div class="settings-section-heading compact">
+                                <div class="settings-section-icon"><i class="fas fa-chart-simple" aria-hidden="true"></i></div>
+                                <div><h3>Progress indicator</h3><p>Show how much of the current class has elapsed.</p></div>
                             </div>
-                            <div class="slider-row">
-                                <label class="slider-label" for="progress-bar-opacity">Opacity:</label>
-                                <input type="range" id="progress-bar-opacity" min="0" max="100" value="20" step="5" onchange="updateProgressBarStyle()">
-                                <span class="range-value slider-value">20%</span>
+                            <div class="switch-container settings-inset-row">
+                                <div class="settings-control-copy"><label class="switch-label" for="progress-bar">Show progress bar</label><p>Display a visual indicator for the current class period.</p></div>
+                                <label class="switch">
+                                    <input type="checkbox" id="progress-bar" onchange="toggleProgressBar()">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div id="progress-bar-settings" hidden>
+                                <div>
+                                    <label for="progress-bar-color">Bar Color:</label>
+                                    <input type="color" id="progress-bar-color" value="#CEC57E" onchange="updateProgressBarStyle()">
+                                </div>
+                                <div class="slider-row">
+                                    <label class="slider-label" for="progress-bar-opacity">Opacity:</label>
+                                    <input type="range" id="progress-bar-opacity" min="0" max="100" value="20" step="5" onchange="updateProgressBarStyle()">
+                                    <span class="range-value slider-value">20%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="settings-group appearance-control-card">
+                            <div class="settings-section-heading compact">
+                                <div class="settings-section-icon"><i class="fas fa-font" aria-hidden="true"></i></div>
+                                <div><h3>Typography</h3><p>Choose the typeface used throughout the site.</p></div>
+                            </div>
+                            <div class="font-selector settings-inset-row">
+                                <div class="settings-control-copy"><label for="font-family">Interface font</label><p>Applied to the dashboard and Settings.</p></div>
+                                <select id="font-family" onchange="updateFont()">
+                                    <option value="Arial">Arial</option>
+                                    <option value="Helvetica">Helvetica</option>
+                                    <option value="'Open Sans'">Open Sans</option>
+                                    <option value="Roboto">Roboto</option>
+                                    <option value="'Source Sans Pro'">Source Sans Pro</option>
+                                    <option value="'SF Pro Text'">SF Pro</option>
+                                    <option value="Inter">Inter</option>
+                                    <option value="Montserrat">Montserrat</option>
+                                    <option value="'Segoe UI'">Segoe UI</option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -404,45 +440,36 @@
                             <input type="color" id="font-color" value="#ffffff">
                         </div>
                     </div>
-                    <div class="settings-group">
-                        <h3><i class="fas fa-font"></i> Typography</h3>
-                        <div class="font-selector">
-                            <div class="settings-control-copy"><label for="font-family">Interface font</label><p>Applied to the dashboard and Settings.</p></div>
-                            <select id="font-family" onchange="updateFont()">
-                                <option value="Arial">Arial</option>
-                                <option value="Helvetica">Helvetica</option>
-                                <option value="'Open Sans'">Open Sans</option>
-                                <option value="Roboto">Roboto</option>
-                                <option value="'Source Sans Pro'">Source Sans Pro</option>
-                                <option value="'SF Pro Text'">SF Pro</option>
-                                <option value="Inter">Inter</option>
-                                <option value="Montserrat">Montserrat</option>
-                                <option value="'Segoe UI'">Segoe UI</option>
-                            </select>
-                        </div>
-                    </div>
                 </div>
                 <!-- Schedule Panel -->
                 <div class="settings-panel active" id="schedule-panel">
-                    <div class="settings-page-header">
+                    <div class="settings-page-header schedule-page-header">
                         <div class="settings-page-icon"><i class="fas fa-calendar-alt"></i></div>
-                        <div><span>Essentials</span><h1>Schedule</h1><p>Manage today’s bells, your lunch wave, and how periods are displayed.</p></div>
+                        <div class="schedule-page-heading-copy"><span>Essentials</span><h1>Schedule</h1><p>Manage today’s bells, your lunch wave, and how periods are displayed.</p></div>
+                        <div class="schedule-header-badges" aria-label="Schedule settings information">
+                            <span><i class="fas fa-calendar-check" aria-hidden="true"></i> Calendar aware</span>
+                            <span><i class="fas fa-cloud-arrow-up" aria-hidden="true"></i> Saves automatically</span>
+                        </div>
                     </div>
                     <select id="grade-level-dropdown" hidden aria-hidden="true">
                         <option value="highSchool" selected>Independence High School</option>
                     </select>
                     <div class="settings-group schedule-selection-card">
-                        <h3><i class="fas fa-calendar-alt"></i> Schedule Selection</h3>
+                        <div class="schedule-section-heading">
+                            <div class="schedule-section-icon"><i class="fas fa-calendar-day" aria-hidden="true"></i></div>
+                            <div><h3>School day setup</h3><p>Choose the bell schedule and lunch wave used throughout the dashboard.</p></div>
+                            <span class="schedule-auto-pill"><i class="fas fa-wand-magic-sparkles" aria-hidden="true"></i> Automatic</span>
+                        </div>
                         <div class="settings-form-grid">
                             <div class="settings-field">
-                                <label class="settings-field-label" for="schedule-dropdown">Today’s Schedule</label>
+                                <label class="settings-field-label" for="schedule-dropdown"><i class="fas fa-bell" aria-hidden="true"></i> Today’s schedule</label>
                                 <select id="schedule-dropdown" onchange="switchSchedule(this.value)">
                                     <option value="normal">Regular Schedule</option>
                                 </select>
                                 <p class="help-text settings-help">Regular, late-start, and half-day schedules are selected automatically from the WCS calendar.</p>
                             </div>
                             <div class="settings-field">
-                                <label class="settings-field-label" for="lunch-wave">Fifth-period lunch</label>
+                                <label class="settings-field-label" for="lunch-wave"><i class="fas fa-utensils" aria-hidden="true"></i> Fifth-period lunch</label>
                                 <select id="lunch-wave" onchange="setLunchWave(this.value)">
                                     <option value="">Not set</option>
                                     <option value="A">A Lunch</option>
@@ -453,25 +480,34 @@
                             </div>
                         </div>
                     </div>
-                    <div class="settings-group">
-                        <h3><i class="fas fa-edit"></i> Customize Periods</h3>
-                        <div id="rename-periods">
-                            <h3 id="rename-periods-toggle" class="dropdown-toggle">
-                                Rename Periods <span class="triangle">&#9662;</span>
-                            </h3>
-                            <div id="rename-periods-content" class="dropdown-content">
-                                <!-- Will be populated by JavaScript -->
+                    <div class="schedule-tools-grid">
+                        <div class="settings-group customize-periods-card">
+                            <div class="schedule-section-heading compact">
+                                <div class="schedule-section-icon"><i class="fas fa-pen" aria-hidden="true"></i></div>
+                                <div><h3>Class names</h3><p>Replace generic period labels with your actual classes.</p></div>
+                            </div>
+                            <div id="rename-periods">
+                                <button type="button" id="rename-periods-toggle" class="dropdown-toggle schedule-action-row" aria-expanded="false" aria-controls="rename-periods-content">
+                                    <span><strong>Rename periods</strong><small>Personalize the names shown on your schedule</small></span>
+                                    <span class="triangle" aria-hidden="true">&#9662;</span>
+                                </button>
+                                <div id="rename-periods-content" class="dropdown-content">
+                                    <!-- Will be populated by JavaScript -->
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="settings-group display-options-card">
-                        <h3><i class="fas fa-clock"></i> Display Options</h3>
-                        <div class="switch-container">
-                            <div class="settings-control-copy"><label class="switch-label" for="show-period-times">Show period times next to names</label><p>Include each period’s start and end time in the schedule.</p></div>
-                            <label class="switch">
-                                <input type="checkbox" id="show-period-times" onchange="toggleShowPeriodTimes(this.checked)">
-                                <span class="slider"></span>
-                            </label>
+                        <div class="settings-group display-options-card">
+                            <div class="schedule-section-heading compact">
+                                <div class="schedule-section-icon"><i class="fas fa-eye" aria-hidden="true"></i></div>
+                                <div><h3>Schedule display</h3><p>Control the details visible beside each period.</p></div>
+                            </div>
+                            <div class="switch-container schedule-switch-row">
+                                <div class="settings-control-copy"><label class="switch-label" for="show-period-times">Show period times</label><p>Include each period’s start and end time beside its name.</p></div>
+                                <label class="switch">
+                                    <input type="checkbox" id="show-period-times" onchange="toggleShowPeriodTimes(this.checked)">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
                         </div>
                     </div>
                     <div class="settings-group" style="display:none">
@@ -497,39 +533,47 @@
                         <div class="settings-page-icon"><i class="fas fa-info-circle"></i></div>
                         <div><span>Information</span><h1>About</h1><p>Learn what Indy Schedule does, how it works, and who maintains it.</p></div>
                     </div>
-                    <div class="settings-group">
-                        <div class="about-content">
-                            <h2>Indy Schedule</h2>
-                            <p>Indy Schedule is a fast, lightweight countdown tool built for Independence High School. It highlights the current period, displays a live countdown, and offers customizable visuals with saved user preferences.</p>
+                    <div class="settings-group about-overview-card">
+                        <div class="about-content about-dashboard">
+                            <div class="about-intro">
+                                <div><span class="about-version">Version 1.0.4</span><h2>Built for the Indy school day.</h2><p>Indy Schedule is a fast, lightweight countdown and daily schedule dashboard for Independence High School.</p></div>
+                                <div class="about-intro-mark"><i class="fas fa-clock" aria-hidden="true"></i></div>
+                            </div>
 
-                            <h3>Key Features</h3>
-                            <ul class="feature-list">
-                                <li>Live countdown that automatically adjusts based on the selected schedule.</li>
-                                <li>The seven-period Independence High School regular schedule.</li>
-                                <li>Visual customization with gradient themes, color selections, gray panel mode, and timer shadow options.</li>
-                                <li>Optional period start/end times (Settings → Schedule) to display detailed bell information.</li>
-                                <li>Optional Google sign-in (via Firebase) for syncing settings across devices.</li>
-                            </ul>
+                            <div class="about-feature-grid" aria-label="Key features">
+                                <div class="about-feature"><i class="fas fa-hourglass-half" aria-hidden="true"></i><strong>Live countdown</strong><span>See the current class and exactly how much time remains.</span></div>
+                                <div class="about-feature"><i class="fas fa-calendar-check" aria-hidden="true"></i><strong>Calendar aware</strong><span>Regular, late-start, and half-day schedules switch automatically.</span></div>
+                                <div class="about-feature"><i class="fas fa-palette" aria-hidden="true"></i><strong>Made yours</strong><span>Choose a palette, class names, lunch wave, and display details.</span></div>
+                                <div class="about-feature"><i class="fas fa-cloud-arrow-up" aria-hidden="true"></i><strong>Optional sync</strong><span>Google sign-in can keep preferences consistent across devices.</span></div>
+                            </div>
 
-                            <h3>Getting Started</h3>
-                            <ol>
-                                <li>Open <strong>Settings → Appearance</strong> to customize your background, colors, or theme.</li>
-                                <li>Use <strong>Settings → Schedule</strong> to switch schedules or show period times.</li>
-                                <li>Sign in with Google if you’d like your settings to sync across devices — completely optional.</li>
-                            </ol>
-                            <button type="button" class="replay-onboarding-btn" onclick="localStorage.removeItem('indyOnboardingComplete_v2'); location.reload();">
-                                <i class="fas fa-play"></i> Replay Welcome Tour
-                            </button>
-
-                            <h3>Privacy</h3>
-                            <p>Indy Schedule uses Firebase for optional sign-in and settings sync. With your permission, visitor usage data from Google Analytics helps improve the site. No data is sold. View the full <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a> for complete details.</p>
-
-                            <h3>Support</h3>
-                            <p>Questions, issues, or feedback? <a href="mailto:indyschedule@outlook.com">Email support</a>.</p>
-
-                            <div class="contact-info">
-                                <p class="version-info">Version 4.0.0</p>
-                                <p class="creator-info">Created by Brady Blackwell</p>
+                            <div class="about-details-grid">
+                                <section class="about-detail-card">
+                                    <div class="settings-section-heading compact">
+                                        <div class="settings-section-icon"><i class="fas fa-route" aria-hidden="true"></i></div>
+                                        <div><h3>Getting started</h3><p>Three quick ways to make the dashboard yours.</p></div>
+                                    </div>
+                                    <ol class="about-steps">
+                                        <li><span>1</span><p>Pick your lunch wave on the <strong>Schedule</strong> page.</p></li>
+                                        <li><span>2</span><p>Choose a palette and font under <strong>Appearance</strong>.</p></li>
+                                        <li><span>3</span><p>Sign in only if you want settings synced between devices.</p></li>
+                                    </ol>
+                                    <button type="button" class="replay-onboarding-btn" onclick="localStorage.removeItem('indyOnboardingComplete_v2'); location.reload();">
+                                        <i class="fas fa-play"></i> Replay Welcome Tour
+                                    </button>
+                                </section>
+                                <section class="about-detail-card about-help-card">
+                                    <div class="settings-section-heading compact">
+                                        <div class="settings-section-icon"><i class="fas fa-shield-heart" aria-hidden="true"></i></div>
+                                        <div><h3>Privacy &amp; support</h3><p>Your choices stay under your control.</p></div>
+                                    </div>
+                                    <p>Sign-in and anonymous analytics are optional. Indy Schedule does not sell personal data.</p>
+                                    <div class="about-link-row">
+                                        <a href="privacy.html" target="_blank" rel="noopener"><i class="fas fa-shield-halved"></i> Privacy policy</a>
+                                        <a href="mailto:indyschedule@outlook.com"><i class="fas fa-envelope"></i> Email support</a>
+                                    </div>
+                                    <div class="contact-info"><span>Created by Brady Blackwell</span><span>Unofficial Indy resource</span></div>
+                                </section>
                             </div>
                         </div>
                     </div>
@@ -540,22 +584,83 @@
                         <div><span>Updates</span><h1>What’s New</h1><p>See the latest improvements, fixes, and schedule updates.</p></div>
                     </div>
                     <div class="settings-group whatsnew-group">
+                        <div class="settings-section-heading updates-section-heading">
+                            <div class="settings-section-icon"><i class="fas fa-code-branch" aria-hidden="true"></i></div>
+                            <div><h3>Website updates</h3><p>New features, visual improvements, and schedule corrections.</p></div>
+                            <span class="settings-status-pill"><i class="fas fa-circle-check" aria-hidden="true"></i> Current release</span>
+                        </div>
                         <div class="whatsnew-tabs" role="tablist" aria-label="Update logs">
                             <button class="whatsnew-tab active" data-wn-target="whatsnew-website" role="tab" aria-selected="true">Website updates</button>
                         </div>
 
                         <div id="whatsnew-website" class="whatsnew-log" role="tabpanel">
+                            <div class="wn-entry current-release">
+                                <div class="wn-entry-header">
+                                    <span class="wn-version">v1.0.4</span>
+                                    <span class="wn-date">Aug 5, 2026</span>
+                                    <span class="wn-tag">Settings polish</span>
+                                </div>
+                                <ul>
+                                    <li>Unified every Settings page with clearer cards, icons, spacing, and responsive layouts.</li>
+                                    <li>Fixed palette colors across Settings, including the selected navigation item and page icons.</li>
+                                    <li>Improved Privacy &amp; Terms alignment and rewrote Contact guidance to be more accurate.</li>
+                                    <li>Refined Today at Indy interactions, card alignment, readability, and accessibility.</li>
+                                </ul>
+                            </div>
+
                             <div class="wn-entry">
                                 <div class="wn-entry-header">
-                                    <span class="wn-version">v4.0.0</span>
-                                    <span class="wn-date">Aug 4, 2026</span>
+                                    <span class="wn-version">v1.0.3</span>
+                                    <span class="wn-date">Aug 5, 2026</span>
+                                    <span class="wn-tag">Chromebook ready</span>
+                                </div>
+                                <ul>
+                                    <li>Optimized the dashboard and Settings workspace for 1366px school Chromebooks.</li>
+                                    <li>Accounted for the ChromeOS shelf and shorter usable browser height.</li>
+                                    <li>Changed long countdowns to an easier-to-read days, hours, and minutes format.</li>
+                                    <li>Improved schedule text contrast, progress indicators, spacing, and card proportions.</li>
+                                </ul>
+                            </div>
+
+                            <div class="wn-entry">
+                                <div class="wn-entry-header">
+                                    <span class="wn-version">v1.0.2</span>
+                                    <span class="wn-date">Aug 5, 2026</span>
+                                    <span class="wn-tag">Personalize it</span>
+                                </div>
+                                <ul>
+                                    <li>Added light and dark four-color palettes plus a fully custom palette editor.</li>
+                                    <li>Made cards, controls, text, and accents respond consistently to the selected palette.</li>
+                                    <li>Improved automatic foreground contrast for readable text across every theme.</li>
+                                    <li>Enabled period times by default and expanded schedule naming controls.</li>
+                                </ul>
+                            </div>
+
+                            <div class="wn-entry">
+                                <div class="wn-entry-header">
+                                    <span class="wn-version">v1.0.1</span>
+                                    <span class="wn-date">Aug 5, 2026</span>
+                                    <span class="wn-tag">Today at Indy</span>
+                                </div>
+                                <ul>
+                                    <li>Added the Today at Indy popup with current status, dismissal, lunch, and next-day details.</li>
+                                    <li>Connected public IHS calendar events through the automatically refreshed site cache.</li>
+                                    <li>Added monthly lunch-menu data with an official WCS fallback when a menu is unavailable.</li>
+                                    <li>Added calendar freshness, loading, empty, and error states.</li>
+                                </ul>
+                            </div>
+
+                            <div class="wn-entry">
+                                <div class="wn-entry-header">
+                                    <span class="wn-version">v1.0.0</span>
+                                    <span class="wn-date">Aug 5, 2026</span>
                                     <span class="wn-tag">Welcome to Indy</span>
                                 </div>
                                 <ul>
-                                    <li>Rebuilt the app around Independence High School’s seven-period day.</li>
-                                    <li>Added WCS calendar awareness and Independence’s half-day bell schedule.</li>
-                                    <li>Rebranded the website with Indy’s navy and gold.</li>
-                                    <li>Simplified settings and improved countdown reliability.</li>
+                                    <li>Rebuilt the site for Independence High School’s seven-period day.</li>
+                                    <li>Added A, B, and C lunch waves with the correct fifth-period split.</li>
+                                    <li>Added WCS calendar awareness for regular, late-start, no-school, and half-day schedules.</li>
+                                    <li>Launched Firebase Hosting with optional Google sign-in, synced preferences, and consent-based analytics.</li>
                                 </ul>
                             </div>
                         </div>
@@ -577,33 +682,32 @@
                                             <i class="fas fa-paper-plane"></i>
                                         </div>
                                         <div>
-                                            <p class="contact-kicker">We usually reply within 1–2 business days.</p>
-                                            <p class="contact-title">Tell us what's going on and we'll help.</p>
+                                            <p class="contact-kicker">Questions, corrections, and ideas are welcome.</p>
+                                            <p class="contact-title">Tell us what needs attention.</p>
                                         </div>
                                     </div>
                                     <a class="contact-btn" href="mailto:indyschedule@outlook.com">
                                         <i class="fas fa-envelope"></i>
-                                        Email support
+                                        Email Indy Schedule
                                     </a>
                                 </div>
                                 <div class="support-col">
                                     <ul class="contact-list">
-                                        <li><span class="contact-bullet-icon">👤</span><span class="contact-bullet-text"><strong>Name</strong> — your full name.</span></li>
-                                        <li><span class="contact-bullet-icon">🗂️</span><span class="contact-bullet-text"><strong>Topic</strong> — bug/issue, feature request, schedule correction, sign-in problem, general feedback, or other.</span></li>
-                                        <li><span class="contact-bullet-icon">📝</span><span class="contact-bullet-text"><strong>Details</strong> — what happened, what you expected, and what you want added or fixed.</span></li>
-                                        <li><span class="contact-bullet-icon">📎</span><span class="contact-bullet-text"><strong>Screenshots (optional)</strong> — attach any relevant images to speed things up.</span></li>
+                                        <li><span class="contact-bullet-icon"><i class="fas fa-heading" aria-hidden="true"></i></span><span class="contact-bullet-text"><strong>Subject</strong> — briefly name the problem, correction, or idea.</span></li>
+                                        <li><span class="contact-bullet-icon"><i class="fas fa-window-maximize" aria-hidden="true"></i></span><span class="contact-bullet-text"><strong>Page</strong> — say whether it happened on the dashboard, Today at Indy, or in Settings.</span></li>
+                                        <li><span class="contact-bullet-icon"><i class="fas fa-align-left" aria-hidden="true"></i></span><span class="contact-bullet-text"><strong>Details</strong> — what happened, what you expected, and what should change.</span></li>
+                                        <li><span class="contact-bullet-icon"><i class="fas fa-paperclip" aria-hidden="true"></i></span><span class="contact-bullet-text"><strong>Screenshot</strong> — attach one when it helps explain the problem.</span></li>
                                     </ul>
                                     <div class="contact-mini-faq">
-                                        <p class="faq-title">Common issues</p>
+                                        <p class="faq-title">Quick checks</p>
                                         <ul>
-                                            <li>Schedule looks off? Check the selected grade and schedule.</li>
-                                            <li>Preferences not syncing? Sign out, refresh the page, and sign in again.</li>
-                                            <li>Need a schedule changed? <a href="mailto:indyschedule@outlook.com">Request a schedule update</a>.</li>
+                                            <li>Wrong lunch wave? Change it under <strong>Settings → Schedule</strong>.</li>
+                                            <li>Preferences not syncing? Refresh the page, then sign out and back in.</li>
+                                            <li>Bell time or calendar event looks wrong? <a href="mailto:indyschedule@outlook.com">Report the mismatch</a> so it can be checked against WCS information.</li>
                                         </ul>
                                     </div>
                                 </div>
                             </div>
-                            <p class="contact-footer-note">We typically reply within 1–2 business days.</p>
                         </div>
                     </div>
                 </div>
@@ -612,8 +716,13 @@
                         <div class="settings-page-icon"><i class="fas fa-shield-halved"></i></div>
                         <div><span>Privacy</span><h1>Privacy &amp; Terms</h1><p>Control optional analytics and review how Indy Schedule handles your data.</p></div>
                     </div>
-                    <div class="settings-group">
+                    <div class="settings-group legal-overview-card">
                         <div class="legal-section">
+                            <div class="settings-section-heading legal-controls-heading">
+                                <div class="settings-section-icon"><i class="fas fa-chart-line" aria-hidden="true"></i></div>
+                                <div><h3>Your privacy controls</h3><p>Choose whether anonymous visitor measurements may be collected.</p></div>
+                                <span class="settings-status-pill"><i class="fas fa-lock" aria-hidden="true"></i> Optional</span>
+                            </div>
                             <div class="analytics-privacy-card">
                                 <div>
                                     <strong><i class="fas fa-chart-line" aria-hidden="true"></i> Visitor analytics</strong>
@@ -624,6 +733,7 @@
                                     <span class="slider"></span>
                                 </label>
                             </div>
+                            <div class="legal-policy-heading"><span>Policies</span><p>Plain-language summaries with links to the complete documents.</p></div>
                             <div class="legal-cards-row">
                                 <div class="legal-card">
                                     <div class="legal-card-header">

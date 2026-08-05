@@ -163,6 +163,7 @@ assert(authSource.includes("classList.add('is-signed-in')"), 'Authenticated stat
 assert(!authSource.includes('aria-label="Sign in with Google"><i'), 'Runtime signed-out control stays text-only');
 assert(!authSource.includes('<div class="profile-container"'), 'Legacy oversized profile control is no longer rendered');
 assert(appSource.includes("document.body.appendChild(card)"), 'Today dialog escapes the blurred dashboard stacking context');
+const primaryStyles = readFile('styles.css');
 const secondaryStyles = readFile('styles2.css');
 const calendarWorkflow = readFile('.github/workflows/update-ihs-calendar.yml');
 const calendarGenerator = readFile('tools/update-calendar-events.mjs');
@@ -173,9 +174,16 @@ assert(calendarGenerator.includes('ical.expandRecurringEvent'), 'Calendar sync e
 assert(calendarGenerator.includes('allDay ? start.toISOString().slice(0, 10)'), 'All-day calendar dates cannot shift across time zones');
 assert(initialCalendarData.source === 'https://ihs.wcs.edu/calendar', 'Initial calendar fallback identifies the official source');
 assert(secondaryStyles.includes('.brand-logo-art') && secondaryStyles.includes('clip-path: inset(0 0 0 3px)'), 'Shared logo treatment clips the source image edge artifact');
-assertEqual((indexSource.match(/brand-logo-art/g) || []).length, 5, 'Every visible brand-logo instance uses the shared artifact fix');
+assertEqual((indexSource.match(/brand-logo-art/g) || []).length, 4, 'Every visible brand-logo instance uses the shared artifact fix');
 assert(indexSource.includes('class="settings-form-grid"'), 'Schedule and lunch controls use the responsive settings grid');
-assert(indexSource.includes('class="settings-group display-options-card"'), 'Display options are a top-level card instead of a nested card');
+assert(indexSource.includes('class="schedule-tools-grid"'), 'Secondary schedule controls share a responsive tools grid');
+assert(indexSource.includes('class="settings-group display-options-card"'), 'Display options remain an independent settings card');
+assert(indexSource.includes('id="rename-periods-toggle" class="dropdown-toggle schedule-action-row" aria-expanded="false"'), 'Period renaming uses an accessible disclosure control');
+assert(indexSource.includes('class="appearance-tools-grid"'), 'Appearance uses the shared compact tools layout');
+assert(indexSource.includes('class="about-feature-grid"'), 'About presents features in a responsive card grid');
+assert(indexSource.includes('class="settings-group legal-overview-card"'), 'Privacy and Terms uses the unified full-width card');
+assert(indexSource.includes('Version 1.0.4') && indexSource.includes('v1.0.4'), 'About and release notes identify the current 1.0.4 version');
+assertEqual((indexSource.match(/<div class="wn-entry(?: current-release)?">/g) || []).length, 5, 'What’s New includes the initial release and four focused updates');
 assert(!indexSource.includes('id="bg-image"'), 'Retired background-image upload is removed from Appearance settings');
 assert(!indexSource.includes('id="bg-image-drop-area"'), 'Retired background-image drop area is removed');
 assert(indexSource.includes('id="gradient-preview"'), 'Gradient editor includes a live preview');
@@ -210,6 +218,7 @@ assert(authSource.includes("this.analytics = null") && authSource.includes("getA
 const secondaryAppSource = readFile('script2.js');
 assert(secondaryAppSource.includes('function initializeSettingsControls()'), 'Settings controls have a top-level initializer');
 assert(secondaryAppSource.includes("settingsButton.addEventListener('click'"), 'Settings button has a reliable click binding');
+assert(secondaryAppSource.includes("this.setAttribute('aria-expanded', 'true')"), 'Period-name disclosure reports its expanded state');
 assert(!secondaryAppSource.includes('function updateTimerShadow') && !secondaryAppSource.includes('function loadShadowSettings'), 'Retired timer-shadow runtime is removed');
 assert(!authSource.includes('timerShadowSettings:'), 'Retired timer-shadow setting is no longer synced');
 assert(secondaryStyles.includes('#whatsnew-panel .whatsnew-tabs') && secondaryStyles.includes('grid-template-columns: 1fr !important'), 'Website Updates fills the full release-note tab bar');
@@ -228,11 +237,14 @@ assert(secondaryStyles.includes('Main-page finishing pass'), 'Main-page visual r
 assert(secondaryStyles.includes('.current-period::before') && secondaryStyles.includes('display: none'), 'Redundant countdown inset border is removed');
 assert(secondaryStyles.includes('opacity: 0.82 !important') && secondaryStyles.includes('font-size: 10px !important'), 'Small schedule times have stronger contrast and legibility');
 assert(secondaryStyles.includes('rgba(var(--theme-dashboard-accent-rgb), 0.34)'), 'Progress fill receives a restrained palette-aware accent glow');
+assert(secondaryStyles.includes('#schedule .period.is-current') && secondaryStyles.includes('transform: none !important'), 'Current schedule row stays aligned with neighboring rows');
 assert(secondaryStyles.includes('var(--page-gradient) !important') && secondaryStyles.includes('rgba(0, 0, 0, 0.46)'), 'Selected Settings item follows the active palette gradient');
+assert(primaryStyles.includes('.nav-item.active.nav-item') && primaryStyles.includes('var(--page-gradient) !important'), 'Legacy active-nav specificity also follows the selected palette');
 assert(secondaryStyles.includes('Complete palette coverage for Settings'), 'Specialized Settings panels use the final palette-aware cascade layer');
 assert(['#legal-panel', '#whatsnew-panel', '#contact-panel'].every((selector) => secondaryStyles.includes(selector)), 'Legal, What’s New, and Contact have explicit palette coverage');
 assert(secondaryStyles.includes('button:not(.whatsnew-tab):not(.palette-option)'), 'Palette cards are excluded from the global action-button treatment');
-assert(secondaryStyles.includes('#settings-sidebar #schedule-panel .settings-field label'), 'Schedule field text explicitly outranks the legacy whole-panel color rule');
+assert(secondaryStyles.includes('#settings-sidebar #schedule-panel .settings-field label'), 'Schedule field text uses explicit palette-aware roles');
+assert(!primaryStyles.includes('#settings-sidebar #schedule-panel *'), 'Schedule icons are not trapped by a legacy whole-panel text color');
 
 const gradientElements = {};
 function mockGradientElement(value = '') {

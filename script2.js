@@ -256,45 +256,6 @@ function rgbToHex(r, g, b) {
     }).join('');
 }
 
-// Modified processUploadedImage function to call applyAndSaveImage instead of applyUploadedImage
-async function processUploadedImage(dataUrl, dropArea, fileType) {
-    const img = new Image();
-    
-    img.onload = function() {
-        try {
-            // For GIFs and SVGs, use original file
-            if (fileType === 'image/gif' || fileType === 'image/svg+xml') {
-                applyAndSaveImage(dataUrl); // Replaced applyUploadedImage with applyAndSaveImage
-                return;
-            }
-
-            // For other formats, compress
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            
-            let { width, height } = calculateImageDimensions(img.width, img.height);
-            canvas.width = width;
-            canvas.height = height;
-            
-            ctx.drawImage(img, 0, 0, width, height);
-            const compressedImage = canvas.toDataURL(fileType, 0.7);
-            
-            applyAndSaveImage(compressedImage);
-        } catch (error) {
-            console.error('Error processing image:', error);
-            hideProcessingOverlay();
-            alert('Error processing image');
-        }
-    };
-    
-    img.onerror = function() {
-        hideProcessingOverlay();
-        alert('Invalid image file');
-    };
-    
-    img.src = dataUrl;
-}
-
 function applyAndSaveImage(imageData) {
     try {
         updateBackgroundPreview(imageData);
@@ -622,12 +583,14 @@ document.addEventListener("DOMContentLoaded", function() {
             });
             document.querySelectorAll('.dropdown-toggle').forEach(el => {
                 el.classList.remove('active');
+                el.setAttribute('aria-expanded', 'false');
             });
             
             // Toggle current dropdown
             if (!isOpen) {
                 content.classList.add('show');
                 this.classList.add('active');
+                this.setAttribute('aria-expanded', 'true');
                 populateRenamePeriods();
             }
         });
