@@ -228,6 +228,7 @@ class GradientManager {
             this.angle = palette.angle;
         }
         this.commitChange();
+        window.trackAnalyticsEvent?.('palette_selected', { palette_id: this.paletteId });
     }
 
     activateCustomPalette() {

@@ -36,6 +36,7 @@ function toggleSettingsSidebar() {
     sidebar.classList.toggle("open");
     const isOpen = sidebar.classList.contains("open");
     document.getElementById('settings-button')?.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    if (isOpen) window.trackAnalyticsEvent?.('settings_open');
     
     // Save settings when closing the sidebar
     if (!isOpen) {

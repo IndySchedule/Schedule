@@ -9,6 +9,85 @@ const firebaseConfig = {
     measurementId: "G-Q8H5WCQK3T"
 };
 
+const ANALYTICS_CONSENT_KEY = 'indyAnalyticsConsent_v1';
+
+function getAnalyticsConsent() {
+    try {
+        const value = localStorage.getItem(ANALYTICS_CONSENT_KEY);
+        return value === 'granted' || value === 'denied' ? value : null;
+    } catch (error) {
+        return null;
+    }
+}
+
+window.dataLayer = window.dataLayer || [];
+window.gtag = window.gtag || function() { window.dataLayer.push(arguments); };
+
+function updateGoogleConsent(granted, command = 'default') {
+    window.gtag('consent', command, {
+        analytics_storage: granted ? 'granted' : 'denied',
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied'
+    });
+}
+
+updateGoogleConsent(getAnalyticsConsent() === 'granted');
+
+function ensureAnalytics() {
+    if (!window.authManager) return null;
+    if (!window.authManager.analytics) {
+        window.authManager.analytics = firebase.analytics();
+    }
+    return window.authManager.analytics;
+}
+
+function updateAnalyticsConsentUI() {
+    const consent = getAnalyticsConsent();
+    const toggle = document.getElementById('analytics-consent-toggle');
+    const status = document.getElementById('analytics-consent-status');
+    const banner = document.getElementById('analytics-consent-banner');
+    if (toggle) toggle.checked = consent === 'granted';
+    if (status) {
+        status.textContent = consent === 'granted'
+            ? 'Visitor analytics are enabled.'
+            : 'Visitor analytics are disabled.';
+    }
+    if (banner) banner.hidden = consent !== null;
+}
+
+function setAnalyticsConsent(granted) {
+    try {
+        localStorage.setItem(ANALYTICS_CONSENT_KEY, granted ? 'granted' : 'denied');
+    } catch (error) {
+        console.warn('Could not save Analytics preference.', error);
+    }
+
+    updateGoogleConsent(granted, 'update');
+    if (granted) {
+        const analytics = ensureAnalytics();
+        analytics?.setAnalyticsCollectionEnabled(true);
+        analytics?.logEvent('analytics_consent_granted');
+    } else if (window.authManager?.analytics) {
+        window.authManager.analytics.setAnalyticsCollectionEnabled(false);
+    }
+    updateAnalyticsConsentUI();
+}
+
+window.trackAnalyticsEvent = function(eventName, parameters = {}) {
+    if (getAnalyticsConsent() !== 'granted') return;
+    ensureAnalytics()?.logEvent(eventName, parameters);
+};
+
+function initializeAnalyticsConsentUI() {
+    document.getElementById('analytics-consent-accept')?.addEventListener('click', () => setAnalyticsConsent(true));
+    document.getElementById('analytics-consent-decline')?.addEventListener('click', () => setAnalyticsConsent(false));
+    document.getElementById('analytics-consent-toggle')?.addEventListener('change', (event) => {
+        setAnalyticsConsent(event.target.checked);
+    });
+    updateAnalyticsConsentUI();
+}
+
 const TOAST_ICON_KEY = 'toastIconEnabled';
 const BREAD_WORDS = ['bread', 'bagel', 'toast', 'roll', 'waffle', 'pancake', 'brioche', 'wheat', 'rye', 'sourdough', 'bun', 'ciabatta', 'focaccia', 'pita', 'naan', 'baguette', 'flatbread', 'chapati', 'cornbread', 'pain', 'pumpernickel', 'monkey bread', 'pane', 'zopf', 'sweetroll', 'muffin', 'crumpet', 'babka', 'crostini', 'rye bread', 'tortilla', 'pain de mie', 'panettone', 'stollen', 'english muffin', 'breadstick', 'lavash', 'kettle bread', 'soda bread', 'pullman loaf', 'cinnamon roll', 'garlic bread', 'baguette viennoise', 'hardroll', 'soft roll', 'dinner roll', 'pretzel roll', 'coburg', 'rusk', 'tiger bread', 'naan bread', 'challah', 'bretzel', 'polenta bread', 'salt rising bread', 'pumpkin bread', 'beer bread', 'fry bread', 'sourdough baguette', 'brioche loaf', 'whole grain bread', 'gluten-free bread', 'multigrain bread', 'sweet roll', 'bunny bread', 'french toast', 'kvass bread', 'baker\'s bread', 'caraway bread', 'pane Siciliano', 'romano bread', 'cereal bread', 'bamboo bread', 'Miche', 'cinnamon swirl bread', 'oatmeal bread', 'spelt bread', 'seeded bread', 'lavender bread', 'tzatziki bread', 'toasted rye', 'Nordic flatbread', 'pepper bread', 'bakers'];
 
@@ -229,13 +308,17 @@ class AuthManager {
         // Initialize Firebase first
         this.app = firebase.initializeApp(firebaseConfig);
         this.auth = firebase.auth();
-        this.analytics = firebase.analytics();
+        this.analytics = null;
         this.provider = new firebase.auth.GoogleAuthProvider();
         this.isAuthenticated = false;
         this.currentUser = null;
         
         // Make auth manager globally available immediately
         window.authManager = this;
+        if (getAnalyticsConsent() === 'granted') {
+            this.analytics = firebase.analytics();
+            this.analytics.setAnalyticsCollectionEnabled(true);
+        }
         
         // Wait for DOM before initializing UI
         if (document.readyState === 'loading') {
@@ -801,6 +884,7 @@ window.addEventListener('message', (event) => {
 
 // Render easter-egg icon once the DOM is available, based on stored flag.
 document.addEventListener('DOMContentLoaded', updateToastIcon);
+document.addEventListener('DOMContentLoaded', initializeAnalyticsConsentUI);
 
 // New helper function to load user settings from Firestore
 async function loadUserSettings() {

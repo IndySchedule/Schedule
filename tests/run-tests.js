@@ -155,7 +155,8 @@ assert(indexSource.includes('id="schedule-context"'), 'Countdown has a separate 
 assert(indexSource.includes('id="countdown-caption"'), 'Countdown explains what the displayed time means');
 assert(indexSource.includes('id="period-progress-track"'), 'Countdown includes an integrated period timeline');
 assert(indexSource.includes('id="next-period-summary"'), 'Countdown includes the next period summary');
-assertEqual((indexSource.match(/googletagmanager\.com\/gtag\/js/g) || []).length, 1, 'Only one Google Analytics loader remains');
+assertEqual((indexSource.match(/googletagmanager\.com\/gtag\/js/g) || []).length, 0, 'Direct Analytics tag cannot run before consent');
+assertEqual((indexSource.match(/firebase-analytics-compat\.js/g) || []).length, 1, 'Firebase provides the single consent-controlled Analytics loader');
 const authSource = readFile('auth.js');
 assert(authSource.includes('dashboard-account-menu'), 'Signed-in account actions use the compact dashboard menu');
 assert(authSource.includes("classList.add('is-signed-in')"), 'Authenticated state switches to the constrained avatar control');
@@ -198,6 +199,12 @@ assertEqual((indexSource.match(/type="radio" name="onboarding-lunch"/g) || []).l
 assert(!indexSource.includes('id="extension-panel"'), 'Extension settings panel removed');
 assert(!indexSource.includes('data-target="extension"'), 'Extension navigation removed');
 assert(!indexSource.includes('EXTENSION_PING'), 'Extension bridge scripts removed');
+assert(indexSource.includes('id="analytics-consent-banner"'), 'Analytics consent choice is shown before visitor tracking');
+assert(indexSource.includes('id="analytics-consent-toggle"'), 'Analytics consent can be changed from Settings');
+assert(!indexSource.includes('G-YS6FHHEGFZ'), 'Retired direct Analytics tag is removed');
+assert(authSource.includes("analytics_storage: granted ? 'granted' : 'denied'"), 'Analytics storage follows the saved visitor choice');
+assert(authSource.includes("ad_storage: 'denied'") && authSource.includes("ad_personalization: 'denied'"), 'Advertising storage and personalization remain disabled');
+assert(authSource.includes("this.analytics = null") && authSource.includes("getAnalyticsConsent() === 'granted'"), 'Firebase Analytics initializes only after consent');
 const secondaryAppSource = readFile('script2.js');
 assert(secondaryAppSource.includes('function initializeSettingsControls()'), 'Settings controls have a top-level initializer');
 assert(secondaryAppSource.includes("settingsButton.addEventListener('click'"), 'Settings button has a reliable click binding');

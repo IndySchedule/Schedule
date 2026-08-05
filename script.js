@@ -445,6 +445,7 @@ function setTodayPopupOpen(open) {
     if (!card || !backdrop || !toggle) return;
 
     const shouldOpen = !!open;
+    const wasOpen = !card.hidden;
     card.hidden = !shouldOpen;
     backdrop.hidden = !shouldOpen;
     card.classList.toggle('open', shouldOpen);
@@ -452,6 +453,7 @@ function setTodayPopupOpen(open) {
     toggle.setAttribute('aria-expanded', shouldOpen ? 'true' : 'false');
     if (shouldOpen) {
         updateTodayAtIndy();
+        if (!wasOpen) window.trackAnalyticsEvent?.('today_at_indy_open');
         document.getElementById('today-card-close')?.focus();
     } else {
         toggle.focus();

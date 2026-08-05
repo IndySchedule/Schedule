@@ -52,13 +52,6 @@
             }
         });
     </script>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YS6FHHEGFZ"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-YS6FHHEGFZ');
-    </script>
         <style>
             .update-notice-body .update-section {
                 margin: 16px 0;
@@ -512,10 +505,10 @@
                             </button>
 
                             <h3>Privacy</h3>
-                            <p>Indy Schedule uses personal data only for authentication and optional settings sync through Firebase. No data is sold or shared beyond this purpose. View the full <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a> for complete details.</p>
+                            <p>Indy Schedule uses Firebase for optional sign-in and settings sync. With your permission, visitor usage data from Google Analytics helps improve the site. No data is sold. View the full <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a> for complete details.</p>
 
                             <h3>Support</h3>
-                            <p>Questions, issues, or feedback? <a href="mailto:ShilohSchedule@outlook.com">Email support</a>.</p>
+                            <p>Questions, issues, or feedback? <a href="mailto:indyschedule@outlook.com">Email support</a>.</p>
 
                             <div class="contact-info">
                                 <p class="version-info">Version 4.0.0</p>
@@ -577,7 +570,7 @@
                                             <p class="contact-title">Tell us what's going on and we'll help.</p>
                                         </div>
                                     </div>
-                                    <a class="contact-btn" href="mailto:ShilohSchedule@outlook.com">
+                                    <a class="contact-btn" href="mailto:indyschedule@outlook.com">
                                         <i class="fas fa-envelope"></i>
                                         Email support
                                     </a>
@@ -594,7 +587,7 @@
                                         <ul>
                                             <li>Schedule looks off? Check the selected grade and schedule.</li>
                                             <li>Preferences not syncing? Sign out, refresh the page, and sign in again.</li>
-                                            <li>Need a schedule changed? <a href="mailto:ShilohSchedule@outlook.com">Request a schedule update</a>.</li>
+                                            <li>Need a schedule changed? <a href="mailto:indyschedule@outlook.com">Request a schedule update</a>.</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -607,6 +600,16 @@
                     <div class="settings-group">
                         <div class="legal-section">
                             <h3 class="legal-section-title">Legal</h3>
+                            <div class="analytics-privacy-card">
+                                <div>
+                                    <strong><i class="fas fa-chart-line" aria-hidden="true"></i> Visitor analytics</strong>
+                                    <p id="analytics-consent-status">Visitor analytics are disabled.</p>
+                                </div>
+                                <label class="switch" aria-label="Allow visitor analytics">
+                                    <input type="checkbox" id="analytics-consent-toggle">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
                             <div class="legal-cards-row">
                                 <div class="legal-card">
                                     <div class="legal-card-header">
@@ -636,7 +639,7 @@
                                     </div>
                                     <div class="legal-card-footer">
                                         <a class="legal-btn" href="privacy.html" target="_blank" rel="noopener">View Privacy Policy</a>
-                                        <span class="legal-updated">Last updated: Nov 23, 2025</span>
+                                        <span class="legal-updated">Last updated: Aug 5, 2026</span>
                                     </div>
                                 </div>
                             </div>
@@ -650,6 +653,20 @@
         </div>
     </div>
     <div class="today-card-backdrop" id="today-card-backdrop" hidden></div>
+    <aside class="analytics-consent-banner" id="analytics-consent-banner" role="dialog" aria-labelledby="analytics-consent-title" hidden>
+        <div class="analytics-consent-copy">
+            <span class="analytics-consent-icon"><i class="fas fa-chart-simple" aria-hidden="true"></i></span>
+            <div>
+                <strong id="analytics-consent-title">Help improve Indy Schedule</strong>
+                <p>Allow Google Analytics to measure page visits, device type, and feature use. No names, emails, schedules, or lunch choices are sent.</p>
+                <a href="privacy.html" target="_blank" rel="noopener">Read the Privacy Policy</a>
+            </div>
+        </div>
+        <div class="analytics-consent-actions">
+            <button type="button" id="analytics-consent-decline">Continue without analytics</button>
+            <button type="button" id="analytics-consent-accept">Allow analytics</button>
+        </div>
+    </aside>
     <div id="login-modal" class="login-modal">
         <div class="login-container">
             <h2>Sign In</h2>
