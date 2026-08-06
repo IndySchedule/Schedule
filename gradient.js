@@ -49,6 +49,76 @@ const COLOR_PALETTES = Object.freeze({
         name: 'Forest Night',
         colors: ['#12372A', '#ADBC9F', '#FBFADA', '#436850'],
         angle: 125
+    },
+    monochrome: {
+        name: 'Monochrome',
+        colors: ['#090909', '#2B2B2B', '#BDBDBD', '#FAFAFA'],
+        angle: 115
+    },
+    slate: {
+        name: 'Slate',
+        colors: ['#0F172A', '#334155', '#38BDF8', '#F8FAFC'],
+        angle: 125
+    },
+    aurora: {
+        name: 'Aurora',
+        colors: ['#101828', '#344054', '#12B76A', '#F9FAFB'],
+        angle: 135
+    },
+    'rose-quartz': {
+        name: 'Rose Quartz',
+        colors: ['#4A1D36', '#8F3B62', '#E8A0BF', '#FFF4F8'],
+        angle: 125
+    },
+    lavender: {
+        name: 'Lavender',
+        colors: ['#29234F', '#62558A', '#C4B5FD', '#F6F3FF'],
+        angle: 130
+    },
+    'cherry-blossom': {
+        name: 'Cherry Blossom',
+        colors: ['#542333', '#A64D68', '#F2A7B9', '#FFF5F7'],
+        angle: 120
+    },
+    'sunset-sorbet': {
+        name: 'Sunset Sorbet',
+        colors: ['#44233F', '#A64B67', '#F59E8B', '#FFF1EA'],
+        angle: 135
+    },
+    'sage-rose': {
+        name: 'Sage Rose',
+        colors: ['#263C36', '#557A6E', '#D6A0AA', '#F6F1ED'],
+        angle: 125
+    },
+    'prism-rush': {
+        name: 'Prism Rush',
+        colors: ['#3A0CA3', '#4361EE', '#F72585', '#F8F9FF'],
+        angle: 130
+    },
+    tropical: {
+        name: 'Tropical',
+        colors: ['#005F73', '#0A9396', '#FFB703', '#FFF7E6'],
+        angle: 125
+    },
+    'candy-pop': {
+        name: 'Candy Pop',
+        colors: ['#6D28D9', '#EC4899', '#2DD4BF', '#FFF1F8'],
+        angle: 135
+    },
+    daylight: {
+        name: 'Daylight',
+        colors: ['#F8FAFC', '#E2E8F0', '#2563EB', '#FFFFFF'],
+        angle: 120
+    },
+    'cotton-candy': {
+        name: 'Cotton Candy',
+        colors: ['#FFF1F7', '#EDE9FE', '#EC4899', '#FFFFFF'],
+        angle: 125
+    },
+    lemonade: {
+        name: 'Lemonade',
+        colors: ['#FFF8CC', '#FFD6A5', '#F97316', '#FFFEF5'],
+        angle: 130
     }
 });
 
@@ -258,6 +328,8 @@ class GradientManager {
     applyGradient() {
         const root = document.documentElement;
         const gradient = buildGradient(this.angle, this.colors);
+        const lightDashboard = readableTextColor(this.colors[0]) === '#111827'
+            && readableTextColor(this.colors[1]) === '#111827';
 
         PALETTE_ROLES.forEach((role, index) => {
             const color = this.colors[index];
@@ -267,7 +339,9 @@ class GradientManager {
             root.style.setProperty(`--theme-on-${role}`, onColor);
             root.style.setProperty(`--theme-on-${role}-rgb`, hexToChannels(onColor).join(', '));
         });
-        const panelColor = supportingPanelColor(this.colors[1]);
+        const panelColor = lightDashboard
+            ? mixColors(this.colors[1], '#FFFFFF', 0.78)
+            : supportingPanelColor(this.colors[1]);
         const onPanelColor = readableTextColor(panelColor);
         const rawSurfaceOn = readableTextColor(this.colors[3]);
         // Settings needs three visibly different layers even when a custom
@@ -287,7 +361,10 @@ class GradientManager {
             [this.colors[0], this.colors[1], this.colors[2], onSettingsCard]
         );
         const onSettingsAction = accessibleTextColor(settingsAction);
-        const dashboardBase = mixColors(this.colors[0], '#000014', 0.5);
+        const dashboardBase = lightDashboard
+            ? mixColors(this.colors[0], this.colors[1], 0.55)
+            : mixColors(this.colors[0], '#000014', 0.5);
+        const dashboardInk = accessibleTextColor(dashboardBase);
         const uiAccent = visibleRoleColor(
             settingsCard,
             [this.colors[2], this.colors[1], this.colors[0]]
@@ -318,6 +395,8 @@ class GradientManager {
         root.style.setProperty('--theme-ui-accent', uiAccent);
         root.style.setProperty('--theme-ui-accent-rgb', hexToChannels(uiAccent).join(', '));
         root.style.setProperty('--theme-dashboard-base', dashboardBase);
+        root.style.setProperty('--theme-dashboard-ink', dashboardInk);
+        root.style.setProperty('--theme-dashboard-ink-rgb', hexToChannels(dashboardInk).join(', '));
         root.style.setProperty('--theme-dashboard-accent', dashboardAccent);
         root.style.setProperty('--theme-dashboard-accent-rgb', hexToChannels(dashboardAccent).join(', '));
         root.style.setProperty('--theme-panel-accent', panelAccent);
@@ -325,6 +404,7 @@ class GradientManager {
         root.style.setProperty('--theme-frame-border', mixColors(this.colors[0], readableTextColor(this.colors[0]), 0.9));
         root.style.setProperty('--page-gradient', gradient);
         root.dataset.palette = this.paletteId;
+        root.dataset.dashboardTone = lightDashboard ? 'light' : 'dark';
         document.body.style.background = gradient;
         document.body.style.backgroundAttachment = 'fixed';
 

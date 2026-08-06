@@ -12,7 +12,7 @@ Indy Schedule is an unofficial schedule countdown website for Independence High 
 - Automatic schedule selection using the 2026–27 WCS school calendar
 - A, B, and C fifth-period lunch support, including split fifth period for B lunch
 - Tuesday–Thursday SOAR and Homeroom placement
-- **Today at Indy** summary with today's schedule, IHS calendar events, lunch menu, and tomorrow's schedule
+- **Today at Indy** summary with separate built-in bells, validated live IHS events, sourced lunch information, and tomorrow's schedule
 - Preset light and dark color palettes plus a custom four-color palette
 - Custom period names and optional times beside schedule entries
 - First-visit setup for selecting lunch
@@ -27,27 +27,36 @@ The calendar updater requires Node.js 24 or newer:
 
 ```sh
 npm install
-npm run update-calendar
+npm run refresh-live-data
 ```
 
-That command downloads the public IHS calendar feed and writes the browser-friendly cache at `data/ihs-calendar-events.json`.
+That command downloads the public IHS calendar feed, writes the browser-friendly cache at `data/ihs-calendar-events.json`, and validates both calendar and lunch data.
 
 ## Calendar Automation
 
 `.github/workflows/update-ihs-calendar.yml` runs every three hours and can also be started manually from the GitHub Actions page. It:
 
 1. Downloads the public Independence High School calendar feed.
-2. Generates `data/ihs-calendar-events.json` for the next 120 days.
-3. Commits the file only when the cached event data changes.
-4. Publishes the refreshed static site through GitHub Pages.
+2. Generates and validates `data/ihs-calendar-events.json` for the next 120 days.
+3. Validates the active monthly lunch menu before anything is published.
+4. Deploys the refreshed working tree directly to the `production` Firebase Hosting target.
+5. Publishes the same validated tree through GitHub Pages as a secondary host.
+6. Commits the calendar cache only when event content changes, avoiding timestamp-only commits.
 
-For the workflow to push updates, enable **Read and write permissions** under **Settings → Actions → General → Workflow permissions** in the GitHub repository. Set the Pages deployment source to **GitHub Actions** under **Settings → Pages**.
+For the workflow to push content updates, enable **Read and write permissions** under **Settings → Actions → General → Workflow permissions**. The repository must retain the `FIREBASE_SERVICE_ACCOUNT_INDYSCHEDULE_1` Actions secret created by `firebase init hosting:github`. Set the Pages deployment source to **GitHub Actions** under **Settings → Pages**.
 
-When calendar data is unavailable or has not been generated yet, the website falls back to a link to the [official IHS calendar](https://ihs.wcs.edu/calendar).
+Today at Indy identifies whether calendar data is live, a saved browser copy, stale, outside its generated range, or unavailable. Built-in bell schedules continue working independently. When event data cannot be trusted, the website links to the [official IHS calendar](https://ihs.wcs.edu/calendar).
 
 ## Lunch Menu Updates
 
-Monthly cafeteria items live in `lunch-menu.js` under `YYYY-MM-DD` date keys. Add each new month's menu there. If a date has no uploaded menu, **Today at Indy** directs visitors to the [official WCS Menus & Nutrition page](https://www.wcs.edu/about-us/menus-nutrition).
+Monthly cafeteria items live in one clearly marked block in `lunch-menu.js`. To replace a month:
+
+1. Update `MENU_MONTH`, `UPDATED_AT`, `COVERAGE_START`, and `COVERAGE_END`.
+2. Replace the dated `MENUS` entries using `YYYY-MM-DD` keys.
+3. Run `npm run validate-live-data`.
+4. Check several dates in Today at Indy, then commit the month together.
+
+The validator rejects malformed dates, empty meals, dates outside the declared month, and lunches assigned to non-instructional days. If a date has no uploaded menu, Today at Indy displays the source and directs visitors to the [official WCS Menus & Nutrition page](https://www.wcs.edu/about-us/menus-nutrition).
 
 ## Project Layout
 
@@ -61,6 +70,7 @@ school-calendar.js                 School dates and schedule selection
 lunch-menu.js                      Daily cafeteria menu data
 data/ihs-calendar-events.json      Generated IHS calendar cache
 tools/update-calendar-events.mjs   Calendar cache generator
+tools/validate-live-data.mjs       Calendar and lunch publication checks
 tests/run-tests.js                 Schedule and regression checks
 .github/workflows/                 GitHub Actions calendar automation
 ```
@@ -75,11 +85,17 @@ On macOS, run the regression suite with JavaScriptCore:
 
 The tests validate schedule dates and times, lunch placement, display states, calendar integration, and retired-code cleanup.
 
+Validate publishable live data separately with:
+
+```sh
+npm run validate-live-data
+```
+
 ## Publishing
 
-Use this directory—the one containing `index.html` and `.github`—as the Git repository root. Do not initialize the parent `Indy Schedule` directory, because it also contains archived versions of the project.
+Use this directory—the one containing `index.html`, `firebase.json`, and `.github`—as the Git repository root. Archived copies outside this directory should not be included in the repository or Firebase deployment.
 
-The site is deployed through GitHub Pages by the calendar workflow. Keep the scheduled workflow enabled so both the event cache and published site stay current.
+Firebase Hosting is the primary deployment. The scheduled calendar workflow deploys the validated site directly to Firebase every three hours and also refreshes GitHub Pages. Keep that workflow enabled so the public event cache does not become stale.
 
 ## Privacy and Terms
 

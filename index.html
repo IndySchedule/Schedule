@@ -148,7 +148,7 @@
 
                 <section class="today-status-card" aria-labelledby="today-status-title">
                     <div class="today-status-heading">
-                        <div><i class="fas fa-bell" aria-hidden="true"></i><span>School status</span></div>
+                        <div><i class="fas fa-bell" aria-hidden="true"></i><span>Built-in bell schedule</span></div>
                         <span class="today-dismissal"><span>Dismissal</span><strong id="today-dismissal">—</strong></span>
                     </div>
                     <p class="today-notice" id="today-notice" aria-live="polite"><span id="today-status-title">Loading today’s details…</span></p>
@@ -162,19 +162,21 @@
                     <section class="today-events today-info-card">
                         <div class="today-section-title">
                             <i class="fas fa-calendar-check" aria-hidden="true"></i>
-                            <span>Today’s events</span>
-                            <a href="https://ihs.wcs.edu/calendar" target="_blank" rel="noopener">Official calendar</a>
+                            <span>Live calendar events</span>
+                            <a href="https://ihs.wcs.edu/calendar" target="_blank" rel="noopener">Open source</a>
                         </div>
                         <div id="today-calendar-events" class="today-events-list" data-state="loading" aria-live="polite">Loading events…</div>
+                        <div class="today-source-meta"><span id="today-calendar-source">Source: Official IHS calendar</span><span id="today-calendar-updated">Checking freshness…</span></div>
                     </section>
                     <section class="today-lunch today-info-card">
                         <div class="today-section-title">
                             <i class="fas fa-utensils" aria-hidden="true"></i>
                             <span>Today’s lunch</span>
                             <small id="today-lunch-time"></small>
-                            <a href="https://www.wcs.edu/about-us/menus-nutrition" target="_blank" rel="noopener">Official menu</a>
+                            <a href="https://www.wcs.edu/about-us/menus-nutrition" target="_blank" rel="noopener">Open source</a>
                         </div>
                         <div id="today-lunch-menu" class="today-lunch-menu" data-state="loading">Loading menu…</div>
+                        <div class="today-source-meta"><span id="today-lunch-source">Source: WCS High School Lunch Menu</span><span id="today-lunch-updated">Checking menu coverage…</span></div>
                     </section>
                 </div>
 
@@ -185,7 +187,7 @@
 
                 <footer class="today-card-footer">
                     <span class="today-disclaimer"><i class="fas fa-circle-exclamation" aria-hidden="true"></i> An unofficial page for Independence High School · Information may contain errors.</span>
-                    <span class="today-data-status" id="today-data-status">Checking calendar freshness…</span>
+                    <span class="today-data-status" id="today-data-status">Live information is checked separately from built-in bell schedules.</span>
                 </footer>
             </div>
             <div class="current-period">
@@ -265,14 +267,37 @@
                             <span class="settings-status-pill"><i class="fas fa-eye" aria-hidden="true"></i> Live preview</span>
                         </div>
                         <div class="palette-grid" id="palette-grid" role="radiogroup" aria-label="Color palette">
-                            <div class="palette-grid-label">Featured</div>
                             <button type="button" class="palette-option" data-palette="indy" role="radio" aria-checked="false">
                                 <span class="palette-swatches" aria-hidden="true"><i style="--swatch:#000035"></i><i style="--swatch:#1B2455"></i><i style="--swatch:#C4AD62"></i><i style="--swatch:#FFFFFF"></i></span>
                                 <span>Indy</span><small>School colors</small>
                             </button>
+                            <button type="button" class="palette-option" data-palette="monochrome" role="radio" aria-checked="false">
+                                <span class="palette-swatches" aria-hidden="true"><i style="--swatch:#090909"></i><i style="--swatch:#2B2B2B"></i><i style="--swatch:#BDBDBD"></i><i style="--swatch:#FAFAFA"></i></span>
+                                <span>Monochrome</span><small>Clean black &amp; white</small>
+                            </button>
+                            <button type="button" class="palette-option" data-palette="slate" role="radio" aria-checked="false">
+                                <span class="palette-swatches" aria-hidden="true"><i style="--swatch:#0F172A"></i><i style="--swatch:#334155"></i><i style="--swatch:#38BDF8"></i><i style="--swatch:#F8FAFC"></i></span>
+                                <span>Slate</span><small>Crisp and modern</small>
+                            </button>
                             <button type="button" class="palette-option" data-palette="ocean" role="radio" aria-checked="false">
                                 <span class="palette-swatches" aria-hidden="true"><i style="--swatch:#112D4E"></i><i style="--swatch:#3F72AF"></i><i style="--swatch:#DBE2EF"></i><i style="--swatch:#F9F7F7"></i></span>
                                 <span>Ocean</span><small>Cool and clear</small>
+                            </button>
+                            <button type="button" class="palette-option" data-palette="aurora" role="radio" aria-checked="false">
+                                <span class="palette-swatches" aria-hidden="true"><i style="--swatch:#101828"></i><i style="--swatch:#344054"></i><i style="--swatch:#12B76A"></i><i style="--swatch:#F9FAFB"></i></span>
+                                <span>Aurora</span><small>Fresh digital green</small>
+                            </button>
+                            <button type="button" class="palette-option" data-palette="prism-rush" role="radio" aria-checked="false">
+                                <span class="palette-swatches" aria-hidden="true"><i style="--swatch:#3A0CA3"></i><i style="--swatch:#4361EE"></i><i style="--swatch:#F72585"></i><i style="--swatch:#F8F9FF"></i></span>
+                                <span>Prism Rush</span><small>Electric violet and blue</small>
+                            </button>
+                            <button type="button" class="palette-option" data-palette="tropical" role="radio" aria-checked="false">
+                                <span class="palette-swatches" aria-hidden="true"><i style="--swatch:#005F73"></i><i style="--swatch:#0A9396"></i><i style="--swatch:#FFB703"></i><i style="--swatch:#FFF7E6"></i></span>
+                                <span>Tropical</span><small>Teal and golden sun</small>
+                            </button>
+                            <button type="button" class="palette-option" data-palette="candy-pop" role="radio" aria-checked="false">
+                                <span class="palette-swatches" aria-hidden="true"><i style="--swatch:#6D28D9"></i><i style="--swatch:#EC4899"></i><i style="--swatch:#2DD4BF"></i><i style="--swatch:#FFF1F8"></i></span>
+                                <span>Candy Pop</span><small>Purple, pink, and mint</small>
                             </button>
                             <button type="button" class="palette-option" data-palette="dark-teal" role="radio" aria-checked="false">
                                 <span class="palette-swatches" aria-hidden="true"><i style="--swatch:#222831"></i><i style="--swatch:#393E46"></i><i style="--swatch:#00ADB5"></i><i style="--swatch:#EEEEEE"></i></span>
@@ -290,7 +315,38 @@
                                 <span class="palette-swatches" aria-hidden="true"><i style="--swatch:#F38181"></i><i style="--swatch:#95E1D3"></i><i style="--swatch:#FCE38A"></i><i style="--swatch:#EAFFD0"></i></span>
                                 <span>Pastel</span><small>Soft and playful</small>
                             </button>
-                            <div class="palette-grid-label">Dark palettes</div>
+                            <button type="button" class="palette-option" data-palette="rose-quartz" role="radio" aria-checked="false">
+                                <span class="palette-swatches" aria-hidden="true"><i style="--swatch:#4A1D36"></i><i style="--swatch:#8F3B62"></i><i style="--swatch:#E8A0BF"></i><i style="--swatch:#FFF4F8"></i></span>
+                                <span>Rose Quartz</span><small>Elegant dusty rose</small>
+                            </button>
+                            <button type="button" class="palette-option" data-palette="lavender" role="radio" aria-checked="false">
+                                <span class="palette-swatches" aria-hidden="true"><i style="--swatch:#29234F"></i><i style="--swatch:#62558A"></i><i style="--swatch:#C4B5FD"></i><i style="--swatch:#F6F3FF"></i></span>
+                                <span>Lavender</span><small>Soft violet calm</small>
+                            </button>
+                            <button type="button" class="palette-option" data-palette="cherry-blossom" role="radio" aria-checked="false">
+                                <span class="palette-swatches" aria-hidden="true"><i style="--swatch:#542333"></i><i style="--swatch:#A64D68"></i><i style="--swatch:#F2A7B9"></i><i style="--swatch:#FFF5F7"></i></span>
+                                <span>Cherry Blossom</span><small>Bright floral pink</small>
+                            </button>
+                            <button type="button" class="palette-option" data-palette="sunset-sorbet" role="radio" aria-checked="false">
+                                <span class="palette-swatches" aria-hidden="true"><i style="--swatch:#44233F"></i><i style="--swatch:#A64B67"></i><i style="--swatch:#F59E8B"></i><i style="--swatch:#FFF1EA"></i></span>
+                                <span>Sunset Sorbet</span><small>Warm peach and berry</small>
+                            </button>
+                            <button type="button" class="palette-option" data-palette="sage-rose" role="radio" aria-checked="false">
+                                <span class="palette-swatches" aria-hidden="true"><i style="--swatch:#263C36"></i><i style="--swatch:#557A6E"></i><i style="--swatch:#D6A0AA"></i><i style="--swatch:#F6F1ED"></i></span>
+                                <span>Sage Rose</span><small>Botanical and soft</small>
+                            </button>
+                            <button type="button" class="palette-option" data-palette="daylight" role="radio" aria-checked="false">
+                                <span class="palette-swatches" aria-hidden="true"><i style="--swatch:#F8FAFC"></i><i style="--swatch:#E2E8F0"></i><i style="--swatch:#2563EB"></i><i style="--swatch:#FFFFFF"></i></span>
+                                <span>Daylight</span><small>White with clear blue</small>
+                            </button>
+                            <button type="button" class="palette-option" data-palette="cotton-candy" role="radio" aria-checked="false">
+                                <span class="palette-swatches" aria-hidden="true"><i style="--swatch:#FFF1F7"></i><i style="--swatch:#EDE9FE"></i><i style="--swatch:#EC4899"></i><i style="--swatch:#FFFFFF"></i></span>
+                                <span>Cotton Candy</span><small>Light pink and lilac</small>
+                            </button>
+                            <button type="button" class="palette-option" data-palette="lemonade" role="radio" aria-checked="false">
+                                <span class="palette-swatches" aria-hidden="true"><i style="--swatch:#FFF8CC"></i><i style="--swatch:#FFD6A5"></i><i style="--swatch:#F97316"></i><i style="--swatch:#FFFEF5"></i></span>
+                                <span>Lemonade</span><small>Sunny cream and peach</small>
+                            </button>
                             <button type="button" class="palette-option" data-palette="midnight" role="radio" aria-checked="false">
                                 <span class="palette-swatches" aria-hidden="true"><i style="--swatch:#070F2B"></i><i style="--swatch:#1B1A55"></i><i style="--swatch:#9290C3"></i><i style="--swatch:#535C91"></i></span>
                                 <span>Midnight</span><small>Deep blue violet</small>
@@ -359,25 +415,6 @@
                             </button>
                         </div>
                     </div>
-                    <!-- Display Panel Content -->
-                    <div class="settings-group legacy-color-setting" hidden>
-                        <h3><i class="fas fa-box"></i> Schedule box</h3>
-                        <div style="display:flex;flex-direction:column;gap:10px;">
-                            <div>
-                                <label for="white-box-color">Background color</label>
-                                <input type="color" id="white-box-color" onchange="updateWhiteBoxColor()">
-                            </div>
-                            <div class="slider-row">
-                                <label class="slider-label" for="white-box-opacity">Opacity</label>
-                                <input type="range" id="white-box-opacity" min="0" max="100" value="90" onchange="updateWhiteBoxColor()">
-                                <span class="range-value slider-value">90%</span>
-                            </div>
-                            <div>
-                                <label for="white-box-text-color">Text color</label>
-                                <input type="color" id="white-box-text-color" onchange="updateWhiteBoxTextColor()">
-                            </div>
-                        </div>
-                    </div>
                     <div class="appearance-tools-grid">
                         <div class="settings-group appearance-control-card">
                             <div class="settings-section-heading compact">
@@ -422,22 +459,6 @@
                                     <option value="'Segoe UI'">Segoe UI</option>
                                 </select>
                             </div>
-                        </div>
-                    </div>
-                    <!-- Timer Panel Content -->
-                    <div class="settings-group legacy-color-setting" hidden>
-                        <h3><i class="fas fa-clock"></i> Timer Display</h3>
-                        <div>
-                            <label for="countdown-color">Timer Color:</label>
-                            <input type="color" id="countdown-color" value="#ffffff" onchange="updateCountdownColor()">
-                        </div>
-                    </div>
-                    <!-- Colors & Fonts Panel Content -->
-                    <div class="settings-group legacy-color-setting" hidden>
-                        <h3><i class="fas fa-palette"></i> Colors</h3>
-                        <div>
-                            <label for="font-color">Timer Header Color:</label>
-                            <input type="color" id="font-color" value="#ffffff">
                         </div>
                     </div>
                 </div>
@@ -510,22 +531,6 @@
                             </div>
                         </div>
                     </div>
-                    <div class="settings-group" style="display:none">
-                        <h3><i class="fas fa-plus-circle"></i> Custom Schedule</h3>
-                        <div id="custom-schedule">
-                            <h3 id="custom-schedule-toggle" class="dropdown-toggle">
-                                Custom Schedule <span class="triangle">&#9662;</span>
-                            </h3>
-                            <div id="custom-schedule-content" class="dropdown-content">
-                                <label for="schedule-name">Schedule Name:</label>
-                                <input type="text" id="schedule-name" placeholder="Enter schedule name" />
-                                <label for="num-periods">Number of Periods:</label>
-                                <input type="number" id="num-periods" min="1" onchange="setupCustomSchedule()" />
-                                <div id="period-inputs"></div>
-                                <button id="save-schedule-button" onclick="saveCustomSchedule()">Save Schedule</button>
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
                 <div class="settings-panel" id="about-panel">
@@ -536,7 +541,7 @@
                     <div class="settings-group about-overview-card">
                         <div class="about-content about-dashboard">
                             <div class="about-intro">
-                                <div><span class="about-version">Version 1.0.4</span><h2>Built for the Indy school day.</h2><p>Indy Schedule is a fast, lightweight countdown and daily schedule dashboard for Independence High School.</p></div>
+                                <div><span class="about-version">Version 1.1.0</span><h2>Built for the Indy school day.</h2><p>Indy Schedule is a fast, lightweight countdown and daily schedule dashboard for Independence High School.</p></div>
                                 <div class="about-intro-mark"><i class="fas fa-clock" aria-hidden="true"></i></div>
                             </div>
 
@@ -595,6 +600,21 @@
 
                         <div id="whatsnew-website" class="whatsnew-log" role="tabpanel">
                             <div class="wn-entry current-release">
+                                <div class="wn-entry-header">
+                                    <span class="wn-version">v1.1.0</span>
+                                    <span class="wn-date">Aug 5, 2026</span>
+                                    <span class="wn-tag">Reliability &amp; live data</span>
+                                </div>
+                                <ul>
+                                    <li>Deploys refreshed, validated IHS calendar data directly to Firebase every three hours.</li>
+                                    <li>Separates official live events from the built-in 2026–27 bell schedule.</li>
+                                    <li>Adds explicit loading, saved-copy, offline, stale, coverage, and error states.</li>
+                                    <li>Shows calendar and lunch sources, update times, and safer official fallbacks.</li>
+                                    <li>Adds automated calendar and lunch validation before publishing.</li>
+                                </ul>
+                            </div>
+
+                            <div class="wn-entry">
                                 <div class="wn-entry-header">
                                     <span class="wn-version">v1.0.4</span>
                                     <span class="wn-date">Aug 5, 2026</span>
@@ -732,6 +752,24 @@
                                     <input type="checkbox" id="analytics-consent-toggle">
                                     <span class="slider"></span>
                                 </label>
+                            </div>
+                            <div class="device-data-card">
+                                <div class="device-data-summary">
+                                    <span class="device-data-icon"><i class="fas fa-hard-drive" aria-hidden="true"></i></span>
+                                    <div>
+                                        <strong>Data stored on this device</strong>
+                                        <p>Delete your lunch choice, appearance, renamed periods, onboarding status, and other preferences saved in this browser.</p>
+                                    </div>
+                                    <button type="button" id="delete-local-data" class="delete-local-data-button" aria-expanded="false" aria-controls="delete-local-data-confirmation">Delete stored data</button>
+                                </div>
+                                <div id="delete-local-data-confirmation" class="device-data-confirmation" hidden>
+                                    <div><strong>Delete everything stored in this browser?</strong><p>This cannot be undone. Google sign-in and data synced to your account are not deleted and may return while you are signed in.</p></div>
+                                    <div class="device-data-confirmation-actions">
+                                        <button type="button" id="cancel-delete-local-data" class="cancel-local-data-button">Cancel</button>
+                                        <button type="button" id="confirm-delete-local-data" class="confirm-local-data-button"><i class="fas fa-trash" aria-hidden="true"></i> Delete everything</button>
+                                    </div>
+                                </div>
+                                <p id="delete-local-data-status" class="device-data-status" role="status" aria-live="polite"></p>
                             </div>
                             <div class="legal-policy-heading"><span>Policies</span><p>Plain-language summaries with links to the complete documents.</p></div>
                             <div class="legal-cards-row">
@@ -873,6 +911,11 @@
                 </div>
             </div>
         </div>
+        <div class="onboarding-launch-mark" aria-hidden="true">
+            <span class="onboarding-launch-logo">
+                <img src="indy_schedule_logo_sizes/indy-schedule-logo-128x128.png" alt="" class="brand-logo-art">
+            </span>
+        </div>
     </div>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script>
@@ -957,6 +1000,7 @@
                     document.body.classList.remove('onboarding-open');
                     document.documentElement.classList.remove('onboarding-pending');
                     document.getElementById('settings-button')?.focus();
+                    window.setTimeout(() => document.body.classList.remove('dashboard-revealing'), 700);
                 }
 
                 function finishOnboarding() {
@@ -971,8 +1015,9 @@
                         closeOnboarding();
                         return;
                     }
+                    document.body.classList.add('dashboard-revealing');
                     backdrop.classList.add('onboarding-launching');
-                    window.setTimeout(closeOnboarding, 1050);
+                    window.setTimeout(closeOnboarding, 1280);
                 }
 
                 nextButton.addEventListener('click', () => {

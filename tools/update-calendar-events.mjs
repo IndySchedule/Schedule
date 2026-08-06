@@ -1,4 +1,4 @@
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { appendFile, mkdir, readFile, writeFile } from 'node:fs/promises';
 import ical from 'node-ical';
 
 const FEED_URL = 'https://calendar.google.com/calendar/ical/myplace.wcs.edu_7jsl4069ahumr4235cdivoue6o%40group.calendar.google.com/public/basic.ics';
@@ -6,6 +6,7 @@ const PUBLIC_CALENDAR_URL = 'https://ihs.wcs.edu/calendar';
 const TIME_ZONE = 'America/Chicago';
 const OUTPUT_PATH = new URL('../data/ihs-calendar-events.json', import.meta.url);
 const DAY_MS = 24 * 60 * 60 * 1000;
+const DATE_KEY_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 
 const textValue = (value) => {
   if (typeof value === 'string') return value.trim();
@@ -53,6 +54,10 @@ const parsed = await ical.async.fromURL(FEED_URL, {
   signal: AbortSignal.timeout(20_000)
 });
 
+if (!parsed || !Object.values(parsed).some((entry) => entry?.type === 'VEVENT')) {
+  throw new Error('The official IHS feed did not contain any calendar events. Existing data was left untouched.');
+}
+
 const events = [];
 for (const event of Object.values(parsed)) {
   if (event?.type !== 'VEVENT' || event.recurrenceid) continue;
@@ -84,13 +89,38 @@ for (const event of Object.values(parsed)) {
 }
 
 const uniqueEvents = [...new Map(events.map((event) => [event.id, event])).values()]
-  .sort((first, second) => first.start.localeCompare(second.start));
+  .sort((first, second) => (
+    first.start.localeCompare(second.start)
+    || first.id.localeCompare(second.id)
+  ));
+
+const validationErrors = [];
+const seenIds = new Set();
+uniqueEvents.forEach((event, index) => {
+  const prefix = `events[${index}]`;
+  if (!event.id || seenIds.has(event.id)) validationErrors.push(`${prefix} has a missing or duplicate id`);
+  seenIds.add(event.id);
+  if (!event.title || event.title.length > 300) validationErrors.push(`${prefix} has an invalid title`);
+  const start = new Date(event.start);
+  const end = new Date(event.end);
+  if (Number.isNaN(start.getTime())) validationErrors.push(`${prefix} has an invalid start`);
+  if (Number.isNaN(end.getTime()) || end < start) validationErrors.push(`${prefix} has an invalid end`);
+  if (!Array.isArray(event.days) || !event.days.length || event.days.some((day) => !DATE_KEY_PATTERN.test(day))) {
+    validationErrors.push(`${prefix} has invalid covered days`);
+  }
+});
+if (validationErrors.length) {
+  throw new Error(`Calendar validation failed:\n- ${validationErrors.join('\n- ')}`);
+}
+
 const comparableOutput = {
   rangeStart: dateKey(rangeStart),
   rangeEnd: dateKey(rangeEnd),
   events: uniqueEvents
 };
-let generatedAt = new Date().toISOString();
+const lastCheckedAt = new Date().toISOString();
+let contentUpdatedAt = lastCheckedAt;
+let contentChanged = true;
 try {
   const previous = JSON.parse(await readFile(OUTPUT_PATH, 'utf8'));
   const previousComparable = {
@@ -99,15 +129,22 @@ try {
     events: previous.events
   };
   if (previous.ready && JSON.stringify(previousComparable) === JSON.stringify(comparableOutput)) {
-    generatedAt = previous.generatedAt;
+    contentChanged = false;
+    contentUpdatedAt = previous.contentUpdatedAt || previous.generatedAt || lastCheckedAt;
   }
 } catch {
   // The first workflow run creates the ready data file.
 }
 
 const output = {
+  schemaVersion: 1,
+  kind: 'ihs-calendar-events',
   ready: true,
-  generatedAt,
+  generatedAt: lastCheckedAt,
+  lastCheckedAt,
+  contentUpdatedAt,
+  refreshIntervalHours: 3,
+  staleAfterHours: 8,
   source: PUBLIC_CALENDAR_URL,
   timeZone: TIME_ZONE,
   rangeStart: comparableOutput.rangeStart,
@@ -117,4 +154,7 @@ const output = {
 
 await mkdir(new URL('../data/', import.meta.url), { recursive: true });
 await writeFile(OUTPUT_PATH, `${JSON.stringify(output, null, 2)}\n`, 'utf8');
-console.log(`Wrote ${uniqueEvents.length} IHS calendar events.`);
+if (process.env.GITHUB_OUTPUT) {
+  await appendFile(process.env.GITHUB_OUTPUT, `content_changed=${contentChanged}\n`, 'utf8');
+}
+console.log(`Wrote ${uniqueEvents.length} validated IHS calendar events (content ${contentChanged ? 'changed' : 'unchanged'}).`);

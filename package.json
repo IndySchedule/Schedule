@@ -3,7 +3,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "update-calendar": "node tools/update-calendar-events.mjs"
+    "update-calendar": "node tools/update-calendar-events.mjs",
+    "validate-live-data": "node tools/validate-live-data.mjs",
+    "refresh-live-data": "npm run update-calendar && npm run validate-live-data"
   },
   "dependencies": {
     "node-ical": "0.27.1"

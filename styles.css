@@ -232,33 +232,6 @@ select {
     font-size: 14px;
 }
 
-#period-inputs > div {
-    background: rgba(0, 191, 165, 0.05);
-    padding: 12px;
-    margin: 8px 0;
-    border-radius: 6px;
-    border: 1px solid rgba(0, 191, 165, 0.1);
-}
-
-#save-schedule-button {
-    width: 100%;
-    margin-top: 15px;
-    padding: 10px;
-    background: #00bfa5;
-    border: none;
-    border-radius: 4px;
-    color: white;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-#save-schedule-button:hover {
-    background: #00a693;
-    transform: translateY(-2px);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-}
-
 /* Modern Settings Sidebar */
 .settings-sidebar {
     display: none;
@@ -617,53 +590,155 @@ body.onboarding-open {
 
 .onboarding-backdrop.onboarding-launching {
     pointer-events: none;
-    animation: onboardingCurtainExit 1050ms cubic-bezier(.65,0,.35,1) forwards;
+    animation: onboardingCurtainExit 1280ms cubic-bezier(.65,0,.35,1) forwards;
 }
 
-.onboarding-backdrop.onboarding-launching::after {
-    content: "";
+.onboarding-launch-mark {
     position: fixed;
     left: 50%;
     top: 50%;
-    z-index: 1;
-    width: 140px;
-    height: 140px;
+    z-index: 4;
+    display: grid;
+    place-items: center;
+    width: 104px;
+    height: 104px;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, -50%) scale(0.72);
+}
+
+.onboarding-launch-mark::before,
+.onboarding-launch-mark::after {
+    content: "";
+    position: absolute;
+    inset: 0;
     border-radius: 50%;
-    background: radial-gradient(circle, #e5d38d 0%, #C4AD62 28%, #1B2455 68%, #000035 100%);
-    box-shadow: 0 0 80px rgba(196,173,98,0.65);
-    transform: translate(-50%, -50%) scale(0);
-    animation: onboardingLaunchPulse 850ms cubic-bezier(.2,.75,.25,1) forwards;
+    border: 2px solid var(--theme-dashboard-accent, #C4AD62);
+    box-shadow: 0 0 30px rgba(var(--theme-dashboard-accent-rgb, 196, 173, 98), 0.34);
+    opacity: 0;
+}
+
+.onboarding-launch-logo {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    width: 76px;
+    height: 76px;
+    overflow: hidden;
+    border: 1px solid rgba(var(--theme-dashboard-accent-rgb, 196, 173, 98), 0.65);
+    border-radius: 50%;
+    background: radial-gradient(circle at 38% 32%, #1B2455, #000035 72%);
+    box-shadow:
+        0 0 0 8px rgba(var(--theme-dashboard-accent-rgb, 196, 173, 98), 0.1),
+        0 18px 55px rgba(0, 0, 20, 0.5);
+}
+
+.onboarding-launch-logo img {
+    width: 58px;
+    height: 58px;
+}
+
+.onboarding-backdrop.onboarding-launching .onboarding-launch-mark {
+    animation: onboardingEmblemReveal 1040ms 150ms cubic-bezier(.2,.75,.2,1) both;
+}
+
+.onboarding-backdrop.onboarding-launching .onboarding-launch-mark::before {
+    animation: onboardingRingExpand 860ms 250ms cubic-bezier(.15,.7,.2,1) both;
+}
+
+.onboarding-backdrop.onboarding-launching .onboarding-launch-mark::after {
+    animation: onboardingRingExpand 820ms 390ms cubic-bezier(.15,.7,.2,1) both;
 }
 
 .onboarding-backdrop.onboarding-launching .onboarding-dialog {
-    animation: onboardingDialogLaunch 620ms cubic-bezier(.55,0,.45,1) forwards;
+    animation: onboardingDialogLaunch 440ms cubic-bezier(.55,0,.45,1) forwards;
 }
 
 .onboarding-backdrop.onboarding-launching .onboarding-ready-mark {
-    animation: onboardingReadyLaunch 560ms ease forwards;
+    animation: onboardingReadyLaunch 390ms cubic-bezier(.2,.85,.25,1) forwards;
 }
 
 @keyframes onboardingDialogLaunch {
-    0% { opacity: 1; transform: scale(1); filter: blur(0); }
-    45% { opacity: 1; transform: scale(0.985); filter: blur(0); }
-    100% { opacity: 0; transform: scale(1.045); filter: blur(7px); }
+    0% { opacity: 1; transform: scale(1); }
+    38% { opacity: 1; transform: scale(0.975); }
+    100% { opacity: 0; transform: scale(0.94); }
 }
 
-@keyframes onboardingLaunchPulse {
-    0% { opacity: 0; transform: translate(-50%, -50%) scale(0); }
-    20% { opacity: 1; }
-    100% { opacity: 0; transform: translate(-50%, -50%) scale(18); }
+@keyframes onboardingEmblemReveal {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.72); }
+    22%, 68% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(1.08); }
+}
+
+@keyframes onboardingRingExpand {
+    0% { opacity: 0; transform: scale(0.58); border-width: 3px; }
+    18% { opacity: 0.88; }
+    100% { opacity: 0; transform: scale(15); border-width: 1px; }
 }
 
 @keyframes onboardingCurtainExit {
-    0%, 62% { opacity: 1; }
+    0%, 68% { opacity: 1; }
     100% { opacity: 0; }
 }
 
 @keyframes onboardingReadyLaunch {
     0% { transform: scale(1) rotate(0); }
-    45% { transform: scale(1.14) rotate(-5deg); box-shadow: 0 0 42px rgba(196,173,98,0.65); }
-    100% { transform: scale(0.75) rotate(8deg); opacity: 0; }
+    45% { transform: scale(1.18) rotate(-4deg); box-shadow: 0 0 46px rgba(196,173,98,0.7); }
+    100% { transform: scale(0.82) rotate(4deg); opacity: 0; }
+}
+
+/* The dashboard arrives behind the expanding Indy mark, then its important
+   information settles in from left to right. */
+body.dashboard-revealing .dashboard-shell {
+    animation: onboardingDashboardReveal 620ms 650ms cubic-bezier(.2,.75,.25,1) both;
+}
+
+body.dashboard-revealing .dashboard-header,
+body.dashboard-revealing .current-period,
+body.dashboard-revealing .schedule-container {
+    animation: onboardingDashboardPiece 520ms cubic-bezier(.2,.75,.25,1) both;
+}
+
+body.dashboard-revealing .dashboard-header { animation-delay: 720ms; }
+body.dashboard-revealing .current-period { animation-delay: 790ms; }
+body.dashboard-revealing .schedule-container { animation-delay: 870ms; }
+
+body.dashboard-revealing #schedule .period {
+    animation: onboardingScheduleRow 360ms cubic-bezier(.2,.75,.25,1) both;
+}
+
+body.dashboard-revealing #schedule .period:nth-child(1) { animation-delay: 930ms; }
+body.dashboard-revealing #schedule .period:nth-child(2) { animation-delay: 970ms; }
+body.dashboard-revealing #schedule .period:nth-child(3) { animation-delay: 1010ms; }
+body.dashboard-revealing #schedule .period:nth-child(4) { animation-delay: 1050ms; }
+body.dashboard-revealing #schedule .period:nth-child(5) { animation-delay: 1090ms; }
+body.dashboard-revealing #schedule .period:nth-child(6) { animation-delay: 1130ms; }
+body.dashboard-revealing #schedule .period:nth-child(7) { animation-delay: 1170ms; }
+body.dashboard-revealing #schedule .period:nth-child(n+8) { animation-delay: 1210ms; }
+
+body.dashboard-revealing .period-progress-track {
+    animation: onboardingProgressSweep 700ms 920ms ease-out both;
+}
+
+@keyframes onboardingDashboardReveal {
+    from { opacity: 0.35; transform: translateY(14px) scale(0.992); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes onboardingDashboardPiece {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes onboardingScheduleRow {
+    from { opacity: 0; transform: translateX(10px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes onboardingProgressSweep {
+    from { opacity: 0; transform: scaleX(0); transform-origin: left center; }
+    to { opacity: 1; transform: scaleX(1); transform-origin: left center; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -680,6 +755,7 @@ body.onboarding-open {
 .onboarding-dialog {
     max-width: 760px;
     min-height: 610px;
+    max-height: calc(100dvh - 48px);
     border-radius: 24px;
     border: 1px solid rgba(196, 173, 98, 0.38);
     background: linear-gradient(155deg, #080d24 0%, #101a3d 58%, #151b36 100%);
@@ -1059,8 +1135,130 @@ body.onboarding-open {
     border-color: rgba(255,255,255,0.12) !important;
 }
 
+/* Keep first-run setup fully visible on Chromebook-sized viewports. The
+   browser toolbar and ChromeOS shelf often leave only ~630–680px of height. */
+@media (min-width: 681px) and (max-height: 760px) {
+    .onboarding-backdrop {
+        align-items: center;
+        padding: 10px 18px;
+    }
+
+    .onboarding-dialog {
+        width: min(760px, calc(100vw - 36px));
+        min-height: 0;
+        height: min(620px, calc(100dvh - 20px));
+        max-height: calc(100dvh - 20px);
+        margin: 0 auto;
+        border-radius: 20px;
+    }
+
+    .onboarding-dialog .update-notice-header {
+        height: 64px;
+        flex-basis: 64px;
+        padding: 0 24px;
+    }
+
+    .onboarding-dialog .update-title-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 11px;
+    }
+
+    .onboarding-dialog .update-title-icon img {
+        width: 31px;
+        height: 31px;
+    }
+
+    .onboarding-dialog .update-title-block h2 { font-size: 17px; }
+    .onboarding-brand { font-size: 9px; }
+    .onboarding-step-count { padding: 6px 10px; font-size: 11px; }
+
+    .onboarding-dialog .update-notice-body {
+        padding: 0 28px 18px;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    .onboarding-progress { margin-inline: -28px; }
+
+    .onboarding-step {
+        min-height: 0;
+        padding: 18px 0 12px;
+    }
+
+    .onboarding-step h1 {
+        margin: 5px 0 8px;
+        font-size: 34px;
+        line-height: 1;
+    }
+
+    .onboarding-lead {
+        max-width: 650px;
+        font-size: 13px !important;
+        line-height: 1.42 !important;
+    }
+
+    .onboarding-hero-mark,
+    .onboarding-ready-mark,
+    .onboarding-step-icon {
+        width: 44px;
+        height: 44px;
+        margin-bottom: 10px;
+        border-radius: 13px;
+        font-size: 19px;
+    }
+
+    .onboarding-hero-mark img { width: 34px; height: 34px; }
+    .onboarding-ready-mark { border-radius: 50%; }
+
+    .onboarding-feature-grid,
+    .onboarding-lunch-options,
+    .onboarding-schedule-list,
+    .onboarding-ready-card {
+        margin-top: 14px;
+    }
+
+    .onboarding-feature-grid,
+    .onboarding-lunch-options { gap: 9px; }
+
+    .onboarding-feature {
+        min-height: 82px;
+        padding: 11px 13px;
+        border-radius: 12px;
+    }
+
+    .onboarding-feature i { margin-bottom: 1px; }
+
+    .onboarding-schedule-list,
+    .onboarding-ready-card { gap: 6px; }
+
+    .onboarding-schedule-list > div,
+    .onboarding-ready-card > div {
+        padding: 8px 13px;
+    }
+
+    .lunch-choice {
+        min-height: 84px;
+        padding: 11px;
+        border-radius: 13px;
+    }
+
+    .lunch-letter { width: 38px; height: 38px; font-size: 17px; }
+    .onboarding-hint { margin-top: 8px !important; }
+
+    .onboarding-actions {
+        padding-top: 10px;
+    }
+
+    .onboarding-actions .btn {
+        min-height: 40px;
+        padding: 9px 17px;
+    }
+}
+
 @media (max-width: 680px) {
-    .onboarding-dialog { min-height: calc(100vh - 24px); margin: 12px auto; border-radius: 18px; }
+    .onboarding-backdrop { padding: 0 12px; }
+    .onboarding-dialog { min-height: calc(100dvh - 24px); max-height: calc(100dvh - 24px); margin: 12px auto; border-radius: 18px; }
     .onboarding-dialog .update-notice-header { height: 72px; flex-basis: 72px; padding: 0 18px; }
     .onboarding-dialog .update-title-icon { width: 40px; height: 40px; }
     .onboarding-dialog .update-title-icon img { width: 31px; height: 31px; }
@@ -1125,97 +1323,6 @@ body.onboarding-open {
 
 .update-notice-dialog { animation: dialogSlideUp 220ms ease both; }
 
-/* Grade level welcome modal */
-.grade-modal-backdrop {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 11000;
-    padding: 20px;
-    animation: backdropFade 220ms ease-in;
-}
-.welcome-modal-wrapper {
-    position: relative;
-}
-.welcome-modal-wrapper::before {
-    content: "";
-    position: absolute;
-    inset: -40px;
-    background: radial-gradient(circle at center, rgba(11,15,62,0.4), rgba(196,173,98,0.12));
-    filter: blur(40px);
-    z-index: -1;
-}
-.grade-modal-card {
-    background: linear-gradient(180deg, #0b1f3d 0%, #0b2f52 100%);
-    color: #e8eef7;
-    width: 100%;
-    max-width: 460px;
-    border-radius: 14px;
-    box-shadow: 0 16px 36px rgba(2,6,23,0.55);
-    border: 1px solid rgba(255,255,255,0.05);
-    padding: 22px 22px 18px;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-}
-.welcome-modal {
-    background: rgba(10, 15, 45, 0.65);
-    backdrop-filter: blur(18px) saturate(150%);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 22px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
-    animation: welcomeFadeIn 0.35s ease forwards;
-}
-.grade-modal-card h2 {
-    margin: 0;
-    font-size: 20px;
-    color: #f5f8ff;
-    letter-spacing: 0.01em;
-}
-.grade-modal-sub {
-    margin: 0;
-    color: rgba(232,238,247,0.9);
-    font-size: 14px;
-    line-height: 1.5;
-}
-.welcome-title {
-    font-size: 22px;
-    font-weight: 600;
-    letter-spacing: -0.3px;
-    color: #FFFFFF;
-    margin-bottom: 6px;
-}
-.welcome-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-.welcome-subtitle {
-    font-size: 15px;
-    opacity: 0.9;
-    margin-bottom: 18px;
-}
-.welcome-option-btn {
-    padding: 12px 18px;
-    border-radius: 12px;
-    background: rgba(255,255,255,0.12);
-    border: 1px solid rgba(255,255,255,0.18);
-    color: #FFFFFF;
-    font-weight: 600;
-    min-width: 140px;
-    text-align: center;
-    cursor: pointer;
-    transition: 0.2s ease;
-    backdrop-filter: blur(10px);
-}
-.welcome-option-btn:hover {
-    background: rgba(255,255,255,0.22);
-    border-color: rgba(255,255,255,0.25);
-    transform: translateY(-1px);
-}
 .contact-card {
     background: linear-gradient(180deg, rgba(255,255,255,0.16), rgba(0,0,53,0.06));
     border: 1px solid rgba(0,0,0,0.06);
@@ -1502,52 +1609,6 @@ body.onboarding-open {
     text-decoration: underline;
     text-decoration-style: dotted;
 }
-.welcome-icon img {
-    width: 38px;
-    opacity: 0.85;
-    margin-bottom: 10px;
-}
-.grade-modal-actions {
-    display: flex;
-    gap: 12px;
-    margin-top: 6px;
-    flex-wrap: wrap;
-}
-.grade-choice {
-    flex: 1;
-    min-width: 150px;
-    padding: 12px 14px;
-    border-radius: 10px;
-    border: 1px solid rgba(255,255,255,0.08);
-    background: rgba(255,255,255,0.06);
-    color: #e8eef7;
-    font-weight: 700;
-    cursor: pointer;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.28);
-    transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
-}
-.grade-choice.primary {
-    background: linear-gradient(90deg,#0c2546 0%, #0b305a 100%);
-    border-color: rgba(255,255,255,0.1);
-}
-.grade-choice:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 12px 26px rgba(0,0,0,0.32);
-    background: rgba(255,255,255,0.1);
-}
-.grade-choice.primary:hover {
-    background: linear-gradient(90deg,#0c2d56 0%, #0b3866 100%);
-}
-.grade-modal-note {
-    font-size: 12px;
-    color: rgba(232,238,247,0.78);
-}
-
-@keyframes welcomeFadeIn {
-    0% { opacity: 0; transform: translateY(12px) scale(0.98); }
-    100% { opacity: 1; transform: translateY(0) scale(1); }
-}
-
 /* Legal panel styles */
 .legal-section {
     max-width: 920px;
@@ -2119,77 +2180,6 @@ close-settings-sidebar:hover {
     }
 }
 
-#bg-image-drop-area {
-    border: 2px dashed #00bfa5;
-    border-radius: 8px;
-    padding: 5px; /* Reduced padding */
-    text-align: center;
-    cursor: pointer;
-    margin: 10px 0;
-    transition: all 0.3s ease;
-    background-color: rgba(0, 191, 165, 0.1);
-    min-height: 30px; /* Reduced min-height */
-    width: 150px; /* Set a fixed width */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    border: 2px dashed currentColor;
-    background-color: transparent;
-    color: inherit;
-}
-
-#bg-image-drop-area:hover {
-    background-color: rgba(0, 191, 165, 0.2);
-    border-color: #ffffff;
-}
-
-#bg-image-drop-area.drag-over {
-    background-color: rgba(0, 191, 165, 0.3);
-    border-color: #ffffff;
-    transform: scale(1.02);
-}
-
-#bg-image-drop-area p {
-    margin: 2px 0; /* Reduced margin */
-    color: #ffffff;
-    font-size: 10px; /* Reduced font size */
-    color: inherit;
-    opacity: 0.8;
-}
-
-#bg-image {
-    display: none; /* Hide the file input */
-}
-
-#save-schedule-button {
-    margin-top: 15px;
-    padding: 8px 16px; /* Existing padding */
-    background-color: #00bfa5;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    width: auto; /* Change from 100% to auto for dynamic width */
-    display: block !important; /* Force display */
-    margin-left: 10px; /* Add left margin for spacing */
-    margin-right: 10px; /* Add right margin for spacing */
-}
-
-#save-schedule-button:hover {
-    background-color: #00796b;
-}
-
-#custom-schedule-content {
-    padding: 15px;
-    display: none;
-}
-
-#custom-schedule-content.show {
-    display: block;
-}
-
 /* ...existing code... */
 
 .settings-group {
@@ -2315,33 +2305,6 @@ close-settings-sidebar:hover {
     color: #00bfa5;
     margin-top: 12px;
     font-size: 14px;
-}
-
-#period-inputs > div {
-    background: rgba(0, 191, 165, 0.05);
-    padding: 12px;
-    margin: 8px 0;
-    border-radius: 6px;
-    border: 1px solid rgba(0, 191, 165, 0.1);
-}
-
-#save-schedule-button {
-    width: 100%;
-    margin-top: 15px;
-    padding: 10px;
-    background: #00bfa5;
-    border: none;
-    border-radius: 4px;
-    color: white;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-#save-schedule-button:hover {
-    background: #00a693;
-    transform: translateY(-2px);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 /* ...existing code... */
@@ -2668,26 +2631,6 @@ input:checked + .slider:before {
 
 /* ...existing code... */
 
-/* Remove or update these styles if they exist */
-.drop-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 191, 165, 0.15);
-    z-index: 10000;
-    pointer-events: none;
-    display: none;
-}
-
-.drop-overlay.active {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    backdrop-filter: blur(5px);
-}
-
 /* ...existing code... */
 
 .popup-overlay {
@@ -2956,41 +2899,6 @@ input, select {
     color: #00bfa5;
 }
 
-/* Extension Panel Styles */
-.color-controls {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.direction-controls {
-    margin-bottom: 20px;
-}
-
-#saveExtensionButton {
-    background: #00bfa5;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin: 20px 0;
-}
-
-#saveExtensionButton:hover {
-    background: #00a392;
-}
-
-#extensionPreview {
-    width: 100%;
-    height: 150px;
-    border-radius: 8px;
-    margin-top: 20px;
-}
-
 /* ...existing code... */
 
 /* Progress Bar Styles */
@@ -3017,7 +2925,7 @@ input, select {
 /* ...existing code... */
 
 /* Schedule Section Dropdowns */
-#rename-periods, #custom-schedule {
+#rename-periods {
     margin: 10px 0;
 }
 
@@ -3085,110 +2993,6 @@ input, select {
     padding: 8px;
     border-radius: 6px;
     background: rgba(255, 255, 255, 0.05);
-}
-
-#save-schedule-button {
-    margin-top: 15px;
-    padding: 8px 16px;
-    background: #00bfa5;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-#save-schedule-button:hover {
-    background: #00a593;
-}
-
-/* Welcome popup styles */
-#grade-level-modal {
-    position: fixed;
-    top: 0; left: 0; width: 100vw; height: 100vh;
-    background: rgba(0,0,0,0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 10000;
-}
-
-.grade-level-modal-box {
-    background: #fff;
-    color: #222;
-    border-radius: 18px;
-    padding: 40px 36px 32px 36px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.22);
-    text-align: center;
-    min-width: 320px;
-    max-width: 95vw;
-    position: relative;
-    font-family: 'Inter', 'Roboto', Arial, sans-serif;
-    border: 2.5px solid #00bfa5;
-    transition: box-shadow 0.2s;
-}
-
-.grade-level-modal-box h2 {
-    margin-bottom: 18px;
-    color: #00bfa5;
-    font-size: 2.1em;
-    font-weight: 700;
-}
-
-.grade-level-modal-box p {
-    margin-bottom: 8px;
-    font-size: 1.18em;
-    font-weight: 500;
-}
-
-.grade-level-modal-buttons {
-    display: flex;
-    gap: 24px;
-    justify-content: center;
-    margin-bottom: 10px;
-}
-
-.grade-level-modal-btn {
-    min-width: 160px;
-    padding: 18px 0;
-    background: linear-gradient(90deg, #00bfa5 60%, #00796b 100%);
-    color: #fff;
-    border: none;
-    border-radius: 14px;
-    font-size: 1.18em;
-    font-weight: 600;
-    cursor: pointer;
-    box-shadow: 0 2px 12px rgba(0,191,165,0.10);
-    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
-    outline: none;
-    border: 2px solid transparent;
-    letter-spacing: 0.02em;
-}
-
-.grade-level-modal-btn:last-child {
-    background: linear-gradient(90deg, #00796b 60%, #00bfa5 100%);
-}
-
-.grade-level-modal-btn:hover,
-.grade-level-modal-btn:focus {
-    background: linear-gradient(90deg, #00bfa5 80%, #00796b 100%);
-    box-shadow: 0 6px 24px rgba(0,191,165,0.18);
-    transform: translateY(-2px) scale(1.06);
-    border: 2px solid #00bfa5;
-}
-
-.grade-level-modal-info {
-    margin-top: 18px;
-    color: #888;
-    font-size: 0.98em;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-}
-
-.grade-level-modal-info i {
-    color: #00bfa5;
 }
 
 /* Terms page helpers to match settings theme */
@@ -3236,41 +3040,6 @@ input, select {
     color: #00bfa5;
 }
 
-/* Extension Panel Styles */
-.color-controls {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.direction-controls {
-    margin-bottom: 20px;
-}
-
-#saveExtensionButton {
-    background: #00bfa5;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin: 20px 0;
-}
-
-#saveExtensionButton:hover {
-    background: #00a392;
-}
-
-#extensionPreview {
-    width: 100%;
-    height: 150px;
-    border-radius: 8px;
-    margin-top: 20px;
-}
-
 /* ...existing code... */
 
 /* Progress Bar Styles */
@@ -3297,7 +3066,7 @@ input, select {
 /* ...existing code... */
 
 /* Schedule Section Dropdowns */
-#rename-periods, #custom-schedule {
+#rename-periods {
     margin: 10px 0;
 }
 
@@ -3365,110 +3134,6 @@ input, select {
     padding: 8px;
     border-radius: 6px;
     background: rgba(255, 255, 255, 0.05);
-}
-
-#save-schedule-button {
-    margin-top: 15px;
-    padding: 8px 16px;
-    background: #00bfa5;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-#save-schedule-button:hover {
-    background: #00a593;
-}
-
-/* Welcome popup styles */
-#grade-level-modal {
-    position: fixed;
-    top: 0; left: 0; width: 100vw; height: 100vh;
-    background: rgba(0,0,0,0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 10000;
-}
-
-.grade-level-modal-box {
-    background: #fff;
-    color: #222;
-    border-radius: 18px;
-    padding: 40px 36px 32px 36px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.22);
-    text-align: center;
-    min-width: 320px;
-    max-width: 95vw;
-    position: relative;
-    font-family: 'Inter', 'Roboto', Arial, sans-serif;
-    border: 2.5px solid #00bfa5;
-    transition: box-shadow 0.2s;
-}
-
-.grade-level-modal-box h2 {
-    margin-bottom: 18px;
-    color: #00bfa5;
-    font-size: 2.1em;
-    font-weight: 700;
-}
-
-.grade-level-modal-box p {
-    margin-bottom: 8px;
-    font-size: 1.18em;
-    font-weight: 500;
-}
-
-.grade-level-modal-buttons {
-    display: flex;
-    gap: 24px;
-    justify-content: center;
-    margin-bottom: 10px;
-}
-
-.grade-level-modal-btn {
-    min-width: 160px;
-    padding: 18px 0;
-    background: linear-gradient(90deg, #00bfa5 60%, #00796b 100%);
-    color: #fff;
-    border: none;
-    border-radius: 14px;
-    font-size: 1.18em;
-    font-weight: 600;
-    cursor: pointer;
-    box-shadow: 0 2px 12px rgba(0,191,165,0.10);
-    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
-    outline: none;
-    border: 2px solid transparent;
-    letter-spacing: 0.02em;
-}
-
-.grade-level-modal-btn:last-child {
-    background: linear-gradient(90deg, #00796b 60%, #00bfa5 100%);
-}
-
-.grade-level-modal-btn:hover,
-.grade-level-modal-btn:focus {
-    background: linear-gradient(90deg, #00bfa5 80%, #00796b 100%);
-    box-shadow: 0 6px 24px rgba(0,191,165,0.18);
-    transform: translateY(-2px) scale(1.06);
-    border: 2px solid #00bfa5;
-}
-
-.grade-level-modal-info {
-    margin-top: 18px;
-    color: #888;
-    font-size: 0.98em;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-}
-
-.grade-level-modal-info i {
-    color: #00bfa5;
 }
 
 /* Terms page helpers to match settings theme */
@@ -3517,8 +3182,6 @@ input, select {
 }
 
 /* Mobile-only optimizations (affects screens <= 700px) */
-/* Hide mobile-only topbar by default (desktop) */
-.mobile-topbar { display: none; }
 @media (max-width: 700px) {
     /* Allow natural page height and enable scrolling on mobile */
     body {
@@ -3540,39 +3203,6 @@ input, select {
     /* Hide the full schedule on mobile to maximize timer visibility */
     .schedule-container {
         display: none !important;
-    }
-
-    /* Mobile top bar (logo + settings) */
-    .mobile-topbar {
-        display: flex !important;
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 56px;
-        background: rgba(17,17,17,0.85);
-        backdrop-filter: blur(6px);
-        z-index: 9998;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .mobile-topbar-inner {
-        width: 100%;
-        max-width: 1100px;
-        padding: 0 12px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-    .mobile-logo { width: 36px; height: 36px; border-radius: 6px; }
-    .mobile-settings-btn {
-        background: transparent;
-        border: none;
-        color: var(--text-primary);
-        font-size: 20px;
-        padding: 8px;
-        border-radius: 8px;
     }
 
     /* Current period more compact */
@@ -3613,11 +3243,9 @@ input, select {
     }
 
     /* Hide all elements except timer and timer header on mobile */
-    .mobile-topbar,
     #sign-in-button,
     .schedule-container,
     #settings-button,
-    .mobile-settings-btn,
     .theme-toggle,
     .settings-actions {
         display: none !important;
@@ -3695,7 +3323,6 @@ input, select {
 
     /* Make modal/dialogs full width and easy to read */
     .update-notice-dialog,
-    .grade-level-modal-box,
     .popup-box {
         max-width: 98vw !important;
         margin: 10px !important;
@@ -3707,9 +3334,7 @@ input, select {
 
     /* Bigger buttons / touch targets */
     .btn,
-    .btn-primary,
-    #save-schedule-button,
-    .grade-level-modal-btn {
+    .btn-primary {
         padding: 12px 18px !important;
         font-size: 16px !important;
     }
@@ -4540,7 +4165,6 @@ body.light-mode {
 /* Buttons and primary accents that used teal literals */
 .btn-primary,
 .gradient-save-btn,
-#save-schedule-button,
 #add-stop,
 .settings-sidebar .btn-primary,
 .settings-sidebar button {
@@ -4548,10 +4172,6 @@ body.light-mode {
     color: #fff !important;
     border-color: transparent !important;
 }
-
-/* Drop area and overlays */
-#bg-image-drop-area { border-color: var(--teal) !important; }
-.drop-overlay { background: rgba(26,33,58,0.06) !important; }
 
 /* Replace remaining common teal literal usages (safeguard) */
 .nav-item.active { background-image: none !important; }
@@ -4571,7 +4191,6 @@ body.light-mode {
 /* Buttons and controls that used teal */
 .btn-primary,
 .gradient-save-btn,
-#save-schedule-button,
 #add-stop,
 .gradient-save-btn,
 .settings-sidebar button,
@@ -4589,10 +4208,6 @@ body.light-mode {
     border-color: rgba(var(--brand-teal-rgb),0.28) !important;
     color: var(--teal) !important;
 }
-
-/* Drop overlay and drag areas */
-.drop-overlay { background: rgba(var(--brand-teal-rgb),0.08) !important; }
-#bg-image-drop-area { border-color: var(--teal) !important; }
 
 /* Hover/active accents tuned to navy */
 .gradient-save-btn:hover,
@@ -4667,7 +4282,6 @@ input[type="range"]::-moz-range-thumb { background: var(--teal) !important; }
 .nav-item.active,
 .btn-primary,
 .gradient-save-btn,
-#save-schedule-button,
 #add-stop {
     background: var(--teal) !important;
     color: #fff !important;
@@ -4759,45 +4373,6 @@ input[type="range"]::-moz-range-thumb { background: var(--teal) !important; }
     color: #000035 !important;
 }
 
-#settings-sidebar #extension-panel .controls input[type="color"] {
-    border: 1px solid var(--card-border) !important;
-    box-shadow: none !important;
-}
-#settings-sidebar #extension-panel .controls .direction-controls select {
-    background: var(--card-bg) !important;
-    color: var(--text-primary) !important;
-    border: 1px solid var(--card-border) !important;
-}
-#settings-sidebar #extension-panel p,
-#settings-sidebar #extension-panel label,
-#settings-sidebar #extension-panel .extension-placeholder {
-    color: var(--text-primary) !important;
-}
-#settings-sidebar #extension-panel .extension-placeholder,
-#settings-sidebar #extension-panel .extension-placeholder a {
-    color: var(--text-primary) !important;
-}
-#settings-sidebar #extension-panel .extension-promo {
-    background: linear-gradient(90deg,#0b1220 0%, #c4ad62 100%) !important;
-    color: #fff !important;
-    border: 1px solid var(--card-border) !important;
-}
-#settings-sidebar #extension-panel .extension-promo .install-btn {
-    background: var(--teal) !important;
-    color: #fff !important;
-}
-#extension-panel .settings-group {
-    padding: 20px 22px;
-    margin: 0 0 20px 0;
-    max-width: 880px;
-}
-#settings-sidebar #extension-panel .extension-coming-soon-overlay,
-#settings-sidebar #extension-panel .extension-coming-soon-overlay *,
-#settings-sidebar #extension-panel .extension-coming-soon-overlay p {
-    color: #fff !important;
-}
-
-#settings-sidebar #extension-panel .settings-group,
 #settings-sidebar #legal-panel .settings-group {
     max-width: 880px !important;
     width: 100% !important;

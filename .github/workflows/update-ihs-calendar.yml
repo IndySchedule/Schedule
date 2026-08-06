@@ -33,19 +33,20 @@ jobs:
         run: npm install --no-package-lock --ignore-scripts
 
       - name: Build calendar data
+        id: calendar
         run: npm run update-calendar
 
-      - name: Commit updated events
+      - name: Validate calendar and lunch data
+        run: npm run validate-live-data
+
+      - name: Commit changed calendar content
+        if: steps.calendar.outputs.content_changed == 'true'
         run: |
-          if git diff --quiet -- data/ihs-calendar-events.json; then
-            echo "Calendar data is unchanged."
-          else
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add data/ihs-calendar-events.json
-            git commit -m "Update IHS calendar events"
-            git push
-          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/ihs-calendar-events.json
+          git commit -m "Update IHS calendar events"
+          git push
 
       - name: Prepare static site
         run: |
@@ -59,6 +60,15 @@ jobs:
             --exclude '_site' \
             --exclude 'package.json' \
             ./ _site/
+
+      - name: Deploy refreshed site to Firebase Hosting
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_INDYSCHEDULE_1 }}
+          channelId: live
+          projectId: indyschedule-1
+          target: production
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v6

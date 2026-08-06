@@ -140,7 +140,6 @@ function initializeApp() {
 
 function initializeAppLogic() {
     try {
-        initializeSavedSchedules();
         const scheduleKey = window.IndyCalendar?.getScheduleKey(new Date()) || 'normal';
         switchSchedule(scheduleKey);
         updateScheduleDisplay();
@@ -238,20 +237,64 @@ function getTimelinePeriodLabel(period) {
 
 const IHS_CALENDAR_DATA_URL = 'data/ihs-calendar-events.json';
 const IHS_CALENDAR_PAGE_URL = 'https://ihs.wcs.edu/calendar';
+const IHS_CALENDAR_CACHE_KEY = 'indyCalendarCache_v1';
 let ihsCalendarDataPromise;
 let renderedCalendarDateKey = '';
 
+function isValidIhsCalendarData(data) {
+    if (data?.schemaVersion !== 1 || data?.kind !== 'ihs-calendar-events' || !data.ready || !Array.isArray(data.events)) return false;
+    const checkedAt = new Date(data.lastCheckedAt || data.generatedAt);
+    if (Number.isNaN(checkedAt.getTime())) return false;
+    const ids = new Set();
+    return data.events.every((event) => {
+        const start = new Date(event?.start);
+        const end = new Date(event?.end);
+        const valid = typeof event?.id === 'string'
+            && event.id.length > 0
+            && !ids.has(event.id)
+            && typeof event.title === 'string'
+            && event.title.trim().length > 0
+            && event.title.length <= 300
+            && !Number.isNaN(start.getTime())
+            && !Number.isNaN(end.getTime())
+            && end >= start
+            && Array.isArray(event.days)
+            && event.days.length > 0
+            && event.days.every((day) => /^\d{4}-\d{2}-\d{2}$/.test(day));
+        ids.add(event?.id);
+        return valid;
+    });
+}
+
+function readCachedIhsCalendarData() {
+    try {
+        const cached = JSON.parse(localStorage.getItem(IHS_CALENDAR_CACHE_KEY) || 'null');
+        return isValidIhsCalendarData(cached) ? cached : null;
+    } catch {
+        return null;
+    }
+}
+
 function loadIhsCalendarData() {
     if (!ihsCalendarDataPromise) {
-        ihsCalendarDataPromise = fetch(IHS_CALENDAR_DATA_URL, { cache: 'no-cache' })
+        const controller = new AbortController();
+        const timeout = window.setTimeout(() => controller.abort(), 8000);
+        ihsCalendarDataPromise = fetch(IHS_CALENDAR_DATA_URL, { cache: 'no-store', signal: controller.signal })
             .then((response) => {
                 if (!response.ok) throw new Error(`Calendar data returned ${response.status}`);
                 return response.json();
             })
             .then((data) => {
-                if (!data?.ready || !Array.isArray(data.events)) throw new Error('Calendar sync has not run yet');
-                return data;
-            });
+                if (!isValidIhsCalendarData(data)) throw new Error('Calendar data failed validation');
+                try { localStorage.setItem(IHS_CALENDAR_CACHE_KEY, JSON.stringify(data)); } catch {}
+                return { ...data, deliveryState: 'live' };
+            })
+            .catch((error) => {
+                const cached = readCachedIhsCalendarData();
+                if (cached) return { ...cached, deliveryState: 'saved', deliveryError: error.message };
+                throw error;
+            })
+            .finally(() => window.clearTimeout(timeout));
     }
     return ihsCalendarDataPromise;
 }
@@ -283,29 +326,67 @@ function updateTodayEventBadge(count) {
 }
 
 function updateTodayCalendarFreshness(data, state = 'ready') {
-    const status = document.getElementById('today-data-status');
+    const status = document.getElementById('today-calendar-updated');
+    const source = document.getElementById('today-calendar-source');
+    const overallStatus = document.getElementById('today-data-status');
     if (!status) return;
     status.dataset.state = state;
-    if (state === 'error' || !data?.generatedAt) {
-        status.textContent = 'Calendar unavailable · Use the official links above.';
+    if (source) source.textContent = `Source: ${data?.source === IHS_CALENDAR_PAGE_URL ? 'Official IHS calendar' : 'IHS calendar cache'}`;
+    if (state === 'error' || !(data?.lastCheckedAt || data?.generatedAt)) {
+        status.textContent = 'Calendar unavailable · Open the source to verify.';
+        if (overallStatus) {
+            overallStatus.dataset.state = 'error';
+            overallStatus.textContent = navigator.onLine === false
+                ? 'Offline · Built-in bell schedules remain available.'
+                : 'Live calendar data could not be loaded · Built-in bells are unaffected.';
+        }
         return;
     }
-    const generatedAt = new Date(data.generatedAt);
-    if (Number.isNaN(generatedAt.getTime())) {
-        status.textContent = 'Calendar sync time unavailable.';
+    const checkedAt = new Date(data.lastCheckedAt || data.generatedAt);
+    if (Number.isNaN(checkedAt.getTime())) {
+        status.textContent = 'Calendar check time unavailable.';
         return;
     }
-    const ageHours = Math.max(0, (Date.now() - generatedAt.getTime()) / 3600000);
+    const ageHours = Math.max(0, (Date.now() - checkedAt.getTime()) / 3600000);
     const formatted = new Intl.DateTimeFormat('en-US', {
         timeZone: 'America/Chicago',
         month: 'short',
         day: 'numeric',
         hour: 'numeric',
         minute: '2-digit'
-    }).format(generatedAt);
-    const outdated = ageHours > 48;
-    status.dataset.state = outdated ? 'outdated' : 'ready';
-    status.textContent = `${outdated ? 'Calendar may be outdated' : 'Calendar updated'} · ${formatted}`;
+    }).format(checkedAt);
+    const contentUpdatedAt = new Date(data.contentUpdatedAt || checkedAt);
+    const contentUpdateSuffix = !Number.isNaN(contentUpdatedAt.getTime())
+        && Math.abs(checkedAt.getTime() - contentUpdatedAt.getTime()) > 60000
+        ? ` · events updated ${new Intl.DateTimeFormat('en-US', {
+            timeZone: 'America/Chicago',
+            month: 'short',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: '2-digit'
+        }).format(contentUpdatedAt)}`
+        : '';
+    const outdated = ageHours > (Number(data.staleAfterHours) || 8);
+    const savedCopy = data.deliveryState === 'saved';
+    const outsideCoverage = state === 'coverage';
+    status.dataset.state = outsideCoverage || outdated ? 'outdated' : savedCopy ? 'saved' : 'ready';
+    status.textContent = outsideCoverage
+        ? `Outside downloaded range · checked ${formatted}${contentUpdateSuffix}`
+        : outdated
+        ? `Outdated copy · last checked ${formatted}${contentUpdateSuffix}`
+        : savedCopy
+            ? `Saved copy · checked ${formatted}${contentUpdateSuffix}`
+            : `Checked ${formatted}${contentUpdateSuffix} · refreshes every 3 hours`;
+    if (overallStatus) {
+        overallStatus.dataset.state = outsideCoverage || outdated ? 'outdated' : savedCopy ? 'saved' : 'ready';
+        overallStatus.textContent = outsideCoverage
+            ? 'This date is outside the live calendar range · Verify events with the official source.'
+            : outdated
+                ? 'Live calendar data is outdated · Verify events with the official source.'
+                : savedCopy
+                    ? 'Using a saved calendar copy · Built-in bell schedules are unaffected.'
+                    : 'Live calendar verified · Bell schedules come from the built-in 2026–27 calendar.';
+    }
 }
 
 function renderIhsCalendarEvents(dateKey) {
@@ -317,6 +398,20 @@ function renderIhsCalendarEvents(dateKey) {
     updateTodayEventBadge(0);
 
     loadIhsCalendarData().then((data) => {
+        if ((data.rangeStart && dateKey < data.rangeStart) || (data.rangeEnd && dateKey > data.rangeEnd)) {
+            updateTodayCalendarFreshness(data, 'coverage');
+            container.dataset.state = 'outdated';
+            container.replaceChildren();
+            const message = document.createElement('span');
+            const link = document.createElement('a');
+            message.textContent = 'This date is outside the downloaded calendar range. ';
+            link.href = IHS_CALENDAR_PAGE_URL;
+            link.target = '_blank';
+            link.rel = 'noopener';
+            link.textContent = 'Check the official calendar.';
+            container.append(message, link);
+            return;
+        }
         const todaysEvents = data.events
             .filter((event) => Array.isArray(event.days) && event.days.includes(dateKey));
         const visibleEvents = todaysEvents.slice(0, 4);
@@ -364,7 +459,9 @@ function renderIhsCalendarEvents(dateKey) {
         container.replaceChildren();
         const message = document.createElement('span');
         const link = document.createElement('a');
-        message.textContent = 'Events are unavailable. ';
+        message.textContent = navigator.onLine === false
+            ? 'You’re offline and no saved event copy is available. '
+            : 'Events are unavailable. ';
         link.href = IHS_CALENDAR_PAGE_URL;
         link.target = '_blank';
         link.rel = 'noopener';
@@ -454,11 +551,11 @@ function updateTodayAtIndy(now = new Date()) {
             ? 'Half day today · Dismissal at 11:15 AM.'
             : dayType === 'lateStart'
                 ? 'Late start today · First period begins at 8:25 AM.'
-                : scheduleKey === 'normalNoSoar'
-                    ? 'Regular schedule · No SOAR today.'
-                    : 'Regular schedule · SOAR meets today.';
-    const notice = document.querySelector('#today-notice span');
+                : '';
+    const noticeBox = document.getElementById('today-notice');
+    const notice = noticeBox?.querySelector('span');
     if (notice) notice.textContent = noticeText;
+    if (noticeBox) noticeBox.hidden = !noticeText;
 
     const menuContainer = document.getElementById('today-lunch-menu');
     if (menuContainer) {
@@ -466,6 +563,28 @@ function updateTodayAtIndy(now = new Date()) {
         menuContainer.dataset.state = 'ready';
         const menuService = window.IndyLunchMenu;
         const items = menuService?.getMenu(dateKey);
+        const menuSource = document.getElementById('today-lunch-source');
+        const menuUpdated = document.getElementById('today-lunch-updated');
+        if (menuSource) menuSource.textContent = `Source: ${menuService?.SOURCE_LABEL || 'Official WCS menus'}`;
+        if (menuUpdated) {
+            const updatedAt = new Date(menuService?.UPDATED_AT);
+            if (!menuService?.ready || Number.isNaN(updatedAt.getTime())) {
+                menuUpdated.dataset.state = 'error';
+                menuUpdated.textContent = 'Menu update time unavailable';
+            } else {
+                const updatedLabel = new Intl.DateTimeFormat('en-US', {
+                    timeZone: calendar.TIME_ZONE,
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric'
+                }).format(updatedAt);
+                const monthCovered = dateKey.startsWith(menuService.MENU_MONTH || '');
+                menuUpdated.dataset.state = monthCovered ? 'ready' : 'outdated';
+                menuUpdated.textContent = monthCovered
+                    ? `Menu updated ${updatedLabel}`
+                    : `No uploaded menu for this month · Last update ${updatedLabel}`;
+            }
+        }
         if (dayType === 'noSchool') {
             menuContainer.textContent = 'No school today.';
         } else if (dayType === 'halfDay') {
@@ -577,6 +696,18 @@ function initializeTodayPopup() {
     close?.addEventListener('click', () => setTodayPopupOpen(false));
     backdrop?.addEventListener('click', () => setTodayPopupOpen(false));
     window.addEventListener('resize', positionTodayPopup);
+    window.addEventListener('online', () => {
+        ihsCalendarDataPromise = undefined;
+        renderedCalendarDateKey = '';
+        if (!card?.hidden) updateTodayAtIndy();
+    });
+    window.addEventListener('offline', () => {
+        const status = document.getElementById('today-data-status');
+        if (status && !card?.hidden) {
+            status.dataset.state = 'saved';
+            status.textContent = 'Offline · Saved events may be shown and built-in bell schedules remain available.';
+        }
+    });
     document.addEventListener('keydown', (event) => {
         const activeCard = document.getElementById('today-at-indy');
         if (event.key === 'Escape' && !activeCard?.hidden) {
@@ -708,30 +839,18 @@ function switchSchedule(scheduleName) {
     if (!scheduleName) return;
     try {
         let schedule;
-        if (scheduleName.startsWith('customSchedule_')) {
-            const savedSchedule = localStorage.getItem(scheduleName);
-            if (savedSchedule) {
-                schedule = JSON.parse(savedSchedule);
-            } else {
-                console.error(`Custom schedule ${scheduleName} not found`);
-                return;
-            }
+        const activeSchedules = getActiveSchedules();
+        if (activeSchedules[scheduleName]) {
+            schedule = JSON.parse(JSON.stringify(activeSchedules[scheduleName]));
         } else {
-            const activeSchedules = getActiveSchedules();
-            if (activeSchedules[scheduleName]) {
-                schedule = JSON.parse(JSON.stringify(activeSchedules[scheduleName]));
-            } else {
-                console.error(`Schedule ${scheduleName} not found`);
-                return;
-            }
+            console.error(`Schedule ${scheduleName} not found`);
+            return;
         }
         applyRenamesToSchedule(schedule);
         currentSchedule = schedule;
         currentScheduleName = scheduleName;
         localStorage.setItem('currentScheduleName', scheduleName);
-        const displayName = scheduleName.startsWith('customSchedule_') 
-            ? scheduleName.replace('customSchedule_', '')
-            : getScheduleDisplayName(scheduleName);
+        const displayName = getScheduleDisplayName(scheduleName);
         const headingText = `${displayName} Schedule ▸ ${schedule[0].name}`;
         document.getElementById("countdown-heading").innerText = headingText;
         const dropdown = document.getElementById("schedule-dropdown");
@@ -755,27 +874,6 @@ function renamePeriod(periodNumber, newName) {
     // rely on rename maps (periodRenames/globalPeriodNames) and applyRenamesToSchedule
     // when rendering or switching schedules. This avoids side-effects that break
     // lookups that rely on original names.
-
-    // Update custom schedules stored in localStorage
-    Object.keys(localStorage).forEach(key => {
-        if (key.startsWith('customSchedule_')) {
-            try {
-                const customSchedule = JSON.parse(localStorage.getItem(key) || '[]');
-                let modified = false;
-                customSchedule.forEach(period => {
-                    if (String(period.periodNum) === periodNumStr) {
-                        period.name = newName;
-                        modified = true;
-                    }
-                });
-                if (modified) {
-                    localStorage.setItem(key, JSON.stringify(customSchedule));
-                }
-            } catch (e) {
-                console.warn('Invalid custom schedule in localStorage for key', key);
-            }
-        }
-    });
 
     // Persist rename maps
     const globalNames = getGlobalPeriodNames();
@@ -802,13 +900,6 @@ function renamePeriod(periodNumber, newName) {
     if (activeSchedules[currentScheduleName]) {
         // Copy from canonical source to avoid previous in-memory mutations
         currentSchedule = JSON.parse(JSON.stringify(activeSchedules[currentScheduleName]));
-        applyRenamesToSchedule(currentSchedule);
-    } else {
-        // If custom schedule is active, reload it from storage (if present)
-        if (currentScheduleName && currentScheduleName.startsWith('customSchedule_')) {
-            const saved = localStorage.getItem(currentScheduleName);
-            if (saved) currentSchedule = JSON.parse(saved);
-        }
         applyRenamesToSchedule(currentSchedule);
     }
 
@@ -1999,8 +2090,6 @@ window.populateRenamePeriods = populateRenamePeriods;
                         // For known keys, prefer sensible defaults
                         if (k === 'globalPeriodNames' || k === 'periodRenames') {
                             localStorage.setItem(k, JSON.stringify({}));
-                        } else if (k.startsWith('customSchedule_')) {
-                            localStorage.setItem(k, JSON.stringify([]));
                         } else {
                             localStorage.setItem(k, JSON.stringify(null));
                         }
@@ -2036,22 +2125,6 @@ window.populateRenamePeriods = populateRenamePeriods;
                         }
                     }
 
-                    // For custom schedules, ensure arrays
-                    if (k.startsWith('customSchedule_')) {
-                        try {
-                            const val = JSON.parse(raw);
-                            if (!Array.isArray(val)) {
-                                // coerce to array if possible
-                                localStorage.setItem(k, JSON.stringify(Array.isArray(val) ? val : []));
-                                fixedKeys.push(k);
-                            }
-                        } catch (e) {
-                            // replace with empty array
-                            localStorage.setItem(k, JSON.stringify([]));
-                            fixedKeys.push(k);
-                            return;
-                        }
-                    }
                 } catch (e) {
                     // ignore per-key errors
                 }
@@ -2094,12 +2167,6 @@ window.populateRenamePeriods = populateRenamePeriods;
             }
         });
 
-        const removeBg = document.getElementById('remove-bg-button');
-        if (removeBg && !removeBg._bound) {
-            removeBg.addEventListener('click', () => { if (typeof removeBackground === 'function') removeBackground(); });
-            removeBg._bound = true;
-        }
-
         const progressCheckbox = document.getElementById('progress-bar');
         if (progressCheckbox && !progressCheckbox._bound) {
             progressCheckbox.addEventListener('change', () => { if (typeof toggleProgressBar === 'function') toggleProgressBar(); });
@@ -2110,13 +2177,6 @@ window.populateRenamePeriods = populateRenamePeriods;
         if (scheduleDropdown && !scheduleDropdown._bound) {
             scheduleDropdown.addEventListener('change', (e) => { if (typeof switchSchedule === 'function') switchSchedule(e.target.value); });
             scheduleDropdown._bound = true;
-        }
-
-        // Save custom schedule button
-        const saveScheduleBtn = document.getElementById('save-schedule-button');
-        if (saveScheduleBtn && !saveScheduleBtn._bound) {
-            saveScheduleBtn.addEventListener('click', () => { if (typeof saveCustomSchedule === 'function') saveCustomSchedule(); });
-            saveScheduleBtn._bound = true;
         }
 
         const settingsButton = document.getElementById('settings-button');
@@ -2531,16 +2591,6 @@ function updateScheduleDropdown() {
         dropdown.value = Object.keys(activeSchedules)[0] || 'normal';
     }
 }
-
-// No-op initializer for saved schedules to satisfy callers that expect it
-function initializeSavedSchedules() {
-    // Intentionally minimal: custom schedule migration/loading is handled elsewhere.
-    // Kept as a defined function so initializeAppLogic() doesn't throw.
-    return;
-}
-
-
-
 
 // Add this function at an appropriate location in the file:
 function initializeSettingsPanels() {

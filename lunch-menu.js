@@ -2,6 +2,11 @@
     'use strict';
 
     const OFFICIAL_MENU_URL = 'https://www.wcs.edu/about-us/menus-nutrition';
+    const SOURCE_LABEL = 'WCS High School Lunch Menu';
+    const MENU_MONTH = '2026-08';
+    const UPDATED_AT = '2026-08-05T12:00:00-05:00';
+    const COVERAGE_START = '2026-08-11';
+    const COVERAGE_END = '2026-08-31';
 
     // Add each new monthly menu here using YYYY-MM-DD keys. Values can be a
     // single string or an array of menu items. Dates that are not listed
@@ -33,7 +38,14 @@
     }
 
     global.IndyLunchMenu = Object.freeze({
+        schemaVersion: 1,
+        ready: true,
         OFFICIAL_MENU_URL,
+        SOURCE_LABEL,
+        MENU_MONTH,
+        UPDATED_AT,
+        COVERAGE_START,
+        COVERAGE_END,
         DAILY_OPTIONS,
         MENUS,
         getMenu

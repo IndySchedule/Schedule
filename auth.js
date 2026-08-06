@@ -84,6 +84,49 @@ function initializeAnalyticsConsentUI() {
     updateAnalyticsConsentUI();
 }
 
+function initializeLocalDataControls() {
+    const openButton = document.getElementById('delete-local-data');
+    const confirmation = document.getElementById('delete-local-data-confirmation');
+    const cancelButton = document.getElementById('cancel-delete-local-data');
+    const confirmButton = document.getElementById('confirm-delete-local-data');
+    const status = document.getElementById('delete-local-data-status');
+    if (!openButton || !confirmation || !cancelButton || !confirmButton) return;
+
+    const setConfirmationOpen = (isOpen) => {
+        confirmation.hidden = !isOpen;
+        openButton.setAttribute('aria-expanded', String(isOpen));
+        openButton.hidden = isOpen;
+        if (status) status.textContent = '';
+        if (isOpen) cancelButton.focus();
+        else openButton.focus();
+    };
+
+    openButton.addEventListener('click', () => setConfirmationOpen(true));
+    cancelButton.addEventListener('click', () => setConfirmationOpen(false));
+
+    confirmButton.addEventListener('click', () => {
+        confirmButton.disabled = true;
+        cancelButton.disabled = true;
+        confirmButton.innerHTML = '<i class="fas fa-circle-notch fa-spin" aria-hidden="true"></i> Deleting…';
+
+        try {
+            // Stop optional measurement before removing its saved consent.
+            updateGoogleConsent(false, 'update');
+            window.authManager?.analytics?.setAnalyticsCollectionEnabled(false);
+            localStorage.clear();
+            confirmation.hidden = true;
+            if (status) status.textContent = 'Stored browser data deleted. Restarting Indy Schedule…';
+            window.setTimeout(() => window.location.reload(), 650);
+        } catch (error) {
+            console.error('Could not delete locally stored Indy Schedule data.', error);
+            confirmButton.disabled = false;
+            cancelButton.disabled = false;
+            confirmButton.innerHTML = '<i class="fas fa-trash" aria-hidden="true"></i> Delete everything';
+            if (status) status.textContent = 'The stored data could not be deleted. Please try again.';
+        }
+    });
+}
+
 window.getAnalyticsConsent = getAnalyticsConsent;
 window.setAnalyticsConsent = setAnalyticsConsent;
 
@@ -417,21 +460,14 @@ class AuthManager {
             // Collect all settings
             const settings = {
                 toastIconEnabled: localStorage.getItem(TOAST_ICON_KEY),
-                whiteBoxColor: localStorage.getItem("whiteBoxColor"),
-                whiteBoxOpacity: localStorage.getItem("whiteBoxOpacity"),
-                whiteBoxTextColor: localStorage.getItem("whiteBoxTextColor"),
                 fontFamily: localStorage.getItem("fontFamily"),
-                fontColor: localStorage.getItem("fontColor"),
                 theme: localStorage.getItem("theme"),
-                countdownColor: localStorage.getItem("countdownColor"),
                 showPeriodTimes: localStorage.getItem("showPeriodTimes"),
                 lunchWave: localStorage.getItem("lunchWave"),
                 progressBarEnabled: localStorage.getItem("progressBarEnabled"),
                 progressBarColor: localStorage.getItem("progressBarColor"),
                 progressBarOpacity: localStorage.getItem("progressBarOpacity"),
                 gradientSettings: localStorage.getItem("gradientSettings"),
-                boxBorderColor: localStorage.getItem("boxBorderColor"),
-                boxBorderWidth: localStorage.getItem("boxBorderWidth"),
                 profileHidden: localStorage.getItem("profileHidden"),
                 currentScheduleName: localStorage.getItem("currentScheduleName"),
                 sawUpdateNotice: localStorage.getItem("sawUpdateNotice")
@@ -461,21 +497,6 @@ class AuthManager {
                 }
             } catch (e) {
                 settings.globalPeriodNames = localStorage.getItem('globalPeriodNames');
-            }
-
-            // Collect any custom schedules saved in localStorage (keys starting with customSchedule_)
-            const customSchedules = {};
-            Object.keys(localStorage).forEach(k => {
-                if (k.startsWith('customSchedule_')) {
-                    try {
-                        customSchedules[k] = JSON.parse(localStorage.getItem(k));
-                    } catch (e) {
-                        customSchedules[k] = localStorage.getItem(k);
-                    }
-                }
-            });
-            if (Object.keys(customSchedules).length) {
-                settings.customSchedules = customSchedules;
             }
 
             // Remove any null or undefined values
@@ -521,10 +542,6 @@ class AuthManager {
                     }
 
                     // Visual settings
-                    if (settings.fontColor) {
-                        const heading = document.getElementById('countdown-heading');
-                        if (heading) heading.style.color = settings.fontColor;
-                    }
                     if (settings.fontFamily) document.body.style.fontFamily = settings.fontFamily;
 
                     // Load settings into UI
@@ -884,6 +901,7 @@ window.addEventListener('message', (event) => {
 // Render easter-egg icon once the DOM is available, based on stored flag.
 document.addEventListener('DOMContentLoaded', updateToastIcon);
 document.addEventListener('DOMContentLoaded', initializeAnalyticsConsentUI);
+document.addEventListener('DOMContentLoaded', initializeLocalDataControls);
 
 // New helper function to load user settings from Firestore
 async function loadUserSettings() {
@@ -911,15 +929,6 @@ async function loadUserSettings() {
                             try { JSON.parse(val); localStorage.setItem(key, val); }
                             catch (e) { localStorage.setItem(key, JSON.stringify(val)); }
                         }
-                    } else if (key === 'customSchedules' && typeof val === 'object') {
-                        // customSchedules is an object mapping keys to schedule arrays
-                        Object.keys(val).forEach(k => {
-                            try {
-                                localStorage.setItem(k, JSON.stringify(val[k]));
-                            } catch (e) {
-                                localStorage.setItem(k, String(val[k]));
-                            }
-                        });
                     } else {
                         // Default: store primitive or stringify object
                         if (typeof val === 'object') localStorage.setItem(key, JSON.stringify(val));
