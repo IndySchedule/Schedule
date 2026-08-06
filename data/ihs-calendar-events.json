@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-08-06T03:35:42.687Z",
-  "lastCheckedAt": "2026-08-06T03:35:42.687Z",
-  "contentUpdatedAt": "2026-08-06T03:35:40.961Z",
+  "generatedAt": "2026-08-06T04:07:19.305Z",
+  "lastCheckedAt": "2026-08-06T04:07:19.305Z",
+  "contentUpdatedAt": "2026-08-06T04:07:19.305Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -123,14 +123,13 @@
       "location": "Harpeth Hall School, 3801 Hobbs Rd, Nashville, TN 37215, USA"
     },
     {
-      "id": "31e4rq7v14bpk1aq6hgolofq4c@google.com-2026-08-18T05:00:00.000Z",
+      "id": "31e4rq7v14bpk1aq6hgolofq4c@google.com-2026-08-18T00:00:00.000Z",
       "title": "IHS Late Start",
-      "start": "2026-08-18T05:00:00.000Z",
-      "end": "2026-08-19T05:00:00.000Z",
+      "start": "2026-08-18T00:00:00.000Z",
+      "end": "2026-08-19T00:00:00.000Z",
       "allDay": true,
       "days": [
-        "2026-08-18",
-        "2026-08-19"
+        "2026-08-18"
       ],
       "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     },
@@ -190,14 +189,13 @@
       "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     },
     {
-      "id": "2o4r3tktqqhcgbctqsepfbd6j7@google.com-2026-08-24T05:00:00.000Z",
+      "id": "2o4r3tktqqhcgbctqsepfbd6j7@google.com-2026-08-24T00:00:00.000Z",
       "title": "IHS Late Start",
-      "start": "2026-08-24T05:00:00.000Z",
-      "end": "2026-08-25T05:00:00.000Z",
+      "start": "2026-08-24T00:00:00.000Z",
+      "end": "2026-08-25T00:00:00.000Z",
       "allDay": true,
       "days": [
-        "2026-08-24",
-        "2026-08-25"
+        "2026-08-24"
       ],
       "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     },
@@ -279,14 +277,13 @@
       "location": "Lincoln County High School, 1233 Huntsville Hwy, Fayetteville, TN 37334, USA"
     },
     {
-      "id": "2sqbqs49nu1ph87nss5624dpms@google.com-2026-08-31T05:00:00.000Z",
+      "id": "2sqbqs49nu1ph87nss5624dpms@google.com-2026-08-31T00:00:00.000Z",
       "title": "IHS Late Start",
-      "start": "2026-08-31T05:00:00.000Z",
-      "end": "2026-09-01T05:00:00.000Z",
+      "start": "2026-08-31T00:00:00.000Z",
+      "end": "2026-09-01T00:00:00.000Z",
       "allDay": true,
       "days": [
-        "2026-08-31",
-        "2026-09-01"
+        "2026-08-31"
       ],
       "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     },
@@ -357,6 +354,17 @@
       "location": "Franklin High School, 810 Hillsboro Rd, Franklin, TN 37064, USA"
     },
     {
+      "id": "16gvjjgc5nhtlatl1d68cdl4dv@google.com-2026-09-05T00:00:00.000Z",
+      "title": "IHS JV/V/G Wrestling Grapple on the Gridiron",
+      "start": "2026-09-05T00:00:00.000Z",
+      "end": "2026-09-06T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2026-09-05"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
       "id": "37ikcvbn1824o8sn72k31eveaa@google.com-2026-09-05T00:00:00.000Z",
       "title": "IHS Varsity Football @ Columbia HS",
       "start": "2026-09-05T00:00:00.000Z",
@@ -368,38 +376,24 @@
       "location": "Columbia High School, 921 Lion Parkway, Columbia, TN 37801"
     },
     {
-      "id": "16gvjjgc5nhtlatl1d68cdl4dv@google.com-2026-09-05T05:00:00.000Z",
-      "title": "IHS JV/V/G Wrestling Grapple on the Gridiron",
-      "start": "2026-09-05T05:00:00.000Z",
-      "end": "2026-09-06T05:00:00.000Z",
-      "allDay": true,
-      "days": [
-        "2026-09-05",
-        "2026-09-06"
-      ],
-      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
-    },
-    {
-      "id": "06l3mf3li1fhtsgiph4bv4f786@google.com-2026-09-07T05:00:00.000Z",
+      "id": "06l3mf3li1fhtsgiph4bv4f786@google.com-2026-09-07T00:00:00.000Z",
       "title": "IHS Labor Day - System Closed",
-      "start": "2026-09-07T05:00:00.000Z",
-      "end": "2026-09-08T05:00:00.000Z",
+      "start": "2026-09-07T00:00:00.000Z",
+      "end": "2026-09-08T00:00:00.000Z",
       "allDay": true,
       "days": [
-        "2026-09-07",
-        "2026-09-08"
+        "2026-09-07"
       ],
       "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     },
     {
-      "id": "619kuhebso85gbnp171ec621ki@google.com-2026-09-08T05:00:00.000Z",
+      "id": "619kuhebso85gbnp171ec621ki@google.com-2026-09-08T00:00:00.000Z",
       "title": "IHS Late Start",
-      "start": "2026-09-08T05:00:00.000Z",
-      "end": "2026-09-09T05:00:00.000Z",
+      "start": "2026-09-08T00:00:00.000Z",
+      "end": "2026-09-09T00:00:00.000Z",
       "allDay": true,
       "days": [
-        "2026-09-08",
-        "2026-09-09"
+        "2026-09-08"
       ],
       "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     },
@@ -459,16 +453,15 @@
       "location": "SUMMIT HIGH SCHOOL, 2830 Austins Wy, Thompson's Station, TN 37179, USA"
     },
     {
-      "id": "4vfa33270addbrltesvrhpcq6t@google.com-2026-09-11T05:00:00.000Z",
+      "id": "4vfa33270addbrltesvrhpcq6t@google.com-2026-09-11T00:00:00.000Z",
       "title": "IHS V Volleyball Rocky Top Classic",
-      "start": "2026-09-11T05:00:00.000Z",
-      "end": "2026-09-14T05:00:00.000Z",
+      "start": "2026-09-11T00:00:00.000Z",
+      "end": "2026-09-14T00:00:00.000Z",
       "allDay": true,
       "days": [
         "2026-09-11",
         "2026-09-12",
-        "2026-09-13",
-        "2026-09-14"
+        "2026-09-13"
       ],
       "location": "Sevierville, TN, USA"
     },
@@ -484,14 +477,13 @@
       "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     },
     {
-      "id": "6p7e8rbo7hmt53tpnk50qpur1f@google.com-2026-09-14T05:00:00.000Z",
+      "id": "6p7e8rbo7hmt53tpnk50qpur1f@google.com-2026-09-14T00:00:00.000Z",
       "title": "IHS Late Start",
-      "start": "2026-09-14T05:00:00.000Z",
-      "end": "2026-09-15T05:00:00.000Z",
+      "start": "2026-09-14T00:00:00.000Z",
+      "end": "2026-09-15T00:00:00.000Z",
       "allDay": true,
       "days": [
-        "2026-09-14",
-        "2026-09-15"
+        "2026-09-14"
       ],
       "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     },
@@ -584,14 +576,13 @@
       "location": "Coffee County Central High School, 100 Red Raider Dr, Manchester, TN 37355, USA"
     },
     {
-      "id": "4ir1b8g5a14srlg17cfhrrcgp4@google.com-2026-09-21T05:00:00.000Z",
+      "id": "4ir1b8g5a14srlg17cfhrrcgp4@google.com-2026-09-21T00:00:00.000Z",
       "title": "IHS Late Start",
-      "start": "2026-09-21T05:00:00.000Z",
-      "end": "2026-09-22T05:00:00.000Z",
+      "start": "2026-09-21T00:00:00.000Z",
+      "end": "2026-09-22T00:00:00.000Z",
       "allDay": true,
       "days": [
-        "2026-09-21",
-        "2026-09-22"
+        "2026-09-21"
       ],
       "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     },
@@ -629,14 +620,13 @@
       "location": "Brentwood High School, 5304 Murray Ln, Brentwood, TN 37027, USA"
     },
     {
-      "id": "1ad2ll377kbmj2n6pmr2j554hh@google.com-2026-09-23T05:00:00.000Z",
+      "id": "1ad2ll377kbmj2n6pmr2j554hh@google.com-2026-09-23T00:00:00.000Z",
       "title": "IHS 9th-11th Picture Day",
-      "start": "2026-09-23T05:00:00.000Z",
-      "end": "2026-09-24T05:00:00.000Z",
+      "start": "2026-09-23T00:00:00.000Z",
+      "end": "2026-09-24T00:00:00.000Z",
       "allDay": true,
       "days": [
-        "2026-09-23",
-        "2026-09-24"
+        "2026-09-23"
       ],
       "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     },
@@ -674,14 +664,13 @@
       "location": "Franklin High School, 810 Hillsboro Rd, Franklin, TN 37064, USA"
     },
     {
-      "id": "0vf6bl04ilo3h1do5fnpkbpqgq@google.com-2026-09-28T05:00:00.000Z",
+      "id": "0vf6bl04ilo3h1do5fnpkbpqgq@google.com-2026-09-28T00:00:00.000Z",
       "title": "IHS Late Start",
-      "start": "2026-09-28T05:00:00.000Z",
-      "end": "2026-09-29T05:00:00.000Z",
+      "start": "2026-09-28T00:00:00.000Z",
+      "end": "2026-09-29T00:00:00.000Z",
       "allDay": true,
       "days": [
-        "2026-09-28",
-        "2026-09-29"
+        "2026-09-28"
       ],
       "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     },
@@ -752,39 +741,36 @@
       "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     },
     {
-      "id": "3cdq34mecfps7tig271gfctm8t@google.com-2026-10-03T05:00:00.000Z",
+      "id": "3cdq34mecfps7tig271gfctm8t@google.com-2026-10-03T00:00:00.000Z",
       "title": "IHS JV Volleyball District Tournament",
-      "start": "2026-10-03T05:00:00.000Z",
-      "end": "2026-10-04T05:00:00.000Z",
+      "start": "2026-10-03T00:00:00.000Z",
+      "end": "2026-10-04T00:00:00.000Z",
       "allDay": true,
       "days": [
-        "2026-10-03",
-        "2026-10-04"
+        "2026-10-03"
       ],
       "location": "TBD"
     },
     {
-      "id": "0pd18lpd3ke1f6ipcf5jc487kk@google.com-2026-10-05T05:00:00.000Z",
+      "id": "0pd18lpd3ke1f6ipcf5jc487kk@google.com-2026-10-05T00:00:00.000Z",
       "title": "IHS V Volleyball District Playoffs",
-      "start": "2026-10-05T05:00:00.000Z",
-      "end": "2026-10-07T05:00:00.000Z",
-      "allDay": true,
-      "days": [
-        "2026-10-05",
-        "2026-10-06",
-        "2026-10-07"
-      ],
-      "location": "SUMMIT HIGH SCHOOL, 2830 Austins Wy, Thompson's Station, TN 37179, USA"
-    },
-    {
-      "id": "37b9cnbj994k9p0tbc1qjtn7sn@google.com-2026-10-05T05:00:00.000Z",
-      "title": "IHS Late Start",
-      "start": "2026-10-05T05:00:00.000Z",
-      "end": "2026-10-06T05:00:00.000Z",
+      "start": "2026-10-05T00:00:00.000Z",
+      "end": "2026-10-07T00:00:00.000Z",
       "allDay": true,
       "days": [
         "2026-10-05",
         "2026-10-06"
+      ],
+      "location": "SUMMIT HIGH SCHOOL, 2830 Austins Wy, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "37b9cnbj994k9p0tbc1qjtn7sn@google.com-2026-10-05T00:00:00.000Z",
+      "title": "IHS Late Start",
+      "start": "2026-10-05T00:00:00.000Z",
+      "end": "2026-10-06T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2026-10-05"
       ],
       "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     },
@@ -844,18 +830,17 @@
       "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     },
     {
-      "id": "4kpu10n6bpp52ncc18hdgerkod@google.com-2026-10-12T05:00:00.000Z",
+      "id": "4kpu10n6bpp52ncc18hdgerkod@google.com-2026-10-12T00:00:00.000Z",
       "title": "IHS Fall Break",
-      "start": "2026-10-12T05:00:00.000Z",
-      "end": "2026-10-17T05:00:00.000Z",
+      "start": "2026-10-12T00:00:00.000Z",
+      "end": "2026-10-17T00:00:00.000Z",
       "allDay": true,
       "days": [
         "2026-10-12",
         "2026-10-13",
         "2026-10-14",
         "2026-10-15",
-        "2026-10-16",
-        "2026-10-17"
+        "2026-10-16"
       ],
       "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     },
@@ -893,14 +878,13 @@
       "location": "Zoom"
     },
     {
-      "id": "0217bb58o6mfdvnc1u6o375t82@google.com-2026-10-19T05:00:00.000Z",
+      "id": "0217bb58o6mfdvnc1u6o375t82@google.com-2026-10-19T00:00:00.000Z",
       "title": "IHS Late Start",
-      "start": "2026-10-19T05:00:00.000Z",
-      "end": "2026-10-20T05:00:00.000Z",
+      "start": "2026-10-19T00:00:00.000Z",
+      "end": "2026-10-20T00:00:00.000Z",
       "allDay": true,
       "days": [
-        "2026-10-19",
-        "2026-10-20"
+        "2026-10-19"
       ],
       "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     },
@@ -916,26 +900,24 @@
       "location": "Brentwood High School, 5304 Murray Ln, Brentwood, TN 37027, USA"
     },
     {
-      "id": "3nrpjdanp09181rlbd2r9m0von@google.com-2026-10-26T05:00:00.000Z",
+      "id": "3nrpjdanp09181rlbd2r9m0von@google.com-2026-10-26T00:00:00.000Z",
       "title": "IHS Late Start",
-      "start": "2026-10-26T05:00:00.000Z",
-      "end": "2026-10-27T05:00:00.000Z",
+      "start": "2026-10-26T00:00:00.000Z",
+      "end": "2026-10-27T00:00:00.000Z",
       "allDay": true,
       "days": [
-        "2026-10-26",
-        "2026-10-27"
+        "2026-10-26"
       ],
       "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     },
     {
-      "id": "34e561d1esg3cp96vj3lrehcp6@google.com-2026-10-27T05:00:00.000Z",
+      "id": "34e561d1esg3cp96vj3lrehcp6@google.com-2026-10-27T00:00:00.000Z",
       "title": "IHS 9th-11th Picture Re-takes",
-      "start": "2026-10-27T05:00:00.000Z",
-      "end": "2026-10-28T05:00:00.000Z",
+      "start": "2026-10-27T00:00:00.000Z",
+      "end": "2026-10-28T00:00:00.000Z",
       "allDay": true,
       "days": [
-        "2026-10-27",
-        "2026-10-28"
+        "2026-10-27"
       ],
       "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     },
@@ -951,75 +933,69 @@
       "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     },
     {
-      "id": "3ovs4k3cd6m2s0liqfnl7o038f@google.com-2026-10-31T05:00:00.000Z",
+      "id": "3ovs4k3cd6m2s0liqfnl7o038f@google.com-2026-10-31T00:00:00.000Z",
       "title": "IHS JV/V/G Wrestling Pre-season tournament",
-      "start": "2026-10-31T05:00:00.000Z",
-      "end": "2026-11-01T05:00:00.000Z",
+      "start": "2026-10-31T00:00:00.000Z",
+      "end": "2026-11-01T00:00:00.000Z",
       "allDay": true,
       "days": [
-        "2026-10-31",
-        "2026-11-01"
+        "2026-10-31"
       ],
       "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     },
     {
-      "id": "IHS Late Start-2026-11-02T06:00:00.000Z",
+      "id": "IHS Late Start-2026-11-02T00:00:00.000Z",
       "title": "IHS Late Start",
-      "start": "2026-11-02T06:00:00.000Z",
-      "end": "2026-11-03T06:00:00.000Z",
+      "start": "2026-11-02T00:00:00.000Z",
+      "end": "2026-11-03T00:00:00.000Z",
       "allDay": true,
       "days": [
-        "2026-11-02",
-        "2026-11-03"
+        "2026-11-02"
       ],
       "location": ""
     },
     {
-      "id": "7c314pmbi678egdkuqj1inh10h@google.com-2026-11-03T06:00:00.000Z",
+      "id": "7c314pmbi678egdkuqj1inh10h@google.com-2026-11-03T00:00:00.000Z",
       "title": "IHS Election Day - No Students",
-      "start": "2026-11-03T06:00:00.000Z",
-      "end": "2026-11-04T06:00:00.000Z",
+      "start": "2026-11-03T00:00:00.000Z",
+      "end": "2026-11-04T00:00:00.000Z",
       "allDay": true,
       "days": [
-        "2026-11-03",
-        "2026-11-04"
+        "2026-11-03"
       ],
       "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     },
     {
-      "id": "0pekg1tdrqgdjq04j172eanj8n@google.com-2026-11-07T06:00:00.000Z",
+      "id": "0pekg1tdrqgdjq04j172eanj8n@google.com-2026-11-07T00:00:00.000Z",
       "title": "IHS JV/V/G Wrestling Nolensville Pre-season",
-      "start": "2026-11-07T06:00:00.000Z",
-      "end": "2026-11-08T06:00:00.000Z",
+      "start": "2026-11-07T00:00:00.000Z",
+      "end": "2026-11-08T00:00:00.000Z",
       "allDay": true,
       "days": [
-        "2026-11-07",
-        "2026-11-08"
+        "2026-11-07"
       ],
       "location": "Nolensville High School, 1600 Summerlyn Dr, Nolensville, TN 37135, USA"
     },
     {
-      "id": "IHS Late Start-2026-11-09T06:00:00.000Z",
+      "id": "IHS Late Start-2026-11-09T00:00:00.000Z",
       "title": "IHS Late Start",
-      "start": "2026-11-09T06:00:00.000Z",
-      "end": "2026-11-10T06:00:00.000Z",
+      "start": "2026-11-09T00:00:00.000Z",
+      "end": "2026-11-10T00:00:00.000Z",
       "allDay": true,
       "days": [
-        "2026-11-09",
-        "2026-11-10"
+        "2026-11-09"
       ],
       "location": ""
     },
     {
-      "id": "0r8p4dtqptvl6he8om5m92lqo8@google.com-2026-11-10T06:00:00.000Z",
+      "id": "0r8p4dtqptvl6he8om5m92lqo8@google.com-2026-11-10T00:00:00.000Z",
       "title": "IHS Senior Pictures",
-      "start": "2026-11-10T06:00:00.000Z",
-      "end": "2026-11-12T06:00:00.000Z",
+      "start": "2026-11-10T00:00:00.000Z",
+      "end": "2026-11-12T00:00:00.000Z",
       "allDay": true,
       "days": [
         "2026-11-10",
-        "2026-11-11",
-        "2026-11-12"
+        "2026-11-11"
       ],
       "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     },
@@ -1035,38 +1011,35 @@
       "location": "Zoom"
     },
     {
-      "id": "1uh1ceo5t6otrcsi2j2ap8dh9t@google.com-2026-11-14T06:00:00.000Z",
+      "id": "1uh1ceo5t6otrcsi2j2ap8dh9t@google.com-2026-11-14T00:00:00.000Z",
       "title": "IHS V Wrestling Buckhorn Border Battle Duals",
-      "start": "2026-11-14T06:00:00.000Z",
-      "end": "2026-11-15T06:00:00.000Z",
+      "start": "2026-11-14T00:00:00.000Z",
+      "end": "2026-11-15T00:00:00.000Z",
       "allDay": true,
       "days": [
-        "2026-11-14",
-        "2026-11-15"
+        "2026-11-14"
       ],
       "location": "Buckhorn High School, 4123 Winchester Rd, New Market, AL 35761, USA"
     },
     {
-      "id": "5c9ee96o1l7skttqqbr6ldqm7s@google.com-2026-11-14T06:00:00.000Z",
+      "id": "5c9ee96o1l7skttqqbr6ldqm7s@google.com-2026-11-14T00:00:00.000Z",
       "title": "IHS G Wrestling Blackman Girls Pre-season",
-      "start": "2026-11-14T06:00:00.000Z",
-      "end": "2026-11-15T06:00:00.000Z",
+      "start": "2026-11-14T00:00:00.000Z",
+      "end": "2026-11-15T00:00:00.000Z",
       "allDay": true,
       "days": [
-        "2026-11-14",
-        "2026-11-15"
+        "2026-11-14"
       ],
       "location": "Blackman High School, 3956 Blaze Dr, Murfreesboro, TN 37128, USA"
     },
     {
-      "id": "IHS Late Start-2026-11-16T06:00:00.000Z",
+      "id": "IHS Late Start-2026-11-16T00:00:00.000Z",
       "title": "IHS Late Start",
-      "start": "2026-11-16T06:00:00.000Z",
-      "end": "2026-11-17T06:00:00.000Z",
+      "start": "2026-11-16T00:00:00.000Z",
+      "end": "2026-11-17T00:00:00.000Z",
       "allDay": true,
       "days": [
-        "2026-11-16",
-        "2026-11-17"
+        "2026-11-16"
       ],
       "location": ""
     },
@@ -1082,78 +1055,72 @@
       "location": "Franklin High School, 810 Hillsboro Rd, Franklin, TN 37064, USA"
     },
     {
-      "id": "2d0c17ofik2a169km9tbvfkenf@google.com-2026-11-21T06:00:00.000Z",
+      "id": "2d0c17ofik2a169km9tbvfkenf@google.com-2026-11-21T00:00:00.000Z",
       "title": "IHS V Wrestling Franklin Duals @ Franklin HS",
-      "start": "2026-11-21T06:00:00.000Z",
-      "end": "2026-11-22T06:00:00.000Z",
+      "start": "2026-11-21T00:00:00.000Z",
+      "end": "2026-11-22T00:00:00.000Z",
       "allDay": true,
       "days": [
-        "2026-11-21",
-        "2026-11-22"
+        "2026-11-21"
       ],
       "location": "Franklin High School, 810 Hillsboro Rd, Franklin, TN 37064, USA"
     },
     {
-      "id": "55tg2d6f40d662ic8qdlrod7cf@google.com-2026-11-21T06:00:00.000Z",
+      "id": "55tg2d6f40d662ic8qdlrod7cf@google.com-2026-11-21T00:00:00.000Z",
       "title": "IHS G Wrestling @ Ravenwood HS",
-      "start": "2026-11-21T06:00:00.000Z",
-      "end": "2026-11-22T06:00:00.000Z",
+      "start": "2026-11-21T00:00:00.000Z",
+      "end": "2026-11-22T00:00:00.000Z",
       "allDay": true,
       "days": [
-        "2026-11-21",
-        "2026-11-22"
+        "2026-11-21"
       ],
       "location": "Ravenwood High School, 1724 Wilson Pike, Brentwood, TN 37027, USA"
     },
     {
-      "id": "278n549fgdi6b00ipdugigkev9@google.com-2026-11-23T06:00:00.000Z",
+      "id": "278n549fgdi6b00ipdugigkev9@google.com-2026-11-23T00:00:00.000Z",
       "title": "IHS JV Wrestling @ Nolensville HS",
-      "start": "2026-11-23T06:00:00.000Z",
-      "end": "2026-11-24T06:00:00.000Z",
+      "start": "2026-11-23T00:00:00.000Z",
+      "end": "2026-11-24T00:00:00.000Z",
       "allDay": true,
       "days": [
-        "2026-11-23",
-        "2026-11-24"
+        "2026-11-23"
       ],
       "location": "Nolensville High School, 1600 Summerlyn Dr, Nolensville, TN 37135, USA"
     },
     {
-      "id": "2socsb8qp1qmdmm2l4sk1d1iij@google.com-2026-11-23T06:00:00.000Z",
+      "id": "2socsb8qp1qmdmm2l4sk1d1iij@google.com-2026-11-23T00:00:00.000Z",
       "title": "IHS Thanksgiving Holiday - System Closed",
-      "start": "2026-11-23T06:00:00.000Z",
-      "end": "2026-11-28T06:00:00.000Z",
+      "start": "2026-11-23T00:00:00.000Z",
+      "end": "2026-11-28T00:00:00.000Z",
       "allDay": true,
       "days": [
         "2026-11-23",
         "2026-11-24",
         "2026-11-25",
         "2026-11-26",
-        "2026-11-27",
-        "2026-11-28"
+        "2026-11-27"
       ],
       "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     },
     {
-      "id": "5v30p5bqmj3idk70eff0muj53f@google.com-2026-11-28T06:00:00.000Z",
+      "id": "5v30p5bqmj3idk70eff0muj53f@google.com-2026-11-28T00:00:00.000Z",
       "title": "IHS JV/G Wrestling @ Kirkwood HS",
-      "start": "2026-11-28T06:00:00.000Z",
-      "end": "2026-11-29T06:00:00.000Z",
+      "start": "2026-11-28T00:00:00.000Z",
+      "end": "2026-11-29T00:00:00.000Z",
       "allDay": true,
       "days": [
-        "2026-11-28",
-        "2026-11-29"
+        "2026-11-28"
       ],
       "location": "Kirkwood High School, 2702 Rossview Rd, Clarksville, TN 37043, USA"
     },
     {
-      "id": "IHS Late Start-2026-11-30T06:00:00.000Z",
+      "id": "IHS Late Start-2026-11-30T00:00:00.000Z",
       "title": "IHS Late Start",
-      "start": "2026-11-30T06:00:00.000Z",
-      "end": "2026-12-01T06:00:00.000Z",
+      "start": "2026-11-30T00:00:00.000Z",
+      "end": "2026-12-01T00:00:00.000Z",
       "allDay": true,
       "days": [
-        "2026-11-30",
-        "2026-12-01"
+        "2026-11-30"
       ],
       "location": ""
     },
@@ -1167,6 +1134,18 @@
         "2026-12-01"
       ],
       "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "669gpv49scv7plunov04721r7c@google.com-2026-12-04T00:00:00.000Z",
+      "title": "IHS V Wrestling Beat Down in the Mountains",
+      "start": "2026-12-04T00:00:00.000Z",
+      "end": "2026-12-06T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2026-12-04",
+        "2026-12-05"
+      ],
+      "location": "Rocky Top Complex"
     },
     {
       "id": "54bcjt5lvra4dp4skobja3mk5n@google.com-2026-12-04T00:30:00.000Z",
