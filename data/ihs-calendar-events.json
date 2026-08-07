@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-08-06T10:17:04.503Z",
-  "lastCheckedAt": "2026-08-06T10:17:04.503Z",
-  "contentUpdatedAt": "2026-08-06T10:17:04.503Z",
+  "generatedAt": "2026-08-07T04:14:40.549Z",
+  "lastCheckedAt": "2026-08-07T04:14:40.549Z",
+  "contentUpdatedAt": "2026-08-07T04:14:40.549Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -12,28 +12,6 @@
   "rangeStart": "2026-08-04",
   "rangeEnd": "2026-12-04",
   "events": [
-    {
-      "id": "03u8i81r65ho5med9c063fkhhe@google.com-2026-08-04T22:30:00.000Z",
-      "title": "IHS Freshman Orientation",
-      "start": "2026-08-04T22:30:00.000Z",
-      "end": "2026-08-05T00:00:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-08-04"
-      ],
-      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
-    },
-    {
-      "id": "4j25k5hqo1f84r8ugbk3ne6mdo@google.com-2026-08-04T23:00:00.000Z",
-      "title": "IHS All INDY Rally",
-      "start": "2026-08-04T23:00:00.000Z",
-      "end": "2026-08-05T00:30:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-08-04"
-      ],
-      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
-    },
     {
       "id": "06pkh4ug6li9u816ji8i4cj8js@google.com-2026-08-07T13:00:00.000Z",
       "title": "IHS Campus Clean-Up",
@@ -1157,6 +1135,17 @@
         "2026-12-03"
       ],
       "location": "Brentwood High School, 5304 Murray Ln, Brentwood, TN 37027, USA"
+    },
+    {
+      "id": "5r7osrt50rc68eo3a6cbj8hop5@google.com-2026-12-05T00:00:00.000Z",
+      "title": "IHS JV/G Wrestling Tullahoma Tournament",
+      "start": "2026-12-05T00:00:00.000Z",
+      "end": "2026-12-06T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2026-12-05"
+      ],
+      "location": "Tullahoma High School, 927 North Jackson St. Tullahoma, TN 37388"
     }
   ]
 }
