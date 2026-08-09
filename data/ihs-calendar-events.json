@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-08-09T08:25:07.676Z",
-  "lastCheckedAt": "2026-08-09T08:25:07.676Z",
-  "contentUpdatedAt": "2026-08-09T08:25:07.676Z",
+  "generatedAt": "2026-08-09T17:06:50.301Z",
+  "lastCheckedAt": "2026-08-09T17:06:50.301Z",
+  "contentUpdatedAt": "2026-08-09T17:06:50.301Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -12,17 +12,6 @@
   "rangeStart": "2026-08-07",
   "rangeEnd": "2026-12-07",
   "events": [
-    {
-      "id": "06pkh4ug6li9u816ji8i4cj8js@google.com-2026-08-07T13:00:00.000Z",
-      "title": "IHS Campus Clean-Up",
-      "start": "2026-08-07T13:00:00.000Z",
-      "end": "2026-08-07T17:00:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-08-07"
-      ],
-      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
-    },
     {
       "id": "5n24p9v696c8k48fr7q2g37gh4@google.com-2026-08-08T00:00:00.000Z",
       "title": "IHS Varsity Football @ CHS (Scrimmage)",
