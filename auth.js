@@ -470,6 +470,7 @@ class AuthManager {
                 gradientSettings: localStorage.getItem("gradientSettings"),
                 profileHidden: localStorage.getItem("profileHidden"),
                 currentScheduleName: localStorage.getItem("currentScheduleName"),
+                indyOnboardingComplete_v2: localStorage.getItem("indyOnboardingComplete_v2"),
                 sawUpdateNotice: localStorage.getItem("sawUpdateNotice")
             };
 

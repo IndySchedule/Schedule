@@ -233,6 +233,9 @@ assert(indexSource.includes('id="onboarding-lunch-wave"'), 'First-run lunch sele
 assert(indexSource.includes('Please select your assigned lunch before continuing.'), 'First-run lunch selection is required');
 assertEqual((indexSource.match(/class="onboarding-step(?: active)?"/g) || []).length, 5, 'Five-step onboarding flow');
 assert(indexSource.includes('indyOnboardingComplete_v2'), 'Onboarding completion is persisted');
+assert(indexSource.includes('recoverableSetup') && indexSource.includes('indyOnboardingReplayRequested_v1'), 'Missing onboarding completion self-heals without breaking intentional replay');
+assert(authSource.includes('indyOnboardingComplete_v2: localStorage.getItem'), 'Onboarding completion is included in signed-in settings sync');
+assert(indexSource.includes('saveAllUserSettings(currentUser.uid)'), 'Completing or repairing onboarding immediately syncs the saved state');
 assert(indexSource.includes('Replay Welcome Tour'), 'Onboarding can be replayed from settings');
 assert(!indexSource.includes('id="timer-shadow"') && !indexSource.includes('id="shadow-settings-content"'), 'Retired timer-shadow controls are removed from Appearance');
 assert(indexSource.includes('onboarding-pending'), 'Opaque pre-onboarding wall prevents site flash');

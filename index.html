@@ -7,7 +7,14 @@
     <script>
         try {
             const savedLunch = (localStorage.getItem('lunchWave') || '').toUpperCase();
-            const setupComplete = localStorage.getItem('indyOnboardingComplete_v2') === 'true';
+            const replayRequested = localStorage.getItem('indyOnboardingReplayRequested_v1') === 'true';
+            const savedConsent = localStorage.getItem('indyAnalyticsConsent_v1');
+            const recoverableSetup = ['A', 'B', 'C'].includes(savedLunch)
+                && ['granted', 'denied'].includes(savedConsent);
+            const setupComplete = !replayRequested && (
+                localStorage.getItem('indyOnboardingComplete_v2') === 'true' || recoverableSetup
+            );
+            if (setupComplete) localStorage.setItem('indyOnboardingComplete_v2', 'true');
             if (!setupComplete || !['A', 'B', 'C'].includes(savedLunch)) {
                 document.documentElement.classList.add('onboarding-pending');
             }
@@ -593,7 +600,7 @@
                                         <li><span>2</span><p>Choose a palette and font under <strong>Appearance</strong>.</p></li>
                                         <li><span>3</span><p>Sign in only if you want settings synced between devices.</p></li>
                                     </ol>
-                                    <button type="button" class="replay-onboarding-btn" onclick="localStorage.removeItem('indyOnboardingComplete_v2'); location.reload();">
+                                    <button type="button" class="replay-onboarding-btn" onclick="localStorage.setItem('indyOnboardingReplayRequested_v1', 'true'); localStorage.removeItem('indyOnboardingComplete_v2'); location.reload();">
                                         <i class="fas fa-play"></i> Replay Welcome Tour
                                     </button>
                                 </section>
@@ -992,11 +999,20 @@
                 const hasLunch = ['A', 'B', 'C'].includes(savedLunch);
                 const hasAnalyticsChoice = typeof window.getAnalyticsConsent === 'function'
                     && window.getAnalyticsConsent() !== null;
+                const replayRequested = localStorage.getItem('indyOnboardingReplayRequested_v1') === 'true';
                 if (!backdrop || !steps.length || !nextButton || !backButton) {
                     document.documentElement.classList.remove('onboarding-pending');
                     return;
                 }
-                const onboardingComplete = Boolean(localStorage.getItem(completionKey));
+                let onboardingComplete = localStorage.getItem(completionKey) === 'true';
+                // Recover completion if that one key was lost while the choices
+                // made during setup are still present. An intentional replay bypasses this.
+                if (!onboardingComplete && !replayRequested && hasLunch && hasAnalyticsChoice) {
+                    localStorage.setItem(completionKey, 'true');
+                    onboardingComplete = true;
+                    const currentUser = window.authManager?.currentUser;
+                    if (currentUser) window.authManager.saveAllUserSettings(currentUser.uid).catch(() => {});
+                }
                 if (onboardingComplete && hasLunch && hasAnalyticsChoice) {
                     document.documentElement.classList.remove('onboarding-pending');
                     return;
@@ -1054,7 +1070,10 @@
                     if (typeof window.setLunchWave === 'function') window.setLunchWave(lunch);
                     else localStorage.setItem('lunchWave', lunch);
                     localStorage.setItem(completionKey, 'true');
+                    localStorage.removeItem('indyOnboardingReplayRequested_v1');
                     localStorage.setItem('updateNoticeShown_v4_0_0', 'true');
+                    const currentUser = window.authManager?.currentUser;
+                    if (currentUser) window.authManager.saveAllUserSettings(currentUser.uid).catch(() => {});
                     nextButton.disabled = true;
                     nextButton.innerHTML = 'Opening Indy <i class="fas fa-circle-notch fa-spin"></i>';
                     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
