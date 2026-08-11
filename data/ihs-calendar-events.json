@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-08-10T10:45:04.747Z",
-  "lastCheckedAt": "2026-08-10T10:45:04.747Z",
-  "contentUpdatedAt": "2026-08-10T10:45:04.747Z",
+  "generatedAt": "2026-08-11T04:52:19.332Z",
+  "lastCheckedAt": "2026-08-11T04:52:19.332Z",
+  "contentUpdatedAt": "2026-08-11T04:52:19.332Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -1135,6 +1135,28 @@
         "2026-12-07"
       ],
       "location": ""
+    },
+    {
+      "id": "35ih9o6l63poftbabe57bnmkn4@google.com-2026-12-09T00:00:00.000Z",
+      "title": "IHS Checkpoint Driving",
+      "start": "2026-12-09T00:00:00.000Z",
+      "end": "2026-12-09T02:00:00.000Z",
+      "allDay": false,
+      "days": [
+        "2026-12-08"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "7v8hffqqbrltslv0qtemp3spu0@google.com-2026-12-09T00:00:00.000Z",
+      "title": "IHS JV/V Wrestling vs J. Lawson HS",
+      "start": "2026-12-09T00:00:00.000Z",
+      "end": "2026-12-09T03:00:00.000Z",
+      "allDay": false,
+      "days": [
+        "2026-12-08"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     }
   ]
 }
