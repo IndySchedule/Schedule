@@ -2,14 +2,14 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-08-11T09:44:01.673Z",
-  "lastCheckedAt": "2026-08-11T09:44:01.673Z",
-  "contentUpdatedAt": "2026-08-11T09:44:01.673Z",
+  "generatedAt": "2026-08-12T05:50:08.663Z",
+  "lastCheckedAt": "2026-08-12T05:50:08.663Z",
+  "contentUpdatedAt": "2026-08-12T05:50:08.663Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
   "timeZone": "America/Chicago",
-  "rangeStart": "2026-08-09",
+  "rangeStart": "2026-08-10",
   "rangeEnd": "2026-12-09",
   "events": [
     {
