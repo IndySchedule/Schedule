@@ -2,38 +2,16 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-08-09T17:06:50.301Z",
-  "lastCheckedAt": "2026-08-09T17:06:50.301Z",
-  "contentUpdatedAt": "2026-08-09T17:06:50.301Z",
+  "generatedAt": "2026-08-12T20:25:17.167Z",
+  "lastCheckedAt": "2026-08-12T20:25:17.167Z",
+  "contentUpdatedAt": "2026-08-12T20:25:17.167Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
   "timeZone": "America/Chicago",
-  "rangeStart": "2026-08-07",
-  "rangeEnd": "2026-12-07",
+  "rangeStart": "2026-08-10",
+  "rangeEnd": "2026-12-10",
   "events": [
-    {
-      "id": "5n24p9v696c8k48fr7q2g37gh4@google.com-2026-08-08T00:00:00.000Z",
-      "title": "IHS Varsity Football @ CHS (Scrimmage)",
-      "start": "2026-08-08T00:00:00.000Z",
-      "end": "2026-08-08T02:00:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-08-07"
-      ],
-      "location": "Centennial High School, 5050 Mallory Ln, Franklin, TN 37067, USA"
-    },
-    {
-      "id": "1lcs0i51cqn13mfe6f7sp32dho@google.com-2026-08-10T12:40:00.000Z",
-      "title": "IHS First Day",
-      "start": "2026-08-10T12:40:00.000Z",
-      "end": "2026-08-10T16:15:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-08-10"
-      ],
-      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
-    },
     {
       "id": "7m52vqin9cf83fkvj0p6o8aksg@google.com-2026-08-11T22:30:00.000Z",
       "title": "IHS Senior Parent Meeting",
@@ -1146,6 +1124,28 @@
         "2026-12-07"
       ],
       "location": ""
+    },
+    {
+      "id": "35ih9o6l63poftbabe57bnmkn4@google.com-2026-12-09T00:00:00.000Z",
+      "title": "IHS Checkpoint Driving",
+      "start": "2026-12-09T00:00:00.000Z",
+      "end": "2026-12-09T02:00:00.000Z",
+      "allDay": false,
+      "days": [
+        "2026-12-08"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "7v8hffqqbrltslv0qtemp3spu0@google.com-2026-12-09T00:00:00.000Z",
+      "title": "IHS JV/V Wrestling vs J. Lawson HS",
+      "start": "2026-12-09T00:00:00.000Z",
+      "end": "2026-12-09T03:00:00.000Z",
+      "allDay": false,
+      "days": [
+        "2026-12-08"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     }
   ]
 }
