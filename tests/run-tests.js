@@ -195,6 +195,8 @@ assert(indexSource.includes('id="onboarding-create-account"') && indexSource.inc
 assert(indexSource.includes('id="onboarding-guest-confirmation"') && indexSource.includes('id="onboarding-guest-cancel"') && indexSource.includes('id="onboarding-guest-confirm"'), 'Guest mode uses a guarded confirmation dialog');
 assert(indexSource.includes('On a school-managed Chromebook, guest settings won’t be saved and setup will have to be redone'), 'Guest confirmation warns school-managed Chromebook users about lost settings and repeated setup');
 assert(indexSource.includes('After closing Chrome or your school-managed Chromebook, you’ll need to sign in again'), 'Walkthrough reminds managed Chromebook users that account sign-in must be repeated');
+assert(indexSource.includes('Saving your Indy Schedule password to Chrome Password Manager is strongly recommended.'), 'New-account walkthrough strongly recommends saving the password in Chrome');
+assert(indexSource.includes('Save it only to your assigned Chromebook or another device you trust.'), 'Password-saving recommendation includes a trusted-device safeguard');
 assert(authSource.includes('createUserWithEmailAndPassword') && authSource.includes('signInWithEmailAndPassword'), 'Firebase email account creation and sign-in are wired');
 assert(authSource.includes('sendPasswordResetEmail'), 'Firebase password-reset email is wired');
 assert(authSource.includes('firebase.auth.Auth.Persistence.LOCAL'), 'Authentication requests persistent Firebase sessions when browser policy permits');
@@ -205,6 +207,8 @@ const primaryStyles = readFile('styles.css');
 const secondaryStyles = readFile('styles2.css');
 assert(secondaryStyles.includes('#sign-in-button .account-avatar-initial i') && secondaryStyles.includes('font-size: 12px !important'), 'Fallback profile icon has a tightly scoped dashboard size');
 assert(primaryStyles.includes('.onboarding-entry-card .onboarding-entry-icon') && primaryStyles.includes('place-items: center'), 'Welcome account-choice icons remain centered in their tiles');
+assert(primaryStyles.includes('.onboarding-step[data-step="0"].active') && primaryStyles.includes('align-items: center'), 'Short Chromebook viewports vertically center the welcome step');
+assert(primaryStyles.includes('grid-template-columns: minmax(0, 0.86fr) minmax(350px, 1.14fr)'), 'Short Chromebook welcome uses a balanced message-and-actions layout');
 const designTokens = readFile('design-tokens.css');
 const calendarWorkflow = readFile('.github/workflows/update-ihs-calendar.yml');
 const calendarGenerator = readFile('tools/update-calendar-events.mjs');

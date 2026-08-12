@@ -919,23 +919,28 @@
                 </div>
 
                 <div class="onboarding-step active" data-step="0">
-                    <div class="onboarding-hero-mark"><img src="indy_schedule_logo_sizes/indy-schedule-logo-128x128.png" alt="" class="brand-logo-art"></div>
-                    <p class="onboarding-eyebrow">BUILT FOR INDEPENDENCE HIGH SCHOOL</p>
-                    <h1>Your school day,<br><span>right on time.</span></h1>
-                    <p class="onboarding-lead">Create an account to keep your schedule preferences when a managed Chromebook clears its browser data.</p>
-                    <div class="onboarding-entry-options">
-                        <button type="button" id="onboarding-create-account" class="onboarding-entry-card is-primary">
-                            <span class="onboarding-entry-icon"><i class="fas fa-user-plus" aria-hidden="true"></i></span>
-                            <span><strong>Create account</strong><small>Set up a new Indy Schedule account, then personalize your school day.</small></span>
-                            <i class="fas fa-arrow-right onboarding-entry-arrow" aria-hidden="true"></i>
-                        </button>
-                        <button type="button" id="onboarding-account-signin" class="onboarding-entry-card">
-                            <span class="onboarding-entry-icon"><i class="fas fa-right-to-bracket" aria-hidden="true"></i></span>
-                            <span><strong>Log in</strong><small>Restore the settings already saved to your account.</small></span>
-                            <i class="fas fa-arrow-right onboarding-entry-arrow" aria-hidden="true"></i>
-                        </button>
+                    <div class="onboarding-welcome-copy">
+                        <div class="onboarding-hero-mark"><img src="indy_schedule_logo_sizes/indy-schedule-logo-128x128.png" alt="" class="brand-logo-art"></div>
+                        <p class="onboarding-eyebrow">BUILT FOR INDEPENDENCE HIGH SCHOOL</p>
+                        <h1>Your school day,<br><span>right on time.</span></h1>
+                        <p class="onboarding-lead">Create an account to keep your schedule preferences when a managed Chromebook clears its browser data.</p>
                     </div>
-                    <button type="button" id="onboarding-use-guest" class="onboarding-use-guest">Use as guest</button>
+                    <div class="onboarding-welcome-actions">
+                        <p class="onboarding-entry-heading">Choose how to continue</p>
+                        <div class="onboarding-entry-options">
+                            <button type="button" id="onboarding-create-account" class="onboarding-entry-card is-primary">
+                                <span class="onboarding-entry-icon"><i class="fas fa-user-plus" aria-hidden="true"></i></span>
+                                <span><strong>Create account</strong><small>Set up a new Indy Schedule account, then personalize your school day.</small></span>
+                                <i class="fas fa-arrow-right onboarding-entry-arrow" aria-hidden="true"></i>
+                            </button>
+                            <button type="button" id="onboarding-account-signin" class="onboarding-entry-card">
+                                <span class="onboarding-entry-icon"><i class="fas fa-right-to-bracket" aria-hidden="true"></i></span>
+                                <span><strong>Log in</strong><small>Restore the settings already saved to your account.</small></span>
+                                <i class="fas fa-arrow-right onboarding-entry-arrow" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                        <button type="button" id="onboarding-use-guest" class="onboarding-use-guest">Use as guest</button>
+                    </div>
                 </div>
 
                 <div class="onboarding-step" data-step="1" hidden>
@@ -1011,6 +1016,16 @@
                 </div>
             </div>
         </div>
+        <div id="onboarding-account-created" class="onboarding-account-created" role="dialog" aria-modal="true" aria-labelledby="account-created-title" aria-describedby="account-created-description" hidden>
+            <div class="onboarding-account-created-card">
+                <span class="onboarding-account-created-icon"><i class="fas fa-key" aria-hidden="true"></i></span>
+                <p class="onboarding-eyebrow">ACCOUNT CREATED</p>
+                <h2 id="account-created-title">Save your password</h2>
+                <p id="account-created-description">Saving your Indy Schedule password to Chrome Password Manager is strongly recommended. It makes signing back in much easier when your school-managed Chromebook clears site data.</p>
+                <p class="onboarding-password-safety"><i class="fas fa-shield-halved" aria-hidden="true"></i> Save it only to your assigned Chromebook or another device you trust.</p>
+                <button type="button" id="onboarding-account-created-continue">Continue setup <i class="fas fa-arrow-right" aria-hidden="true"></i></button>
+            </div>
+        </div>
         <div class="onboarding-launch-mark" aria-hidden="true">
             <span class="onboarding-launch-logo">
                 <img src="indy_schedule_logo_sizes/indy-schedule-logo-128x128.png" alt="" class="brand-logo-art">
@@ -1038,6 +1053,8 @@
                 const guestConfirmation = document.getElementById('onboarding-guest-confirmation');
                 const guestCancel = document.getElementById('onboarding-guest-cancel');
                 const guestConfirm = document.getElementById('onboarding-guest-confirm');
+                const accountCreatedNotice = document.getElementById('onboarding-account-created');
+                const accountCreatedContinue = document.getElementById('onboarding-account-created-continue');
                 const savedLunch = (localStorage.getItem('lunchWave') || '').toUpperCase();
                 const hasLunch = ['A', 'B', 'C'].includes(savedLunch);
                 const hasAnalyticsChoice = typeof window.getAnalyticsConsent === 'function'
@@ -1119,11 +1136,22 @@
                     currentStep = 1;
                     renderStep();
                 });
-                window.addEventListener('indy-account-authenticated', () => {
+                accountCreatedContinue?.addEventListener('click', () => {
+                    accountCreatedNotice.hidden = true;
+                    currentStep = 1;
+                    renderStep();
+                    nextButton.focus();
+                });
+                window.addEventListener('indy-account-authenticated', event => {
                     const restoredLunch = ['A', 'B', 'C'].includes((localStorage.getItem('lunchWave') || '').toUpperCase());
                     const restoredAnalytics = window.getAnalyticsConsent?.() !== null;
                     if (localStorage.getItem(completionKey) === 'true' && restoredLunch && restoredAnalytics) {
                         window.location.reload();
+                        return;
+                    }
+                    if (event.detail?.mode === 'create' && accountCreatedNotice) {
+                        accountCreatedNotice.hidden = false;
+                        accountCreatedContinue?.focus();
                         return;
                     }
                     currentStep = 1;
@@ -1217,6 +1245,7 @@
                         }
                         return;
                     }
+                    if (!accountCreatedNotice?.hidden) return;
                     if (event.key === 'Enter' && event.target.tagName !== 'BUTTON') {
                         event.preventDefault();
                         nextButton.click();

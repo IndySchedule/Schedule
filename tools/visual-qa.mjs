@@ -54,6 +54,7 @@ const scenarios = [
     { name: 'onboarding-guest-confirmation', viewport: 'chromebook', time: schoolTimes.beforeSchool, onboarding: true, action: 'onboarding-guest-confirmation' },
     { name: 'onboarding-finish-chromebook', viewport: 'chromebook', time: schoolTimes.beforeSchool, onboarding: true, action: 'onboarding-finish' },
     { name: 'onboarding-create-account', viewport: 'phone', time: schoolTimes.beforeSchool, onboarding: true, action: 'onboarding-create' },
+    { name: 'onboarding-account-created', viewport: 'chromebook', time: schoolTimes.beforeSchool, onboarding: true, action: 'onboarding-account-created' },
     { name: 'palette-daylight', viewport: 'chromebook', time: schoolTimes.duringClass, palette: 'daylight', state: 'in-class', heading: 'Period 1' },
     { name: 'palette-dark-plum', viewport: 'chromebook', time: schoolTimes.duringClass, palette: 'dark-plum', state: 'in-class', heading: 'Period 1' },
     { name: 'edition-friday-night-lights', viewport: 'chromebook', time: schoolTimes.duringClass, edition: 'friday-night-lights', state: 'in-class', heading: 'Period 1' },
@@ -288,6 +289,10 @@ async function prepareScenario(page, scenario) {
         await page.evaluate(`document.getElementById('onboarding-use-guest')?.click()`);
         await delay(250);
     }
+    if (scenario.action === 'onboarding-account-created') {
+        await page.evaluate(`window.dispatchEvent(new CustomEvent('indy-account-authenticated', { detail: { mode: 'create' } }))`);
+        await delay(250);
+    }
     if (scenario.account === 'signed-in' || scenario.account === 'signed-in-fallback') {
         await page.evaluate(`
             (() => {
@@ -338,6 +343,11 @@ async function inspectScenario(page, scenario) {
             const onboarding = document.getElementById('update-notice-backdrop');
             const onboardingDialog = onboarding?.querySelector('.onboarding-dialog');
             const onboardingRect = onboardingDialog?.getBoundingClientRect();
+            const activeOnboardingStep = onboarding?.querySelector('.onboarding-step.active');
+            const activeOnboardingStepRect = activeOnboardingStep?.getBoundingClientRect();
+            const onboardingStepChildren = activeOnboardingStep ? [...activeOnboardingStep.children].filter(visible) : [];
+            const firstOnboardingChildRect = onboardingStepChildren[0]?.getBoundingClientRect();
+            const lastOnboardingChildRect = onboardingStepChildren.at(-1)?.getBoundingClientRect();
             const accountDialog = document.querySelector('#login-modal .login-container');
             const accountDialogRect = accountDialog?.getBoundingClientRect();
             const accountMenu = document.querySelector('.dashboard-account-menu');
@@ -360,8 +370,12 @@ async function inspectScenario(page, scenario) {
                 todayContained: !todayRect || (todayRect.left >= -1 && todayRect.right <= innerWidth + 1 && todayRect.top >= -1 && todayRect.bottom <= innerHeight + 1),
                 onboardingOpen: Boolean(onboarding && onboarding.getAttribute('aria-hidden') === 'false' && getComputedStyle(onboarding).display !== 'none'),
                 onboardingContained: !onboardingRect || (onboardingRect.left >= -1 && onboardingRect.right <= innerWidth + 1),
+                onboardingVerticalBalance: activeOnboardingStepRect && firstOnboardingChildRect && lastOnboardingChildRect
+                    ? Math.abs((firstOnboardingChildRect.top - activeOnboardingStepRect.top) - (activeOnboardingStepRect.bottom - lastOnboardingChildRect.bottom))
+                    : null,
                 managedChromebookReminderVisible: visible([...document.querySelectorAll('.onboarding-ready-card strong')].find((element) => element.textContent.includes('School Chromebook reminder'))),
                 guestConfirmationVisible: visible(document.getElementById('onboarding-guest-confirmation')),
+                accountCreatedNoticeVisible: visible(document.getElementById('onboarding-account-created')),
                 accountDialogOpen: Boolean(accountDialog && visible(accountDialog)),
                 accountDialogContained: !accountDialogRect || (accountDialogRect.left >= -1 && accountDialogRect.right <= innerWidth + 1 && accountDialogRect.top >= -1 && accountDialogRect.bottom <= innerHeight + 1),
                 activeAuthMode: document.querySelector('.auth-mode-button.active')?.dataset.authMode || '',
@@ -416,10 +430,12 @@ function validateScenario(scenario, result) {
     }
     if (scenario.action === 'onboarding-finish') check(result.managedChromebookReminderVisible, 'managed Chromebook sign-in reminder is not visible on the final walkthrough step');
     if (scenario.action === 'onboarding-guest-confirmation') check(result.guestConfirmationVisible, 'guest confirmation dialog did not open');
+    if (scenario.action === 'onboarding-account-created') check(result.accountCreatedNoticeVisible, 'post-signup password recommendation did not open');
     if (scenario.onboarding) {
         check(result.onboardingOpen, 'onboarding did not open');
         check(result.onboardingContained, 'onboarding is clipped horizontally');
     }
+    if (scenario.name === 'onboarding-first-step-chromebook') check(result.onboardingVerticalBalance !== null && result.onboardingVerticalBalance <= 40, `welcome content is not vertically centered (${result.onboardingVerticalBalance}px imbalance)`);
     if (scenario.account === 'signed-out') check(result.accountState.includes('is-signed-out'), 'signed-out account state is missing');
     if (scenario.account === 'signed-in' || scenario.account === 'signed-in-fallback') {
         check(result.accountState.includes('is-signed-in'), 'signed-in account state is missing');
