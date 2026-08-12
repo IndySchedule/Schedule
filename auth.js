@@ -70,6 +70,8 @@ function setAnalyticsConsent(granted) {
         window.authManager.analytics.setAnalyticsCollectionEnabled(false);
     }
     updateAnalyticsConsentUI();
+    const currentUser = window.authManager?.currentUser;
+    if (currentUser) window.authManager.saveAllUserSettings(currentUser.uid).catch(() => {});
 }
 
 window.trackAnalyticsEvent = function(eventName, parameters = {}) {
@@ -365,6 +367,7 @@ class AuthManager {
         // Wait for DOM before initializing UI
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => {
+                this.initializeAccountUI();
                 this.checkAuthentication();
                 this.updateUI();
                 // Set up auth state listener
@@ -374,11 +377,14 @@ class AuthManager {
                     this.updateUI();
                     if (user) {
                         // Instead of saving local settings immediately, load Firestore settings if they exist.
-                        this._maybeLoadUserSettings();
+                        this._maybeLoadUserSettings().then(settings => {
+                            if (settings) window.dispatchEvent(new CustomEvent('indy-account-authenticated', { detail: { source: 'saved-session' } }));
+                        });
                     }
                 });
             });
         } else {
+            this.initializeAccountUI();
             this.checkAuthentication();
             this.updateUI();
             // Set up auth state listener
@@ -388,7 +394,9 @@ class AuthManager {
                 this.updateUI();
                 if (user) {
                     // Instead of saving local settings immediately, load Firestore settings if they exist.
-                    this._maybeLoadUserSettings();
+                    this._maybeLoadUserSettings().then(settings => {
+                        if (settings) window.dispatchEvent(new CustomEvent('indy-account-authenticated', { detail: { source: 'saved-session' } }));
+                    });
                 }
             });
         }
@@ -468,9 +476,9 @@ class AuthManager {
                 progressBarColor: localStorage.getItem("progressBarColor"),
                 progressBarOpacity: localStorage.getItem("progressBarOpacity"),
                 gradientSettings: localStorage.getItem("gradientSettings"),
-                profileHidden: localStorage.getItem("profileHidden"),
                 currentScheduleName: localStorage.getItem("currentScheduleName"),
                 indyOnboardingComplete_v2: localStorage.getItem("indyOnboardingComplete_v2"),
+                indyAnalyticsConsent_v1: localStorage.getItem(ANALYTICS_CONSENT_KEY),
                 sawUpdateNotice: localStorage.getItem("sawUpdateNotice")
             };
 
@@ -552,6 +560,7 @@ class AuthManager {
 
                     updateToastIcon();
                     console.info("✅ Settings applied successfully");
+                    return settings;
                 }
             } else {
                 console.info("No settings found in Firestore, saving current local settings.");
@@ -561,26 +570,119 @@ class AuthManager {
         } catch (e) {
             console.error("Error handling user settings:", e);
         }
+        return null;
     }
 
     handleAuthError(error) {
         console.error('Auth error:', error);
-        this.showError(error.message || 'Authentication failed');
+        this.showError(error);
     }
 
     async initializeAuth() {
-        const button = document.getElementById('google-signin');
-        if (button) {
-            button.innerHTML = `
-                <button class="google-btn" onclick="authManager.signIn()">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google Logo">
-                    Sign in with Google
-                </button>
-            `;
-        }
-        
         // Check for redirect result on page load
         await this.handleRedirectResult();
+    }
+
+    initializeAccountUI() {
+        const modal = document.getElementById('login-modal');
+        const form = document.getElementById('email-auth-form');
+        if (!modal || !form || modal.dataset.authBound === 'true') return;
+        modal.dataset.authBound = 'true';
+
+        const modeButtons = Array.from(modal.querySelectorAll('[data-auth-mode]'));
+        const nameGroup = document.getElementById('auth-name-group');
+        const nameInput = document.getElementById('auth-display-name');
+        const emailInput = document.getElementById('auth-email');
+        const passwordInput = document.getElementById('auth-password');
+        const submitButton = document.getElementById('email-auth-submit');
+        const forgotButton = document.getElementById('forgot-password');
+        const status = document.getElementById('login-status');
+        let mode = 'signin';
+
+        const clearFeedback = () => {
+            const error = document.getElementById('login-error');
+            if (error) {
+                error.textContent = '';
+                error.style.display = 'none';
+            }
+            if (status) status.textContent = '';
+        };
+
+        const setMode = (nextMode) => {
+            mode = nextMode === 'create' ? 'create' : 'signin';
+            modeButtons.forEach((button) => {
+                const active = button.dataset.authMode === mode;
+                button.classList.toggle('active', active);
+                button.setAttribute('aria-selected', String(active));
+            });
+            if (nameGroup) nameGroup.hidden = mode !== 'create';
+            if (nameInput) nameInput.required = mode === 'create';
+            if (passwordInput) passwordInput.autocomplete = mode === 'create' ? 'new-password' : 'current-password';
+            if (submitButton) submitButton.textContent = mode === 'create' ? 'Create account' : 'Sign in';
+            if (forgotButton) forgotButton.hidden = mode !== 'signin';
+            clearFeedback();
+        };
+        modal._setAuthMode = setMode;
+
+        modeButtons.forEach((button) => button.addEventListener('click', () => setMode(button.dataset.authMode)));
+        document.getElementById('login-close')?.addEventListener('click', () => this.hideLoginModal());
+        document.getElementById('google-auth-button')?.addEventListener('click', () => this.signIn());
+
+        forgotButton?.addEventListener('click', async () => {
+            clearFeedback();
+            const email = emailInput?.value.trim() || '';
+            if (!email) {
+                this.showError('Enter your email address first, then choose “Forgot your password?”');
+                emailInput?.focus();
+                return;
+            }
+            forgotButton.disabled = true;
+            try {
+                await this.auth.sendPasswordResetEmail(email);
+                if (status) status.textContent = 'Password reset email sent. Check your inbox.';
+            } catch (error) {
+                this.handleAuthError(error);
+            } finally {
+                forgotButton.disabled = false;
+            }
+        });
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            clearFeedback();
+            if (!form.reportValidity()) return;
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
+            const displayName = nameInput?.value.trim() || '';
+            submitButton.disabled = true;
+            submitButton.innerHTML = `<i class="fas fa-circle-notch fa-spin" aria-hidden="true"></i> ${mode === 'create' ? 'Creating account…' : 'Signing in…'}`;
+            try {
+                await this.auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+                const credential = mode === 'create'
+                    ? await this.auth.createUserWithEmailAndPassword(email, password)
+                    : await this.auth.signInWithEmailAndPassword(email, password);
+                if (mode === 'create' && displayName) await credential.user.updateProfile({ displayName });
+                this.currentUser = credential.user;
+                this.isAuthenticated = true;
+                await this._maybeLoadUserSettings();
+                const enteredFromOnboarding = modal.dataset.onboardingEntry === 'true';
+                this.hideLoginModal();
+                if (enteredFromOnboarding) {
+                    window.dispatchEvent(new CustomEvent('indy-account-authenticated', {
+                        detail: { mode, userId: credential.user.uid }
+                    }));
+                } else {
+                    window.location.reload();
+                }
+            } catch (error) {
+                this.handleAuthError(error);
+            } finally {
+                submitButton.disabled = false;
+                submitButton.textContent = mode === 'create' ? 'Create account' : 'Sign in';
+            }
+        });
+
+        setMode('signin');
     }
 
     async signIn() {
@@ -619,11 +721,20 @@ class AuthManager {
     showError(message) {
         const errorElement = document.getElementById('login-error');
         if (errorElement) {
-            errorElement.textContent = message;
+            const friendlyMessages = {
+                'auth/email-already-in-use': 'An account already uses this email. Sign in instead.',
+                'auth/invalid-email': 'Enter a valid email address.',
+                'auth/weak-password': 'Choose a stronger password with at least 6 characters.',
+                'auth/password-does-not-meet-requirements': 'Choose a password that meets the account security requirements.',
+                'auth/wrong-password': 'The email or password is incorrect.',
+                'auth/invalid-credential': 'The email or password is incorrect.',
+                'auth/user-not-found': 'The email or password is incorrect.',
+                'auth/too-many-requests': 'Too many attempts. Wait a little while and try again.',
+                'auth/network-request-failed': 'Could not reach Firebase. Check your connection and try again.',
+                'auth/operation-not-allowed': 'Email accounts are not enabled yet in Firebase.'
+            };
+            errorElement.textContent = friendlyMessages[message?.code] || message?.message || message || 'Authentication failed.';
             errorElement.style.display = 'block';
-            setTimeout(() => {
-                errorElement.style.display = 'none';
-            }, 5000);
         }
     }
 
@@ -634,24 +745,20 @@ class AuthManager {
         if (this.isAuthenticated && this.currentUser) {
             headerButton.classList.add('is-signed-in');
             headerButton.classList.remove('is-signed-out');
-            const photoURL = this.currentUser.photoURL || 'https://www.gravatar.com/avatar/?d=mp';
-            const isHidden = localStorage.getItem('profileHidden') === 'true';
-            if (isHidden) {
-                headerButton.style.display = 'none';
-                return;
-            }
-            
+            const photoURL = this.currentUser.photoURL || '';
+            const avatar = photoURL
+                ? `<img src="${photoURL}" alt="">`
+                : '<span class="account-avatar-initial" aria-hidden="true"><i class="fas fa-user"></i></span>';
             headerButton.style.display = 'block';
             headerButton.innerHTML = `
                 <div class="dashboard-account-control">
                     <button type="button" class="account-trigger" aria-label="Open account menu" aria-expanded="false">
-                        <img src="${photoURL}" alt="">
+                        ${avatar}
                     </button>
                     <div class="dashboard-account-menu" hidden>
                         <strong></strong>
                         <span></span>
                         <button type="button" class="account-signout">Sign Out</button>
-                        <button type="button" class="account-visibility">Hide Profile</button>
                     </div>
                 </div>
             `;
@@ -666,16 +773,18 @@ class AuthManager {
             trigger?.addEventListener('click', (event) => {
                 event.stopPropagation();
                 const willOpen = menu.hidden;
+                if (willOpen && document.getElementById('today-at-indy')?.hidden === false) {
+                    document.getElementById('today-card-close')?.click();
+                }
                 menu.hidden = !willOpen;
                 trigger.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
             });
-            headerButton.querySelector('.account-signout')?.addEventListener('click', (event) => {
+            headerButton.querySelector('.account-signout')?.addEventListener('click', async (event) => {
                 event.stopPropagation();
-                window.authManager.logout();
-            });
-            headerButton.querySelector('.account-visibility')?.addEventListener('click', (event) => {
-                event.stopPropagation();
-                window.authManager.toggleProfileVisibility(event);
+                const button = event.currentTarget;
+                button.disabled = true;
+                button.innerHTML = '<i class="fas fa-circle-notch fa-spin" aria-hidden="true"></i> Signing out…';
+                await window.authManager.logout();
             });
             if (!headerButton._outsideBound) {
                 document.addEventListener('click', (event) => {
@@ -692,18 +801,18 @@ class AuthManager {
             headerButton.classList.remove('is-signed-in');
             headerButton.style.display = 'block';
             headerButton.innerHTML = `
-                <button type="button" class="account-trigger" aria-label="Sign in with Google"><span class="account-label">Sign In</span></button>
+                <button type="button" class="account-trigger" aria-label="Open account sign-in"><span class="account-label">Sign In</span></button>
             `;
-            headerButton.querySelector('.account-trigger')?.addEventListener('click', () => this.signIn());
+            headerButton.querySelector('.account-trigger')?.addEventListener('click', () => this.showLoginModal());
         }
         
         // Update sidebar button if it exists
         const sidebarButton = document.getElementById('auth-button');
         if (sidebarButton) {
             if (this.isAuthenticated && this.currentUser) {
-                const photoURL = this.currentUser.photoURL || 'https://www.gravatar.com/avatar/?d=mp';
+                const photoURL = this.currentUser.photoURL || '';
                 sidebarButton.innerHTML = `
-                    <img src="${photoURL}" alt="Profile" class="profile-pic">
+                    ${photoURL ? `<img src="${photoURL}" alt="Profile" class="profile-pic">` : '<i class="fas fa-user"></i>'}
                     <span>Sign Out</span>
                 `;
             } else {
@@ -715,42 +824,9 @@ class AuthManager {
         }
     }
 
-    // Add new method to handle profile visibility
-    toggleProfileVisibility(e) {
-        if (e) e.stopPropagation();
-        
-        const isCurrentlyHidden = localStorage.getItem('profileHidden') === 'true';
-        const newHiddenState = !isCurrentlyHidden; // Flip the current state
-        
-        // Update localStorage
-        localStorage.setItem('profileHidden', newHiddenState);
-        
-        // Update UI
-        const headerButton = document.getElementById('sign-in-button');
-        const settingsSwitch = document.getElementById('profile-visibility-toggle');
-        
-        if (headerButton) {
-            headerButton.style.display = newHiddenState ? 'none' : 'block';
-            if (!newHiddenState) {
-                // Re-render the profile UI when showing
-                this.updateUI();
-            }
-        }
-        
-        // Update settings switch if it exists
-        if (settingsSwitch) {
-            settingsSwitch.checked = !newHiddenState;
-        }
-
-        // Save to Firestore if authenticated
-        if (this.currentUser) {
-            this.saveAllUserSettings(this.currentUser.uid);
-        }
-    }
-
     checkAuthentication() {
-        const token = localStorage.getItem('authToken');
-        this.isAuthenticated = !!token;
+        this.currentUser = this.auth.currentUser;
+        this.isAuthenticated = !!this.currentUser;
         // Remove auto-show of login modal
         return this.isAuthenticated;
     }
@@ -797,9 +873,12 @@ class AuthManager {
         }
     }
 
-    showLoginModal() {
+    showLoginModal(options = {}) {
         const modal = document.getElementById('login-modal');
         if (modal) {
+            const requestedMode = options.mode === 'create' ? 'create' : 'signin';
+            modal.dataset.onboardingEntry = options.onboarding ? 'true' : 'false';
+            modal._setAuthMode?.(requestedMode);
             // Clear any previous errors
             const errorElement = document.getElementById('login-error');
             if (errorElement) {
@@ -808,8 +887,10 @@ class AuthManager {
             
             // Add the 'show' class to trigger the fade-in animation
             modal.style.display = 'flex';
+            modal.setAttribute('aria-hidden', 'false');
             requestAnimationFrame(() => {
                 modal.classList.add('show');
+                document.getElementById('auth-email')?.focus();
             });
             
             this.initializeAuth();
@@ -843,6 +924,7 @@ class AuthManager {
         const modal = document.getElementById('login-modal');
         if (modal) {
             modal.classList.remove('show');
+            modal.setAttribute('aria-hidden', 'true');
             // Clean up event listeners
             if (modal._cleanup) {
                 modal._cleanup();
@@ -860,7 +942,7 @@ class AuthManager {
         if (this.isAuthenticated) {
             this.logout();
         } else {
-            this.signIn(); // Directly call signIn instead of showLoginModal
+            this.showLoginModal();
         }
     }
 }

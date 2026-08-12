@@ -50,6 +50,10 @@ const scenarios = [
     { name: 'dashboard-phone', viewport: 'phone', time: schoolTimes.duringClass, state: 'in-class', heading: 'Period 1' },
     { name: 'today-at-indy', viewport: 'phone', time: schoolTimes.lunch, action: 'today' },
     { name: 'onboarding-first-step', viewport: 'phone', time: schoolTimes.beforeSchool, onboarding: true },
+    { name: 'onboarding-first-step-chromebook', viewport: 'chromebook', time: schoolTimes.beforeSchool, onboarding: true },
+    { name: 'onboarding-guest-confirmation', viewport: 'chromebook', time: schoolTimes.beforeSchool, onboarding: true, action: 'onboarding-guest-confirmation' },
+    { name: 'onboarding-finish-chromebook', viewport: 'chromebook', time: schoolTimes.beforeSchool, onboarding: true, action: 'onboarding-finish' },
+    { name: 'onboarding-create-account', viewport: 'phone', time: schoolTimes.beforeSchool, onboarding: true, action: 'onboarding-create' },
     { name: 'palette-daylight', viewport: 'chromebook', time: schoolTimes.duringClass, palette: 'daylight', state: 'in-class', heading: 'Period 1' },
     { name: 'palette-dark-plum', viewport: 'chromebook', time: schoolTimes.duringClass, palette: 'dark-plum', state: 'in-class', heading: 'Period 1' },
     { name: 'edition-friday-night-lights', viewport: 'chromebook', time: schoolTimes.duringClass, edition: 'friday-night-lights', state: 'in-class', heading: 'Period 1' },
@@ -60,6 +64,10 @@ const scenarios = [
     { name: 'palette-disables-edition', viewport: 'chromebook', time: schoolTimes.duringClass, edition: 'friday-night-lights', settings: 'appearance', resetEdition: true },
     { name: 'account-signed-out', viewport: 'chromebook', time: schoolTimes.duringClass, account: 'signed-out' },
     { name: 'account-signed-in', viewport: 'chromebook', time: schoolTimes.duringClass, account: 'signed-in' },
+    { name: 'account-fallback-avatar', viewport: 'chromebook', time: schoolTimes.duringClass, account: 'signed-in-fallback' },
+    { name: 'account-over-today', viewport: 'chromebook', time: schoolTimes.duringClass, account: 'signed-in', action: 'today-then-account' },
+    { name: 'account-dialog', viewport: 'chromebook', time: schoolTimes.duringClass, action: 'account' },
+    { name: 'account-dialog-phone', viewport: 'phone', time: schoolTimes.duringClass, action: 'account' },
     ...['schedule', 'appearance', 'about', 'legal', 'whatsnew', 'contact'].map((panel) => ({
         name: `settings-${panel}`,
         viewport: 'chromebook',
@@ -214,11 +222,11 @@ function initializationScript(scenario) {
             FixedDate.parse = NativeDate.parse;
             FixedDate.UTC = NativeDate.UTC;
             window.Date = FixedDate;
-            localStorage.setItem('lunchWave', 'A');
             localStorage.setItem('showPeriodTimes', 'true');
             localStorage.setItem('progressBarEnabled', 'true');
-            localStorage.setItem('indyAnalyticsConsent_v1', 'denied');
-            ${scenario.onboarding ? "localStorage.removeItem('indyOnboardingComplete_v2');" : "localStorage.setItem('indyOnboardingComplete_v2', 'true');"}
+            ${scenario.onboarding
+                ? "localStorage.removeItem('lunchWave'); localStorage.removeItem('indyAnalyticsConsent_v1'); localStorage.removeItem('indyOnboardingComplete_v2');"
+                : "localStorage.setItem('lunchWave', 'A'); localStorage.setItem('indyAnalyticsConsent_v1', 'denied'); localStorage.setItem('indyOnboardingComplete_v2', 'true');"}
             ${settings ? `localStorage.setItem('gradientSettings', ${JSON.stringify(JSON.stringify(settings))});` : "localStorage.removeItem('gradientSettings');"}
         })();
     `;
@@ -253,11 +261,34 @@ async function prepareScenario(page, scenario) {
         await page.evaluate(`document.querySelector('.edition-option[data-edition=${JSON.stringify(scenario.chooseEdition)}]')?.click()`);
         await delay(200);
     }
-    if (scenario.action === 'today') {
+    if (scenario.action === 'today' || scenario.action === 'today-then-account') {
         await page.evaluate(`document.getElementById('today-toggle')?.click()`);
         await delay(250);
     }
-    if (scenario.account === 'signed-in') {
+    if (scenario.action === 'account') {
+        await page.evaluate(`document.querySelector('#sign-in-button .account-trigger')?.click()`);
+        await delay(250);
+    }
+    if (scenario.action === 'onboarding-create') {
+        await page.evaluate(`document.getElementById('onboarding-create-account')?.click()`);
+        await delay(250);
+    }
+    if (scenario.action === 'onboarding-finish') {
+        await page.evaluate(`
+            document.getElementById('onboarding-use-guest')?.click();
+            document.getElementById('onboarding-guest-confirm')?.click();
+            document.getElementById('onboarding-next')?.click();
+            document.querySelector('input[name="onboarding-lunch"][value="A"]')?.click();
+            document.getElementById('onboarding-next')?.click();
+            document.getElementById('onboarding-analytics-decline')?.click();
+        `);
+        await delay(250);
+    }
+    if (scenario.action === 'onboarding-guest-confirmation') {
+        await page.evaluate(`document.getElementById('onboarding-use-guest')?.click()`);
+        await delay(250);
+    }
+    if (scenario.account === 'signed-in' || scenario.account === 'signed-in-fallback') {
         await page.evaluate(`
             (() => {
                 if (!window.authManager) return;
@@ -265,7 +296,7 @@ async function prepareScenario(page, scenario) {
                 window.authManager.currentUser = {
                     displayName: 'Indy Student',
                     email: 'student@example.com',
-                    photoURL: 'indy_schedule_logo_sizes/indy-schedule-logo-48x48.png'
+                    photoURL: ${'`'}${scenario.account === 'signed-in-fallback' ? '' : 'indy_schedule_logo_sizes/indy-schedule-logo-48x48.png'}${'`'}
                 };
                 window.authManager.updateUI();
                 document.querySelector('#sign-in-button .account-trigger')?.click();
@@ -307,6 +338,14 @@ async function inspectScenario(page, scenario) {
             const onboarding = document.getElementById('update-notice-backdrop');
             const onboardingDialog = onboarding?.querySelector('.onboarding-dialog');
             const onboardingRect = onboardingDialog?.getBoundingClientRect();
+            const accountDialog = document.querySelector('#login-modal .login-container');
+            const accountDialogRect = accountDialog?.getBoundingClientRect();
+            const accountMenu = document.querySelector('.dashboard-account-menu');
+            const signOutAction = accountMenu?.querySelector('.account-signout');
+            const signOutRect = signOutAction?.getBoundingClientRect();
+            const signOutTopElement = signOutRect ? document.elementFromPoint(signOutRect.left + signOutRect.width / 2, signOutRect.top + signOutRect.height / 2) : null;
+            const fallbackAvatar = document.querySelector('.account-avatar-initial');
+            const fallbackAvatarRect = fallbackAvatar?.getBoundingClientRect();
             return {
                 viewport: { width: innerWidth, height: innerHeight },
                 horizontalOverflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
@@ -321,8 +360,17 @@ async function inspectScenario(page, scenario) {
                 todayContained: !todayRect || (todayRect.left >= -1 && todayRect.right <= innerWidth + 1 && todayRect.top >= -1 && todayRect.bottom <= innerHeight + 1),
                 onboardingOpen: Boolean(onboarding && onboarding.getAttribute('aria-hidden') === 'false' && getComputedStyle(onboarding).display !== 'none'),
                 onboardingContained: !onboardingRect || (onboardingRect.left >= -1 && onboardingRect.right <= innerWidth + 1),
+                managedChromebookReminderVisible: visible([...document.querySelectorAll('.onboarding-ready-card strong')].find((element) => element.textContent.includes('School Chromebook reminder'))),
+                guestConfirmationVisible: visible(document.getElementById('onboarding-guest-confirmation')),
+                accountDialogOpen: Boolean(accountDialog && visible(accountDialog)),
+                accountDialogContained: !accountDialogRect || (accountDialogRect.left >= -1 && accountDialogRect.right <= innerWidth + 1 && accountDialogRect.top >= -1 && accountDialogRect.bottom <= innerHeight + 1),
+                activeAuthMode: document.querySelector('.auth-mode-button.active')?.dataset.authMode || '',
+                forgotPasswordVisible: visible(document.getElementById('forgot-password')),
                 accountState: document.getElementById('sign-in-button')?.className || '',
                 accountMenuOpen: !document.querySelector('.dashboard-account-menu')?.hidden,
+                signOutVisible: visible(signOutAction),
+                signOutReachable: Boolean(signOutAction && (signOutTopElement === signOutAction || signOutAction.contains(signOutTopElement))),
+                fallbackAvatarSize: fallbackAvatarRect ? { width: fallbackAvatarRect.width, height: fallbackAvatarRect.height } : null,
                 duplicateIds,
                 unnamedControls,
                 imagesWithoutAlt
@@ -356,15 +404,33 @@ function validateScenario(scenario, result) {
         check(result.todayOpen, 'Today at Indy did not open');
         check(result.todayContained, 'Today at Indy is clipped outside the viewport');
     }
+    if (scenario.action === 'account') {
+        check(result.accountDialogOpen, 'account dialog did not open');
+        check(result.accountDialogContained, 'account dialog is clipped outside the viewport');
+    }
+    if (scenario.action === 'onboarding-create') {
+        check(result.accountDialogOpen, 'create-account dialog did not open');
+        check(result.accountDialogContained, 'create-account dialog is clipped outside the viewport');
+        check(result.activeAuthMode === 'create', `expected create-account mode, received ${result.activeAuthMode}`);
+        check(!result.forgotPasswordVisible, 'password-reset action should be hidden while creating an account');
+    }
+    if (scenario.action === 'onboarding-finish') check(result.managedChromebookReminderVisible, 'managed Chromebook sign-in reminder is not visible on the final walkthrough step');
+    if (scenario.action === 'onboarding-guest-confirmation') check(result.guestConfirmationVisible, 'guest confirmation dialog did not open');
     if (scenario.onboarding) {
         check(result.onboardingOpen, 'onboarding did not open');
         check(result.onboardingContained, 'onboarding is clipped horizontally');
     }
     if (scenario.account === 'signed-out') check(result.accountState.includes('is-signed-out'), 'signed-out account state is missing');
-    if (scenario.account === 'signed-in') {
+    if (scenario.account === 'signed-in' || scenario.account === 'signed-in-fallback') {
         check(result.accountState.includes('is-signed-in'), 'signed-in account state is missing');
         check(result.accountMenuOpen, 'signed-in account menu did not open');
+        check(result.signOutVisible, 'sign-out action is not visible');
+        check(result.signOutReachable, 'sign-out action is covered by another dashboard layer');
     }
+    if (scenario.account === 'signed-in-fallback') {
+        check(result.fallbackAvatarSize && result.fallbackAvatarSize.width <= 28 && result.fallbackAvatarSize.height <= 28, 'fallback avatar is oversized');
+    }
+    if (scenario.action === 'today-then-account') check(!result.todayOpen, 'Today at Indy stayed open over the account menu');
     return failures;
 }
 

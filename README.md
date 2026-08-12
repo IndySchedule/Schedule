@@ -11,13 +11,13 @@ Indy Schedule is an unofficial schedule countdown website for Independence High 
 - Independence's regular, late-start, and half-day bell schedules
 - Automatic schedule selection using the 2026–27 WCS school calendar
 - A, B, and C fifth-period lunch support, including split fifth period for B lunch
-- Tuesday–Thursday SOAR and Homeroom placement
+- Official Tuesday–Thursday SOAR and Monday/Friday no-SOAR bells
 - **Today at Indy** summary with separate built-in bells, validated live IHS events, sourced lunch information, and tomorrow's schedule
 - Preset light and dark color palettes plus a custom four-color palette
 - Music City special edition with a matching built-in palette; Friday Night Lights and Historic Franklin remain implemented but are temporarily hidden from Appearance
 - Custom period names and optional times beside schedule entries
 - First-visit setup for selecting lunch
-- Optional Google sign-in and Firebase preference syncing
+- Optional email/password or Google sign-in with Firebase preference syncing
 - Responsive layouts for desktop and smaller screens
 
 ## Running Locally
@@ -123,7 +123,7 @@ Firebase Hosting is the primary deployment. The scheduled calendar workflow depl
 
 ## Privacy and Terms
 
-The countdown and most preferences work without an account. Google sign-in is optional and is used only for authentication and cross-device preference syncing. See `privacy.html` and `terms.html` for the full policies.
+The countdown and most preferences work without an account. Email/password and Google sign-in are optional and are used only for authentication and preference syncing. See `privacy.html` and `terms.html` for the full policies.
 
 ## License
 

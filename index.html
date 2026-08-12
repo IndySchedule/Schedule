@@ -586,7 +586,7 @@
                                 <div class="about-feature"><i class="fas fa-hourglass-half" aria-hidden="true"></i><strong>Live countdown</strong><span>See the current class and exactly how much time remains.</span></div>
                                 <div class="about-feature"><i class="fas fa-calendar-check" aria-hidden="true"></i><strong>Calendar aware</strong><span>Regular, late-start, and half-day schedules switch automatically.</span></div>
                                 <div class="about-feature"><i class="fas fa-palette" aria-hidden="true"></i><strong>Made yours</strong><span>Choose a palette, class names, lunch wave, and display details.</span></div>
-                                <div class="about-feature"><i class="fas fa-cloud-arrow-up" aria-hidden="true"></i><strong>Optional sync</strong><span>Google sign-in can keep preferences consistent across devices.</span></div>
+                                <div class="about-feature"><i class="fas fa-cloud-arrow-up" aria-hidden="true"></i><strong>Optional sync</strong><span>An Indy Schedule account can restore preferences after Chromebook storage is cleared.</span></div>
                             </div>
 
                             <div class="about-details-grid">
@@ -816,7 +816,7 @@
                                     <button type="button" id="delete-local-data" class="delete-local-data-button" aria-expanded="false" aria-controls="delete-local-data-confirmation">Delete stored data</button>
                                 </div>
                                 <div id="delete-local-data-confirmation" class="device-data-confirmation" hidden>
-                                    <div><strong>Delete everything stored in this browser?</strong><p>This cannot be undone. Google sign-in and data synced to your account are not deleted and may return while you are signed in.</p></div>
+                                    <div><strong>Delete everything stored in this browser?</strong><p>This cannot be undone. Your Firebase account and cloud-synced data are not deleted and may return after you sign in.</p></div>
                                     <div class="device-data-confirmation-actions">
                                         <button type="button" id="cancel-delete-local-data" class="cancel-local-data-button">Cancel</button>
                                         <button type="button" id="confirm-delete-local-data" class="confirm-local-data-button"><i class="fas fa-trash" aria-hidden="true"></i> Delete everything</button>
@@ -868,13 +868,38 @@
         </div>
     </div>
     <div class="today-card-backdrop" id="today-card-backdrop" hidden></div>
-    <div id="login-modal" class="login-modal">
+    <div id="login-modal" class="login-modal" role="dialog" aria-modal="true" aria-labelledby="login-title" aria-hidden="true">
         <div class="login-container">
-            <h2>Sign In</h2>
-            <div class="login-content">
-                <p>Sign in with your Google account to continue</p>
-                <div id="google-signin"></div>
+            <button type="button" class="login-close" id="login-close" aria-label="Close account dialog"><i class="fas fa-times" aria-hidden="true"></i></button>
+            <div class="login-brand" aria-hidden="true"><img src="indy_schedule_logo_sizes/indy-schedule-logo-128x128.png" alt="" class="brand-logo-art"></div>
+            <h2 id="login-title">Indy Schedule Account</h2>
+            <p class="login-intro">Save your lunch, classes, and appearance in the cloud—even when a managed Chromebook clears browser data.</p>
+            <div class="auth-mode-switch" role="tablist" aria-label="Account action">
+                <button type="button" class="auth-mode-button active" id="auth-mode-signin" data-auth-mode="signin" role="tab" aria-selected="true">Sign in</button>
+                <button type="button" class="auth-mode-button" id="auth-mode-create" data-auth-mode="create" role="tab" aria-selected="false">Create account</button>
             </div>
+            <form id="email-auth-form" class="email-auth-form" novalidate>
+                <div class="input-group" id="auth-name-group" hidden>
+                    <label for="auth-display-name">Display name</label>
+                    <input type="text" id="auth-display-name" autocomplete="name" maxlength="40" placeholder="Your name">
+                </div>
+                <div class="input-group">
+                    <label for="auth-email">Email address</label>
+                    <input type="email" id="auth-email" autocomplete="email" required placeholder="you@example.com">
+                </div>
+                <div class="input-group">
+                    <label for="auth-password">Password</label>
+                    <input type="password" id="auth-password" autocomplete="current-password" minlength="6" required placeholder="At least 6 characters">
+                </div>
+                <div id="login-error" class="error-message" role="alert" aria-live="polite"></div>
+                <div id="login-status" class="login-status" role="status" aria-live="polite"></div>
+                <button type="submit" id="email-auth-submit" class="email-auth-submit">Sign in</button>
+            </form>
+            <button type="button" id="forgot-password" class="forgot-password">Forgot your password?</button>
+            <div class="auth-divider"><span>or</span></div>
+            <button type="button" id="google-auth-button" class="google-auth-button"><i class="fab fa-google" aria-hidden="true"></i> Continue with Google</button>
+            <p class="google-auth-warning"><i class="fas fa-triangle-exclamation" aria-hidden="true"></i> Google sign-in won’t work on school-managed Chromebooks. Use your school email and password above instead.</p>
+            <p class="managed-device-note"><i class="fas fa-circle-info" aria-hidden="true"></i> If Chrome clears site data, sign in again to restore your saved settings.</p>
         </div>
     </div>
     <!-- First-run onboarding -->
@@ -897,12 +922,20 @@
                     <div class="onboarding-hero-mark"><img src="indy_schedule_logo_sizes/indy-schedule-logo-128x128.png" alt="" class="brand-logo-art"></div>
                     <p class="onboarding-eyebrow">BUILT FOR INDEPENDENCE HIGH SCHOOL</p>
                     <h1>Your school day,<br><span>right on time.</span></h1>
-                    <p class="onboarding-lead">See the current period, the time remaining, and what comes next—without digging through your schedule.</p>
-                    <div class="onboarding-feature-grid">
-                        <div class="onboarding-feature"><i class="fas fa-clock"></i><strong>Live countdown</strong><span>Always know how much time is left.</span></div>
-                        <div class="onboarding-feature"><i class="fas fa-calendar-check"></i><strong>Calendar aware</strong><span>Late starts and half days switch automatically.</span></div>
-                        <div class="onboarding-feature"><i class="fas fa-palette"></i><strong>Made yours</strong><span>Personalize colors, names, and visuals.</span></div>
+                    <p class="onboarding-lead">Create an account to keep your schedule preferences when a managed Chromebook clears its browser data.</p>
+                    <div class="onboarding-entry-options">
+                        <button type="button" id="onboarding-create-account" class="onboarding-entry-card is-primary">
+                            <span class="onboarding-entry-icon"><i class="fas fa-user-plus" aria-hidden="true"></i></span>
+                            <span><strong>Create account</strong><small>Set up a new Indy Schedule account, then personalize your school day.</small></span>
+                            <i class="fas fa-arrow-right onboarding-entry-arrow" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" id="onboarding-account-signin" class="onboarding-entry-card">
+                            <span class="onboarding-entry-icon"><i class="fas fa-right-to-bracket" aria-hidden="true"></i></span>
+                            <span><strong>Log in</strong><small>Restore the settings already saved to your account.</small></span>
+                            <i class="fas fa-arrow-right onboarding-entry-arrow" aria-hidden="true"></i>
+                        </button>
                     </div>
+                    <button type="button" id="onboarding-use-guest" class="onboarding-use-guest">Use as guest</button>
                 </div>
 
                 <div class="onboarding-step" data-step="1" hidden>
@@ -911,7 +944,7 @@
                     <h1>The right bells,<br><span>every school day.</span></h1>
                     <p class="onboarding-lead">Indy Schedule follows the 2026–27 WCS calendar in Central Time. You don’t need to switch schedules yourself.</p>
                     <div class="onboarding-schedule-list">
-                        <div><span class="schedule-dot regular"></span><strong>Regular days</strong><small>Official bells, Homeroom, and Tuesday–Thursday SOAR</small></div>
+                        <div><span class="schedule-dot regular"></span><strong>Regular days</strong><small>Official SOAR and no-SOAR bell schedules</small></div>
                         <div><span class="schedule-dot late"></span><strong>Late-start days</strong><small>All 27 official Monday and Tuesday dates</small></div>
                         <div><span class="schedule-dot half"></span><strong>Half days</strong><small>Shortened periods and 11:15 dismissal</small></div>
                         <div><span class="schedule-dot closed"></span><strong>Breaks &amp; weekends</strong><small>Counts down to the next school day</small></div>
@@ -924,9 +957,9 @@
                     <h1>Which lunch<br><span>do you have?</span></h1>
                     <p class="onboarding-lead">Your fifth-period teacher assigns A, B, or C lunch. Choose yours so the countdown pauses class time and shows lunch correctly.</p>
                     <div class="onboarding-lunch-options" id="onboarding-lunch-wave" role="radiogroup" aria-label="Your assigned lunch">
-                        <label class="lunch-choice"><input type="radio" name="onboarding-lunch" value="A"><span class="lunch-letter">A</span><span><strong>A Lunch</strong><small>11:43–12:08 · Late start 11:38–12:06</small></span><i class="fas fa-check"></i></label>
-                        <label class="lunch-choice"><input type="radio" name="onboarding-lunch" value="B"><span class="lunch-letter">B</span><span><strong>B Lunch</strong><small>12:10–12:35 · Late start 12:08–12:36</small></span><i class="fas fa-check"></i></label>
-                        <label class="lunch-choice"><input type="radio" name="onboarding-lunch" value="C"><span class="lunch-letter">C</span><span><strong>C Lunch</strong><small>12:37–1:02 · Late start 12:38–1:06</small></span><i class="fas fa-check"></i></label>
+                        <label class="lunch-choice"><input type="radio" name="onboarding-lunch" value="A"><span class="lunch-letter">A</span><span><strong>A Lunch</strong><small>SOAR 11:45–12:10 · No SOAR 11:27–11:52 · Late start 11:38–12:06</small></span><i class="fas fa-check"></i></label>
+                        <label class="lunch-choice"><input type="radio" name="onboarding-lunch" value="B"><span class="lunch-letter">B</span><span><strong>B Lunch</strong><small>SOAR 12:11–12:36 · No SOAR 11:56–12:21 · Late start 12:08–12:36</small></span><i class="fas fa-check"></i></label>
+                        <label class="lunch-choice"><input type="radio" name="onboarding-lunch" value="C"><span class="lunch-letter">C</span><span><strong>C Lunch</strong><small>SOAR 12:37–1:02 · No SOAR 12:25–12:50 · Late start 12:38–1:06</small></span><i class="fas fa-check"></i></label>
                     </div>
                     <p id="onboarding-lunch-error" class="onboarding-field-error" hidden>Please select your assigned lunch before continuing.</p>
                     <p class="onboarding-hint"><i class="fas fa-circle-info"></i> Not sure? Your fifth-period teacher will tell you. You can change this later in Settings.</p>
@@ -939,7 +972,7 @@
                     <p class="onboarding-lead">Allow anonymous usage measurements so we can see what works, catch rough spots, and make the site better for students.</p>
                     <div class="onboarding-ready-card onboarding-analytics-card">
                         <div><i class="fas fa-chart-line"></i><span><strong>Useful, limited insights</strong><small>Page visits, device type, and feature use help guide improvements.</small></span></div>
-                        <div><i class="fas fa-user-shield"></i><span><strong>Your school day stays private</strong><small>No names, emails, schedules, period names, or lunch choices are sent.</small></span></div>
+                        <div><i class="fas fa-user-shield"></i><span><strong>Your school day stays private</strong><small>No names, emails, schedules, period names, or lunch choices are sent to Analytics.</small></span></div>
                     </div>
                     <p class="onboarding-hint onboarding-privacy-hint"><i class="fas fa-lock"></i> Optional and changeable anytime in Settings. <a href="privacy.html" target="_blank" rel="noopener">Read the Privacy Policy</a>.</p>
                 </div>
@@ -951,16 +984,30 @@
                     <p class="onboarding-lead">Your schedule is ready and your lunch is set to <strong id="onboarding-lunch-summary">—</strong>.</p>
                     <div class="onboarding-ready-card">
                         <div><i class="fas fa-gear"></i><span><strong>Make it yours</strong><small>Open Settings to rename periods or change the theme.</small></span></div>
-                        <div><i class="fas fa-cloud"></i><span><strong>Optional cloud sync</strong><small>Sign in with Google to carry preferences across devices.</small></span></div>
+                        <div><i class="fas fa-cloud"></i><span><strong>Optional cloud sync</strong><small>Use email/password or Google to restore preferences across sessions.</small></span></div>
+                        <div class="managed-chromebook-reminder"><i class="fas fa-school-lock"></i><span><strong>School Chromebook reminder</strong><small>After closing Chrome or your school-managed Chromebook, you’ll need to sign in again when you reopen Indy Schedule.</small></span></div>
                     </div>
+                    <p id="onboarding-finish-status" class="onboarding-finish-status" role="status" aria-live="polite"></p>
                 </div>
 
-                <div class="update-notice-actions onboarding-actions">
+                <div class="update-notice-actions onboarding-actions" hidden>
                     <button id="onboarding-back" class="btn onboarding-back" type="button"><i class="fas fa-arrow-left"></i> Back</button>
                     <div class="onboarding-forward-actions">
                         <button id="onboarding-analytics-decline" class="btn onboarding-analytics-decline" type="button" hidden>Continue without analytics</button>
                         <button id="onboarding-next" class="btn btn-primary" type="button">Get Started <i class="fas fa-arrow-right"></i></button>
                     </div>
+                </div>
+            </div>
+        </div>
+        <div id="onboarding-guest-confirmation" class="onboarding-guest-confirmation" role="alertdialog" aria-modal="true" aria-labelledby="guest-confirmation-title" aria-describedby="guest-confirmation-description" hidden>
+            <div class="onboarding-guest-confirmation-card">
+                <span class="onboarding-guest-confirmation-icon"><i class="fas fa-triangle-exclamation" aria-hidden="true"></i></span>
+                <p class="onboarding-eyebrow">SCHOOL CHROMEBOOK NOTICE</p>
+                <h2 id="guest-confirmation-title">Continue without an account?</h2>
+                <p id="guest-confirmation-description">On a school-managed Chromebook, guest settings won’t be saved and setup will have to be redone each time Chrome closes.</p>
+                <div class="onboarding-guest-confirmation-actions">
+                    <button type="button" id="onboarding-guest-cancel">Go back</button>
+                    <button type="button" id="onboarding-guest-confirm">Continue as guest</button>
                 </div>
             </div>
         </div>
@@ -973,15 +1020,6 @@
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Profile visibility switch logic
-            const profileSwitch = document.getElementById('profile-visibility-toggle');
-            if (profileSwitch) {
-                // Set initial state from localStorage
-                profileSwitch.checked = localStorage.getItem('profileHidden') !== 'true';
-                profileSwitch.addEventListener('change', function() {
-                    window.authManager.toggleProfileVisibility();
-                });
-            }
             function initializeOnboarding() {
                 const completionKey = 'indyOnboardingComplete_v2';
                 const backdrop = document.getElementById('update-notice-backdrop');
@@ -995,6 +1033,11 @@
                 const lunchChoices = Array.from(document.querySelectorAll('input[name="onboarding-lunch"]'));
                 const analyticsDeclineButton = document.getElementById('onboarding-analytics-decline');
                 const analyticsStep = steps.findIndex(step => step.hasAttribute('data-onboarding-analytics'));
+                const onboardingActions = backdrop?.querySelector('.onboarding-actions');
+                const finishStatus = document.getElementById('onboarding-finish-status');
+                const guestConfirmation = document.getElementById('onboarding-guest-confirmation');
+                const guestCancel = document.getElementById('onboarding-guest-cancel');
+                const guestConfirm = document.getElementById('onboarding-guest-confirm');
                 const savedLunch = (localStorage.getItem('lunchWave') || '').toUpperCase();
                 const hasLunch = ['A', 'B', 'C'].includes(savedLunch);
                 const hasAnalyticsChoice = typeof window.getAnalyticsConsent === 'function'
@@ -1039,6 +1082,7 @@
                     });
                     if (stepNumber) stepNumber.textContent = String(currentStep + 1);
                     if (progressFill) progressFill.style.width = `${((currentStep + 1) / steps.length) * 100}%`;
+                    if (onboardingActions) onboardingActions.hidden = currentStep === 0;
                     backButton.style.visibility = currentStep === 0 ? 'hidden' : 'visible';
                     if (analyticsDeclineButton) analyticsDeclineButton.hidden = currentStep !== analyticsStep;
                     nextButton.classList.toggle('onboarding-analytics-primary', currentStep === analyticsStep);
@@ -1055,6 +1099,37 @@
                     document.querySelector('.update-notice-body')?.scrollTo({ top: 0, behavior: 'smooth' });
                 }
 
+                function openAccount(mode) {
+                    window.authManager?.showLoginModal({ mode, onboarding: true });
+                }
+
+                document.getElementById('onboarding-create-account')?.addEventListener('click', () => openAccount('create'));
+                document.getElementById('onboarding-account-signin')?.addEventListener('click', () => openAccount('signin'));
+                document.getElementById('onboarding-use-guest')?.addEventListener('click', () => {
+                    if (!guestConfirmation) return;
+                    guestConfirmation.hidden = false;
+                    guestConfirm?.focus();
+                });
+                guestCancel?.addEventListener('click', () => {
+                    guestConfirmation.hidden = true;
+                    document.getElementById('onboarding-use-guest')?.focus();
+                });
+                guestConfirm?.addEventListener('click', () => {
+                    guestConfirmation.hidden = true;
+                    currentStep = 1;
+                    renderStep();
+                });
+                window.addEventListener('indy-account-authenticated', () => {
+                    const restoredLunch = ['A', 'B', 'C'].includes((localStorage.getItem('lunchWave') || '').toUpperCase());
+                    const restoredAnalytics = window.getAnalyticsConsent?.() !== null;
+                    if (localStorage.getItem(completionKey) === 'true' && restoredLunch && restoredAnalytics) {
+                        window.location.reload();
+                        return;
+                    }
+                    currentStep = 1;
+                    renderStep();
+                });
+
                 function closeOnboarding() {
                     backdrop.style.display = 'none';
                     backdrop.setAttribute('aria-hidden', 'true');
@@ -1065,7 +1140,7 @@
                     window.setTimeout(() => document.body.classList.remove('dashboard-revealing'), 700);
                 }
 
-                function finishOnboarding() {
+                async function finishOnboarding() {
                     const lunch = selectedLunch();
                     if (typeof window.setLunchWave === 'function') window.setLunchWave(lunch);
                     else localStorage.setItem('lunchWave', lunch);
@@ -1073,9 +1148,22 @@
                     localStorage.removeItem('indyOnboardingReplayRequested_v1');
                     localStorage.setItem('updateNoticeShown_v4_0_0', 'true');
                     const currentUser = window.authManager?.currentUser;
-                    if (currentUser) window.authManager.saveAllUserSettings(currentUser.uid).catch(() => {});
                     nextButton.disabled = true;
-                    nextButton.innerHTML = 'Opening Indy <i class="fas fa-circle-notch fa-spin"></i>';
+                    nextButton.innerHTML = currentUser
+                        ? 'Saving setup <i class="fas fa-circle-notch fa-spin"></i>'
+                        : 'Opening Indy <i class="fas fa-circle-notch fa-spin"></i>';
+                    if (finishStatus) finishStatus.textContent = '';
+                    if (currentUser) {
+                        const cloudSaved = await window.authManager.saveAllUserSettings(currentUser.uid);
+                        if (!cloudSaved) {
+                            nextButton.disabled = false;
+                            nextButton.innerHTML = 'Retry cloud save <i class="fas fa-rotate-right"></i>';
+                            if (finishStatus) finishStatus.textContent = 'Your setup is saved on this device, but could not be saved to your account. Check your connection and try again.';
+                            return;
+                        }
+                        if (finishStatus) finishStatus.textContent = 'Setup saved to your account.';
+                        nextButton.innerHTML = 'Opening Indy <i class="fas fa-circle-notch fa-spin"></i>';
+                    }
                     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
                         closeOnboarding();
                         return;
@@ -1122,6 +1210,13 @@
 
                 document.addEventListener('keydown', event => {
                     if (backdrop.getAttribute('aria-hidden') === 'true') return;
+                    if (!guestConfirmation?.hidden) {
+                        if (event.key === 'Escape') {
+                            event.preventDefault();
+                            guestCancel?.click();
+                        }
+                        return;
+                    }
                     if (event.key === 'Enter' && event.target.tagName !== 'BUTTON') {
                         event.preventDefault();
                         nextButton.click();
@@ -1136,7 +1231,7 @@
                 document.documentElement.classList.remove('onboarding-pending');
                 document.body.classList.add('onboarding-open');
                 renderStep();
-                nextButton.focus();
+                document.getElementById('onboarding-create-account')?.focus();
             }
 
             initializeOnboarding();

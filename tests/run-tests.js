@@ -62,25 +62,35 @@ const regular = calendar.SCHEDULES.normal;
 const regularNoSoar = calendar.SCHEDULES.normalNoSoar;
 const lateStart = calendar.SCHEDULES.lateStart;
 const halfDay = calendar.SCHEDULES.halfDay;
-assertEqual(regular.length, 9, 'Regular schedule includes Homeroom and SOAR');
-assertEqual(regularNoSoar.length, 8, 'No-SOAR schedule includes Homeroom');
+assertEqual(regular.length, 8, 'SOAR schedule includes seven periods and SOAR');
+assertEqual(regularNoSoar.length, 7, 'No-SOAR schedule includes seven periods');
 assertEqual(lateStart.length, 7, 'Late-start schedule period count');
 assertEqual(halfDay.length, 7, 'Half-day schedule period count');
-assertEqual(regular[0].start, '07:40', 'Regular day start');
-assertEqual(regular[0].end, '08:29', 'Official first-period end');
-assertEqual(regular[2].name, 'Homeroom', 'Homeroom is included');
-assertEqual(regular[2].start, '09:21', 'Official Homeroom start');
-assertEqual(regular[4].name, 'SOAR', 'SOAR is included');
-assertEqual(regular[4].end, '10:51', 'Official SOAR end');
-assertEqual(regular[8].end, '14:47', 'Regular day dismissal');
-assertEqual(regularNoSoar[3].name, 'Period 3', 'No-SOAR block remains third period');
-assertEqual(regularNoSoar[3].end, '10:51', 'Third period extends through the no-SOAR block');
+const rows = (schedule) => schedule.map(({ name, start, end }) => `${name}|${start}|${end}`).join(',');
+assertEqual(rows(regular), [
+    'Period 1|07:40|08:29', 'Period 2|08:34|09:21', 'Period 3|09:26|10:13',
+    'SOAR|10:13|10:53', 'Period 4|10:58|11:45', 'Period 5|11:50|13:02',
+    'Period 6|13:07|13:54', 'Period 7|13:59|14:47'
+].join(','), 'Official SOAR bell schedule');
+assertEqual(rows(regularNoSoar), [
+    'Period 1|07:40|08:33', 'Period 2|08:38|09:31', 'Period 3|09:36|10:29',
+    'Period 4|10:34|11:27', 'Period 5|11:32|12:50', 'Period 6|12:55|13:48',
+    'Period 7|13:53|14:47'
+].join(','), 'Official no-SOAR bell schedule');
+assertEqual(rows(lateStart), [
+    'Period 1|08:25|09:11', 'Period 2|09:16|10:00', 'Period 3|10:05|10:49',
+    'Period 4|10:54|11:38', 'Period 5|11:43|13:06', 'Period 6|13:11|13:55',
+    'Period 7|14:00|14:47'
+].join(','), 'Official late-start bell schedule');
 assertEqual(lateStart[0].start, '08:25', 'Late-start day begins at 8:25');
 assertEqual(lateStart[6].end, '14:47', 'Late-start day dismissal');
 assertEqual(halfDay[6].end, '11:15', 'Half-day dismissal');
-assertEqual(calendar.getLunchPeriod('normal', 'A').start, '11:43', 'Regular A lunch start');
-assertEqual(calendar.getLunchPeriod('normal', 'B').end, '12:35', 'Regular B lunch end');
-assertEqual(calendar.getLunchPeriod('normal', 'C').end, '13:02', 'Regular C lunch end');
+assertEqual(calendar.getLunchPeriod('normal', 'A').start, '11:45', 'SOAR A lunch start');
+assertEqual(calendar.getLunchPeriod('normal', 'B').end, '12:36', 'SOAR B lunch end');
+assertEqual(calendar.getLunchPeriod('normal', 'C').end, '13:02', 'SOAR C lunch end');
+assertEqual(calendar.getLunchPeriod('normalNoSoar', 'A').start, '11:27', 'No-SOAR A lunch start');
+assertEqual(calendar.getLunchPeriod('normalNoSoar', 'B').start, '11:56', 'No-SOAR B lunch start');
+assertEqual(calendar.getLunchPeriod('normalNoSoar', 'C').end, '12:50', 'No-SOAR C lunch end');
 assertEqual(calendar.getLunchPeriod('lateStart', 'A').start, '11:38', 'Late-start A lunch start');
 assertEqual(calendar.getLunchPeriod('lateStart', 'C').end, '13:06', 'Late-start C lunch end');
 assertEqual(calendar.getLunchPeriod('halfDay', 'A'), null, 'Half days have no lunch wave');
@@ -89,27 +99,33 @@ assertEqual(regular.filter((period) => /^Period /.test(period.name)).length, 7, 
 const lunchA = calendar.getScheduleWithLunch('normal', 'A');
 const lunchB = calendar.getScheduleWithLunch('normal', 'B');
 const lunchC = calendar.getScheduleWithLunch('normal', 'C');
+const noSoarLunchA = calendar.getScheduleWithLunch('normalNoSoar', 'A');
+const noSoarLunchB = calendar.getScheduleWithLunch('normalNoSoar', 'B');
+const noSoarLunchC = calendar.getScheduleWithLunch('normalNoSoar', 'C');
 const lateLunchA = calendar.getScheduleWithLunch('lateStart', 'A');
 const lateLunchB = calendar.getScheduleWithLunch('lateStart', 'B');
 const lateLunchC = calendar.getScheduleWithLunch('lateStart', 'C');
 const chronological = (schedule) => schedule.slice(0, -1).every((period, index) => period.end <= schedule[index + 1].start);
 
-assert([lunchA, lunchB, lunchC, lateLunchA, lateLunchB, lateLunchC].every(
+assert([lunchA, lunchB, lunchC, noSoarLunchA, noSoarLunchB, noSoarLunchC, lateLunchA, lateLunchB, lateLunchC].every(
     (schedule) => schedule.find((period) => period.isLunch)?.name === 'Lunch'
 ), 'Visible lunch timeline hides the selected wave letter');
 assert(lunchA.findIndex((period) => period.isLunch) < lunchA.findIndex((period) => period.periodNum === '5'), 'A lunch appears before fifth period');
-assertEqual(lunchA.find((period) => period.periodNum === '5').start, '12:13', 'Regular A fifth period begins after lunch passing time');
+assertEqual(lunchA.find((period) => period.periodNum === '5').start, '12:15', 'SOAR A fifth period begins after lunch passing time');
 assertEqual(lunchB.filter((period) => period.periodNum === '5').length, 2, 'B lunch splits fifth period into two sections');
 assertEqual(lunchB.filter((period) => period.periodNum === '5')[0].segmentLabel, 'Part 1', 'First split section uses the Part 1 label');
-assertEqual(lunchB.filter((period) => period.periodNum === '5')[1].start, '12:40', 'Regular B fifth period resumes after lunch');
+assertEqual(lunchB.filter((period) => period.periodNum === '5')[1].start, '12:41', 'SOAR B fifth period resumes after lunch');
 assertEqual(lunchB.filter((period) => period.periodNum === '5')[1].segmentLabel, 'Part 2', 'Second split section uses the Part 2 label');
 assertEqual(lunchC.filter((period) => period.periodNum === '5').length, 1, 'C lunch has one fifth-period section before lunch');
 assertEqual(lunchC.find((period) => period.periodNum === '5').end, '12:37', 'Regular C fifth period ends when lunch begins');
 assert(lunchC.findIndex((period) => period.periodNum === '5') < lunchC.findIndex((period) => period.isLunch), 'C lunch appears after fifth period');
+assertEqual(noSoarLunchA.find((period) => period.periodNum === '5').start, '11:57', 'No-SOAR A fifth period begins after lunch');
+assertEqual(noSoarLunchB.filter((period) => period.periodNum === '5')[1].start, '12:26', 'No-SOAR B fifth period resumes after lunch');
+assertEqual(noSoarLunchC.find((period) => period.periodNum === '5').end, '12:25', 'No-SOAR C fifth period ends when lunch begins');
 assertEqual(lateLunchA.find((period) => period.periodNum === '5').start, '12:11', 'Late-start A fifth period begins after lunch');
 assertEqual(lateLunchB.filter((period) => period.periodNum === '5')[1].start, '12:41', 'Late-start B fifth period resumes after lunch');
 assertEqual(lateLunchC.find((period) => period.periodNum === '5').end, '12:38', 'Late-start C fifth period ends when lunch begins');
-assert([lunchA, lunchB, lunchC, lateLunchA, lateLunchB, lateLunchC].every(chronological), 'Every lunch timeline is chronological and non-overlapping');
+assert([lunchA, lunchB, lunchC, noSoarLunchA, noSoarLunchB, noSoarLunchC, lateLunchA, lateLunchB, lateLunchC].every(chronological), 'Every lunch timeline is chronological and non-overlapping');
 
 assertEqual(
     calendar.epochForSchoolTime('2026-08-11', '07:40'),
@@ -166,12 +182,29 @@ assertEqual((indexSource.match(/googletagmanager\.com\/gtag\/js/g) || []).length
 assertEqual((indexSource.match(/firebase-analytics-compat\.js/g) || []).length, 1, 'Firebase provides the single consent-controlled Analytics loader');
 const authSource = readFile('auth.js');
 assert(authSource.includes('dashboard-account-menu'), 'Signed-in account actions use the compact dashboard menu');
+assert(authSource.includes("button.innerHTML = '<i class=\"fas fa-circle-notch fa-spin\" aria-hidden=\"true\"></i> Signing out…'"), 'Account menu exposes a working sign-out action with progress feedback');
+assert(authSource.includes("document.getElementById('today-card-close')?.click()"), 'Opening the account menu closes Today at Indy so account actions remain reachable');
+assert(!authSource.includes('account-visibility') && !authSource.includes('profileHidden'), 'Account control cannot be hidden in a way that strands the sign-out action');
 assert(authSource.includes("classList.add('is-signed-in')"), 'Authenticated state switches to the constrained avatar control');
 assert(!authSource.includes('aria-label="Sign in with Google"><i'), 'Runtime signed-out control stays text-only');
 assert(!authSource.includes('<div class="profile-container"'), 'Legacy oversized profile control is no longer rendered');
+assert(indexSource.includes('id="email-auth-form"') && indexSource.includes('id="auth-mode-create"'), 'Account dialog offers email sign-in and account creation');
+assert(indexSource.includes('Google sign-in won’t work on school-managed Chromebooks. Use your school email and password above instead.'), 'Google option warns school Chromebook users to use email and password');
+assert(indexSource.includes('id="forgot-password"') && indexSource.includes('id="onboarding-account-signin"'), 'Password recovery and Chromebook onboarding login are available');
+assert(indexSource.includes('id="onboarding-create-account"') && indexSource.includes('id="onboarding-use-guest"'), 'Welcome screen presents account creation, login, and a secondary guest path');
+assert(indexSource.includes('id="onboarding-guest-confirmation"') && indexSource.includes('id="onboarding-guest-cancel"') && indexSource.includes('id="onboarding-guest-confirm"'), 'Guest mode uses a guarded confirmation dialog');
+assert(indexSource.includes('On a school-managed Chromebook, guest settings won’t be saved and setup will have to be redone'), 'Guest confirmation warns school-managed Chromebook users about lost settings and repeated setup');
+assert(indexSource.includes('After closing Chrome or your school-managed Chromebook, you’ll need to sign in again'), 'Walkthrough reminds managed Chromebook users that account sign-in must be repeated');
+assert(authSource.includes('createUserWithEmailAndPassword') && authSource.includes('signInWithEmailAndPassword'), 'Firebase email account creation and sign-in are wired');
+assert(authSource.includes('sendPasswordResetEmail'), 'Firebase password-reset email is wired');
+assert(authSource.includes('firebase.auth.Auth.Persistence.LOCAL'), 'Authentication requests persistent Firebase sessions when browser policy permits');
+assert(authSource.includes('indyAnalyticsConsent_v1: localStorage.getItem'), 'Analytics consent is included in account preference sync');
+assert(authSource.includes("window.dispatchEvent(new CustomEvent('indy-account-authenticated'"), 'Successful account authentication returns first-time users to onboarding');
 assert(appSource.includes("document.body.appendChild(card)"), 'Today dialog escapes the blurred dashboard stacking context');
 const primaryStyles = readFile('styles.css');
 const secondaryStyles = readFile('styles2.css');
+assert(secondaryStyles.includes('#sign-in-button .account-avatar-initial i') && secondaryStyles.includes('font-size: 12px !important'), 'Fallback profile icon has a tightly scoped dashboard size');
+assert(primaryStyles.includes('.onboarding-entry-card .onboarding-entry-icon') && primaryStyles.includes('place-items: center'), 'Welcome account-choice icons remain centered in their tiles');
 const designTokens = readFile('design-tokens.css');
 const calendarWorkflow = readFile('.github/workflows/update-ihs-calendar.yml');
 const calendarGenerator = readFile('tools/update-calendar-events.mjs');
@@ -193,7 +226,7 @@ assert(liveDataValidator.includes('Lunch menu has no dated entries.') && liveDat
 assert(initialCalendarData.source === 'https://ihs.wcs.edu/calendar', 'Initial calendar fallback identifies the official source');
 assert(initialCalendarData.schemaVersion === 1 && initialCalendarData.staleAfterHours === 8, 'Calendar fallback declares its schema and freshness threshold');
 assert(secondaryStyles.includes('.brand-logo-art') && secondaryStyles.includes('clip-path: inset(0 0 0 3px)'), 'Shared logo treatment clips the source image edge artifact');
-assertEqual((indexSource.match(/brand-logo-art/g) || []).length, 5, 'Every visible brand-logo instance, including the onboarding reveal mark, uses the shared artifact fix');
+assertEqual((indexSource.match(/brand-logo-art/g) || []).length, 6, 'Every visible brand-logo instance, including account and onboarding marks, uses the shared artifact fix');
 assert(indexSource.includes('class="settings-form-grid"'), 'Schedule and lunch controls use the responsive settings grid');
 assert(indexSource.includes('class="schedule-tools-grid"'), 'Secondary schedule controls share a responsive tools grid');
 assert(indexSource.includes('class="settings-group display-options-card"'), 'Display options remain an independent settings card');
@@ -236,6 +269,7 @@ assert(indexSource.includes('indyOnboardingComplete_v2'), 'Onboarding completion
 assert(indexSource.includes('recoverableSetup') && indexSource.includes('indyOnboardingReplayRequested_v1'), 'Missing onboarding completion self-heals without breaking intentional replay');
 assert(authSource.includes('indyOnboardingComplete_v2: localStorage.getItem'), 'Onboarding completion is included in signed-in settings sync');
 assert(indexSource.includes('saveAllUserSettings(currentUser.uid)'), 'Completing or repairing onboarding immediately syncs the saved state');
+assert(indexSource.includes('await window.authManager.saveAllUserSettings(currentUser.uid)'), 'Onboarding waits for Firestore to save its completion state before opening the dashboard');
 assert(indexSource.includes('Replay Welcome Tour'), 'Onboarding can be replayed from settings');
 assert(!indexSource.includes('id="timer-shadow"') && !indexSource.includes('id="shadow-settings-content"'), 'Retired timer-shadow controls are removed from Appearance');
 assert(indexSource.includes('onboarding-pending'), 'Opaque pre-onboarding wall prevents site flash');

@@ -686,7 +686,7 @@ async function handleAuthButton() {
     if (auth.isAuthenticated) {
         auth.logout();
     } else {
-        auth.signIn(); // Directly call signIn instead of showLoginModal
+        auth.showLoginModal();
     }
 }
 

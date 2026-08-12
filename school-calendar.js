@@ -9,23 +9,21 @@
         normal: Object.freeze([
             { name: 'Period 1', start: '07:40', end: '08:29' },
             { name: 'Period 2', start: '08:34', end: '09:21' },
-            { name: 'Homeroom', start: '09:21', end: '09:31' },
-            { name: 'Period 3', start: '09:36', end: '10:23' },
-            { name: 'SOAR', start: '10:23', end: '10:51' },
-            { name: 'Period 4', start: '10:56', end: '11:43' },
-            { name: 'Period 5', start: '11:48', end: '13:02' },
+            { name: 'Period 3', start: '09:26', end: '10:13' },
+            { name: 'SOAR', start: '10:13', end: '10:53' },
+            { name: 'Period 4', start: '10:58', end: '11:45' },
+            { name: 'Period 5', start: '11:50', end: '13:02' },
             { name: 'Period 6', start: '13:07', end: '13:54' },
             { name: 'Period 7', start: '13:59', end: '14:47' }
         ]),
         normalNoSoar: Object.freeze([
-            { name: 'Period 1', start: '07:40', end: '08:29' },
-            { name: 'Period 2', start: '08:34', end: '09:21' },
-            { name: 'Homeroom', start: '09:21', end: '09:31' },
-            { name: 'Period 3', start: '09:36', end: '10:51' },
-            { name: 'Period 4', start: '10:56', end: '11:43' },
-            { name: 'Period 5', start: '11:48', end: '13:02' },
-            { name: 'Period 6', start: '13:07', end: '13:54' },
-            { name: 'Period 7', start: '13:59', end: '14:47' }
+            { name: 'Period 1', start: '07:40', end: '08:33' },
+            { name: 'Period 2', start: '08:38', end: '09:31' },
+            { name: 'Period 3', start: '09:36', end: '10:29' },
+            { name: 'Period 4', start: '10:34', end: '11:27' },
+            { name: 'Period 5', start: '11:32', end: '12:50' },
+            { name: 'Period 6', start: '12:55', end: '13:48' },
+            { name: 'Period 7', start: '13:53', end: '14:47' }
         ]),
         lateStart: Object.freeze([
             { name: 'Period 1', start: '08:25', end: '09:11' },
@@ -49,9 +47,14 @@
 
     const LUNCHES = Object.freeze({
         normal: Object.freeze({
-            A: Object.freeze({ name: 'Lunch A', start: '11:43', end: '12:08', isLunch: true }),
-            B: Object.freeze({ name: 'Lunch B', start: '12:10', end: '12:35', isLunch: true }),
+            A: Object.freeze({ name: 'Lunch A', start: '11:45', end: '12:10', isLunch: true }),
+            B: Object.freeze({ name: 'Lunch B', start: '12:11', end: '12:36', isLunch: true }),
             C: Object.freeze({ name: 'Lunch C', start: '12:37', end: '13:02', isLunch: true })
+        }),
+        normalNoSoar: Object.freeze({
+            A: Object.freeze({ name: 'Lunch A', start: '11:27', end: '11:52', isLunch: true }),
+            B: Object.freeze({ name: 'Lunch B', start: '11:56', end: '12:21', isLunch: true }),
+            C: Object.freeze({ name: 'Lunch C', start: '12:25', end: '12:50', isLunch: true })
         }),
         lateStart: Object.freeze({
             A: Object.freeze({ name: 'Lunch A', start: '11:38', end: '12:06', isLunch: true }),
@@ -152,7 +155,7 @@
     function getLunchPeriod(scheduleKey, wave) {
         if (scheduleKey === 'halfDay') return null;
         const normalizedWave = String(wave || '').toUpperCase();
-        const lunchSchedule = scheduleKey === 'lateStart' ? LUNCHES.lateStart : LUNCHES.normal;
+        const lunchSchedule = LUNCHES[scheduleKey] || LUNCHES.normal;
         return lunchSchedule[normalizedWave] || null;
     }
 
@@ -172,7 +175,11 @@
         if (fifthIndex < 0) return base;
         const fifth = base[fifthIndex];
         const normalizedWave = String(wave).toUpperCase();
-        const isLateStart = scheduleKey === 'lateStart';
+        const fiveMinutesAfter = (time) => {
+            const [hours, minutes] = time.split(':').map(Number);
+            const total = hours * 60 + minutes + 5;
+            return `${String(Math.floor(total / 60)).padStart(2, '0')}:${String(total % 60).padStart(2, '0')}`;
+        };
         const segment = (start, end, segmentLabel) => ({
             name: 'Period 5', periodNum: '5', start, end, segmentLabel
         });
@@ -183,13 +190,13 @@
         if (normalizedWave === 'A') {
             replacement = [
                 lunchEntry,
-                segment(isLateStart ? '12:11' : '12:13', fifth.end)
+                segment(fiveMinutesAfter(lunch.end), fifth.end)
             ];
         } else if (normalizedWave === 'B') {
             replacement = [
                 segment(fifth.start, lunch.start, 'Part 1'),
                 lunchEntry,
-                segment(isLateStart ? '12:41' : '12:40', fifth.end, 'Part 2')
+                segment(fiveMinutesAfter(lunch.end), fifth.end, 'Part 2')
             ];
         } else {
             replacement = [
