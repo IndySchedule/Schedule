@@ -124,6 +124,29 @@ const COLOR_PALETTES = Object.freeze({
 
 const DEFAULT_PALETTE_ID = 'indy';
 const PALETTE_ROLES = ['primary', 'secondary', 'accent', 'surface'];
+const SPECIAL_EDITIONS = Object.freeze({
+    'friday-night-lights': {
+        name: 'Friday Night Lights',
+        badge: 'Friday Night Lights Edition',
+        scheduleTitle: 'Today’s Lineup',
+        colors: ['#020B18', '#102947', '#D99A2B', '#F4F7FB'],
+        angle: 125
+    },
+    'historic-franklin': {
+        name: 'Historic Franklin',
+        badge: 'Historic Franklin Edition',
+        scheduleTitle: 'Today on Main',
+        colors: ['#071018', '#20252A', '#B8793E', '#F1D5A6'],
+        angle: 120
+    },
+    'music-city': {
+        name: 'Music City',
+        badge: 'Music City Edition',
+        scheduleTitle: 'Today’s Lineup',
+        colors: ['#07052A', '#21104C', '#F04FB5', '#FFF0D2'],
+        angle: 135
+    }
+});
 
 const normalizeColor = (color, fallback) => (
     typeof color === 'string' && /^#[0-9a-f]{6}$/i.test(color)
@@ -205,6 +228,7 @@ class GradientManager {
         this.paletteId = DEFAULT_PALETTE_ID;
         this.colors = [...defaultPalette.colors];
         this.angle = defaultPalette.angle;
+        this.editionId = null;
         this.stops = [];
         this.initialized = false;
 
@@ -227,16 +251,25 @@ class GradientManager {
     loadExternalSettings(settings, commit = true) {
         if (!settings || typeof settings !== 'object') return;
 
+        const edition = SPECIAL_EDITIONS[settings.editionId];
         const preset = COLOR_PALETTES[settings.paletteId];
-        if (preset) {
+        if (edition) {
+            this.editionId = settings.editionId;
+            this.paletteId = `edition-${settings.editionId}`;
+            this.colors = [...edition.colors];
+            this.angle = Number.isFinite(Number(settings.angle)) ? Number(settings.angle) : edition.angle;
+        } else if (preset) {
+            this.editionId = null;
             this.paletteId = settings.paletteId;
             this.colors = [...preset.colors];
             this.angle = Number.isFinite(Number(settings.angle)) ? Number(settings.angle) : preset.angle;
         } else if (Array.isArray(settings.colors) && settings.colors.length === 4) {
+            this.editionId = null;
             this.paletteId = 'custom';
             this.colors = settings.colors.map((color, index) => normalizeColor(color, COLOR_PALETTES.indy.colors[index]));
             this.angle = Number.isFinite(Number(settings.angle)) ? Number(settings.angle) : 90;
         } else if (settings.startColor || settings.endColor) {
+            this.editionId = null;
             // Migrate the previous two-color gradient into a custom four-color palette.
             const indy = COLOR_PALETTES.indy.colors;
             this.paletteId = 'custom';
@@ -259,6 +292,9 @@ class GradientManager {
 
         document.querySelectorAll('.palette-option').forEach((button) => {
             button.addEventListener('click', () => this.selectPalette(button.dataset.palette));
+        });
+        document.querySelectorAll('.edition-option').forEach((button) => {
+            button.addEventListener('click', () => this.selectEdition(button.dataset.edition));
         });
 
         document.getElementById('gradient-angle')?.addEventListener('input', (event) => {
@@ -288,6 +324,7 @@ class GradientManager {
     }
 
     selectPalette(paletteId) {
+        this.editionId = null;
         if (paletteId === 'custom') {
             this.paletteId = 'custom';
         } else {
@@ -302,8 +339,20 @@ class GradientManager {
     }
 
     activateCustomPalette() {
+        this.editionId = null;
         this.paletteId = 'custom';
         this.commitChange();
+    }
+
+    selectEdition(editionId) {
+        const edition = SPECIAL_EDITIONS[editionId];
+        if (!edition) return;
+        this.editionId = editionId;
+        this.paletteId = `edition-${editionId}`;
+        this.colors = [...edition.colors];
+        this.angle = edition.angle;
+        this.commitChange();
+        window.trackAnalyticsEvent?.('special_edition_selected', { edition_id: editionId });
     }
 
     updateAngle(value) {
@@ -405,12 +454,29 @@ class GradientManager {
         root.style.setProperty('--page-gradient', gradient);
         root.dataset.palette = this.paletteId;
         root.dataset.dashboardTone = lightDashboard ? 'light' : 'dark';
+        if (this.editionId) root.dataset.edition = this.editionId;
+        else delete root.dataset.edition;
         document.body.style.background = gradient;
         document.body.style.backgroundAttachment = 'fixed';
 
         const preview = document.getElementById('gradient-preview');
         if (preview) {
             preview.style.background = `linear-gradient(110deg, ${this.colors.join(', ')})`;
+        }
+        this.updateEditionCopy();
+    }
+
+    updateEditionCopy() {
+        const edition = SPECIAL_EDITIONS[this.editionId];
+        const badge = document.getElementById('active-edition-badge');
+        if (badge) {
+            badge.hidden = !edition;
+            badge.textContent = edition?.badge || '';
+        }
+        const scheduleHeading = document.getElementById('white-box-heading');
+        const dashboardState = document.querySelector('.current-period')?.dataset.state;
+        if (scheduleHeading && dashboardState !== 'no-school') {
+            scheduleHeading.textContent = edition?.scheduleTitle || 'Today’s Schedule';
         }
     }
 
@@ -450,6 +516,12 @@ class GradientManager {
             button.setAttribute('aria-checked', String(selected));
         });
 
+        document.querySelectorAll('.edition-option').forEach((button) => {
+            const selected = button.dataset.edition === this.editionId;
+            button.classList.toggle('selected', selected);
+            button.setAttribute('aria-checked', String(selected));
+        });
+
         const customEditor = document.getElementById('gradient-settings');
         if (customEditor) customEditor.hidden = this.paletteId !== 'custom';
 
@@ -466,7 +538,8 @@ class GradientManager {
     saveSettings() {
         localStorage.setItem('gradientSettings', JSON.stringify({
             paletteId: this.paletteId,
-            paletteName: COLOR_PALETTES[this.paletteId]?.name || 'Custom',
+            paletteName: SPECIAL_EDITIONS[this.editionId]?.name || COLOR_PALETTES[this.paletteId]?.name || 'Custom',
+            editionId: this.editionId,
             colors: this.colors,
             angle: this.angle,
             startColor: this.colors[0],
@@ -477,5 +550,6 @@ class GradientManager {
 }
 
 window.IndyPalettes = COLOR_PALETTES;
+window.IndySpecialEditions = SPECIAL_EDITIONS;
 window.gradientManager = window.gradientManager || new GradientManager();
 window.gradientManager.init();

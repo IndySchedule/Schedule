@@ -1,8 +1,12 @@
 {
   "name": "indy-schedule-calendar-sync",
+  "version": "1.2.0",
   "private": true,
   "type": "module",
   "scripts": {
+    "test": "node tools/run-regression.mjs",
+    "test:visual": "node tools/visual-qa.mjs",
+    "qa": "npm test && npm run validate-live-data && npm run test:visual",
     "update-calendar": "node tools/update-calendar-events.mjs",
     "validate-live-data": "node tools/validate-live-data.mjs",
     "refresh-live-data": "npm run update-calendar && npm run validate-live-data"

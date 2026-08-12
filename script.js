@@ -2333,7 +2333,7 @@ function updateScheduleDisplay() {
                 label.appendChild(timesSpan);
             }
             const timer = document.createElement("span");
-            timer.id = `Period_Timer`;
+            timer.className = 'period-timer';
             periodDiv.appendChild(label);
             periodDiv.appendChild(timer);
             scheduleContainer.appendChild(periodDiv);
@@ -2408,7 +2408,8 @@ function updateCountdowns() {
     const scheduleHeadingElement = document.getElementById('white-box-heading');
     const scheduleSummaryElement = document.getElementById('schedule-day-summary');
     if (dayType !== 'noSchool' && scheduleHeadingElement) {
-        scheduleHeadingElement.textContent = 'Today’s Schedule';
+        const activeEdition = window.IndySpecialEditions?.[document.documentElement.dataset.edition];
+        scheduleHeadingElement.textContent = activeEdition?.scheduleTitle || 'Today’s Schedule';
     }
     const setHeroText = ({ context, heading, caption, periodWindow, nextSummary, state = 'idle' }) => {
         if (heroElement) heroElement.dataset.state = state;

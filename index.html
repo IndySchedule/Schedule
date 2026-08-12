@@ -25,6 +25,7 @@
         }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Roboto&family=Source+Sans+Pro&family=Inter&family=Montserrat&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="./design-tokens.css">
     <link rel="stylesheet" type="text/css" href="./styles.css">
     <link rel="stylesheet" type="text/css" href="./styles2.css">
     <link rel="icon" type="image/png" sizes="16x16" href="indy_schedule_logo_sizes/indy-schedule-logo-16x16-optimized.png">
@@ -115,9 +116,11 @@
     <div class="container">
         <div class="dashboard-shell">
             <div class="dashboard-header" role="banner">
+                <img class="edition-header-art edition-header-art-music" src="assets/special-editions/music-city-header-skyline-v2.png" alt="" aria-hidden="true">
                 <div class="dashboard-brand">
                     <img src="indy_schedule_logo_sizes/indy-schedule-logo-128x128.png" alt="" class="dashboard-logo brand-logo-art">
                     <div><strong>Indy Schedule</strong><span>Independence High School</span></div>
+                    <span class="edition-badge" id="active-edition-badge" hidden></span>
                 </div>
                 <div class="dashboard-actions">
                     <div id="sign-in-button" class="dashboard-account is-signed-out">
@@ -191,6 +194,7 @@
                 </footer>
             </div>
             <div class="current-period">
+                <img class="edition-countdown-emblem edition-countdown-emblem-music" src="assets/special-editions/music-city-guitar-emblem.png" alt="" aria-hidden="true">
                 <span class="schedule-context" id="schedule-context">Regular Schedule</span>
                 <h2 id="countdown-heading" class="countdown-header">Period 1</h2>
                 <div id="current-period-time">00:00</div>
@@ -200,6 +204,7 @@
                     <span id="period-window">—</span>
                     <span id="next-period-summary">Next: —</span>
                 </div>
+                <img class="edition-hero-sign edition-hero-sign-music" src="assets/special-editions/music-city-nashville-sign.png" alt="" aria-hidden="true">
             </div>
             <div class="schedule-container">
                 <div class="schedule-card-heading">
@@ -415,6 +420,31 @@
                             </button>
                         </div>
                     </div>
+                    <div class="settings-group special-editions-card">
+                        <div class="settings-section-heading">
+                            <div class="settings-section-icon"><i class="fas fa-wand-magic-sparkles" aria-hidden="true"></i></div>
+                            <div><h3>Special editions</h3><p>Transform the dashboard with themed artwork, details, and a matching built-in palette.</p></div>
+                            <span class="settings-status-pill"><i class="fas fa-palette" aria-hidden="true"></i> Includes palette</span>
+                        </div>
+                        <div class="edition-grid" id="edition-grid" role="radiogroup" aria-label="Special edition">
+                            <button type="button" class="edition-option" data-edition="friday-night-lights" role="radio" aria-checked="false" hidden>
+                                <span class="edition-preview edition-preview-football" aria-hidden="true"><i class="fas fa-football"></i></span>
+                                <span class="edition-option-copy"><strong>Friday Night Lights</strong><small>Stadium night · navy and gold</small></span>
+                                <span class="edition-selected-label"><i class="fas fa-check" aria-hidden="true"></i> Active</span>
+                            </button>
+                            <button type="button" class="edition-option" data-edition="historic-franklin" role="radio" aria-checked="false" hidden>
+                                <span class="edition-preview edition-preview-franklin" aria-hidden="true"><i class="fas fa-landmark"></i></span>
+                                <span class="edition-option-copy"><strong>Historic Franklin</strong><small>Main Street · bronze and parchment</small></span>
+                                <span class="edition-selected-label"><i class="fas fa-check" aria-hidden="true"></i> Active</span>
+                            </button>
+                            <button type="button" class="edition-option" data-edition="music-city" role="radio" aria-checked="false">
+                                <span class="edition-preview edition-preview-music" aria-hidden="true"><i class="fas fa-music"></i></span>
+                                <span class="edition-option-copy"><strong>Music City</strong><small>Nashville night · neon and gold</small></span>
+                                <span class="edition-selected-label"><i class="fas fa-check" aria-hidden="true"></i> Active</span>
+                            </button>
+                        </div>
+                        <p class="edition-help"><i class="fas fa-circle-info" aria-hidden="true"></i> Selecting a regular or custom color palette turns off the active edition.</p>
+                    </div>
                     <div class="appearance-tools-grid">
                         <div class="settings-group appearance-control-card">
                             <div class="settings-section-heading compact">
@@ -541,7 +571,7 @@
                     <div class="settings-group about-overview-card">
                         <div class="about-content about-dashboard">
                             <div class="about-intro">
-                                <div><span class="about-version">Version 1.1.0</span><h2>Built for the Indy school day.</h2><p>Indy Schedule is a fast, lightweight countdown and daily schedule dashboard for Independence High School.</p></div>
+                                <div><span class="about-version">Version 1.2.0</span><h2>Built for the Indy school day.</h2><p>Indy Schedule is a fast, lightweight countdown and daily schedule dashboard for Independence High School.</p></div>
                                 <div class="about-intro-mark"><i class="fas fa-clock" aria-hidden="true"></i></div>
                             </div>
 
@@ -600,6 +630,22 @@
 
                         <div id="whatsnew-website" class="whatsnew-log" role="tabpanel">
                             <div class="wn-entry current-release">
+                                <div class="wn-entry-header">
+                                    <span class="wn-version">v1.2.0</span>
+                                    <span class="wn-date">Aug 6, 2026</span>
+                                    <span class="wn-tag">Design system &amp; final QA</span>
+                                </div>
+                                <ul>
+                                    <li>Removed retired features, hidden controls, unused JavaScript, dead CSS, and duplicate schedule-row IDs.</li>
+                                    <li>Established one authoritative design-token and palette system for colors, spacing, radii, borders, and shadows.</li>
+                                    <li>Consolidated dashboard and Settings components so cards, controls, navigation, and responsive rules behave predictably.</li>
+                                    <li>Refined Chromebook, tablet, and phone layouts to prevent clipping, uneven cards, horizontal overflow, and unnecessary scrolling.</li>
+                                    <li>Added repeatable visual testing for every dashboard state, Settings page, onboarding, Today at Indy, account states, and light and dark palettes.</li>
+                                    <li>Completed accessibility, reduced-motion, syntax, live-data, Firebase configuration, and release-readiness checks.</li>
+                                </ul>
+                            </div>
+
+                            <div class="wn-entry">
                                 <div class="wn-entry-header">
                                     <span class="wn-version">v1.1.0</span>
                                     <span class="wn-date">Aug 5, 2026</span>

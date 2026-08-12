@@ -1,0 +1,130 @@
+/*
+ * Indy Schedule design tokens
+ *
+ * This is the only stylesheet that declares global palette and design values.
+ * gradient.js replaces the --theme-* color roles at runtime when a palette is
+ * selected; component styles consume the roles and never redefine them.
+ */
+:root {
+    color-scheme: light;
+
+    /* Default (Indy) palette roles. */
+    --theme-primary: #000035;
+    --theme-primary-rgb: 0, 0, 53;
+    --theme-secondary: #1b2455;
+    --theme-secondary-rgb: 27, 36, 85;
+    --theme-accent: #c4ad62;
+    --theme-accent-rgb: 196, 173, 98;
+    --theme-surface: #ffffff;
+    --theme-surface-rgb: 255, 255, 255;
+    --theme-on-primary: #ffffff;
+    --theme-on-primary-rgb: 255, 255, 255;
+    --theme-on-secondary: #ffffff;
+    --theme-on-secondary-rgb: 255, 255, 255;
+    --theme-on-accent: #111827;
+    --theme-on-accent-rgb: 17, 24, 39;
+    --theme-on-surface: #111827;
+    --theme-on-surface-rgb: 17, 24, 39;
+
+    /* Derived role fallbacks; gradient.js recalculates these per palette. */
+    --theme-panel: #10152f;
+    --theme-panel-rgb: 16, 21, 47;
+    --theme-on-panel: #ffffff;
+    --theme-on-panel-rgb: 255, 255, 255;
+    --theme-panel-accent: #c4ad62;
+    --theme-panel-accent-rgb: 196, 173, 98;
+    --theme-dashboard-base: #000025;
+    --theme-dashboard-ink: #ffffff;
+    --theme-dashboard-ink-rgb: 255, 255, 255;
+    --theme-dashboard-accent: #c4ad62;
+    --theme-dashboard-accent-rgb: 196, 173, 98;
+    --theme-settings-canvas: #bcbec3;
+    --theme-settings-canvas-rgb: 188, 190, 195;
+    --theme-on-settings-canvas: #111827;
+    --theme-on-settings-canvas-rgb: 17, 24, 39;
+    --theme-settings-card: #ffffff;
+    --theme-settings-card-rgb: 255, 255, 255;
+    --theme-on-settings-card: #111827;
+    --theme-on-settings-card-rgb: 17, 24, 39;
+    --theme-settings-inset: #ecedef;
+    --theme-settings-inset-rgb: 236, 237, 239;
+    --theme-on-settings-inset: #111827;
+    --theme-on-settings-inset-rgb: 17, 24, 39;
+    --theme-settings-action: #000035;
+    --theme-settings-action-rgb: 0, 0, 53;
+    --theme-on-settings-action: #ffffff;
+    --theme-on-settings-action-rgb: 255, 255, 255;
+    --theme-ui-accent: #1b2455;
+    --theme-ui-accent-rgb: 27, 36, 85;
+    --theme-frame-border: #1a1a4a;
+    --page-gradient: linear-gradient(90deg, var(--theme-primary) 0%, var(--theme-secondary) 100%);
+
+    /* Palette-neutral semantic colors. */
+    --color-white: #ffffff;
+    --color-white-rgb: 255, 255, 255;
+    --color-black: #000000;
+    --color-black-rgb: 0, 0, 0;
+    --color-overlay-rgb: 0, 0, 20;
+    --color-scrim-rgb: 0, 0, 18;
+    --color-danger: #b42318;
+    --color-danger-hover: #991b1b;
+    --color-danger-rgb: 220, 38, 38;
+    --color-success: #15803d;
+    --color-warning: #a16207;
+
+    /* Legacy names remain aliases so old selectors follow the active palette. */
+    --bg-dark: var(--theme-settings-canvas);
+    --bg-shell: var(--theme-settings-canvas);
+    --card-bg: var(--theme-settings-card);
+    --card-elev: var(--theme-settings-inset);
+    --teal: var(--theme-ui-accent);
+    --teal-rgb: var(--theme-ui-accent-rgb);
+    --gold: var(--theme-accent);
+    --text-primary: var(--theme-on-settings-card);
+    --text-muted: rgba(var(--theme-on-settings-card-rgb), 0.68);
+    --card-border: rgba(var(--theme-on-settings-card-rgb), 0.12);
+    --glass: rgba(var(--theme-settings-card-rgb), 0.75);
+    --brand-navy: var(--theme-primary);
+    --brand-navy-soft: var(--theme-secondary);
+    --brand-panel: var(--theme-panel);
+    --brand-gold: var(--theme-accent);
+    --brand-teal: var(--theme-ui-accent);
+    --brand-teal-rgb: var(--theme-ui-accent-rgb);
+    --brand-text: var(--theme-on-panel);
+    --brand-muted: rgba(var(--theme-on-panel-rgb), 0.68);
+    --brand-border: rgba(var(--theme-on-panel-rgb), 0.14);
+
+    /* Shared spacing, radii, borders, elevation, and motion. */
+    --space-0: 0;
+    --space-1: 4px;
+    --space-1-5: 6px;
+    --space-2: 8px;
+    --space-2-5: 10px;
+    --space-3: 12px;
+    --space-3-5: 14px;
+    --space-4: 16px;
+    --space-4-5: 18px;
+    --space-5: 20px;
+    --space-6: 24px;
+    --space-7: 28px;
+    --space-8: 32px;
+    --radius-xs: 4px;
+    --radius-sm: 6px;
+    --radius-control: 8px;
+    --radius-md: 10px;
+    --radius-card-sm: 12px;
+    --radius-lg: 14px;
+    --radius-card: 16px;
+    --radius-xl: 20px;
+    --radius-pill: 999px;
+    --border-subtle: 1px solid rgba(var(--theme-on-settings-card-rgb), 0.12);
+    --shadow-xs: 0 1px 2px rgba(var(--color-black-rgb), 0.06);
+    --shadow-sm: 0 4px 12px rgba(var(--theme-primary-rgb), 0.08);
+    --shadow-md: 0 9px 24px rgba(var(--theme-primary-rgb), 0.1);
+    --shadow-lg: 0 18px 42px rgba(var(--theme-primary-rgb), 0.16);
+    --shadow-popover: 0 24px 60px rgba(var(--color-scrim-rgb), 0.28);
+    --duration-fast: 120ms;
+    --duration-medium: 200ms;
+    --duration-slow: 300ms;
+    --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+}

@@ -55,6 +55,7 @@ jobs:
             --exclude '.git' \
             --exclude '.github' \
             --exclude 'node_modules' \
+            --exclude 'assets/special-editions/*-master.png' \
             --exclude 'tools' \
             --exclude 'tests' \
             --exclude '_site' \

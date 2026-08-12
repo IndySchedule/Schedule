@@ -14,6 +14,7 @@ Indy Schedule is an unofficial schedule countdown website for Independence High 
 - Tuesday–Thursday SOAR and Homeroom placement
 - **Today at Indy** summary with separate built-in bells, validated live IHS events, sourced lunch information, and tomorrow's schedule
 - Preset light and dark color palettes plus a custom four-color palette
+- Music City special edition with a matching built-in palette; Friday Night Lights and Historic Franklin remain implemented but are temporarily hidden from Appearance
 - Custom period names and optional times beside schedule entries
 - First-visit setup for selecting lunch
 - Optional Google sign-in and Firebase preference syncing
@@ -62,34 +63,57 @@ The validator rejects malformed dates, empty meals, dates outside the declared m
 
 ```text
 index.html                         Main dashboard, settings, and onboarding
+design-tokens.css                 Authoritative palette and design-token values
 styles.css / script.js             Dashboard styling and behavior
 styles2.css / script2.js           Settings styling and behavior
-gradient.js                        Palette and background-gradient behavior
+gradient.js                        Runtime palette roles and background-gradient behavior
 auth.js                            Optional Firebase authentication and sync
 school-calendar.js                 School dates and schedule selection
 lunch-menu.js                      Daily cafeteria menu data
 data/ihs-calendar-events.json      Generated IHS calendar cache
 tools/update-calendar-events.mjs   Calendar cache generator
 tools/validate-live-data.mjs       Calendar and lunch publication checks
+tools/run-regression.mjs           Portable Node regression-test launcher
+tools/visual-qa.mjs                Browser screenshots and responsive QA
 tests/run-tests.js                 Schedule and regression checks
 .github/workflows/                 GitHub Actions calendar automation
 ```
 
 ## Testing
 
-On macOS, run the regression suite with JavaScriptCore:
+Run the regression suite with Node:
 
 ```sh
-/System/Library/Frameworks/JavaScriptCore.framework/Versions/A/Helpers/jsc tests/run-tests.js
+npm test
 ```
 
-The tests validate schedule dates and times, lunch placement, display states, calendar integration, and retired-code cleanup.
+The tests validate schedule dates and times, lunch placement, display states, calendar integration, palette contrast and token ownership, and retired-code cleanup.
 
 Validate publishable live data separately with:
 
 ```sh
 npm run validate-live-data
 ```
+
+Run the complete v1.2.0 release check with:
+
+```sh
+npm run qa
+```
+
+The visual QA runner uses local Chrome or Chromium to freeze representative school times and capture Chromebook, tablet, and phone screenshots. It covers all dashboard states, every Settings page, onboarding, Today at Indy, signed-in and signed-out headers, and representative light and dark palettes. Screenshots and a machine-readable report are written to `.artifacts/visual-qa/` and are intentionally excluded from deployment and version control.
+
+Special editions live directly below Color palette in Appearance. Music City is currently the visible option; Friday Night Lights and Historic Franklin remain implemented behind temporary hidden controls. Activating an edition applies its artwork and built-in palette across the dashboard and Settings. Choosing any regular palette or editing the custom palette turns the edition off. Lossless source artwork remains locally in `assets/special-editions/` and is ignored by Git, while deployment includes only the optimized browser images.
+
+## CSS Architecture
+
+Styles load in a deliberate order:
+
+1. `design-tokens.css` owns global palette, spacing, radius, border, shadow, and motion values.
+2. `styles.css` provides base layout, dashboard foundations, onboarding/dialog components, and base responsive fallbacks.
+3. `styles2.css` provides the canonical dashboard components, Settings shell and pages, Today at Indy popover, and component-local responsive refinements.
+
+Keep palette values out of component stylesheets. Add shared component behavior to the existing canonical section instead of appending a new override block at the end of a file.
 
 ## Publishing
 
