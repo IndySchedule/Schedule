@@ -2,38 +2,16 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-08-13T09:50:10.390Z",
-  "lastCheckedAt": "2026-08-13T09:50:10.390Z",
-  "contentUpdatedAt": "2026-08-13T09:50:10.390Z",
+  "generatedAt": "2026-08-14T05:49:57.661Z",
+  "lastCheckedAt": "2026-08-14T05:49:57.661Z",
+  "contentUpdatedAt": "2026-08-14T05:49:57.661Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
   "timeZone": "America/Chicago",
-  "rangeStart": "2026-08-11",
+  "rangeStart": "2026-08-12",
   "rangeEnd": "2026-12-11",
   "events": [
-    {
-      "id": "7m52vqin9cf83fkvj0p6o8aksg@google.com-2026-08-11T22:30:00.000Z",
-      "title": "IHS Senior Parent Meeting",
-      "start": "2026-08-11T22:30:00.000Z",
-      "end": "2026-08-12T01:00:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-08-11"
-      ],
-      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
-    },
-    {
-      "id": "71h7ghqhp4rh9mjvbqqik6e168@google.com-2026-08-11T23:00:00.000Z",
-      "title": "IHS Checkpoint Driving",
-      "start": "2026-08-11T23:00:00.000Z",
-      "end": "2026-08-12T01:00:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-08-11"
-      ],
-      "location": "Zoom"
-    },
     {
       "id": "18r9gs44mu98520juijb77tcgu@google.com-2026-08-13T22:30:00.000Z",
       "title": "IHS Sophomore/Junior Parent Meeting",
@@ -1155,6 +1133,28 @@
       "allDay": true,
       "days": [
         "2026-12-11"
+      ],
+      "location": "Kirkwood High School, 2702 Rossview Rd, Clarksville, TN 37043, USA"
+    },
+    {
+      "id": "0ee53fdtltf8a2lo262rfisact@google.com-2026-12-12T00:00:00.000Z",
+      "title": "IHS JV/G Wrestling @ Siegel HS",
+      "start": "2026-12-12T00:00:00.000Z",
+      "end": "2026-12-13T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2026-12-12"
+      ],
+      "location": "Siegel High School, 3300 Siegel Rd, Murfreesboro, TN 37129, USA"
+    },
+    {
+      "id": "3abjpikf8tk7dcjvorpnog9ove@google.com-2026-12-12T00:00:00.000Z",
+      "title": "IHS V Wrestling @ Kirkwood HS",
+      "start": "2026-12-12T00:00:00.000Z",
+      "end": "2026-12-13T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2026-12-12"
       ],
       "location": "Kirkwood High School, 2702 Rossview Rd, Clarksville, TN 37043, USA"
     }
