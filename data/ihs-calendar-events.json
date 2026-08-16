@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-08-15T07:47:11.490Z",
-  "lastCheckedAt": "2026-08-15T07:47:11.490Z",
-  "contentUpdatedAt": "2026-08-15T07:47:11.490Z",
+  "generatedAt": "2026-08-16T03:29:13.238Z",
+  "lastCheckedAt": "2026-08-16T03:29:13.238Z",
+  "contentUpdatedAt": "2026-08-16T03:29:13.238Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -12,17 +12,6 @@
   "rangeStart": "2026-08-13",
   "rangeEnd": "2026-12-13",
   "events": [
-    {
-      "id": "18r9gs44mu98520juijb77tcgu@google.com-2026-08-13T22:30:00.000Z",
-      "title": "IHS Sophomore/Junior Parent Meeting",
-      "start": "2026-08-13T22:30:00.000Z",
-      "end": "2026-08-14T01:00:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-08-13"
-      ],
-      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
-    },
     {
       "id": "67juvd1nearo303mdei07gdcvv@google.com-2026-08-15T00:00:00.000Z",
       "title": "IHS Varsity Football @LHS (Scrimmage)",
