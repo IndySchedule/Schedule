@@ -112,6 +112,12 @@
       letter-spacing:-.025em;
     }
 
+    .brand-icon svg {
+      display:block;
+      width:21px;
+      height:21px;
+    }
+
     .brand-icon {
       width:38px;
       height:38px;
@@ -959,8 +965,14 @@
 <div class="app">
   <aside class="sidebar">
     <div class="brand">
-      <div class="brand-icon">♫</div>
-      <span>Local Music</span>
+      <div class="brand-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="21" height="21" fill="none">
+          <path d="M9 18V6.8L18 5v10.2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="6.8" cy="18.2" r="2.8" fill="currentColor"/>
+          <circle cx="15.8" cy="15.4" r="2.8" fill="currentColor"/>
+        </svg>
+      </div>
+      <span>Music Player</span>
     </div>
 
     <div class="stack">
