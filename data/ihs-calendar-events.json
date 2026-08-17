@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-08-16T07:48:48.306Z",
-  "lastCheckedAt": "2026-08-16T07:48:48.306Z",
-  "contentUpdatedAt": "2026-08-16T07:48:48.306Z",
+  "generatedAt": "2026-08-17T03:30:03.866Z",
+  "lastCheckedAt": "2026-08-17T03:30:03.866Z",
+  "contentUpdatedAt": "2026-08-17T03:30:03.866Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -12,17 +12,6 @@
   "rangeStart": "2026-08-14",
   "rangeEnd": "2026-12-14",
   "events": [
-    {
-      "id": "67juvd1nearo303mdei07gdcvv@google.com-2026-08-15T00:00:00.000Z",
-      "title": "IHS Varsity Football @LHS (Scrimmage)",
-      "start": "2026-08-15T00:00:00.000Z",
-      "end": "2026-08-15T02:00:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-08-14"
-      ],
-      "location": "Lebanon High School, 500 Blue Devil Blvd, Lebanon, TN 37087, USA"
-    },
     {
       "id": "0d26vcchm049v3gcf58huj3vu0@google.com-2026-08-17T22:00:00.000Z",
       "title": "IHS JV/V Volleyball @ Harpeth Hall",
