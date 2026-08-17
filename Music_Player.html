@@ -646,6 +646,13 @@
       transition:background .14s ease, color .14s ease, transform .14s ease;
     }
 
+    .icon-btn svg {
+      display:block;
+      width:20px;
+      height:20px;
+      pointer-events:none;
+    }
+
     .icon-btn:hover {
       color:white;
       background:rgba(255,255,255,.075);
@@ -1015,9 +1022,17 @@
 
       <div class="controls">
         <button id="shuffleBtn" class="icon-btn" title="Shuffle">⤨</button>
-        <button id="prevBtn" class="icon-btn" title="Previous">⏮</button>
+        <button id="prevBtn" class="icon-btn" title="Previous" aria-label="Previous song">
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="currentColor">
+            <path d="M6 5h2v14H6V5Zm12.5 1.2v11.6a1 1 0 0 1-1.54.84L9 13.8a1 1 0 0 1 0-1.7l7.96-4.84a1 1 0 0 1 1.54.85Z"/>
+          </svg>
+        </button>
         <button id="playBtn" class="play-btn" title="Play/Pause">▶</button>
-        <button id="nextBtn" class="icon-btn" title="Next">⏭</button>
+        <button id="nextBtn" class="icon-btn" title="Next" aria-label="Next song">
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="currentColor">
+            <path d="M16 5h2v14h-2V5ZM5.5 6.2v11.6a1 1 0 0 0 1.54.84L15 13.8a1 1 0 0 0 0-1.7L7.04 7.26a1 1 0 0 0-1.54.85Z"/>
+          </svg>
+        </button>
         <button id="repeatBtn" class="icon-btn" title="Repeat">↻</button>
       </div>
 
