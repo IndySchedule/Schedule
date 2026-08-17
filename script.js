@@ -1385,6 +1385,20 @@ window.populateRenamePeriods = populateRenamePeriods;
             toggleDevtoolsHud();
             syncHudBtnLabel();
         });
+        const musicPlayerBtn = document.createElement('button');
+        musicPlayerBtn.textContent = 'Music Player';
+        musicPlayerBtn.style.cursor = 'pointer';
+        musicPlayerBtn.style.padding = '10px 12px';
+        musicPlayerBtn.style.borderRadius = '10px';
+        musicPlayerBtn.style.border = '1px solid rgba(255,255,255,0.12)';
+        musicPlayerBtn.style.background = 'rgba(130,149,255,0.16)';
+        musicPlayerBtn.style.color = '#dbe2ff';
+        musicPlayerBtn.style.fontWeight = '700';
+
+musicPlayerBtn.addEventListener('click', (ev) => {
+    ev.stopPropagation();
+    window.open('/Music_Player.html', '_blank', 'noopener');
+});
         const closeBtn = document.createElement('button');
         closeBtn.textContent = 'Close';
         closeBtn.style.cursor = 'pointer';
@@ -1424,6 +1438,7 @@ window.populateRenamePeriods = populateRenamePeriods;
         btnGroup.appendChild(toastToggleBtn);
         btnGroup.appendChild(simulateScheduleBtn);
         btnGroup.appendChild(hudBtn);
+        btnGroup.appendChild(musicPlayerBtn);
         btnGroup.appendChild(clearBtn);
         btnGroup.appendChild(closeBtn);
 
