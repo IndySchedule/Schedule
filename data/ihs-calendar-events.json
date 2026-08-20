@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-08-19T08:05:47.956Z",
-  "lastCheckedAt": "2026-08-19T08:05:47.956Z",
-  "contentUpdatedAt": "2026-08-19T08:05:47.956Z",
+  "generatedAt": "2026-08-20T03:15:04.613Z",
+  "lastCheckedAt": "2026-08-20T03:15:04.613Z",
+  "contentUpdatedAt": "2026-08-20T03:15:04.613Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -12,17 +12,6 @@
   "rangeStart": "2026-08-17",
   "rangeEnd": "2026-12-17",
   "events": [
-    {
-      "id": "0d26vcchm049v3gcf58huj3vu0@google.com-2026-08-17T22:00:00.000Z",
-      "title": "IHS JV/V Volleyball @ Harpeth Hall",
-      "start": "2026-08-17T22:00:00.000Z",
-      "end": "2026-08-18T00:30:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-08-17"
-      ],
-      "location": "Harpeth Hall School, 3801 Hobbs Rd, Nashville, TN 37215, USA"
-    },
     {
       "id": "31e4rq7v14bpk1aq6hgolofq4c@google.com-2026-08-18T00:00:00.000Z",
       "title": "IHS Late Start",
@@ -1135,6 +1124,28 @@
         "2026-12-12"
       ],
       "location": "Kirkwood High School, 2702 Rossview Rd, Clarksville, TN 37043, USA"
+    },
+    {
+      "id": "233ckp3ah8c811qn32ntbkdsgj@google.com-2026-12-18T00:00:00.000Z",
+      "title": "IHS JV Wrestling @ Brentwood Academy",
+      "start": "2026-12-18T00:00:00.000Z",
+      "end": "2026-12-19T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2026-12-18"
+      ],
+      "location": "Brentwood Academy, 219 Granny White Pike, Brentwood, TN 37027, USA"
+    },
+    {
+      "id": "71n29vkndt788orajf3knf35aa@google.com-2026-12-18T00:00:00.000Z",
+      "title": "IHS G Wrestling @ Northwest HS",
+      "start": "2026-12-18T00:00:00.000Z",
+      "end": "2026-12-19T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2026-12-18"
+      ],
+      "location": "Northwest High School, 800 Lafayette Rd, Clarksville, TN 37042, USA"
     }
   ]
 }
