@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-08-20T08:08:05.843Z",
-  "lastCheckedAt": "2026-08-20T08:08:05.843Z",
-  "contentUpdatedAt": "2026-08-20T08:08:05.843Z",
+  "generatedAt": "2026-08-21T03:13:40.493Z",
+  "lastCheckedAt": "2026-08-21T03:13:40.493Z",
+  "contentUpdatedAt": "2026-08-21T03:13:40.493Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -12,28 +12,6 @@
   "rangeStart": "2026-08-18",
   "rangeEnd": "2026-12-18",
   "events": [
-    {
-      "id": "31e4rq7v14bpk1aq6hgolofq4c@google.com-2026-08-18T00:00:00.000Z",
-      "title": "IHS Late Start",
-      "start": "2026-08-18T00:00:00.000Z",
-      "end": "2026-08-19T00:00:00.000Z",
-      "allDay": true,
-      "days": [
-        "2026-08-18"
-      ],
-      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
-    },
-    {
-      "id": "7l7mefteuq0cnn82clpvijj393@google.com-2026-08-18T22:00:00.000Z",
-      "title": "IHS JV/V Girls Soccer vs Oakland HS",
-      "start": "2026-08-18T22:00:00.000Z",
-      "end": "2026-08-19T02:00:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-08-18"
-      ],
-      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
-    },
     {
       "id": "4gigfht8m62j8b0jmcs9ls4t95@google.com-2026-08-19T21:30:00.000Z",
       "title": "IHS JV/V Volleyball vs Franklin HS",
@@ -1146,6 +1124,29 @@
         "2026-12-18"
       ],
       "location": "Northwest High School, 800 Lafayette Rd, Clarksville, TN 37042, USA"
+    },
+    {
+      "id": "1f8428ofjo80k9r26b1theirss@google.com-2026-12-19T00:00:00.000Z",
+      "title": "IHS V Wrestling @ Brentwood Academy",
+      "start": "2026-12-19T00:00:00.000Z",
+      "end": "2026-12-20T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2026-12-19"
+      ],
+      "location": "Brentwood Academy, 219 Granny White Pike, Brentwood, TN 37027, USA"
+    },
+    {
+      "id": "2t50qbato5jcltcb4o090er3c8@google.com-2026-12-19T00:00:00.000Z",
+      "title": "IHS Wrestling Qualifiers/Medalists",
+      "start": "2026-12-19T00:00:00.000Z",
+      "end": "2026-12-21T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2026-12-19",
+        "2026-12-20"
+      ],
+      "location": "Bob Carpenter Center"
     }
   ]
 }
