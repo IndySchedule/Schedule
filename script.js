@@ -16,7 +16,7 @@ async function initializeAuth() {
 const schedules = JSON.parse(JSON.stringify(window.IndyCalendar.SCHEDULES));
 
 const scheduleDisplayNames = {
-    normal: 'Regular',
+    normal: 'Regular (SOAR)',
     normalNoSoar: 'Regular (No SOAR)',
     lateStart: 'Late Start',
     halfDay: 'Half Day'
@@ -29,6 +29,62 @@ function getScheduleDisplayName(key) {
 let currentSchedule = schedules.normal;
 let currentScheduleName = 'normal';
 const LUNCH_WAVE_KEY = 'lunchWave';
+const SCHEDULE_OVERRIDE_KEY = 'indyScheduleOverride_v1';
+
+function getScheduleOverride(value = new Date()) {
+    const calendar = window.IndyCalendar;
+    if (!calendar) return null;
+    const requestedDate = calendar.dateKey(value);
+    try {
+        const override = JSON.parse(localStorage.getItem(SCHEDULE_OVERRIDE_KEY) || 'null');
+        const isValid = override
+            && override.date === requestedDate
+            && typeof override.schedule === 'string'
+            && Boolean(schedules[override.schedule]);
+        if (isValid) return override;
+        if (override) localStorage.removeItem(SCHEDULE_OVERRIDE_KEY);
+    } catch (error) {
+        localStorage.removeItem(SCHEDULE_OVERRIDE_KEY);
+    }
+    return null;
+}
+
+function getEffectiveScheduleKey(value = new Date()) {
+    return getScheduleOverride(value)?.schedule
+        || window.IndyCalendar?.getScheduleKey(value)
+        || 'normal';
+}
+
+function getEffectiveDayType(value = new Date()) {
+    const override = getScheduleOverride(value);
+    if (!override) return window.IndyCalendar?.getDayType(value) || 'regular';
+    if (override.schedule === 'halfDay') return 'halfDay';
+    if (override.schedule === 'lateStart') return 'lateStart';
+    return 'regular';
+}
+
+function refreshScheduleOverrideUI(value = new Date()) {
+    const override = getScheduleOverride(value);
+    const dropdown = document.getElementById('schedule-dropdown');
+    if (dropdown) dropdown.value = override?.schedule || 'automatic';
+
+    const pill = document.getElementById('schedule-mode-pill');
+    if (pill) {
+        pill.dataset.mode = override ? 'override' : 'automatic';
+        const icon = pill.querySelector('i');
+        const label = pill.querySelector('span');
+        if (icon) icon.className = override ? 'fas fa-pen-to-square' : 'fas fa-wand-magic-sparkles';
+        if (label) label.textContent = override ? 'Override today' : 'Automatic';
+    }
+
+    const help = document.getElementById('schedule-override-help');
+    if (help) {
+        help.textContent = override
+            ? `${getScheduleDisplayName(override.schedule)} is being used for today only. Automatic scheduling resumes tomorrow.`
+            : 'Regular, late-start, and half-day schedules are selected automatically from the WCS calendar. A manual choice applies only today.';
+    }
+}
+
 
 // Clear school-specific selections left by the previous build.
 const INDY_SCHEDULE_MIGRATION_KEY = 'indyScheduleMigration_v1';
@@ -112,8 +168,8 @@ function initializeApp() {
 
 function initializeAppLogic() {
     try {
-        const scheduleKey = window.IndyCalendar?.getScheduleKey(new Date()) || 'normal';
-        switchSchedule(scheduleKey);
+        const scheduleKey = getEffectiveScheduleKey(new Date());
+        activateSchedule(scheduleKey);
         updateScheduleDisplay();
         initializeLunchWaveControl();
         updateTodayAtIndy();
@@ -453,11 +509,12 @@ function updateTodayAtIndy(now = new Date()) {
     };
     const dateKey = calendar.dateKey(now);
     renderIhsCalendarEvents(dateKey);
-    const dayType = calendar.getDayType(dateKey);
-    const scheduleKey = calendar.getScheduleKey(dateKey);
+    const override = getScheduleOverride(now);
+    const dayType = getEffectiveDayType(now);
+    const scheduleKey = getEffectiveScheduleKey(now);
     const schedule = calendar.getScheduleWithLunch(scheduleKey, getLunchWave()) || calendar.SCHEDULES[scheduleKey] || [];
     const scheduleLabels = {
-        normal: 'Regular',
+        normal: 'Regular · SOAR',
         normalNoSoar: 'Regular · No SOAR',
         lateStart: 'Late Start',
         halfDay: 'Half Day'
@@ -470,7 +527,8 @@ function updateTodayAtIndy(now = new Date()) {
     });
 
     setText('today-date', dateFormatter.format(now));
-    setText('today-schedule', dayType === 'noSchool' ? 'No School' : (scheduleLabels[scheduleKey] || 'Regular'));
+    const todayScheduleLabel = dayType === 'noSchool' ? 'No School' : (scheduleLabels[scheduleKey] || 'Regular');
+    setText('today-schedule', override ? `${todayScheduleLabel} · Override` : todayScheduleLabel);
     setText('today-dismissal', dayType === 'noSchool' || !schedule.length
         ? '—'
         : formatTime12(schedule[schedule.length - 1].end));
@@ -517,13 +575,15 @@ function updateTodayAtIndy(now = new Date()) {
         ? `${formatTime12(lunch.start)}–${formatTime12(lunch.end)}`
         : '');
 
-    const noticeText = dayType === 'noSchool'
-        ? 'No school today.'
-        : dayType === 'halfDay'
-            ? 'Half day today · Dismissal at 11:15 AM.'
-            : dayType === 'lateStart'
-                ? 'Late start today · First period begins at 8:25 AM.'
-                : '';
+    const noticeText = override
+        ? `Manual schedule override: ${getScheduleDisplayName(scheduleKey)}. Automatic scheduling resumes tomorrow.`
+        : dayType === 'noSchool'
+            ? 'No school today.'
+            : dayType === 'halfDay'
+                ? 'Half day today · Dismissal at 11:15 AM.'
+                : dayType === 'lateStart'
+                    ? 'Late start today · First period begins at 8:25 AM.'
+                    : '';
     const noticeBox = document.getElementById('today-notice');
     const notice = noticeBox?.querySelector('span');
     if (notice) notice.textContent = noticeText;
@@ -807,7 +867,7 @@ function applyRenamesToSchedule(schedule) {
 }
 
 // Update switchSchedule to apply renames
-function switchSchedule(scheduleName) {
+function activateSchedule(scheduleName) {
     if (!scheduleName) return;
     try {
         let schedule;
@@ -835,6 +895,26 @@ function switchSchedule(scheduleName) {
         console.error('Error switching schedule:', error);
         currentSchedule = schedules[scheduleName] || schedules.normal;
     }
+}
+
+function switchSchedule(scheduleName) {
+    const calendar = window.IndyCalendar;
+    if (!calendar) return;
+
+    if (!scheduleName || scheduleName === 'automatic') {
+        localStorage.removeItem(SCHEDULE_OVERRIDE_KEY);
+    } else if (schedules[scheduleName]) {
+        localStorage.setItem(SCHEDULE_OVERRIDE_KEY, JSON.stringify({
+            date: calendar.dateKey(new Date()),
+            schedule: scheduleName
+        }));
+    } else {
+        return;
+    }
+
+    activateSchedule(getEffectiveScheduleKey(new Date()));
+    refreshScheduleOverrideUI();
+    updateTodayAtIndy();
 }
 
 // Replace duplicate renamePeriod implementations with one authoritative function
@@ -2334,7 +2414,10 @@ function updateScheduleDisplay() {
             lateStart: 'Late Start',
             halfDay: 'Half Day'
         };
-        scheduleSummary.textContent = labels[currentScheduleName] || 'Automatic Indy bells';
+        const summaryLabel = labels[currentScheduleName] || 'Automatic Indy bells';
+        scheduleSummary.textContent = getScheduleOverride()
+            ? `${summaryLabel} · Override`
+            : summaryLabel;
     }
     updateCountdowns();
 }
@@ -2371,12 +2454,13 @@ function updateTabTitle(periodDisplayName, timeText) {
 function updateCountdowns() {
     const now = new Date();
     const calendar = window.IndyCalendar;
-    const dayType = calendar?.getDayType(now) || 'regular';
-    const automaticScheduleName = calendar?.getScheduleKey(now) || 'normal';
+    const dayType = getEffectiveDayType(now);
+    const effectiveScheduleName = getEffectiveScheduleKey(now);
+    refreshScheduleOverrideUI(now);
 
-    if (dayType !== 'noSchool' && currentScheduleName !== automaticScheduleName) {
-        currentScheduleName = automaticScheduleName;
-        currentSchedule = schedules[automaticScheduleName] || schedules.normal;
+    if (dayType !== 'noSchool' && currentScheduleName !== effectiveScheduleName) {
+        currentScheduleName = effectiveScheduleName;
+        currentSchedule = schedules[effectiveScheduleName] || schedules.normal;
         updateScheduleDisplay();
     }
 
@@ -2435,7 +2519,7 @@ function updateCountdowns() {
             : `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
     };
 
-    const timelineSchedule = getTimelineSchedule(automaticScheduleName, currentSchedule);
+    const timelineSchedule = getTimelineSchedule(effectiveScheduleName, currentSchedule);
     const currentPeriod = dayType === 'noSchool' ? null : timelineSchedule.find((period) => {
         const start = getTimeInSeconds(period.start);
         const end = getTimeInSeconds(period.end);
@@ -2560,24 +2644,23 @@ function updateScheduleDropdown() {
     const dropdown = document.getElementById('schedule-dropdown');
     if (!dropdown) return;
 
-    // Remove existing options
-    dropdown.innerHTML = '';
+    dropdown.replaceChildren();
+
+    const automaticKey = window.IndyCalendar?.getScheduleKey(new Date()) || 'normal';
+    const automaticOption = document.createElement('option');
+    automaticOption.value = 'automatic';
+    automaticOption.textContent = `Automatic — ${getScheduleDisplayName(automaticKey)}`;
+    dropdown.appendChild(automaticOption);
 
     const activeSchedules = getActiveSchedules();
-    Object.keys(activeSchedules).forEach(key => {
-        const opt = document.createElement('option');
-        opt.value = key;
-        opt.textContent = getScheduleDisplayName(key);
-        dropdown.appendChild(opt);
+    Object.keys(activeSchedules).forEach((key) => {
+        const option = document.createElement('option');
+        option.value = key;
+        option.textContent = getScheduleDisplayName(key);
+        dropdown.appendChild(option);
     });
 
-    // Try to keep the previously selected schedule
-    const selected = localStorage.getItem('currentScheduleName') || currentScheduleName || 'normal';
-    if (activeSchedules[selected]) {
-        dropdown.value = selected;
-    } else {
-        dropdown.value = Object.keys(activeSchedules)[0] || 'normal';
-    }
+    refreshScheduleOverrideUI();
 }
 
 // Add this function at an appropriate location in the file:

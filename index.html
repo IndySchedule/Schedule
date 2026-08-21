@@ -516,15 +516,15 @@
                         <div class="schedule-section-heading">
                             <div class="schedule-section-icon"><i class="fas fa-calendar-day" aria-hidden="true"></i></div>
                             <div><h3>School day setup</h3><p>Choose the bell schedule and lunch wave used throughout the dashboard.</p></div>
-                            <span class="schedule-auto-pill"><i class="fas fa-wand-magic-sparkles" aria-hidden="true"></i> Automatic</span>
+                            <span class="schedule-auto-pill" id="schedule-mode-pill"><i class="fas fa-wand-magic-sparkles" aria-hidden="true"></i><span>Automatic</span></span>
                         </div>
                         <div class="settings-form-grid">
                             <div class="settings-field">
                                 <label class="settings-field-label" for="schedule-dropdown"><i class="fas fa-bell" aria-hidden="true"></i> Today’s schedule</label>
                                 <select id="schedule-dropdown" onchange="switchSchedule(this.value)">
-                                    <option value="normal">Regular Schedule</option>
+                                    <option value="automatic">Automatic</option>
                                 </select>
-                                <p class="help-text settings-help">Regular, late-start, and half-day schedules are selected automatically from the WCS calendar.</p>
+                                <p class="help-text settings-help" id="schedule-override-help">Regular, late-start, and half-day schedules are selected automatically from the WCS calendar. A manual choice applies only today.</p>
                             </div>
                             <div class="settings-field">
                                 <label class="settings-field-label" for="lunch-wave"><i class="fas fa-utensils" aria-hidden="true"></i> Fifth-period lunch</label>
@@ -759,12 +759,21 @@
                                             <p class="contact-title">Tell us what needs attention.</p>
                                         </div>
                                     </div>
+                                    <p class="contact-intro">Send a direct message about the dashboard, bell times, calendar information, or an idea for the site.</p>
                                     <a class="contact-btn" href="mailto:indyschedule@outlook.com">
-                                        <i class="fas fa-envelope"></i>
-                                        Email Indy Schedule
+                                        <i class="fas fa-envelope" aria-hidden="true"></i>
+                                        <span>Email Indy Schedule</span>
+                                        <i class="fas fa-arrow-up-right-from-square contact-btn-arrow" aria-hidden="true"></i>
                                     </a>
+                                    <p class="contact-action-note">Opens your default email app.</p>
+                                    <p class="contact-address"><i class="fas fa-at" aria-hidden="true"></i> indyschedule@outlook.com</p>
+                                    <p class="contact-privacy-note"><i class="fas fa-shield-halved" aria-hidden="true"></i> Only include information needed to explain the issue.</p>
                                 </div>
                                 <div class="support-col">
+                                    <div class="contact-checklist-heading">
+                                        <p>Helpful details</p>
+                                        <h2>What to include</h2>
+                                    </div>
                                     <ul class="contact-list">
                                         <li><span class="contact-bullet-icon"><i class="fas fa-heading" aria-hidden="true"></i></span><span class="contact-bullet-text"><strong>Subject</strong> — briefly name the problem, correction, or idea.</span></li>
                                         <li><span class="contact-bullet-icon"><i class="fas fa-window-maximize" aria-hidden="true"></i></span><span class="contact-bullet-text"><strong>Page</strong> — say whether it happened on the dashboard, Today at Indy, or in Settings.</span></li>
@@ -772,7 +781,7 @@
                                         <li><span class="contact-bullet-icon"><i class="fas fa-paperclip" aria-hidden="true"></i></span><span class="contact-bullet-text"><strong>Screenshot</strong> — attach one when it helps explain the problem.</span></li>
                                     </ul>
                                     <div class="contact-mini-faq">
-                                        <p class="faq-title">Quick checks</p>
+                                        <p class="faq-title"><i class="fas fa-circle-check" aria-hidden="true"></i> Quick checks</p>
                                         <ul>
                                             <li>Wrong lunch wave? Change it under <strong>Settings → Schedule</strong>.</li>
                                             <li>Preferences not syncing? Refresh the page, then sign out and back in.</li>

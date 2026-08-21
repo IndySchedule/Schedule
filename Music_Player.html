@@ -341,20 +341,21 @@
       font-weight:600;
     }
 
-    .playlist-remove {
+    .playlist-menu-button {
       width:30px;
       height:30px;
       border-radius:9px;
       background:transparent;
       color:#748093;
-      font-size:17px;
+      font-size:16px;
+      font-weight:800;
       line-height:1;
       transition:background .15s ease, color .15s ease;
     }
 
-    .playlist-remove:hover {
-      color:#ff9a9a;
-      background:rgba(255,116,116,.1);
+    .playlist-menu-button:hover {
+      color:white;
+      background:rgba(255,255,255,.075);
     }
 
     .search {
@@ -420,14 +421,13 @@
       width:100%;
       min-height:53px;
       display:grid;
-      grid-template-columns:24px 42px minmax(0,1fr);
+      grid-template-columns:minmax(0,1fr) 30px;
       align-items:center;
-      gap:9px;
-      padding:6px 8px;
+      gap:2px;
+      padding:0 4px 0 0;
       margin-bottom:3px;
       border-radius:11px;
       background:transparent;
-      text-align:left;
       transition:background .14s ease, transform .14s ease;
     }
 
@@ -437,6 +437,53 @@
 
     .track.active {
       background:linear-gradient(90deg, rgba(130,149,255,.15), rgba(130,149,255,.045));
+    }
+
+    .track.dragging {
+      opacity:.46;
+      transform:scale(.985);
+    }
+
+    .track.drag-over {
+      box-shadow:inset 0 2px 0 var(--accent);
+    }
+
+    .track-main {
+      min-width:0;
+      min-height:53px;
+      display:grid;
+      grid-template-columns:24px 42px minmax(0,1fr) auto;
+      align-items:center;
+      gap:9px;
+      padding:6px 4px 6px 8px;
+      border-radius:11px;
+      color:inherit;
+      background:transparent;
+      text-align:left;
+    }
+
+    .track-action {
+      width:28px;
+      height:28px;
+      display:grid;
+      place-items:center;
+      padding:0;
+      border-radius:8px;
+      color:#727e90;
+      background:transparent;
+      font-size:16px;
+      opacity:0;
+      transition:opacity .14s ease,color .14s ease,background .14s ease;
+    }
+
+    .track:hover .track-action,
+    .track:focus-within .track-action {
+      opacity:1;
+    }
+
+    .track-action:hover {
+      color:white;
+      background:rgba(255,255,255,.07);
     }
 
     .track-number {
@@ -495,6 +542,62 @@
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
+    }
+
+    .track-duration {
+      padding-left:5px;
+      color:#687486;
+      font-size:9.5px;
+      font-weight:650;
+      font-variant-numeric:tabular-nums;
+    }
+
+    .history-section {
+      flex:0 0 auto;
+      margin-top:7px;
+      padding-top:8px;
+      border-top:1px solid var(--border);
+    }
+
+    .history-section[hidden] {
+      display:none!important;
+    }
+
+    .history-heading {
+      margin-bottom:5px;
+      color:#747f91;
+      font-size:9px;
+      font-weight:800;
+      letter-spacing:.045em;
+      text-transform:uppercase;
+    }
+
+    .history-list {
+      display:flex;
+      gap:5px;
+      overflow-x:auto;
+      scrollbar-width:none;
+    }
+
+    .history-list::-webkit-scrollbar { display:none; }
+
+    .history-track {
+      min-width:0;
+      max-width:96px;
+      padding:6px 8px;
+      border-radius:9px;
+      color:#8793a5;
+      background:rgba(255,255,255,.032);
+      font-size:9.5px;
+      font-weight:650;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .history-track:hover {
+      color:#e9edf5;
+      background:rgba(255,255,255,.065);
     }
 
     .empty {
@@ -906,6 +1009,30 @@
       pointer-events:none;
     }
 
+    .repeat-one-badge {
+      position:absolute;
+      right:5px;
+      bottom:4px;
+      min-width:11px;
+      height:11px;
+      display:none;
+      place-items:center;
+      border-radius:50%;
+      color:#111726;
+      background:#c7d0ff;
+      font-size:7px;
+      font-weight:900;
+      line-height:1;
+    }
+
+    .icon-btn[data-repeat="one"] {
+      position:relative;
+    }
+
+    .icon-btn[data-repeat="one"] .repeat-one-badge {
+      display:grid;
+    }
+
     .icon-btn:hover {
       color:white;
       background:rgba(255,255,255,.075);
@@ -932,16 +1059,45 @@
       border-radius:50%;
       color:#0c1017;
       background:linear-gradient(180deg,#ffffff,#e9edf5);
-      font-size:27px;
+      border:1px solid rgba(255,255,255,.68);
       box-shadow:
-        0 12px 28px rgba(0,0,0,.28),
+        0 12px 28px rgba(0,0,0,.3),
+        0 0 0 5px rgba(255,255,255,.035),
         inset 0 1px 0 white;
       transition:transform .15s ease, box-shadow .15s ease;
     }
 
+    .play-btn svg {
+      display:block;
+      width:27px;
+      height:27px;
+      overflow:visible;
+      pointer-events:none;
+    }
+
+    .play-btn .play-shape {
+      transform:translateX(1px);
+      transform-origin:center;
+    }
+
+    .play-btn .pause-shape {
+      display:none;
+    }
+
+    .play-btn.is-playing .play-shape {
+      display:none;
+    }
+
+    .play-btn.is-playing .pause-shape {
+      display:inline;
+    }
+
     .play-btn:hover {
       transform:scale(1.045);
-      box-shadow:0 16px 32px rgba(0,0,0,.33);
+      box-shadow:
+        0 16px 34px rgba(0,0,0,.34),
+        0 0 0 6px rgba(255,255,255,.05),
+        inset 0 1px 0 white;
     }
 
     .play-btn:active {
@@ -1100,6 +1256,133 @@
       text-align:center;
     }
 
+    .shortcut-help-trigger {
+      padding:2px 6px;
+      border-radius:6px;
+      color:#8995a8;
+      background:transparent;
+      font-size:9px;
+      font-weight:700;
+      text-decoration:underline;
+      text-underline-offset:2px;
+    }
+
+    .shortcut-help-trigger:hover {
+      color:#d9def1;
+      background:rgba(255,255,255,.05);
+    }
+
+    .floating-menu {
+      position:fixed;
+      z-index:120;
+      width:172px;
+      padding:6px;
+      border:1px solid rgba(255,255,255,.11);
+      border-radius:12px;
+      background:rgba(17,23,34,.97);
+      box-shadow:0 18px 48px rgba(0,0,0,.48),inset 0 1px 0 rgba(255,255,255,.04);
+      backdrop-filter:blur(18px);
+    }
+
+    .floating-menu[hidden] { display:none!important; }
+
+    .floating-menu button {
+      width:100%;
+      min-height:34px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      padding:7px 9px;
+      border-radius:8px;
+      color:#c4cddd;
+      background:transparent;
+      font-size:11px;
+      font-weight:680;
+      text-align:left;
+    }
+
+    .floating-menu button:hover {
+      color:white;
+      background:rgba(255,255,255,.07);
+    }
+
+    .floating-menu button.danger { color:#ffaaaa; }
+    .floating-menu button:disabled { opacity:.4;cursor:not-allowed; }
+
+    .toast-region {
+      position:fixed;
+      right:18px;
+      bottom:18px;
+      z-index:150;
+      width:min(330px,calc(100vw - 36px));
+      display:grid;
+      gap:8px;
+      pointer-events:none;
+    }
+
+    .toast {
+      padding:11px 13px;
+      border:1px solid rgba(255,255,255,.11);
+      border-left:3px solid var(--accent);
+      border-radius:11px;
+      color:#e9edf6;
+      background:rgba(17,23,34,.96);
+      box-shadow:0 14px 38px rgba(0,0,0,.38);
+      backdrop-filter:blur(16px);
+      font-size:11px;
+      font-weight:650;
+      line-height:1.4;
+      animation:toast-in .2s ease-out;
+    }
+
+    .toast.success { border-left-color:#66d5a0; }
+    .toast.error { border-left-color:#ff7f88; }
+    .toast.leaving { opacity:0;transform:translateY(5px);transition:.18s ease; }
+
+    @keyframes toast-in {
+      from { opacity:0;transform:translateY(8px); }
+      to { opacity:1;transform:translateY(0); }
+    }
+
+    .shortcut-card {
+      width:min(440px,100%);
+      text-align:left;
+    }
+
+    .shortcut-card h2 { text-align:center; }
+
+    .shortcut-card .confirm-actions { grid-template-columns:1fr; }
+
+    .shortcut-grid {
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:8px;
+      margin-top:20px;
+    }
+
+    .shortcut-item {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:9px 10px;
+      border-radius:9px;
+      color:#aab5c6;
+      background:rgba(255,255,255,.04);
+      font-size:11px;
+    }
+
+    .rename-input {
+      width:100%;
+      margin-top:18px;
+      padding:11px 12px;
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:10px;
+      outline:none;
+      color:white;
+      background:rgba(3,7,14,.5);
+    }
+
     .confirm-backdrop {
       position:fixed;
       inset:0;
@@ -1165,7 +1448,7 @@
       letter-spacing:-.025em;
     }
 
-    .confirm-card p:last-of-type {
+    .confirm-card > p:not(.confirm-eyebrow):last-of-type {
       margin:0;
       color:#a3afc0;
       font-size:13px;
@@ -1234,6 +1517,10 @@
         animation-iteration-count:1!important;
         transition-duration:.01ms!important;
       }
+    }
+
+    @media (hover:none) {
+      .track-action { opacity:1; }
     }
 
     /* ---------- Chromebook tuning ---------- */
@@ -1520,6 +1807,11 @@
     <div id="trackList" class="track-list">
       <div class="empty">Add a folder containing your downloaded MP3s.</div>
     </div>
+
+    <section id="historySection" class="history-section" hidden>
+      <div class="history-heading">Recently played</div>
+      <div id="historyList" class="history-list"></div>
+    </section>
   </aside>
 
   <main id="mainArea" class="main">
@@ -1560,19 +1852,41 @@
       </div>
 
       <div class="controls">
-        <button id="shuffleBtn" class="icon-btn" title="Shuffle" aria-label="Toggle shuffle" aria-pressed="false">⤨</button>
+        <button id="shuffleBtn" class="icon-btn" title="Shuffle" aria-label="Toggle shuffle" aria-pressed="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M3 7h3.5c4.5 0 6.5 10 11 10H21"/>
+            <path d="m18 14 3 3-3 3"/>
+            <path d="M3 17h3.5c1.7 0 3-1.4 4.2-3.1M14.3 9.6C15.3 8.1 16.3 7 17.5 7H21"/>
+            <path d="m18 4 3 3-3 3"/>
+          </svg>
+        </button>
         <button id="prevBtn" class="icon-btn" title="Previous" aria-label="Previous song">
-          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="currentColor">
-            <path d="M6 5h2v14H6V5Zm12.5 1.2v11.6a1 1 0 0 1-1.54.84L9 13.8a1 1 0 0 1 0-1.7l7.96-4.84a1 1 0 0 1 1.54.85Z"/>
+          <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M7 5v14M18 6.5 9.5 12l8.5 5.5z"/>
           </svg>
         </button>
-        <button id="playBtn" class="play-btn" title="Play" aria-label="Play">▶</button>
+        <button id="playBtn" class="play-btn" title="Play" aria-label="Play">
+          <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+            <path class="play-shape" d="M8 5.3v13.4L18.4 12 8 5.3Z"/>
+            <g class="pause-shape">
+              <rect x="7" y="5.5" width="3.5" height="13" rx="1"/>
+              <rect x="13.5" y="5.5" width="3.5" height="13" rx="1"/>
+            </g>
+          </svg>
+        </button>
         <button id="nextBtn" class="icon-btn" title="Next" aria-label="Next song">
-          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="currentColor">
-            <path d="M16 5h2v14h-2V5ZM5.5 6.2v11.6a1 1 0 0 0 1.54.84L15 13.8a1 1 0 0 0 0-1.7L7.04 7.26a1 1 0 0 0-1.54.85Z"/>
+          <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 5v14M6 6.5l8.5 5.5L6 17.5z"/>
           </svg>
         </button>
-        <button id="repeatBtn" class="icon-btn" title="Repeat" aria-label="Change repeat mode" aria-pressed="false">↻</button>
+        <button id="repeatBtn" class="icon-btn" title="Repeat" aria-label="Change repeat mode" aria-pressed="false" data-repeat="off">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M17 2.8 21 7l-4 4.2"/>
+            <path d="M3 11V9a2 2 0 0 1 2-2h16M7 21.2 3 17l4-4.2"/>
+            <path d="M21 13v2a2 2 0 0 1-2 2H3"/>
+          </svg>
+          <span class="repeat-one-badge" aria-hidden="true">1</span>
+        </button>
       </div>
 
       <div class="bottom">
@@ -1596,7 +1910,7 @@
           </svg>
         </button>
       </div>
-      <div class="shortcut-hint"><kbd>Space</kbd> play · <kbd>←</kbd> <kbd>→</kbd> seek · <kbd>M</kbd> mute</div>
+      <div class="shortcut-hint"><kbd>Space</kbd> play · <kbd>←</kbd> <kbd>→</kbd> seek · <button id="shortcutHelpBtn" class="shortcut-help-trigger" type="button">All shortcuts</button></div>
     </section>
   </main>
 </div>
@@ -1618,6 +1932,52 @@
   </div>
 </div>
 
+<div id="playlistMenu" class="floating-menu" role="menu" hidden>
+  <button type="button" data-playlist-action="refresh" role="menuitem">↻ Refresh playlist</button>
+  <button type="button" data-playlist-action="shuffle" role="menuitem">⤨ Shuffle and play</button>
+  <button type="button" data-playlist-action="rename" role="menuitem">✎ Rename display</button>
+  <button type="button" data-playlist-action="remove" class="danger" role="menuitem">× Remove playlist</button>
+</div>
+
+<div id="trackMenu" class="floating-menu" role="menu" hidden>
+  <button type="button" data-track-action="next" role="menuitem">＋ Play next</button>
+  <button type="button" data-track-action="remove" class="danger" role="menuitem">× Remove from queue</button>
+</div>
+
+<div id="renameDialog" class="confirm-backdrop" role="dialog" aria-modal="true" aria-labelledby="renameDialogTitle" hidden>
+  <div class="confirm-card">
+    <p class="confirm-eyebrow">Playlist display name</p>
+    <h2 id="renameDialogTitle">Rename playlist</h2>
+    <input id="renamePlaylistInput" class="rename-input" type="text" maxlength="80" autocomplete="off" />
+    <div class="confirm-actions">
+      <button id="cancelRenameBtn" type="button">Cancel</button>
+      <button id="confirmRenameBtn" type="button">Save name</button>
+    </div>
+  </div>
+</div>
+
+<div id="shortcutDialog" class="confirm-backdrop" role="dialog" aria-modal="true" aria-labelledby="shortcutDialogTitle" hidden>
+  <div class="confirm-card shortcut-card">
+    <p class="confirm-eyebrow">Player controls</p>
+    <h2 id="shortcutDialogTitle">Keyboard shortcuts</h2>
+    <div class="shortcut-grid">
+      <div class="shortcut-item"><span>Play or pause</span><kbd>Space</kbd></div>
+      <div class="shortcut-item"><span>Seek 5 seconds</span><span><kbd>←</kbd> <kbd>→</kbd></span></div>
+      <div class="shortcut-item"><span>Change volume</span><span><kbd>↑</kbd> <kbd>↓</kbd></span></div>
+      <div class="shortcut-item"><span>Mute</span><kbd>M</kbd></div>
+      <div class="shortcut-item"><span>Shuffle</span><kbd>S</kbd></div>
+      <div class="shortcut-item"><span>Repeat mode</span><kbd>R</kbd></div>
+      <div class="shortcut-item"><span>Next track</span><kbd>N</kbd></div>
+      <div class="shortcut-item"><span>Previous track</span><kbd>P</kbd></div>
+    </div>
+    <div class="confirm-actions">
+      <button id="closeShortcutBtn" type="button">Close</button>
+    </div>
+  </div>
+</div>
+
+<div id="toastRegion" class="toast-region" aria-live="polite" aria-atomic="false"></div>
+
 <audio id="audio" preload="metadata"></audio>
 
 <script>
@@ -1635,6 +1995,18 @@
   const libraryTitle = document.getElementById('libraryTitle');
   const trackCount = document.getElementById('trackCount');
   const trackList = document.getElementById('trackList');
+  const historySection = document.getElementById('historySection');
+  const historyList = document.getElementById('historyList');
+  const playlistMenu = document.getElementById('playlistMenu');
+  const trackMenu = document.getElementById('trackMenu');
+  const renameDialog = document.getElementById('renameDialog');
+  const renamePlaylistInput = document.getElementById('renamePlaylistInput');
+  const cancelRenameBtn = document.getElementById('cancelRenameBtn');
+  const confirmRenameBtn = document.getElementById('confirmRenameBtn');
+  const shortcutHelpBtn = document.getElementById('shortcutHelpBtn');
+  const shortcutDialog = document.getElementById('shortcutDialog');
+  const closeShortcutBtn = document.getElementById('closeShortcutBtn');
+  const toastRegion = document.getElementById('toastRegion');
 
   const nowTitle = document.getElementById('nowTitle');
   const nowSub = document.getElementById('nowSub');
@@ -1668,9 +2040,22 @@
   let playOrder = [];
   let playPosition = -1;
   let playedIndexes = new Set();
+  let removedIndexes = new Set();
+  let playHistory = [];
   let isSeeking = false;
   let previousVolume = 0.8;
   let clearDialogPreviousFocus = null;
+  let shortcutDialogPreviousFocus = null;
+  let playlistMenuIndex = -1;
+  let trackMenuIndex = -1;
+  let renamePlaylistIndex = -1;
+  let pendingRefreshIndex = -1;
+  let draggedTrackIndex = -1;
+  let metadataQueue = [];
+  let activeMetadataLoads = 0;
+  let libraryRenderFrame = 0;
+
+  const METADATA_CONCURRENCY = 3;
 
   let isShuffle = localStorage.getItem('localMusic_shuffle') === 'true';
   let repeatMode = Number(localStorage.getItem('localMusic_repeat') || 0);
@@ -1706,11 +2091,39 @@
     searchInput.placeholder = hasTracks ? 'Search this playlist...' : 'Choose a playlist to search';
   }
 
+  function setPlayButtonState(isPlaying) {
+    playBtn.classList.toggle('is-playing', isPlaying);
+    playBtn.title = isPlaying ? 'Pause' : 'Play';
+    playBtn.setAttribute('aria-label', isPlaying ? 'Pause' : 'Play');
+    playerCard.classList.toggle('is-playing', isPlaying);
+  }
+
   function formatTime(seconds) {
     if (!Number.isFinite(seconds)) return '0:00';
     const m = Math.floor(seconds / 60);
     const s = Math.floor(seconds % 60).toString().padStart(2, '0');
     return `${m}:${s}`;
+  }
+
+  function scheduleLibraryRender() {
+    if (libraryRenderFrame) return;
+    libraryRenderFrame = requestAnimationFrame(() => {
+      libraryRenderFrame = 0;
+      renderTracks();
+    });
+  }
+
+  function showToast(message, type = 'info') {
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.textContent = message;
+    toastRegion.appendChild(toast);
+
+    while (toastRegion.children.length > 3) toastRegion.firstElementChild.remove();
+    setTimeout(() => {
+      toast.classList.add('leaving');
+      setTimeout(() => toast.remove(), 200);
+    }, 3200);
   }
 
   function parseTrackName(filename) {
@@ -1868,8 +2281,31 @@
     return metadata;
   }
 
+  function readTrackDuration(track) {
+    return new Promise(resolve => {
+      const probe = document.createElement('audio');
+      let settled = false;
+      const finish = duration => {
+        if (settled) return;
+        settled = true;
+        clearTimeout(timeout);
+        probe.removeAttribute('src');
+        probe.load();
+        resolve(Number.isFinite(duration) ? duration : 0);
+      };
+      const timeout = setTimeout(() => finish(0), 6000);
+      probe.preload = 'metadata';
+      probe.addEventListener('loadedmetadata', () => finish(probe.duration), { once: true });
+      probe.addEventListener('error', () => finish(0), { once: true });
+      probe.src = track.url;
+    });
+  }
+
   async function loadMetadata(track) {
-    const metadata = await extractMp3Metadata(track.file);
+    const [metadata, trackDuration] = await Promise.all([
+      extractMp3Metadata(track.file),
+      readTrackDuration(track)
+    ]);
 
     if (track.disposed) {
       if (metadata.artworkUrl) {
@@ -1879,9 +2315,10 @@
     }
 
     track.artworkUrl = metadata.artworkUrl;
+    track.duration = trackDuration;
     if (metadata.title) track.title = metadata.title;
     if (metadata.artist) track.artist = metadata.artist;
-    renderTracks();
+    scheduleLibraryRender();
 
     if (currentIndex >= 0 && tracks[currentIndex] === track) {
       nowTitle.textContent = track.title;
@@ -1890,6 +2327,34 @@
       updateMainArtwork(track);
       updateMediaSession();
     }
+  }
+
+  function pumpMetadataQueue() {
+    while (activeMetadataLoads < METADATA_CONCURRENCY && metadataQueue.length) {
+      const track = metadataQueue.shift();
+      if (!track || track.disposed || track.metadataState !== 'queued') continue;
+
+      activeMetadataLoads++;
+      track.metadataState = 'loading';
+      loadMetadata(track)
+        .catch(error => console.warn('Music Player: metadata could not be read.', error))
+        .finally(() => {
+          track.metadataState = track.disposed ? 'disposed' : 'loaded';
+          activeMetadataLoads--;
+          pumpMetadataQueue();
+        });
+    }
+  }
+
+  function queueTrackMetadata(track, prioritize = false) {
+    if (!track || track.disposed || track.metadataState === 'loading' || track.metadataState === 'loaded') return;
+
+    const existingPosition = metadataQueue.indexOf(track);
+    if (existingPosition >= 0) metadataQueue.splice(existingPosition, 1);
+    track.metadataState = 'queued';
+    if (prioritize) metadataQueue.unshift(track);
+    else metadataQueue.push(track);
+    pumpMetadataQueue();
   }
 
   function updateMainArtwork(track) {
@@ -1930,7 +2395,11 @@
   function buildPlayOrder(keepCurrent = true) {
     const all = tracks.map((_, index) => index);
     const active = keepCurrent ? currentIndex : -1;
-    const remaining = all.filter(index => index !== active && !playedIndexes.has(index));
+    const remaining = all.filter(index =>
+      index !== active &&
+      !playedIndexes.has(index) &&
+      !removedIndexes.has(index)
+    );
 
     if (isShuffle) {
       if (active >= 0) {
@@ -1963,8 +2432,33 @@
       : playOrder;
 
     return visibleOrder.filter(index =>
-      index === currentIndex || !playedIndexes.has(index)
+      index === currentIndex || (!playedIndexes.has(index) && !removedIndexes.has(index))
     );
+  }
+
+  function recordPlayedTrack(index) {
+    if (index < 0 || index >= tracks.length) return;
+    playedIndexes.add(index);
+    playHistory = [index, ...playHistory.filter(historyIndex => historyIndex !== index)].slice(0, 5);
+  }
+
+  function renderHistory() {
+    const visibleHistory = playHistory
+      .filter(index => index >= 0 && index < tracks.length)
+      .slice(0, 4);
+    historySection.hidden = !visibleHistory.length || Boolean(searchInput.value.trim());
+    historyList.innerHTML = '';
+
+    visibleHistory.forEach(index => {
+      const track = tracks[index];
+      const button = document.createElement('button');
+      button.className = 'history-track';
+      button.type = 'button';
+      button.textContent = track.title;
+      button.title = `Play ${track.title} again`;
+      button.addEventListener('click', () => playTrack(index, false));
+      historyList.appendChild(button);
+    });
   }
 
   function getSelectedFolderName(files) {
@@ -1983,16 +2477,21 @@
       title: parsed.title,
       artist: parsed.artist,
       artworkUrl: null,
+      duration: 0,
+      metadataState: 'idle',
       disposed: false
     };
 
-    loadMetadata(track);
+    queueTrackMetadata(track);
     return track;
   }
 
   function revokePlaylist(playlist) {
     playlist.tracks.forEach(track => {
       track.disposed = true;
+      track.metadataState = 'disposed';
+      const queuedIndex = metadataQueue.indexOf(track);
+      if (queuedIndex >= 0) metadataQueue.splice(queuedIndex, 1);
       try { URL.revokeObjectURL(track.url); } catch {}
       if (track.artworkUrl) {
         try { URL.revokeObjectURL(track.artworkUrl); } catch {}
@@ -2007,7 +2506,10 @@
     shuffleBtn.title = isShuffle ? 'Shuffle on' : 'Shuffle off';
     shuffleBtn.setAttribute('aria-pressed', String(isShuffle));
 
-    repeatBtn.textContent = repeatMode === 2 ? '↻¹' : '↻';
+    repeatBtn.dataset.repeat =
+      repeatMode === 0 ? 'off' :
+      repeatMode === 1 ? 'all' :
+      'one';
     repeatBtn.title =
       repeatMode === 0 ? 'Repeat off' :
       repeatMode === 1 ? 'Repeat all' :
@@ -2051,19 +2553,121 @@
       select.append(name, meta);
       select.addEventListener('click', () => selectPlaylist(index));
 
-      const remove = document.createElement('button');
-      remove.className = 'playlist-remove';
-      remove.type = 'button';
-      remove.title = 'Remove playlist';
-      remove.textContent = '×';
-      remove.addEventListener('click', (e) => {
-        e.stopPropagation();
-        removePlaylist(index);
+      const menuButton = document.createElement('button');
+      menuButton.className = 'playlist-menu-button';
+      menuButton.type = 'button';
+      menuButton.title = `Options for ${playlist.name}`;
+      menuButton.setAttribute('aria-label', menuButton.title);
+      menuButton.textContent = '•••';
+      menuButton.addEventListener('click', event => {
+        event.stopPropagation();
+        openPlaylistMenu(index, menuButton);
       });
 
-      row.append(select, remove);
+      row.append(select, menuButton);
       playlistList.appendChild(row);
     });
+  }
+
+  function openPlaylistMenu(index, anchor) {
+    closeFloatingMenus();
+    playlistMenuIndex = index;
+    const refreshButton = playlistMenu.querySelector('[data-playlist-action="refresh"]');
+    refreshButton.textContent = playlists[index].directoryHandle
+      ? '↻ Refresh playlist'
+      : '↻ Re-choose folder';
+    positionFloatingMenu(playlistMenu, anchor);
+  }
+
+  function replacePlaylistFiles(index, fileList) {
+    if (index < 0 || index >= playlists.length) return false;
+    const files = Array.from(fileList).filter(isAudioFile);
+    if (!files.length) {
+      showToast('No playable audio files were found.', 'error');
+      return false;
+    }
+
+    const oldPlaylist = playlists[index];
+    const wasActive = index === activePlaylistIndex;
+    if (wasActive) {
+      audio.pause();
+      audio.removeAttribute('src');
+    }
+    revokePlaylist(oldPlaylist);
+    playlists[index] = {
+      ...oldPlaylist,
+      tracks: files
+        .sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' }))
+        .map(makeTrack)
+    };
+
+    if (wasActive) selectPlaylist(index);
+    else renderPlaylists();
+    showToast(`${playlists[index].name} refreshed with ${files.length} songs.`, 'success');
+    return true;
+  }
+
+  async function refreshPlaylist(index) {
+    if (index < 0 || index >= playlists.length) return;
+    const playlist = playlists[index];
+    if (!playlist.directoryHandle) {
+      pendingRefreshIndex = index;
+      folderInput.value = '';
+      folderInput.click();
+      showToast('Choose the folder again to refresh this playlist.');
+      return;
+    }
+
+    showToast(`Refreshing ${playlist.name}…`);
+    const files = await readImmediateAudioFiles(playlist.directoryHandle);
+    replacePlaylistFiles(index, files);
+  }
+
+  function shuffleAndPlayPlaylist(index) {
+    selectPlaylist(index);
+    isShuffle = true;
+    updateModeButtons();
+    buildPlayOrder(false);
+    if (playOrder.length) playTrack(playOrder[0], true);
+    showToast(`${playlists[index].name} shuffled.`, 'success');
+  }
+
+  function openRenameDialog(index) {
+    if (index < 0 || index >= playlists.length) return;
+    renamePlaylistIndex = index;
+    renamePlaylistInput.value = playlists[index].name;
+    renameDialog.hidden = false;
+    appRoot.inert = true;
+    requestAnimationFrame(() => {
+      renamePlaylistInput.focus();
+      renamePlaylistInput.select();
+    });
+  }
+
+  function closeRenameDialog() {
+    renameDialog.hidden = true;
+    appRoot.inert = false;
+    renamePlaylistIndex = -1;
+  }
+
+  function savePlaylistRename() {
+    if (renamePlaylistIndex < 0 || renamePlaylistIndex >= playlists.length) return;
+    const requestedName = renamePlaylistInput.value.trim();
+    if (!requestedName) {
+      showToast('Enter a playlist name.', 'error');
+      return;
+    }
+    const finalName = uniquePlaylistName(requestedName, renamePlaylistIndex);
+    playlists[renamePlaylistIndex].name = finalName;
+    if (renamePlaylistIndex === activePlaylistIndex) {
+      if (currentIndex < 0) nowTitle.textContent = finalName;
+      nowSub.textContent = currentIndex >= 0
+        ? `${tracks[currentIndex].artist} · ${finalName}`
+        : `${tracks.length} local ${tracks.length === 1 ? 'song' : 'songs'}`;
+    }
+    closeRenameDialog();
+    renderPlaylists();
+    showToast(`Playlist renamed to ${finalName}.`, 'success');
   }
 
   function renderTracks() {
@@ -2089,18 +2693,28 @@
 
     if (!visible.length) {
       trackList.innerHTML = `<div class="empty">${
-        tracks.length ? 'No songs match your search.' : 'Add or select a playlist.'
+        query
+          ? 'No songs match your search.'
+          : tracks.length
+            ? 'Your queue is complete.'
+            : 'Add or select a playlist.'
       }</div>`;
+      renderHistory();
       return;
     }
 
     visible.forEach(({ track, trackIndex, queueIndex }) => {
       const isCurrent = trackIndex === currentIndex;
 
-      const row = document.createElement('button');
+      const row = document.createElement('div');
       row.className = `track${isCurrent ? ' active' : ''}`;
-      row.type = 'button';
-      row.setAttribute('aria-label', `${isCurrent ? 'Currently playing' : 'Play'} ${track.title} by ${track.artist}`);
+      row.dataset.trackIndex = String(trackIndex);
+      row.draggable = !isCurrent && !query;
+
+      const main = document.createElement('button');
+      main.className = 'track-main';
+      main.type = 'button';
+      main.setAttribute('aria-label', `${isCurrent ? 'Currently playing' : 'Play'} ${track.title} by ${track.artist}`);
 
       const number = document.createElement('div');
       number.className = 'track-number';
@@ -2113,6 +2727,8 @@
         art.className = 'track-art';
         art.src = track.artworkUrl;
         art.alt = '';
+        art.loading = 'lazy';
+        art.decoding = 'async';
       } else {
         art = document.createElement('div');
         art.className = 'track-art-placeholder';
@@ -2132,15 +2748,134 @@
         ? `${track.artist} · Playing now`
         : track.artist;
 
-      info.append(title, sub);
-      row.append(number, art, info);
+      const duration = document.createElement('div');
+      duration.className = 'track-duration';
+      duration.textContent = track.duration ? formatTime(track.duration) : '—';
 
-      row.addEventListener('click', () => {
+      info.append(title, sub);
+      main.append(number, art, info, duration);
+
+      const actions = document.createElement('button');
+      actions.className = 'track-action';
+      actions.type = 'button';
+      actions.title = `Queue options for ${track.title}`;
+      actions.setAttribute('aria-label', actions.title);
+      actions.textContent = '•••';
+
+      row.append(main, actions);
+
+      main.addEventListener('click', () => {
         playTrack(trackIndex, false);
+      });
+
+      actions.addEventListener('click', event => {
+        event.stopPropagation();
+        openTrackMenu(trackIndex, actions);
+      });
+
+      row.addEventListener('dragstart', event => {
+        draggedTrackIndex = trackIndex;
+        row.classList.add('dragging');
+        event.dataTransfer.effectAllowed = 'move';
+        event.dataTransfer.setData('text/plain', String(trackIndex));
+      });
+
+      row.addEventListener('dragover', event => {
+        if (draggedTrackIndex < 0 || draggedTrackIndex === trackIndex) return;
+        event.preventDefault();
+        row.classList.add('drag-over');
+      });
+
+      row.addEventListener('dragleave', () => row.classList.remove('drag-over'));
+
+      row.addEventListener('drop', event => {
+        event.preventDefault();
+        row.classList.remove('drag-over');
+        moveQueueTrack(draggedTrackIndex, trackIndex);
+      });
+
+      row.addEventListener('dragend', () => {
+        draggedTrackIndex = -1;
+        trackList.querySelectorAll('.track').forEach(item => item.classList.remove('dragging', 'drag-over'));
       });
 
       trackList.appendChild(row);
     });
+
+    renderHistory();
+    requestAnimationFrame(() => {
+      trackList.querySelector('.track.active')?.scrollIntoView({ block: 'nearest' });
+    });
+  }
+
+  function moveQueueTrack(fromTrackIndex, toTrackIndex) {
+    if (fromTrackIndex < 0 || toTrackIndex < 0 || fromTrackIndex === toTrackIndex) return;
+    const fromPosition = playOrder.indexOf(fromTrackIndex);
+    const toPosition = playOrder.indexOf(toTrackIndex);
+    if (fromPosition < 0 || toPosition < 0) return;
+
+    playOrder.splice(fromPosition, 1);
+    const adjustedTarget = fromPosition < toPosition ? toPosition - 1 : toPosition;
+    playOrder.splice(adjustedTarget, 0, fromTrackIndex);
+    playPosition = currentIndex >= 0 ? playOrder.indexOf(currentIndex) : -1;
+    renderTracks();
+    showToast('Up Next order updated.');
+  }
+
+  function positionFloatingMenu(menu, anchor) {
+    const rect = anchor.getBoundingClientRect();
+    menu.hidden = false;
+    const menuRect = menu.getBoundingClientRect();
+    const left = Math.min(window.innerWidth - menuRect.width - 10, Math.max(10, rect.right - menuRect.width));
+    const preferredTop = rect.bottom + 5;
+    const top = preferredTop + menuRect.height < window.innerHeight - 10
+      ? preferredTop
+      : Math.max(10, rect.top - menuRect.height - 5);
+    menu.style.left = `${left}px`;
+    menu.style.top = `${top}px`;
+    requestAnimationFrame(() => menu.querySelector('button:not(:disabled)')?.focus());
+  }
+
+  function closeFloatingMenus() {
+    playlistMenu.hidden = true;
+    trackMenu.hidden = true;
+    playlistMenuIndex = -1;
+    trackMenuIndex = -1;
+  }
+
+  function openTrackMenu(trackIndex, anchor) {
+    closeFloatingMenus();
+    trackMenuIndex = trackIndex;
+    const removeButton = trackMenu.querySelector('[data-track-action="remove"]');
+    const nextButton = trackMenu.querySelector('[data-track-action="next"]');
+    removeButton.disabled = trackIndex === currentIndex;
+    nextButton.disabled = trackIndex === currentIndex;
+    positionFloatingMenu(trackMenu, anchor);
+  }
+
+  function playTrackNext(trackIndex) {
+    const existingPosition = playOrder.indexOf(trackIndex);
+    if (existingPosition >= 0) playOrder.splice(existingPosition, 1);
+    removedIndexes.delete(trackIndex);
+    playedIndexes.delete(trackIndex);
+
+    const insertionPosition = currentIndex >= 0
+      ? Math.max(0, playOrder.indexOf(currentIndex) + 1)
+      : 0;
+    playOrder.splice(insertionPosition, 0, trackIndex);
+    playPosition = currentIndex >= 0 ? playOrder.indexOf(currentIndex) : -1;
+    renderTracks();
+    showToast(`${tracks[trackIndex].title} will play next.`, 'success');
+  }
+
+  function removeTrackFromQueue(trackIndex) {
+    if (trackIndex === currentIndex) return;
+    removedIndexes.add(trackIndex);
+    const position = playOrder.indexOf(trackIndex);
+    if (position >= 0) playOrder.splice(position, 1);
+    playPosition = currentIndex >= 0 ? playOrder.indexOf(currentIndex) : -1;
+    renderTracks();
+    showToast(`${tracks[trackIndex].title} removed from Up Next.`);
   }
 
   function addFolder(fileList, customName = '') {
@@ -2148,6 +2883,7 @@
 
     if (!files.length) {
       setDiscoveryStatus('That folder has no supported audio files.');
+      showToast('That folder has no supported audio files.', 'error');
       folderInput.value = '';
       return;
     }
@@ -2178,6 +2914,7 @@
     }
 
     folderInput.value = '';
+    showToast(`${displayName} added with ${files.length} songs.`, 'success');
   }
 
   function setDiscoveryStatus(message) {
@@ -2214,6 +2951,7 @@
   // Discovery deliberately reads only files directly inside each !MUSIC folder.
   async function readImmediateAudioFiles(directoryHandle) {
     const files = [];
+    let skippedFiles = 0;
 
     try {
       for await (const entry of directoryHandle.values()) {
@@ -2223,11 +2961,16 @@
           const file = await entry.getFile();
           if (isAudioFile(file)) files.push(file);
         } catch (error) {
+          skippedFiles++;
           console.warn('Music Player: skipped an unreadable local file.', error);
         }
       }
     } catch (error) {
       console.warn('Music Player: could not finish reading a playlist folder.', error);
+    }
+
+    if (skippedFiles) {
+      showToast(`${skippedFiles} unreadable ${skippedFiles === 1 ? 'file was' : 'files were'} skipped.`, 'error');
     }
 
     return files.sort((a, b) => a.name.localeCompare(b.name, undefined, {
@@ -2275,6 +3018,7 @@
   async function findMyMusic() {
     if (!('showDirectoryPicker' in window)) {
       setDiscoveryStatus("Automatic music discovery isn't supported here. Choose a music folder instead.");
+      showToast('Automatic discovery is unavailable. Choose one folder instead.');
       folderInput.click();
       return;
     }
@@ -2311,6 +3055,7 @@
 
       if (!matchingFolders.length) {
         setDiscoveryStatus('No !MUSIC folders were found in the selected folder.');
+        showToast('No !MUSIC folders were found.', 'error');
         return;
       }
 
@@ -2348,6 +3093,7 @@
 
       if (!playablePlaylistCount) {
         setDiscoveryStatus('No playable music was found in your !MUSIC folders.');
+        showToast('No playable music was found in the !MUSIC folders.', 'error');
         return;
       }
 
@@ -2356,17 +3102,20 @@
           ? originalActiveIndex
           : firstUpdatedIndex;
       selectPlaylist(playlistToSelect);
-      setDiscoveryStatus(
+      const discoveryMessage =
         `Found ${playablePlaylistCount} ${playablePlaylistCount === 1 ? 'playlist' : 'playlists'} · ` +
-        `${totalSongCount} ${totalSongCount === 1 ? 'song' : 'songs'}`
-      );
+        `${totalSongCount} ${totalSongCount === 1 ? 'song' : 'songs'}`;
+      setDiscoveryStatus(discoveryMessage);
+      showToast(discoveryMessage, 'success');
     } catch (error) {
       if (error?.name === 'AbortError') return;
       if (error?.name === 'NotAllowedError' || error?.name === 'SecurityError') {
         setDiscoveryStatus('Folder access was not granted. Your existing playlists are unchanged.');
+        showToast('Folder access was not granted.', 'error');
       } else {
         console.warn('Music Player: automatic discovery could not start.', error);
         setDiscoveryStatus('Could not scan that folder. Your existing playlists are unchanged.');
+        showToast('Could not scan that folder.', 'error');
       }
     } finally {
       findMusicBtn.disabled = false;
@@ -2400,6 +3149,8 @@
     playOrder = [];
     playPosition = -1;
     playedIndexes = new Set();
+    removedIndexes = new Set();
+    playHistory = [];
     searchInput.value = '';
 
     nowTitle.textContent = playlists[index].name;
@@ -2409,10 +3160,7 @@
     durationEl.textContent = '0:00';
     seekBar.value = 0;
     setRangeProgress(seekBar, 0);
-    playBtn.textContent = '▶';
-    playBtn.title = 'Play';
-    playBtn.setAttribute('aria-label', 'Play');
-    playerCard.classList.remove('is-playing');
+    setPlayButtonState(false);
     playStateLabel.textContent = 'Ready to play';
     statusEl.textContent = 'Playlist ready · local files only';
     updateMainArtwork(null);
@@ -2425,6 +3173,7 @@
   function removePlaylist(index) {
     if (index < 0 || index >= playlists.length) return;
 
+    const removedPlaylistName = playlists[index].name;
     const removingActive = index === activePlaylistIndex;
 
     if (removingActive) {
@@ -2442,6 +3191,8 @@
       playOrder = [];
       playPosition = -1;
       playedIndexes = new Set();
+      removedIndexes = new Set();
+      playHistory = [];
       mainArea.classList.remove('has-library');
 
       nowTitle.textContent = 'No song selected';
@@ -2459,6 +3210,7 @@
 
       renderPlaylists();
       renderTracks();
+      showToast(`${removedPlaylistName} removed.`);
       return;
     }
 
@@ -2469,17 +3221,21 @@
       renderPlaylists();
       renderTracks();
     }
+    showToast(`${removedPlaylistName} removed.`);
   }
 
   async function playTrack(index, preserveOrder = true) {
     if (!tracks.length || index < 0 || index >= tracks.length) return;
 
     if (currentIndex >= 0 && currentIndex !== index) {
-      playedIndexes.add(currentIndex);
+      recordPlayedTrack(currentIndex);
     }
 
     currentIndex = index;
     playedIndexes.delete(index);
+    removedIndexes.delete(index);
+    playHistory = playHistory.filter(historyIndex => historyIndex !== index);
+    queueTrackMetadata(tracks[index], true);
 
     if (!preserveOrder) {
       buildPlayOrder(true);
@@ -2517,17 +3273,15 @@
     if (currentIndex === -1) {
       ensurePlayOrder();
 
-      if (!playOrder.some(index => !playedIndexes.has(index))) {
+      if (!playOrder.some(index => !playedIndexes.has(index) && !removedIndexes.has(index))) {
         playedIndexes.clear();
+        removedIndexes.clear();
         buildPlayOrder(false);
       }
 
-      if (isShuffle && playOrder.length) {
+      if (playOrder.length) {
         playPosition = 0;
         playTrack(playOrder[0], true);
-      } else {
-        playPosition = 0;
-        playTrack(0, true);
       }
       return;
     }
@@ -2552,7 +3306,7 @@
 
     while (
       nextPosition < playOrder.length &&
-      playedIndexes.has(playOrder[nextPosition])
+      (playedIndexes.has(playOrder[nextPosition]) || removedIndexes.has(playOrder[nextPosition]))
     ) nextPosition++;
 
     if (nextPosition >= playOrder.length) {
@@ -2562,15 +3316,12 @@
         buildPlayOrder(false);
         nextPosition = 0;
       } else {
-        if (currentIndex >= 0) playedIndexes.add(currentIndex);
+        if (currentIndex >= 0) recordPlayedTrack(currentIndex);
         currentIndex = -1;
         playPosition = playOrder.length;
         audio.pause();
         audio.currentTime = 0;
-        playBtn.textContent = '▶';
-        playBtn.title = 'Play';
-        playBtn.setAttribute('aria-label', 'Play');
-        playerCard.classList.remove('is-playing');
+        setPlayButtonState(false);
         playStateLabel.textContent = 'Paused';
         statusEl.textContent = 'End of playlist';
         renderTracks();
@@ -2626,11 +3377,69 @@
 
   findMusicBtn.addEventListener('click', findMyMusic);
   rescanMusicBtn.addEventListener('click', findMyMusic);
-  chooseOneFolderBtn.addEventListener('click', () => folderInput.click());
-  addFolderBtn.addEventListener('click', () => folderInput.click());
-  folderInput.addEventListener('change', e => addFolder(e.target.files));
+  chooseOneFolderBtn.addEventListener('click', () => {
+    pendingRefreshIndex = -1;
+    folderInput.click();
+  });
+  addFolderBtn.addEventListener('click', () => {
+    pendingRefreshIndex = -1;
+    folderInput.click();
+  });
+  folderInput.addEventListener('change', event => {
+    if (pendingRefreshIndex >= 0) {
+      replacePlaylistFiles(pendingRefreshIndex, event.target.files);
+      pendingRefreshIndex = -1;
+      folderInput.value = '';
+      return;
+    }
+    addFolder(event.target.files);
+  });
 
   searchInput.addEventListener('input', renderTracks);
+
+  trackMenu.addEventListener('click', event => {
+    const action = event.target.closest('[data-track-action]')?.dataset.trackAction;
+    const index = trackMenuIndex;
+    if (!action || index < 0) return;
+    closeFloatingMenus();
+    if (action === 'next') playTrackNext(index);
+    else if (action === 'remove') removeTrackFromQueue(index);
+  });
+  [trackMenu, playlistMenu].forEach(menu => {
+    menu.addEventListener('keydown', event => {
+      if (event.key === 'Escape') closeFloatingMenus();
+    });
+  });
+
+  playlistMenu.addEventListener('click', event => {
+    const action = event.target.closest('[data-playlist-action]')?.dataset.playlistAction;
+    const index = playlistMenuIndex;
+    if (!action || index < 0) return;
+    closeFloatingMenus();
+    if (action === 'refresh') refreshPlaylist(index);
+    else if (action === 'shuffle') shuffleAndPlayPlaylist(index);
+    else if (action === 'rename') openRenameDialog(index);
+    else if (action === 'remove') removePlaylist(index);
+  });
+
+  cancelRenameBtn.addEventListener('click', closeRenameDialog);
+  confirmRenameBtn.addEventListener('click', savePlaylistRename);
+  renamePlaylistInput.addEventListener('keydown', event => {
+    if (event.key === 'Enter') savePlaylistRename();
+    else if (event.key === 'Escape') closeRenameDialog();
+  });
+  renameDialog.addEventListener('click', event => {
+    if (event.target === renameDialog) closeRenameDialog();
+  });
+
+  document.addEventListener('pointerdown', event => {
+    if (!event.target.closest('.floating-menu, .playlist-menu-button, .track-action')) {
+      closeFloatingMenus();
+    }
+  });
+  window.addEventListener('resize', closeFloatingMenus);
+  playlistList.addEventListener('scroll', closeFloatingMenus);
+  trackList.addEventListener('scroll', closeFloatingMenus);
 
   playBtn.addEventListener('click', togglePlay);
   prevBtn.addEventListener('click', previousTrack);
@@ -2719,23 +3528,21 @@
 
   audio.addEventListener('loadedmetadata', () => {
     durationEl.textContent = formatTime(audio.duration);
+    if (currentIndex >= 0 && Number.isFinite(audio.duration)) {
+      tracks[currentIndex].duration = audio.duration;
+      scheduleLibraryRender();
+    }
   });
 
   audio.addEventListener('play', () => {
-    playBtn.textContent = '❚❚';
-    playBtn.title = 'Pause';
-    playBtn.setAttribute('aria-label', 'Pause');
-    playerCard.classList.add('is-playing');
+    setPlayButtonState(true);
     playStateLabel.textContent = 'Now playing';
     renderTracks();
     updateMediaSession();
   });
 
   audio.addEventListener('pause', () => {
-    playBtn.textContent = '▶';
-    playBtn.title = 'Play';
-    playBtn.setAttribute('aria-label', 'Play');
-    playerCard.classList.remove('is-playing');
+    setPlayButtonState(false);
     playStateLabel.textContent = currentIndex >= 0 ? 'Paused' : 'Ready to play';
     renderTracks();
   });
@@ -2746,6 +3553,7 @@
     if (currentIndex < 0) return;
     statusEl.textContent = 'Could not play this file';
     playStateLabel.textContent = 'Playback error';
+    showToast('This audio file could not be played.', 'error');
   });
 
   function clearAllPlaylists() {
@@ -2761,6 +3569,8 @@
     playOrder = [];
     playPosition = -1;
     playedIndexes = new Set();
+    removedIndexes = new Set();
+    playHistory = [];
     mainArea.classList.remove('has-library');
 
     nowTitle.textContent = 'No song selected';
@@ -2779,6 +3589,20 @@
 
     renderPlaylists();
     renderTracks();
+    showToast('All playlists cleared.');
+  }
+
+  function openShortcutDialog() {
+    shortcutDialogPreviousFocus = document.activeElement;
+    shortcutDialog.hidden = false;
+    appRoot.inert = true;
+    closeShortcutBtn.focus();
+  }
+
+  function closeShortcutDialog() {
+    shortcutDialog.hidden = true;
+    appRoot.inert = false;
+    if (shortcutDialogPreviousFocus instanceof HTMLElement) shortcutDialogPreviousFocus.focus();
   }
 
   function openClearDialog() {
@@ -2796,6 +3620,14 @@
   }
 
   clearAllBtn.addEventListener('click', openClearDialog);
+  shortcutHelpBtn.addEventListener('click', openShortcutDialog);
+  closeShortcutBtn.addEventListener('click', closeShortcutDialog);
+  shortcutDialog.addEventListener('click', event => {
+    if (event.target === shortcutDialog) closeShortcutDialog();
+  });
+  shortcutDialog.addEventListener('keydown', event => {
+    if (event.key === 'Escape') closeShortcutDialog();
+  });
   cancelClearBtn.addEventListener('click', closeClearDialog);
   confirmClearBtn.addEventListener('click', () => {
     closeClearDialog();
@@ -2825,7 +3657,7 @@
   });
 
   document.addEventListener('keydown', e => {
-    if (!clearDialog.hidden || e.target.matches('input, button')) return;
+    if (!clearDialog.hidden || !shortcutDialog.hidden || !renameDialog.hidden || e.target.matches('input, button')) return;
 
     if (e.code === 'Space') {
       e.preventDefault();
@@ -2854,6 +3686,12 @@
       shuffleBtn.click();
     } else if (e.code === 'KeyR') {
       repeatBtn.click();
+    } else if (e.code === 'KeyN') {
+      nextTrack();
+    } else if (e.code === 'KeyP') {
+      previousTrack();
+    } else if (e.code === 'Slash' && e.shiftKey) {
+      openShortcutDialog();
     }
   });
 

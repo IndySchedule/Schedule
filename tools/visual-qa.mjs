@@ -69,6 +69,7 @@ const scenarios = [
     { name: 'account-over-today', viewport: 'chromebook', time: schoolTimes.duringClass, account: 'signed-in', action: 'today-then-account' },
     { name: 'account-dialog', viewport: 'chromebook', time: schoolTimes.duringClass, action: 'account' },
     { name: 'account-dialog-phone', viewport: 'phone', time: schoolTimes.duringClass, action: 'account' },
+    { name: 'settings-schedule-override', viewport: 'chromebook', time: schoolTimes.duringClass, settings: 'schedule', scheduleOverride: 'normalNoSoar' },
     ...['schedule', 'appearance', 'about', 'legal', 'whatsnew', 'contact'].map((panel) => ({
         name: `settings-${panel}`,
         viewport: 'chromebook',
@@ -254,6 +255,18 @@ async function prepareScenario(page, scenario) {
         `);
         await delay(300);
     }
+    if (scenario.scheduleOverride) {
+        await page.evaluate(`
+            (() => {
+                const dropdown = document.getElementById('schedule-dropdown');
+                if (!dropdown) return;
+                dropdown.value = ${JSON.stringify(scenario.scheduleOverride)};
+                dropdown.dispatchEvent(new Event('change', { bubbles: true }));
+                updateCountdowns();
+            })()
+        `);
+        await delay(1250);
+    }
     if (scenario.resetEdition) {
         await page.evaluate(`document.querySelector('.palette-option[data-palette="indy"]')?.click()`);
         await delay(200);
@@ -385,6 +398,10 @@ async function inspectScenario(page, scenario) {
                 signOutVisible: visible(signOutAction),
                 signOutReachable: Boolean(signOutAction && (signOutTopElement === signOutAction || signOutAction.contains(signOutTopElement))),
                 fallbackAvatarSize: fallbackAvatarRect ? { width: fallbackAvatarRect.width, height: fallbackAvatarRect.height } : null,
+                scheduleOverride: localStorage.getItem('indyScheduleOverride_v1') || '',
+                scheduleDropdownValue: document.getElementById('schedule-dropdown')?.value || '',
+                scheduleMode: document.getElementById('schedule-mode-pill')?.dataset.mode || '',
+                scheduleSummary: document.getElementById('schedule-day-summary')?.textContent?.trim() || '',
                 duplicateIds,
                 unnamedControls,
                 imagesWithoutAlt
@@ -413,6 +430,16 @@ function validateScenario(scenario, result) {
         check(result.settingsOpen, 'Settings did not open');
         check(result.activeSettingsPanel === `${scenario.settings}-panel`, `wrong Settings panel: ${result.activeSettingsPanel}`);
         check(result.activePanelContained, 'active Settings panel is clipped horizontally');
+    }
+    if (scenario.scheduleOverride) {
+        let savedOverride = null;
+        try { savedOverride = JSON.parse(result.scheduleOverride); } catch {}
+        check(savedOverride?.date === '2026-08-11', `override date was not saved for today: ${result.scheduleOverride}`);
+        check(savedOverride?.schedule === scenario.scheduleOverride, `wrong saved override: ${result.scheduleOverride}`);
+        check(result.scheduleDropdownValue === scenario.scheduleOverride, `override reset after countdown refresh: ${result.scheduleDropdownValue}`);
+        check(result.scheduleMode === 'override', `override pill did not activate: ${result.scheduleMode}`);
+        check(result.scheduleSummary.includes('No SOAR') && result.scheduleSummary.includes('Override'),
+            `schedule summary did not identify the override: ${result.scheduleSummary}`);
     }
     if (scenario.action === 'today') {
         check(result.todayOpen, 'Today at Indy did not open');

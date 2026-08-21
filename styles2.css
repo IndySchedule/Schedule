@@ -5040,6 +5040,12 @@ body {
     white-space: nowrap;
 }
 
+#settings-sidebar #schedule-panel .schedule-auto-pill[data-mode="override"] {
+    border-color: rgba(var(--theme-ui-accent-rgb), 0.34);
+    color: var(--settings-ink);
+    background: rgba(var(--theme-ui-accent-rgb), 0.16);
+}
+
 #settings-sidebar #schedule-panel .settings-form-grid {
     gap: var(--space-2-5);
 }
@@ -5824,14 +5830,14 @@ body {
 
 #settings-sidebar #contact-panel .support-grid {
     display: grid;
-    grid-template-columns: minmax(280px, 0.78fr) minmax(0, 1.22fr);
+    grid-template-columns: minmax(250px, 0.72fr) minmax(0, 1.28fr);
     align-items: stretch;
     gap: var(--space-3);
 }
 
 #settings-sidebar #contact-panel .support-col {
     min-width: 0;
-    padding: 15px;
+    padding: var(--space-4);
     box-sizing: border-box;
     border: 1px solid var(--settings-inset-line);
     border-radius: var(--radius-card-sm);
@@ -5839,14 +5845,118 @@ body {
     background: var(--settings-inset) !important;
 }
 
+#settings-sidebar #contact-panel .support-col:first-child {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    background:
+        radial-gradient(circle at 8% 0%, rgba(var(--theme-ui-accent-rgb), 0.11), transparent 42%),
+        var(--settings-inset) !important;
+}
+
 #settings-sidebar #contact-panel .contact-btn {
-    width: 100%;
+    width: auto;
     max-width: 100%;
+    min-width: min(210px, 100%);
+    min-height: 42px;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2-5);
+    margin: var(--space-4) 0 var(--space-1);
+    padding: 9px 12px;
     box-sizing: border-box;
+    border: 1px solid rgba(var(--theme-on-settings-action-rgb), 0.18);
+    border-radius: var(--radius-control);
+    font-size: 11px;
+    font-weight: 780;
+    line-height: 1.2;
+    white-space: nowrap;
+    text-decoration: none;
+}
+
+#settings-sidebar #contact-panel .contact-btn span {
+    min-width: 0;
+    overflow: hidden;
+    color: inherit !important;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#settings-sidebar #contact-panel .contact-btn-arrow {
+    margin-left: auto;
+    font-size: 9px;
+    opacity: 0.68;
 }
 
 #settings-sidebar #contact-panel .contact-header {
-    margin-bottom: 11px;
+    margin-bottom: var(--space-2);
+}
+
+#settings-sidebar #contact-panel .contact-intro {
+    max-width: 34ch;
+    margin: 0;
+    color: var(--settings-inset-muted) !important;
+    font-size: 9px;
+    line-height: 1.45;
+}
+
+#settings-sidebar #contact-panel .contact-address,
+#settings-sidebar #contact-panel .contact-action-note,
+#settings-sidebar #contact-panel .contact-privacy-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 7px;
+    margin: 0;
+    color: var(--settings-inset-muted) !important;
+    font-size: 8px;
+    line-height: 1.4;
+}
+
+#settings-sidebar #contact-panel .contact-action-note {
+    margin-bottom: var(--space-2);
+}
+
+#settings-sidebar #contact-panel .contact-address {
+    color: var(--settings-inset-ink) !important;
+    font-weight: 700;
+}
+
+#settings-sidebar #contact-panel .contact-privacy-note {
+    margin-top: auto;
+    padding-top: var(--space-5);
+}
+
+#settings-sidebar #contact-panel .contact-address i,
+#settings-sidebar #contact-panel .contact-privacy-note i {
+    margin-top: 1px;
+    color: var(--theme-ui-accent) !important;
+}
+
+#settings-sidebar #contact-panel .contact-checklist-heading {
+    display: grid;
+    gap: 2px;
+    margin-bottom: var(--space-3);
+}
+
+#settings-sidebar #contact-panel .contact-checklist-heading p {
+    display: block;
+    margin: 0;
+    color: var(--theme-ui-accent) !important;
+    font-size: 8px;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+#settings-sidebar #contact-panel .contact-checklist-heading h2 {
+    display: block;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    color: var(--settings-inset-ink) !important;
+    font-size: 13px;
+    font-weight: 760;
+    line-height: 1.25;
 }
 
 #settings-sidebar #contact-panel .contact-list {
@@ -5872,9 +5982,16 @@ body {
 }
 
 #settings-sidebar #contact-panel .contact-mini-faq .faq-title {
+    display: flex;
+    align-items: center;
+    gap: 7px;
     color: var(--settings-inset-ink) !important;
     font-size: 11px;
     font-weight: 760;
+}
+
+#settings-sidebar #contact-panel .contact-mini-faq .faq-title i {
+    color: var(--theme-ui-accent) !important;
 }
 
 #settings-sidebar #contact-panel .contact-bullet-icon {
