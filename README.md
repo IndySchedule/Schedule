@@ -12,12 +12,13 @@ Indy Schedule is an unofficial schedule countdown website for Independence High 
 - Automatic schedule selection using the 2026–27 WCS school calendar
 - A, B, and C fifth-period lunch support, including split fifth period for B lunch
 - Official Tuesday–Thursday SOAR and Monday/Friday no-SOAR bells
+- One-day schedule overrides that automatically expire and sync with an optional account
 - **Today at Indy** summary with separate built-in bells, validated live IHS events, sourced lunch information, and tomorrow's schedule
 - Preset light and dark color palettes plus a custom four-color palette
 - Music City special edition with a matching built-in palette; Friday Night Lights and Historic Franklin remain implemented but are temporarily hidden from Appearance
-- Custom period names and optional times beside schedule entries
-- First-visit setup for selecting lunch
-- Optional email/password or Google sign-in with Firebase preference syncing
+- Custom period names, selectable interface fonts, and optional times beside schedule entries
+- First-visit setup with account or guest paths, lunch selection, and replayable guidance
+- Optional email/password or Google sign-in with resilient Firebase preference syncing
 - Responsive layouts for desktop and smaller screens
 
 ## Running Locally
@@ -68,6 +69,8 @@ styles.css / script.js             Dashboard styling and behavior
 styles2.css / script2.js           Settings styling and behavior
 gradient.js                        Runtime palette roles and background-gradient behavior
 auth.js                            Optional Firebase authentication and sync
+firebase-loader.js                 Non-blocking Firebase service loader
+dialog-manager.js                  Shared modal focus and background-isolation behavior
 school-calendar.js                 School dates and schedule selection
 lunch-menu.js                      Daily cafeteria menu data
 data/ihs-calendar-events.json      Generated IHS calendar cache
@@ -95,13 +98,13 @@ Validate publishable live data separately with:
 npm run validate-live-data
 ```
 
-Run the complete v1.2.0 release check with:
+Run the complete v1.3.0 release check with:
 
 ```sh
 npm run qa
 ```
 
-The visual QA runner uses local Chrome or Chromium to freeze representative school times and capture Chromebook, tablet, and phone screenshots. It covers all dashboard states, every Settings page, onboarding, Today at Indy, signed-in and signed-out headers, and representative light and dark palettes. Screenshots and a machine-readable report are written to `.artifacts/visual-qa/` and are intentionally excluded from deployment and version control.
+The browser QA runner (`npm run test:browser`, also used by `test:visual`) uses local Chrome or Chromium to freeze representative school times and capture Chromebook, tablet, and phone screenshots. It covers all dashboard states, every Settings page, onboarding, Today at Indy, signed-in and signed-out headers, Firestore preference behavior, signed-in tour replay, optional-auth failure, modal accessibility, and representative light and dark palettes. Screenshots and a machine-readable report are written to `.artifacts/visual-qa/` and are intentionally excluded from deployment and version control.
 
 Special editions live directly below Color palette in Appearance. Music City is currently the visible option; Friday Night Lights and Historic Franklin remain implemented behind temporary hidden controls. Activating an edition applies its artwork and built-in palette across the dashboard and Settings. Choosing any regular palette or editing the custom palette turns the edition off. Lossless source artwork remains locally in `assets/special-editions/` and is ignored by Git, while deployment includes only the optimized browser images.
 

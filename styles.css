@@ -6,7 +6,7 @@
 /* Global palette and design values live in design-tokens.css. */
 body {
     margin: 0;
-    font-family: 'Roboto', Arial, sans-serif;
+    font-family: var(--interface-font-family, Inter, "Segoe UI", sans-serif);
     background: var(--bg-shell);
     color: var(--text-primary);
     height: 100vh;

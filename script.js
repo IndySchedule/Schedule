@@ -1,15 +1,8 @@
 // Add this at the start of the file
-async function initializeAuth() {
-    await new Promise((resolve) => {
-        const checkAuth = () => {
-            if (window.authManager) {
-                resolve();
-            } else {
-                setTimeout(checkAuth, 50);
-            }
-        };
-        checkAuth();
-    });
+function initializeAuth() {
+    // Authentication is an optional enhancement. The schedule must initialize
+    // even when Firebase is blocked, offline, or still loading.
+    return window.authManager || null;
 }
 
 // Independence High School schedules
@@ -94,8 +87,8 @@ if (localStorage.getItem(INDY_SCHEDULE_MIGRATION_KEY) !== 'complete') {
 }
 
 // Modify your DOMContentLoaded handler
-document.addEventListener("DOMContentLoaded", async function() {
-    await initializeAuth();
+document.addEventListener("DOMContentLoaded", function() {
+    initializeAuth();
     // Remove the auth check that was showing the modal
     initializeApp();
     
@@ -915,6 +908,9 @@ function switchSchedule(scheduleName) {
     activateSchedule(getEffectiveScheduleKey(new Date()));
     refreshScheduleOverrideUI();
     updateTodayAtIndy();
+    // The override has its own dated record; sync immediately instead of
+    // waiting for the settings sidebar to close.
+    if (typeof saveSettings === 'function') saveSettings();
 }
 
 // Replace duplicate renamePeriod implementations with one authoritative function
@@ -2668,19 +2664,58 @@ function initializeSettingsPanels() {
     if (document.documentElement.dataset.settingsPanelsInitialized === 'true') return;
     document.documentElement.dataset.settingsPanelsInitialized = 'true';
     const navItems = document.querySelectorAll('.nav-item');
-    navItems.forEach(item => {
-        item.addEventListener('click', () => {
+    const navList = document.querySelector('.settings-nav[role="tablist"]');
+    const mobileSettings = window.matchMedia('(max-width: 760px)');
+    const updateOrientation = () => navList?.setAttribute('aria-orientation', mobileSettings.matches ? 'horizontal' : 'vertical');
+    updateOrientation();
+    mobileSettings.addEventListener?.('change', updateOrientation);
+    const activateItem = (item, moveFocus = false) => {
             // Remove active class from all nav items and panels
-            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
-            document.querySelectorAll('.settings-panel').forEach(panel => panel.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(nav => {
+                nav.classList.remove('active');
+                nav.setAttribute('aria-selected', 'false');
+                nav.tabIndex = -1;
+            });
+            document.querySelectorAll('.settings-panel').forEach(panel => {
+                panel.classList.remove('active');
+                panel.hidden = true;
+            });
             // Add active class to the clicked item
             item.classList.add('active');
+            item.setAttribute('aria-selected', 'true');
+            item.tabIndex = 0;
             // Show the corresponding panel based on data-target attribute
             const target = item.getAttribute("data-target");
             const panel = document.getElementById(`${target}-panel`);
-                        if (panel) {
+            if (panel) {
                 panel.classList.add('active');
+                panel.hidden = false;
             }
+            if (moveFocus) item.focus();
+    };
+    navItems.forEach((item, index) => {
+        const target = item.getAttribute('data-target');
+        const panel = document.getElementById(`${target}-panel`);
+        item.id ||= `settings-tab-${target}`;
+        item.setAttribute('role', 'tab');
+        item.setAttribute('aria-controls', panel?.id || '');
+        item.setAttribute('aria-selected', item.classList.contains('active') ? 'true' : 'false');
+        item.tabIndex = item.classList.contains('active') ? 0 : -1;
+        if (panel) {
+            panel.setAttribute('role', 'tabpanel');
+            panel.setAttribute('aria-labelledby', item.id);
+            panel.hidden = !panel.classList.contains('active');
+        }
+        item.addEventListener('click', () => activateItem(item));
+        item.addEventListener('keydown', (event) => {
+            if (!['ArrowDown', 'ArrowRight', 'ArrowUp', 'ArrowLeft', 'Home', 'End'].includes(event.key)) return;
+            event.preventDefault();
+            let nextIndex = index;
+            if (event.key === 'Home') nextIndex = 0;
+            else if (event.key === 'End') nextIndex = navItems.length - 1;
+            else if (event.key === 'ArrowDown' || event.key === 'ArrowRight') nextIndex = (index + 1) % navItems.length;
+            else nextIndex = (index - 1 + navItems.length) % navItems.length;
+            activateItem(navItems[nextIndex], true);
         });
     });
 }

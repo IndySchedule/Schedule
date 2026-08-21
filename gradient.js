@@ -456,6 +456,11 @@ class GradientManager {
         root.dataset.dashboardTone = lightDashboard ? 'light' : 'dark';
         if (this.editionId) root.dataset.edition = this.editionId;
         else delete root.dataset.edition;
+        if (this.editionId === 'music-city') {
+            document.querySelectorAll('img[data-edition-src]').forEach((image) => {
+                if (!image.hasAttribute('src')) image.src = image.dataset.editionSrc;
+            });
+        }
         document.body.style.background = gradient;
         document.body.style.backgroundAttachment = 'fixed';
 

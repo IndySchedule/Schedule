@@ -69,6 +69,12 @@ const scenarios = [
     { name: 'account-over-today', viewport: 'chromebook', time: schoolTimes.duringClass, account: 'signed-in', action: 'today-then-account' },
     { name: 'account-dialog', viewport: 'chromebook', time: schoolTimes.duringClass, action: 'account' },
     { name: 'account-dialog-phone', viewport: 'phone', time: schoolTimes.duringClass, action: 'account' },
+    { name: 'auth-unavailable-dashboard', viewport: 'chromebook', time: schoolTimes.duringClass, blockFirebase: true },
+    { name: 'onboarding-replay-signed-in', viewport: 'chromebook', time: schoolTimes.beforeSchool, onboardingReplay: true, action: 'replay-signed-in' },
+    { name: 'firestore-schedule-sync', viewport: 'chromebook', time: schoolTimes.duringClass, settings: 'schedule', action: 'firestore-sync' },
+    { name: 'settings-modal-accessibility', viewport: 'chromebook', time: schoolTimes.duringClass, settings: 'appearance', action: 'settings-a11y' },
+    { name: 'font-local-restoration', viewport: 'chromebook', time: schoolTimes.duringClass, settings: 'appearance', fontFamily: 'Open Sans', expectedFont: "'Open Sans'" },
+    { name: 'font-firestore-restoration', viewport: 'chromebook', time: schoolTimes.duringClass, settings: 'appearance', action: 'font-firestore', expectedFont: "'Source Sans Pro'" },
     { name: 'settings-schedule-override', viewport: 'chromebook', time: schoolTimes.duringClass, settings: 'schedule', scheduleOverride: 'normalNoSoar' },
     ...['schedule', 'appearance', 'about', 'legal', 'whatsnew', 'contact'].map((panel) => ({
         name: `settings-${panel}`,
@@ -80,6 +86,10 @@ const scenarios = [
     { name: 'settings-appearance-tablet', viewport: 'tablet', time: schoolTimes.duringClass, settings: 'appearance' },
     { name: 'settings-contact-phone', viewport: 'phone', time: schoolTimes.duringClass, settings: 'contact' }
 ];
+const scenarioFilter = (process.env.VISUAL_QA_FILTER || '').trim();
+const selectedScenarios = scenarioFilter
+    ? scenarios.filter((scenario) => scenario.name.includes(scenarioFilter))
+    : scenarios;
 
 const delay = (milliseconds) => new Promise((resolveDelay) => setTimeout(resolveDelay, milliseconds));
 
@@ -147,6 +157,22 @@ async function launchChrome(executable) {
     }
     if (!debugPort) throw new Error('Chrome did not expose a debugging port.');
     return { chrome, debugPort, profileDirectory };
+}
+
+async function stopChrome(browser) {
+    const waitForExit = () => new Promise((resolveExit) => {
+        if (browser.chrome.exitCode !== null) resolveExit();
+        else browser.chrome.once('exit', resolveExit);
+    });
+    const gracefulExit = waitForExit();
+    browser.chrome.kill('SIGTERM');
+    await Promise.race([gracefulExit, delay(3000)]);
+    if (browser.chrome.exitCode === null) {
+        const forcedExit = waitForExit();
+        browser.chrome.kill('SIGKILL');
+        await Promise.race([forcedExit, delay(1000)]);
+    }
+    await rm(browser.profileDirectory, { recursive: true, force: true });
 }
 
 class CdpPage {
@@ -229,7 +255,11 @@ function initializationScript(scenario) {
             ${scenario.onboarding
                 ? "localStorage.removeItem('lunchWave'); localStorage.removeItem('indyAnalyticsConsent_v1'); localStorage.removeItem('indyOnboardingComplete_v2');"
                 : "localStorage.setItem('lunchWave', 'A'); localStorage.setItem('indyAnalyticsConsent_v1', 'denied'); localStorage.setItem('indyOnboardingComplete_v2', 'true');"}
+            ${scenario.onboardingReplay
+                ? "localStorage.setItem('lunchWave', 'A'); localStorage.setItem('indyAnalyticsConsent_v1', 'denied'); localStorage.removeItem('indyOnboardingComplete_v2'); localStorage.setItem('indyOnboardingReplayRequested_v1', 'true');"
+                : "localStorage.removeItem('indyOnboardingReplayRequested_v1');"}
             ${settings ? `localStorage.setItem('gradientSettings', ${JSON.stringify(JSON.stringify(settings))});` : "localStorage.removeItem('gradientSettings');"}
+            ${scenario.fontFamily ? `localStorage.setItem('fontFamily', ${JSON.stringify(scenario.fontFamily)});` : "localStorage.removeItem('fontFamily');"}
         })();
     `;
 }
@@ -247,7 +277,18 @@ async function waitForReady(page) {
     throw new Error('Page did not finish loading.');
 }
 
+async function waitForAuthManager(page) {
+    for (let attempt = 0; attempt < 60; attempt += 1) {
+        if (await page.evaluate(`Boolean(window.authManager)`)) return;
+        await delay(100);
+    }
+    throw new Error('Optional Firebase account services did not initialize for an auth-dependent scenario.');
+}
+
 async function prepareScenario(page, scenario) {
+    const needsAuth = scenario.account
+        || ['account', 'onboarding-create', 'replay-signed-in', 'firestore-sync'].includes(scenario.action);
+    if (needsAuth && !scenario.blockFirebase) await waitForAuthManager(page);
     if (scenario.settings) {
         await page.evaluate(`
             document.getElementById('settings-button')?.click();
@@ -305,6 +346,61 @@ async function prepareScenario(page, scenario) {
     if (scenario.action === 'onboarding-account-created') {
         await page.evaluate(`window.dispatchEvent(new CustomEvent('indy-account-authenticated', { detail: { mode: 'create' } }))`);
         await delay(250);
+    }
+    if (scenario.action === 'replay-signed-in') {
+        await page.evaluate(`
+            (() => {
+                window.authManager.currentUser = { uid: 'replay-user', displayName: 'Indy Student', email: 'student@example.com' };
+                window.authManager.isAuthenticated = true;
+                window.dispatchEvent(new CustomEvent('indy-account-authenticated', { detail: { source: 'saved-session' } }));
+            })()
+        `);
+        await delay(250);
+    }
+    if (scenario.action === 'firestore-sync') {
+        await page.evaluate(`
+            (async () => {
+                window.__firestoreWrites = [];
+                window.__firestoreReads = 0;
+                window.authManager.currentUser = { uid: 'sync-user' };
+                window.authManager.isAuthenticated = true;
+                firebase.firestore = () => ({
+                    collection: () => ({
+                        doc: () => ({
+                            get: async () => {
+                                window.__firestoreReads += 1;
+                                return { exists: true, data: () => ({ settings: { lunchWave: 'A' } }) };
+                            },
+                            set: async (payload) => { window.__firestoreWrites.push(JSON.parse(JSON.stringify(payload))); }
+                        })
+                    })
+                });
+                window.authManager._settingsLoadPromise = null;
+                window.authManager._settingsLoadUserId = null;
+                await Promise.all([
+                    window.authManager._maybeLoadUserSettings(),
+                    window.authManager._maybeLoadUserSettings()
+                ]);
+                const dropdown = document.getElementById('schedule-dropdown');
+                dropdown.value = 'normalNoSoar';
+                dropdown.dispatchEvent(new Event('change', { bubbles: true }));
+                saveSettings();
+                saveSettings();
+            })()
+        `);
+        await delay(700);
+        await page.evaluate(`
+            (() => {
+                const dropdown = document.getElementById('schedule-dropdown');
+                dropdown.value = 'automatic';
+                dropdown.dispatchEvent(new Event('change', { bubbles: true }));
+            })()
+        `);
+        await delay(700);
+    }
+    if (scenario.action === 'font-firestore') {
+        await page.evaluate(`loadSettings({ fontFamily: 'Source Sans 3' })`);
+        await delay(200);
     }
     if (scenario.account === 'signed-in' || scenario.account === 'signed-in-fallback') {
         await page.evaluate(`
@@ -391,6 +487,7 @@ async function inspectScenario(page, scenario) {
                 accountCreatedNoticeVisible: visible(document.getElementById('onboarding-account-created')),
                 accountDialogOpen: Boolean(accountDialog && visible(accountDialog)),
                 accountDialogContained: !accountDialogRect || (accountDialogRect.left >= -1 && accountDialogRect.right <= innerWidth + 1 && accountDialogRect.top >= -1 && accountDialogRect.bottom <= innerHeight + 1),
+                accountFocusContained: Boolean(document.getElementById('login-modal')?.contains(document.activeElement)),
                 activeAuthMode: document.querySelector('.auth-mode-button.active')?.dataset.authMode || '',
                 forgotPasswordVisible: visible(document.getElementById('forgot-password')),
                 accountState: document.getElementById('sign-in-button')?.className || '',
@@ -404,7 +501,25 @@ async function inspectScenario(page, scenario) {
                 scheduleSummary: document.getElementById('schedule-day-summary')?.textContent?.trim() || '',
                 duplicateIds,
                 unnamedControls,
-                imagesWithoutAlt
+                imagesWithoutAlt,
+                activeOnboardingStep: Number(document.querySelector('.onboarding-step.active')?.dataset.step ?? -1),
+                onboardingFocusContained: Boolean(onboarding?.contains(document.activeElement)),
+                backgroundInert: Boolean(document.querySelector('.container')?.inert),
+                firebaseAvailable: Boolean(window.authManager),
+                countdownInitialized: Boolean(document.getElementById('countdown-heading')?.textContent?.trim()),
+                firestoreWrites: window.__firestoreWrites || [],
+                firestoreReads: window.__firestoreReads || 0,
+                settingsFocusContained: Boolean(sidebar?.contains(document.activeElement)),
+                dashboardInertWhileSettingsOpen: Boolean(document.querySelector('.container')?.inert),
+                visiblePaletteCount: [...document.querySelectorAll('.palette-option')].filter(visible).length,
+                totalPaletteCount: document.querySelectorAll('.palette-option').length,
+                inactiveEditionAssetsLoaded: [...document.querySelectorAll('img[data-edition-src]')].some((image) => image.hasAttribute('src')),
+                fontDropdownValue: document.getElementById('font-family')?.value || '',
+                storedFontFamily: localStorage.getItem('fontFamily') || '',
+                interfaceFontToken: document.documentElement.style.getPropertyValue('--interface-font-family'),
+                bodyFontFamily: getComputedStyle(document.body).fontFamily,
+                settingsFontFamily: sidebar ? getComputedStyle(sidebar).fontFamily : '',
+                sourceSansLoaded: Boolean(document.getElementById('indy-font-source-sans-3'))
             };
         })()
     `);
@@ -441,6 +556,15 @@ function validateScenario(scenario, result) {
         check(result.scheduleSummary.includes('No SOAR') && result.scheduleSummary.includes('Override'),
             `schedule summary did not identify the override: ${result.scheduleSummary}`);
     }
+    if (scenario.expectedFont) {
+        check(result.fontDropdownValue === scenario.expectedFont, `font dropdown did not restore ${scenario.expectedFont}: ${result.fontDropdownValue}`);
+        check(result.storedFontFamily === scenario.expectedFont, `font preference was not normalized: ${result.storedFontFamily}`);
+        const expectedCssFamily = scenario.expectedFont === "'Source Sans Pro'" ? 'Source Sans 3' : scenario.expectedFont.replaceAll("'", '');
+        check(result.interfaceFontToken.includes(expectedCssFamily), `font token does not apply ${expectedCssFamily}: ${result.interfaceFontToken}`);
+        check(result.bodyFontFamily.includes(expectedCssFamily), `dashboard does not use ${expectedCssFamily}: ${result.bodyFontFamily}`);
+        check(result.settingsFontFamily.includes(expectedCssFamily), `Settings does not use ${expectedCssFamily}: ${result.settingsFontFamily}`);
+        if (scenario.action === 'font-firestore') check(result.sourceSansLoaded, 'Source Sans 3 stylesheet was not loaded on demand');
+    }
     if (scenario.action === 'today') {
         check(result.todayOpen, 'Today at Indy did not open');
         check(result.todayContained, 'Today at Indy is clipped outside the viewport');
@@ -448,12 +572,35 @@ function validateScenario(scenario, result) {
     if (scenario.action === 'account') {
         check(result.accountDialogOpen, 'account dialog did not open');
         check(result.accountDialogContained, 'account dialog is clipped outside the viewport');
+        check(result.accountFocusContained && result.backgroundInert, 'account dialog did not contain focus and inert the dashboard');
+    }
+    if (scenario.blockFirebase) {
+        check(!result.firebaseAvailable, 'Firebase unexpectedly initialized in the blocked-CDN scenario');
+        check(result.countdownInitialized, 'dashboard did not initialize without Firebase');
+        check(!result.inactiveEditionAssetsLoaded, 'inactive edition artwork loaded eagerly');
+    }
+    if (scenario.action === 'replay-signed-in') {
+        check(result.onboardingOpen, 'replayed onboarding closed for the signed-in user');
+        check(result.activeOnboardingStep === 1, `signed-in replay did not bypass the account step: ${result.activeOnboardingStep}`);
+        check(!result.accountDialogOpen, 'signed-in replay opened the account dialog');
+    }
+    if (scenario.action === 'firestore-sync') {
+        check(result.firestoreReads === 1, `expected one coalesced Firestore read, received ${result.firestoreReads}`);
+        check(result.firestoreWrites.length === 2, `expected two debounced Firestore writes, received ${result.firestoreWrites.length}`);
+        check(result.firestoreWrites[0]?.settings?.indyScheduleOverride_v1?.schedule === 'normalNoSoar', 'manual override was not written to Firestore');
+        check(result.firestoreWrites[1]?.settings?.indyScheduleOverride_v1 === null, 'Automatic mode did not clear the Firestore override');
+    }
+    if (scenario.action === 'settings-a11y') {
+        check(result.settingsFocusContained, 'keyboard focus did not enter the Settings dialog');
+        check(result.dashboardInertWhileSettingsOpen, 'dashboard was not inert while Settings was modal');
+        check(result.visiblePaletteCount < result.totalPaletteCount, 'additional palettes were not collapsed');
     }
     if (scenario.action === 'onboarding-create') {
         check(result.accountDialogOpen, 'create-account dialog did not open');
         check(result.accountDialogContained, 'create-account dialog is clipped outside the viewport');
         check(result.activeAuthMode === 'create', `expected create-account mode, received ${result.activeAuthMode}`);
         check(!result.forgotPasswordVisible, 'password-reset action should be hidden while creating an account');
+        check(result.accountFocusContained && result.backgroundInert, 'create-account dialog did not contain focus and inert the dashboard');
     }
     if (scenario.action === 'onboarding-finish') check(result.managedChromebookReminderVisible, 'managed Chromebook sign-in reminder is not visible on the final walkthrough step');
     if (scenario.action === 'onboarding-guest-confirmation') check(result.guestConfirmationVisible, 'guest confirmation dialog did not open');
@@ -461,6 +608,7 @@ function validateScenario(scenario, result) {
     if (scenario.onboarding) {
         check(result.onboardingOpen, 'onboarding did not open');
         check(result.onboardingContained, 'onboarding is clipped horizontally');
+        if (!result.accountDialogOpen) check(result.onboardingFocusContained && result.backgroundInert, 'onboarding did not contain focus and inert the dashboard');
     }
     if (scenario.name === 'onboarding-first-step-chromebook') check(result.onboardingVerticalBalance !== null && result.onboardingVerticalBalance <= 40, `welcome content is not vertically centered (${result.onboardingVerticalBalance}px imbalance)`);
     if (scenario.account === 'signed-out') check(result.accountState.includes('is-signed-out'), 'signed-out account state is missing');
@@ -513,7 +661,7 @@ async function run() {
             '*://identitytoolkit.googleapis.com/*',
             '*://securetoken.googleapis.com/*'
         ] });
-        for (const scenario of scenarios) {
+        for (const scenario of selectedScenarios) {
             let initializationId;
             try {
                 const viewport = viewports[scenario.viewport];
@@ -527,6 +675,12 @@ async function run() {
                     media: 'screen',
                     features: [{ name: 'prefers-reduced-motion', value: 'no-preference' }]
                 });
+                await page.send('Network.setBlockedURLs', { urls: [
+                    '*://www.googleapis.com/identitytoolkit/*',
+                    '*://identitytoolkit.googleapis.com/*',
+                    '*://securetoken.googleapis.com/*',
+                    ...(scenario.blockFirebase ? ['*://www.gstatic.com/firebasejs/*'] : [])
+                ] });
                 const initialization = await page.send('Page.addScriptToEvaluateOnNewDocument', { source: initializationScript(scenario) });
                 initializationId = initialization.identifier;
                 await page.send('Page.navigate', { url: `http://127.0.0.1:${port}/index.html` });
@@ -555,15 +709,15 @@ async function run() {
         await page.close();
     } finally {
         server.close();
-        browser.chrome.kill('SIGTERM');
-        await rm(browser.profileDirectory, { recursive: true, force: true });
+        await stopChrome(browser);
     }
 
     await writeFile(join(artifactRoot, 'report.json'), `${JSON.stringify(report, null, 2)}\n`);
     const passedCount = report.scenarios.filter((scenario) => scenario.failures.length === 0).length;
-    console.log(`\nVisual QA: ${passedCount}/${report.scenarios.length} scenarios passed.`);
-    console.log(`Keyboard focus: ${report.globalChecks.keyboardFocusMoves ? 'PASS' : 'FAIL'}`);
-    console.log(`Reduced motion: ${report.globalChecks.reducedMotionHonored ? 'PASS' : 'FAIL'}`);
+    console.log(`\nVisual QA: ${passedCount}/${report.scenarios.length} scenarios passed.${scenarioFilter ? ` Filter: ${scenarioFilter}.` : ''}`);
+    const globalChecksRan = typeof report.globalChecks.keyboardFocusMoves === 'boolean';
+    console.log(`Keyboard focus: ${globalChecksRan ? (report.globalChecks.keyboardFocusMoves ? 'PASS' : 'FAIL') : 'SKIPPED'}`);
+    console.log(`Reduced motion: ${globalChecksRan ? (report.globalChecks.reducedMotionHonored ? 'PASS' : 'FAIL') : 'SKIPPED'}`);
     console.log(`Artifacts: ${artifactRoot}`);
     if (failed) process.exitCode = 1;
 }

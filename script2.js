@@ -2,30 +2,12 @@
 let activeStop = null;
 // Add this at the start of the file
 function waitForAuth() {
-    return new Promise((resolve) => {
-        const checkAuth = () => {
-            if (window.authManager) {
-                resolve(window.authManager);
-            } else {
-                setTimeout(checkAuth, 50);
-            }
-        };
-        checkAuth();
-    });
+    return Promise.resolve(window.authManager || null);
 }
 
 // Add a check for auth manager availability
 function getAuthManager() {
-    return new Promise((resolve) => {
-        const check = () => {
-            if (window.authManager) {
-                resolve(window.authManager);
-            } else {
-                setTimeout(check, 50);
-            }
-        };
-        check();
-    });
+    return Promise.resolve(window.authManager || null);
 }
 
 // Settings Management
@@ -34,8 +16,19 @@ function toggleSettingsSidebar() {
     if (!sidebar) return;
     sidebar.classList.toggle("open");
     const isOpen = sidebar.classList.contains("open");
+    sidebar.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
     document.getElementById('settings-button')?.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-    if (isOpen) window.trackAnalyticsEvent?.('settings_open');
+    if (isOpen) {
+        document.getElementById('today-card-close')?.click();
+        window.trackAnalyticsEvent?.('settings_open');
+        window.IndyDialogManager?.open(sidebar, {
+            trigger: document.getElementById('settings-button'),
+            initialFocus: sidebar.querySelector('.close-settings'),
+            onRequestClose: toggleSettingsSidebar
+        });
+    } else {
+        window.IndyDialogManager?.close(sidebar);
+    }
     
     // Save settings when closing the sidebar
     if (!isOpen) {
@@ -71,6 +64,118 @@ function initializeSettingsControls() {
 
 document.addEventListener('DOMContentLoaded', initializeSettingsControls);
 
+const DEFAULT_INTERFACE_FONT = 'Inter';
+const INTERFACE_FONTS = Object.freeze({
+    'Arial': { stack: 'Arial, sans-serif' },
+    'Helvetica': { stack: 'Helvetica, Arial, sans-serif' },
+    "'Open Sans'": { stack: '"Open Sans", Arial, sans-serif', query: 'Open+Sans:wght@400;500;600;700' },
+    'Roboto': { stack: 'Roboto, Arial, sans-serif', query: 'Roboto:wght@400;500;700' },
+    "'Source Sans Pro'": { stack: '"Source Sans 3", "Source Sans Pro", Arial, sans-serif', query: 'Source+Sans+3:wght@400;500;600;700' },
+    "'SF Pro Text'": { stack: '"SF Pro Text", Inter, "Segoe UI", sans-serif' },
+    'Inter': { stack: 'Inter, "Segoe UI", sans-serif' },
+    'Montserrat': { stack: 'Montserrat, Arial, sans-serif', query: 'Montserrat:wght@400;500;600;700' },
+    "'Segoe UI'": { stack: '"Segoe UI", Arial, sans-serif' }
+});
+const INTERFACE_FONT_ALIASES = Object.freeze({
+    'arial': 'Arial',
+    'helvetica': 'Helvetica',
+    'open sans': "'Open Sans'",
+    'roboto': 'Roboto',
+    'source sans pro': "'Source Sans Pro'",
+    'source sans 3': "'Source Sans Pro'",
+    'sf pro': "'SF Pro Text'",
+    'sf pro text': "'SF Pro Text'",
+    'inter': 'Inter',
+    'montserrat': 'Montserrat',
+    'segoe ui': "'Segoe UI'"
+});
+
+function normalizeInterfaceFont(fontFamily) {
+    if (typeof fontFamily !== 'string') return DEFAULT_INTERFACE_FONT;
+    const firstFamily = fontFamily.split(',')[0].trim().replace(/^['"]|['"]$/g, '').toLowerCase();
+    return INTERFACE_FONT_ALIASES[firstFamily] || DEFAULT_INTERFACE_FONT;
+}
+
+function applyInterfaceFont(fontFamily) {
+    const canonicalFont = normalizeInterfaceFont(fontFamily);
+    const font = INTERFACE_FONTS[canonicalFont];
+    if (font.query) {
+        const familyQuery = font.query;
+        const fontId = `indy-font-${familyQuery.split(':')[0].toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+        if (!document.getElementById(fontId)) {
+            const link = document.createElement('link');
+            link.id = fontId;
+            link.rel = 'stylesheet';
+            link.href = `https://fonts.googleapis.com/css2?family=${familyQuery}&display=swap`;
+            document.head.appendChild(link);
+        }
+    }
+    document.documentElement.style.setProperty('--interface-font-family', font.stack);
+    document.documentElement.dataset.interfaceFont = canonicalFont.replaceAll("'", '');
+    if (document.body) document.body.style.fontFamily = 'var(--interface-font-family)';
+    const selector = document.getElementById('font-family');
+    if (selector) selector.value = canonicalFont;
+    localStorage.setItem('fontFamily', canonicalFont);
+    return canonicalFont;
+}
+window.applyInterfaceFont = applyInterfaceFont;
+window.normalizeInterfaceFont = normalizeInterfaceFont;
+
+function initializePaletteDisclosure() {
+    const grid = document.getElementById('palette-grid');
+    const toggle = document.getElementById('palette-more-toggle');
+    if (!grid || !toggle) return;
+    const featured = new Set(['indy', 'ocean', 'aurora', 'daylight', 'midnight', 'custom']);
+    grid.querySelectorAll('.palette-option').forEach((button) => {
+        button.classList.toggle('palette-extra', !featured.has(button.dataset.palette));
+    });
+    const render = (expanded) => {
+        grid.dataset.expanded = expanded ? 'true' : 'false';
+        toggle.setAttribute('aria-expanded', String(expanded));
+        toggle.innerHTML = expanded
+            ? 'Show fewer palettes <i class="fas fa-chevron-up" aria-hidden="true"></i>'
+            : 'Show more palettes <i class="fas fa-chevron-down" aria-hidden="true"></i>';
+    };
+    toggle.addEventListener('click', () => render(grid.dataset.expanded !== 'true'));
+    render(false);
+}
+
+function initializeOptionalAuthFallback() {
+    if (window.authManager) return;
+    const trigger = document.querySelector('#sign-in-button .account-trigger');
+    const modal = document.getElementById('login-modal');
+    const close = document.getElementById('login-close');
+    if (!trigger || !modal) return;
+    trigger.addEventListener('click', () => {
+        modal.style.display = 'flex';
+        modal.setAttribute('aria-hidden', 'false');
+        modal.classList.add('show');
+        const error = document.getElementById('login-error');
+        if (error) {
+            error.textContent = 'Account services are unavailable right now. Your schedule and local settings still work.';
+            error.style.display = 'block';
+        }
+        modal.querySelectorAll('input, button:not(#login-close)').forEach((control) => { control.disabled = true; });
+        window.IndyDialogManager?.open(modal, {
+            trigger,
+            initialFocus: close,
+            onRequestClose: () => close?.click()
+        });
+    });
+    close?.addEventListener('click', () => {
+        modal.classList.remove('show');
+        modal.setAttribute('aria-hidden', 'true');
+        window.IndyDialogManager?.close(modal);
+        window.setTimeout(() => { modal.style.display = 'none'; }, 300);
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    initializePaletteDisclosure();
+    initializeOptionalAuthFallback();
+    applyInterfaceFont(localStorage.getItem('fontFamily'));
+});
+
 // Add missing helper function
 function hexToRgb(hex) {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -78,11 +183,11 @@ function hexToRgb(hex) {
 }
 
 // Modify your loadSettings function
-async function loadSettings() {
+async function loadSettings(firestoreSettings = null) {
     try {
-        await waitForAuth();
-        const firestoreSettings = await loadUserSettings();
-        
+    const syncedFont = firestoreSettings?.fontFamily;
+    applyInterfaceFont(syncedFont || localStorage.getItem('fontFamily'));
+
     // Initialize show period times checkbox from Firestore or localStorage
     const storedShowTimes = localStorage.getItem('showPeriodTimes');
     const syncedShowTimes = firestoreSettings?.showPeriodTimes;
@@ -92,6 +197,14 @@ async function loadSettings() {
     localStorage.setItem('showPeriodTimes', showTimesSetting ? 'true' : 'false');
     const showTimesCheckbox = document.getElementById('show-period-times');
     if (showTimesCheckbox) showTimesCheckbox.checked = showTimesSetting;
+
+    // Firestore may have supplied a dated schedule override after the initial
+    // dashboard render. Apply it immediately on this device.
+    if (typeof getEffectiveScheduleKey === 'function' && typeof activateSchedule === 'function') {
+        activateSchedule(getEffectiveScheduleKey(new Date()));
+        if (typeof refreshScheduleOverrideUI === 'function') refreshScheduleOverrideUI();
+        if (typeof updateTodayAtIndy === 'function') updateTodayAtIndy();
+    }
 
     // Load other settings with null checks
         // Timer shadows were retired; clear older local/synced values and any
@@ -598,9 +711,9 @@ function startCountdown() {
 }
 
 function updateFont() {
-    const fontFamily = document.getElementById('font-family').value;
-    document.body.style.fontFamily = fontFamily;
-    localStorage.setItem('fontFamily', fontFamily);
+    const selector = document.getElementById('font-family');
+    if (!selector) return;
+    applyInterfaceFont(selector.value);
     saveSettings();
 }
 
@@ -683,6 +796,7 @@ function removeProgressBar() {
 
 async function handleAuthButton() {
     const auth = await getAuthManager();
+    if (!auth) return;
     if (auth.isAuthenticated) {
         auth.logout();
     } else {
@@ -697,10 +811,10 @@ async function updateAuthButtonText() {
     const headerButtonText = document.getElementById('header-auth-text');
     
     if (buttonText) {
-        buttonText.textContent = auth.isAuthenticated ? 'Sign Out' : 'Sign In';
+        buttonText.textContent = auth?.isAuthenticated ? 'Sign Out' : 'Sign In';
     }
     if (headerButtonText) {
-        headerButtonText.textContent = auth.isAuthenticated ? 'Sign Out' : 'Sign In';
+        headerButtonText.textContent = auth?.isAuthenticated ? 'Sign Out' : 'Sign In';
     }
 }
 
@@ -711,7 +825,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Add this function to handle saving settings
 async function saveSettings() {
-    if (window.authManager?.currentUser) {
-        await window.authManager.saveAllUserSettings(window.authManager.currentUser.uid);
+    if (!window.authManager?.currentUser) {
+        window.updateSettingsSyncStatus?.('local');
+        return true;
     }
+    return window.authManager.scheduleUserSettingsSave();
 }

@@ -31,7 +31,9 @@
             background: #050824;
         }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Roboto&family=Source+Sans+Pro&family=Inter&family=Montserrat&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="./design-tokens.css">
     <link rel="stylesheet" type="text/css" href="./styles.css">
     <link rel="stylesheet" type="text/css" href="./styles2.css">
@@ -39,11 +41,9 @@
     <link rel="icon" type="image/png" sizes="32x32" href="indy_schedule_logo_sizes/indy-schedule-logo-32x32.png">
     <link rel="apple-touch-icon" sizes="128x128" href="indy_schedule_logo_sizes/indy-schedule-logo-128x128.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-    <script type="text/javascript" src="auth.js"></script>
+    <script defer src="./dialog-manager.js"></script>
+    <script defer src="auth.js"></script>
+    <script defer src="./firebase-loader.js"></script>
     <script defer src="./gradient.js"></script>
     <script defer src="./script2.js"></script>
     <script defer src="./school-calendar.js"></script>
@@ -123,7 +123,7 @@
     <div class="container">
         <div class="dashboard-shell">
             <div class="dashboard-header" role="banner">
-                <img class="edition-header-art edition-header-art-music" src="assets/special-editions/music-city-header-skyline-v2.png" alt="" aria-hidden="true">
+                <img class="edition-header-art edition-header-art-music" data-edition-src="assets/special-editions/music-city-header-skyline-v2.png" width="1000" height="132" alt="" aria-hidden="true">
                 <div class="dashboard-brand">
                     <img src="indy_schedule_logo_sizes/indy-schedule-logo-128x128.png" alt="" class="dashboard-logo brand-logo-art">
                     <div><strong>Indy Schedule</strong><span>Independence High School</span></div>
@@ -201,7 +201,7 @@
                 </footer>
             </div>
             <div class="current-period">
-                <img class="edition-countdown-emblem edition-countdown-emblem-music" src="assets/special-editions/music-city-guitar-emblem.png" alt="" aria-hidden="true">
+                <img class="edition-countdown-emblem edition-countdown-emblem-music" data-edition-src="assets/special-editions/music-city-guitar-emblem.png" width="256" height="256" alt="" aria-hidden="true">
                 <span class="schedule-context" id="schedule-context">Regular Schedule</span>
                 <h2 id="countdown-heading" class="countdown-header">Period 1</h2>
                 <div id="current-period-time">00:00</div>
@@ -211,7 +211,7 @@
                     <span id="period-window">—</span>
                     <span id="next-period-summary">Next: —</span>
                 </div>
-                <img class="edition-hero-sign edition-hero-sign-music" src="assets/special-editions/music-city-nashville-sign.png" alt="" aria-hidden="true">
+                <img class="edition-hero-sign edition-hero-sign-music" data-edition-src="assets/special-editions/music-city-nashville-sign.png" width="600" height="274" alt="" aria-hidden="true">
             </div>
             <div class="schedule-container">
                 <div class="schedule-card-heading">
@@ -223,24 +223,27 @@
         </div>
         </div>
     </div>
-    <div id="settings-sidebar" class="settings-sidebar">
+    <div id="settings-sidebar" class="settings-sidebar" role="dialog" aria-modal="true" aria-labelledby="settings-dialog-title" aria-hidden="true">
         <div class="settings-header">
             <div class="header-left">
                 <img src="indy_schedule_logo_sizes/indy-schedule-logo-128x128.png" alt="Indy Schedule logo" class="settings-logo brand-logo-art">
                 <div class="settings-heading">
-                    <h2 class="settings-title">Settings</h2>
+                    <h2 class="settings-title" id="settings-dialog-title">Settings</h2>
                     <p>Customize your Indy experience</p>
                 </div>
             </div>
 
+            <div class="settings-header-actions">
+                <span class="settings-sync-status" id="settings-sync-status" role="status" aria-live="polite">Saved on this device</span>
             <button class="close-settings" aria-label="Close Settings">
                 <i class="fas fa-times"></i>
                 <span>Done</span>
             </button>
+            </div>
         </div>
         
         <div class="settings-content">
-            <div class="settings-nav">
+            <div class="settings-nav" role="tablist" aria-label="Settings sections" aria-orientation="vertical">
                 <span class="settings-nav-group">Essentials</span>
                 <button class="nav-item active" data-target="schedule">
                     <i class="fas fa-calendar"></i> Schedule
@@ -380,6 +383,9 @@
                                 <span>Custom</span><small>Your four colors</small>
                             </button>
                         </div>
+                        <button type="button" class="palette-more-toggle" id="palette-more-toggle" aria-expanded="false" aria-controls="palette-grid">
+                            Show more palettes <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                        </button>
                         <div id="gradient-settings" class="gradient-controls">
                             <div class="custom-palette-heading"><strong>Custom palette</strong><span>Changes appear instantly</span></div>
                             <div id="gradient-preview" class="gradient-preview" aria-label="Gradient preview"></div>
@@ -491,7 +497,7 @@
                                     <option value="Roboto">Roboto</option>
                                     <option value="'Source Sans Pro'">Source Sans Pro</option>
                                     <option value="'SF Pro Text'">SF Pro</option>
-                                    <option value="Inter">Inter</option>
+                                    <option value="Inter" selected>Inter</option>
                                     <option value="Montserrat">Montserrat</option>
                                     <option value="'Segoe UI'">Segoe UI</option>
                                 </select>
@@ -578,7 +584,7 @@
                     <div class="settings-group about-overview-card">
                         <div class="about-content about-dashboard">
                             <div class="about-intro">
-                                <div><span class="about-version">Version 1.2.0</span><h2>Built for the Indy school day.</h2><p>Indy Schedule is a fast, lightweight countdown and daily schedule dashboard for Independence High School.</p></div>
+                                <div><span class="about-version">Version 1.3.0</span><h2>Built for the Indy school day.</h2><p>Indy Schedule is a fast, lightweight countdown and daily schedule dashboard for Independence High School.</p></div>
                                 <div class="about-intro-mark"><i class="fas fa-clock" aria-hidden="true"></i></div>
                             </div>
 
@@ -638,17 +644,39 @@
                         <div id="whatsnew-website" class="whatsnew-log" role="tabpanel">
                             <div class="wn-entry current-release">
                                 <div class="wn-entry-header">
-                                    <span class="wn-version">v1.2.0</span>
-                                    <span class="wn-date">Aug 6, 2026</span>
-                                    <span class="wn-tag">Design system &amp; final QA</span>
+                                    <span class="wn-version">v1.3.0</span>
+                                    <span class="wn-date">Aug 21, 2026</span>
+                                    <span class="wn-tag">Schedules, syncing &amp; smoother setup</span>
                                 </div>
                                 <ul>
-                                    <li>Removed retired features, hidden controls, unused JavaScript, dead CSS, and duplicate schedule-row IDs.</li>
-                                    <li>Established one authoritative design-token and palette system for colors, spacing, radii, borders, and shadows.</li>
-                                    <li>Consolidated dashboard and Settings components so cards, controls, navigation, and responsive rules behave predictably.</li>
-                                    <li>Refined Chromebook, tablet, and phone layouts to prevent clipping, uneven cards, horizontal overflow, and unnecessary scrolling.</li>
-                                    <li>Added repeatable visual testing for every dashboard state, Settings page, onboarding, Today at Indy, account states, and light and dark palettes.</li>
-                                    <li>Completed accessibility, reduced-motion, syntax, live-data, Firebase configuration, and release-readiness checks.</li>
+                                    <li>Updated the bell and lunch times to match the latest 2026–27 school schedule.</li>
+                                    <li>Added a way to change just today’s schedule for special circumstances. The site switches back to automatic mode the next day.</li>
+                                    <li>Made first-time setup easier, with clearer choices to create an account, sign in, or continue as a guest.</li>
+                                    <li>Added email sign-up, password reset, and Google sign-in, plus a reminder that guest settings may be cleared on school Chromebooks.</li>
+                                    <li>Fixed the Welcome Tour so signed-in users can replay it without being sent back to the sign-in screen.</li>
+                                    <li>Made account syncing more reliable and added a status message so you can tell when your settings are saved.</li>
+                                    <li>The schedule now keeps working even if account services are slow or temporarily unavailable.</li>
+                                    <li>Fixed the font menu so it always shows and uses your saved font on the dashboard and in Settings.</li>
+                                    <li>Improved keyboard navigation, screen-reader support, motion settings, and popup behavior.</li>
+                                    <li>Made the site load faster by shrinking large images and waiting to load optional features until they are needed.</li>
+                                    <li>Made the Appearance page easier to browse by showing popular color choices first, with a button for the rest.</li>
+                                    <li>Fixed layout and popup issues on Chromebooks, tablets, and phones.</li>
+                                </ul>
+                            </div>
+
+                            <div class="wn-entry">
+                                <div class="wn-entry-header">
+                                    <span class="wn-version">v1.2.0</span>
+                                    <span class="wn-date">Aug 6, 2026</span>
+                                    <span class="wn-tag">A cleaner, more consistent look</span>
+                                </div>
+                                <ul>
+                                    <li>Removed old options and behind-the-scenes code that the site no longer used.</li>
+                                    <li>Made colors, spacing, rounded corners, borders, and shadows more consistent across the site.</li>
+                                    <li>Updated cards, buttons, menus, and Settings pages so they look and behave the same way.</li>
+                                    <li>Improved Chromebook, tablet, and phone layouts to prevent cut-off content and unnecessary scrolling.</li>
+                                    <li>Added automatic checks for the dashboard, Settings, setup screens, account menus, and color themes.</li>
+                                    <li>Improved accessibility and support for people who prefer less animation.</li>
                                 </ul>
                             </div>
 
@@ -656,14 +684,14 @@
                                 <div class="wn-entry-header">
                                     <span class="wn-version">v1.1.0</span>
                                     <span class="wn-date">Aug 5, 2026</span>
-                                    <span class="wn-tag">Reliability &amp; live data</span>
+                                    <span class="wn-tag">More reliable school information</span>
                                 </div>
                                 <ul>
-                                    <li>Deploys refreshed, validated IHS calendar data directly to Firebase every three hours.</li>
-                                    <li>Separates official live events from the built-in 2026–27 bell schedule.</li>
-                                    <li>Adds explicit loading, saved-copy, offline, stale, coverage, and error states.</li>
-                                    <li>Shows calendar and lunch sources, update times, and safer official fallbacks.</li>
-                                    <li>Adds automated calendar and lunch validation before publishing.</li>
+                                    <li>Refreshes the IHS calendar every three hours.</li>
+                                    <li>Keeps school events separate from the built-in bell schedule, so classes still work if the calendar is unavailable.</li>
+                                    <li>Clearly explains when information is loading, saved from earlier, out of date, or unavailable.</li>
+                                    <li>Shows where calendar and lunch information came from and when it was last updated.</li>
+                                    <li>Checks calendar and lunch information for problems before it appears on the site.</li>
                                 </ul>
                             </div>
 
@@ -674,10 +702,10 @@
                                     <span class="wn-tag">Settings polish</span>
                                 </div>
                                 <ul>
-                                    <li>Unified every Settings page with clearer cards, icons, spacing, and responsive layouts.</li>
-                                    <li>Fixed palette colors across Settings, including the selected navigation item and page icons.</li>
-                                    <li>Improved Privacy &amp; Terms alignment and rewrote Contact guidance to be more accurate.</li>
-                                    <li>Refined Today at Indy interactions, card alignment, readability, and accessibility.</li>
+                                    <li>Gave every Settings page clearer sections, icons, spacing, and mobile layouts.</li>
+                                    <li>Fixed color themes that did not appear correctly in parts of Settings.</li>
+                                    <li>Cleaned up the Privacy, Terms, and Contact pages.</li>
+                                    <li>Made Today at Indy easier to open, read, and use.</li>
                                 </ul>
                             </div>
 
@@ -685,13 +713,13 @@
                                 <div class="wn-entry-header">
                                     <span class="wn-version">v1.0.3</span>
                                     <span class="wn-date">Aug 5, 2026</span>
-                                    <span class="wn-tag">Chromebook ready</span>
+                                    <span class="wn-tag">Better on school Chromebooks</span>
                                 </div>
                                 <ul>
-                                    <li>Optimized the dashboard and Settings workspace for 1366px school Chromebooks.</li>
-                                    <li>Accounted for the ChromeOS shelf and shorter usable browser height.</li>
-                                    <li>Changed long countdowns to an easier-to-read days, hours, and minutes format.</li>
-                                    <li>Improved schedule text contrast, progress indicators, spacing, and card proportions.</li>
+                                    <li>Adjusted the dashboard and Settings to fit common school Chromebook screens.</li>
+                                    <li>Made room for the ChromeOS shelf so important controls are not cut off.</li>
+                                    <li>Made long countdowns easier to read by showing days, hours, and minutes.</li>
+                                    <li>Improved schedule readability, spacing, and progress bars.</li>
                                 </ul>
                             </div>
 
@@ -699,13 +727,13 @@
                                 <div class="wn-entry-header">
                                     <span class="wn-version">v1.0.2</span>
                                     <span class="wn-date">Aug 5, 2026</span>
-                                    <span class="wn-tag">Personalize it</span>
+                                    <span class="wn-tag">More ways to make it yours</span>
                                 </div>
                                 <ul>
-                                    <li>Added light and dark four-color palettes plus a fully custom palette editor.</li>
-                                    <li>Made cards, controls, text, and accents respond consistently to the selected palette.</li>
-                                    <li>Improved automatic foreground contrast for readable text across every theme.</li>
-                                    <li>Enabled period times by default and expanded schedule naming controls.</li>
+                                    <li>Added several light and dark color themes, plus an option to create your own.</li>
+                                    <li>Made your chosen colors apply more consistently across the whole site.</li>
+                                    <li>Improved text contrast so every theme is easier to read.</li>
+                                    <li>Turned period times on by default and added more control over class names.</li>
                                 </ul>
                             </div>
 
@@ -716,10 +744,10 @@
                                     <span class="wn-tag">Today at Indy</span>
                                 </div>
                                 <ul>
-                                    <li>Added the Today at Indy popup with current status, dismissal, lunch, and next-day details.</li>
-                                    <li>Connected public IHS calendar events through the automatically refreshed site cache.</li>
-                                    <li>Added monthly lunch-menu data with an official WCS fallback when a menu is unavailable.</li>
-                                    <li>Added calendar freshness, loading, empty, and error states.</li>
+                                    <li>Added Today at Indy with the current schedule, dismissal time, lunch, and tomorrow’s schedule.</li>
+                                    <li>Added public events from the IHS calendar.</li>
+                                    <li>Added daily lunch menus with a link to the official WCS menu when information is missing.</li>
+                                    <li>Added clear messages when calendar information is loading, missing, or out of date.</li>
                                 </ul>
                             </div>
 
@@ -727,13 +755,13 @@
                                 <div class="wn-entry-header">
                                     <span class="wn-version">v1.0.0</span>
                                     <span class="wn-date">Aug 5, 2026</span>
-                                    <span class="wn-tag">Welcome to Indy</span>
+                                    <span class="wn-tag">The first release</span>
                                 </div>
                                 <ul>
-                                    <li>Rebuilt the site for Independence High School’s seven-period day.</li>
-                                    <li>Added A, B, and C lunch waves with the correct fifth-period split.</li>
-                                    <li>Added WCS calendar awareness for regular, late-start, no-school, and half-day schedules.</li>
-                                    <li>Launched Firebase Hosting with optional Google sign-in, synced preferences, and consent-based analytics.</li>
+                                    <li>Launched a live countdown for Independence High School’s seven-period day.</li>
+                                    <li>Added A, B, and C lunch choices with the correct fifth-period timing.</li>
+                                    <li>Automatically changes for regular days, late starts, half days, and days without school.</li>
+                                    <li>Added optional Google sign-in and the ability to save preferences between devices.</li>
                                 </ul>
                             </div>
                         </div>
@@ -1041,7 +1069,6 @@
             </span>
         </div>
     </div>
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             function initializeOnboarding() {
@@ -1082,14 +1109,16 @@
                     const currentUser = window.authManager?.currentUser;
                     if (currentUser) window.authManager.saveAllUserSettings(currentUser.uid).catch(() => {});
                 }
-                if (onboardingComplete && hasLunch && hasAnalyticsChoice) {
+                if (!replayRequested && onboardingComplete && hasLunch && hasAnalyticsChoice) {
                     document.documentElement.classList.remove('onboarding-pending');
                     return;
                 }
 
-                let currentStep = onboardingComplete && hasLunch && !hasAnalyticsChoice && analyticsStep >= 0
-                    ? analyticsStep
-                    : 0;
+                let currentStep = replayRequested && window.authManager?.currentUser
+                    ? 1
+                    : onboardingComplete && hasLunch && !hasAnalyticsChoice && analyticsStep >= 0
+                        ? analyticsStep
+                        : 0;
                 if (hasLunch) {
                     const savedChoice = lunchChoices.find(choice => choice.value === savedLunch);
                     if (savedChoice) savedChoice.checked = true;
@@ -1126,7 +1155,14 @@
                 }
 
                 function openAccount(mode) {
-                    window.authManager?.showLoginModal({ mode, onboarding: true });
+                    if (window.authManager?.currentUser) {
+                        currentStep = 1;
+                        renderStep();
+                        nextButton.focus();
+                        return;
+                    }
+                    if (window.authManager) window.authManager.showLoginModal({ mode, onboarding: true });
+                    else document.querySelector('#sign-in-button .account-trigger')?.click();
                 }
 
                 document.getElementById('onboarding-create-account')?.addEventListener('click', () => openAccount('create'));
@@ -1134,19 +1170,26 @@
                 document.getElementById('onboarding-use-guest')?.addEventListener('click', () => {
                     if (!guestConfirmation) return;
                     guestConfirmation.hidden = false;
-                    guestConfirm?.focus();
+                    window.IndyDialogManager?.open(guestConfirmation, {
+                        trigger: document.getElementById('onboarding-use-guest'),
+                        initialFocus: guestCancel,
+                        onRequestClose: () => guestCancel?.click()
+                    });
                 });
                 guestCancel?.addEventListener('click', () => {
                     guestConfirmation.hidden = true;
-                    document.getElementById('onboarding-use-guest')?.focus();
+                    window.IndyDialogManager?.close(guestConfirmation);
                 });
                 guestConfirm?.addEventListener('click', () => {
                     guestConfirmation.hidden = true;
+                    window.IndyDialogManager?.close(guestConfirmation, { restoreFocus: false });
                     currentStep = 1;
                     renderStep();
+                    nextButton.focus();
                 });
                 accountCreatedContinue?.addEventListener('click', () => {
                     accountCreatedNotice.hidden = true;
+                    window.IndyDialogManager?.close(accountCreatedNotice, { restoreFocus: false });
                     currentStep = 1;
                     renderStep();
                     nextButton.focus();
@@ -1154,13 +1197,27 @@
                 window.addEventListener('indy-account-authenticated', event => {
                     const restoredLunch = ['A', 'B', 'C'].includes((localStorage.getItem('lunchWave') || '').toUpperCase());
                     const restoredAnalytics = window.getAnalyticsConsent?.() !== null;
+                    if (replayRequested) {
+                        // Auth can finish just after the replay screen appears.
+                        // Close any account dialog opened during that short race.
+                        window.authManager?.hideLoginModal();
+                        if (currentStep === 0) {
+                            currentStep = 1;
+                            renderStep();
+                            nextButton.focus();
+                        }
+                        return;
+                    }
                     if (localStorage.getItem(completionKey) === 'true' && restoredLunch && restoredAnalytics) {
                         window.location.reload();
                         return;
                     }
                     if (event.detail?.mode === 'create' && accountCreatedNotice) {
                         accountCreatedNotice.hidden = false;
-                        accountCreatedContinue?.focus();
+                        window.IndyDialogManager?.open(accountCreatedNotice, {
+                            initialFocus: accountCreatedContinue,
+                            closeOnEscape: false
+                        });
                         return;
                     }
                     currentStep = 1;
@@ -1173,7 +1230,7 @@
                     backdrop.classList.remove('onboarding-launching');
                     document.body.classList.remove('onboarding-open');
                     document.documentElement.classList.remove('onboarding-pending');
-                    document.getElementById('settings-button')?.focus();
+                    window.IndyDialogManager?.close(backdrop);
                     window.setTimeout(() => document.body.classList.remove('dashboard-revealing'), 700);
                 }
 
@@ -1269,7 +1326,11 @@
                 document.documentElement.classList.remove('onboarding-pending');
                 document.body.classList.add('onboarding-open');
                 renderStep();
-                document.getElementById('onboarding-create-account')?.focus();
+                window.IndyDialogManager?.open(backdrop, {
+                    trigger: document.getElementById('settings-button'),
+                    initialFocus: document.getElementById('onboarding-create-account'),
+                    closeOnEscape: false
+                });
             }
 
             initializeOnboarding();

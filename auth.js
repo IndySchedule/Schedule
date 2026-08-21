@@ -11,6 +11,21 @@ const firebaseConfig = {
 
 const ANALYTICS_CONSENT_KEY = 'indyAnalyticsConsent_v1';
 
+function updateSettingsSyncStatus(state = 'local') {
+    const status = document.getElementById('settings-sync-status');
+    if (!status) return;
+    const labels = {
+        local: 'Saved on this device',
+        loading: 'Restoring settings…',
+        saving: 'Saving…',
+        saved: 'Saved to your account',
+        error: 'Cloud save failed'
+    };
+    status.dataset.state = state;
+    status.textContent = labels[state] || labels.local;
+}
+window.updateSettingsSyncStatus = updateSettingsSyncStatus;
+
 function getAnalyticsConsent() {
     try {
         const value = localStorage.getItem(ANALYTICS_CONSENT_KEY);
@@ -35,7 +50,7 @@ function updateGoogleConsent(granted, command = 'default') {
 updateGoogleConsent(getAnalyticsConsent() === 'granted');
 
 function ensureAnalytics() {
-    if (!window.authManager) return null;
+    if (!window.authManager || typeof firebase?.analytics !== 'function') return null;
     if (!window.authManager.analytics) {
         window.authManager.analytics = firebase.analytics();
     }
@@ -356,6 +371,11 @@ class AuthManager {
         this.provider = new firebase.auth.GoogleAuthProvider();
         this.isAuthenticated = false;
         this.currentUser = null;
+        this._settingsLoadPromise = null;
+        this._settingsLoadUserId = null;
+        this._settingsSaveTimer = null;
+        this._settingsSaveResolvers = [];
+        this._settingsSaveChain = Promise.resolve(true);
         
         // Make auth manager globally available immediately
         window.authManager = this;
@@ -364,42 +384,26 @@ class AuthManager {
             this.analytics.setAnalyticsCollectionEnabled(true);
         }
         
-        // Wait for DOM before initializing UI
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => {
-                this.initializeAccountUI();
-                this.checkAuthentication();
-                this.updateUI();
-                // Set up auth state listener
-                this.auth.onAuthStateChanged(user => {
-                    this.currentUser = user;
-                    this.isAuthenticated = !!user;
-                    this.updateUI();
-                    if (user) {
-                        // Instead of saving local settings immediately, load Firestore settings if they exist.
-                        this._maybeLoadUserSettings().then(settings => {
-                            if (settings) window.dispatchEvent(new CustomEvent('indy-account-authenticated', { detail: { source: 'saved-session' } }));
-                        });
-                    }
-                });
-            });
-        } else {
+        const initializeWhenReady = () => {
             this.initializeAccountUI();
             this.checkAuthentication();
             this.updateUI();
-            // Set up auth state listener
             this.auth.onAuthStateChanged(user => {
                 this.currentUser = user;
                 this.isAuthenticated = !!user;
                 this.updateUI();
+                updateSettingsSyncStatus(user ? 'loading' : 'local');
                 if (user) {
-                    // Instead of saving local settings immediately, load Firestore settings if they exist.
                     this._maybeLoadUserSettings().then(settings => {
-                        if (settings) window.dispatchEvent(new CustomEvent('indy-account-authenticated', { detail: { source: 'saved-session' } }));
+                        window.dispatchEvent(new CustomEvent('indy-account-authenticated', {
+                            detail: { source: 'saved-session', settingsRestored: Boolean(settings) }
+                        }));
                     });
                 }
             });
-        }
+        };
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initializeWhenReady);
+        else initializeWhenReady();
         
         // Add message listener for popup communication
         window.addEventListener('message', this.handleAuthMessage.bind(this));
@@ -435,7 +439,6 @@ class AuthManager {
                 };
             }
             
-            localStorage.setItem('authToken', credential.accessToken);
             this.isAuthenticated = true;
             this.hideLoginModal();
             this.updateUI();
@@ -446,11 +449,6 @@ class AuthManager {
             // _maybeLoadUserSettings helper which handles both cases.
             await this._maybeLoadUserSettings();
             
-            console.info('Auth success - user data:', {
-                name: this.currentUser.displayName,
-                email: this.currentUser.email,
-                photo: this.currentUser.photoURL
-            });
             // Refresh the page after successful login
             window.location.reload();
         } catch (error) {
@@ -459,8 +457,41 @@ class AuthManager {
         }
     }
 
-    // New function to save ALL settings
+    scheduleUserSettingsSave(delay = 450) {
+        if (!this.currentUser) {
+            updateSettingsSyncStatus('local');
+            return Promise.resolve(true);
+        }
+        updateSettingsSyncStatus('saving');
+        window.clearTimeout(this._settingsSaveTimer);
+        const pending = new Promise((resolve) => this._settingsSaveResolvers.push(resolve));
+        this._settingsSaveTimer = window.setTimeout(async () => {
+            this._settingsSaveTimer = null;
+            const resolvers = this._settingsSaveResolvers.splice(0);
+            const saved = this.currentUser
+                ? await this.saveAllUserSettings(this.currentUser.uid)
+                : true;
+            if (!this.currentUser) updateSettingsSyncStatus('local');
+            resolvers.forEach((resolve) => resolve(saved));
+        }, delay);
+        return pending;
+    }
+
     async saveAllUserSettings(userId) {
+        if (!userId) return false;
+        const queuedResolvers = this._settingsSaveTimer ? this._settingsSaveResolvers.splice(0) : [];
+        window.clearTimeout(this._settingsSaveTimer);
+        this._settingsSaveTimer = null;
+        updateSettingsSyncStatus('saving');
+        this._settingsSaveChain = this._settingsSaveChain
+            .catch(() => false)
+            .then(() => this._saveAllUserSettingsNow(userId));
+        const saved = await this._settingsSaveChain;
+        queuedResolvers.forEach((resolve) => resolve(saved));
+        return saved;
+    }
+
+    async _saveAllUserSettingsNow(userId) {
         try {
             const db = firebase.firestore();
             const userDocRef = db.collection("users").doc(userId);
@@ -477,10 +508,20 @@ class AuthManager {
                 progressBarOpacity: localStorage.getItem("progressBarOpacity"),
                 gradientSettings: localStorage.getItem("gradientSettings"),
                 currentScheduleName: localStorage.getItem("currentScheduleName"),
+                // Keep the date with a manual choice so it can be restored on
+                // another signed-in device without becoming a permanent mode.
+                indyScheduleOverride_v1: null,
                 indyOnboardingComplete_v2: localStorage.getItem("indyOnboardingComplete_v2"),
                 indyAnalyticsConsent_v1: localStorage.getItem(ANALYTICS_CONSENT_KEY),
                 sawUpdateNotice: localStorage.getItem("sawUpdateNotice")
             };
+
+            try {
+                const scheduleOverride = localStorage.getItem('indyScheduleOverride_v1');
+                if (scheduleOverride) settings.indyScheduleOverride_v1 = JSON.parse(scheduleOverride);
+            } catch (error) {
+                console.warn('Could not parse the saved schedule override.', error);
+            }
 
             // Include period renames and global period names (as JSON)
             try {
@@ -509,32 +550,49 @@ class AuthManager {
             }
 
             // Remove any null or undefined values
-            Object.keys(settings).forEach(key => 
-                (settings[key] === null || typeof settings[key] === 'undefined') && delete settings[key]
-            );
+            Object.keys(settings).forEach(key => {
+                // A null override intentionally tells other signed-in devices
+                // that the user returned today's schedule to Automatic.
+                if (key !== 'indyScheduleOverride_v1'
+                    && (settings[key] === null || typeof settings[key] === 'undefined')) {
+                    delete settings[key];
+                }
+            });
 
             // Save to Firestore
             await userDocRef.set({ settings }, { merge: true });
             console.info("✅ All settings saved to Firestore");
+            updateSettingsSyncStatus('saved');
             
             return true;
         } catch (error) {
             console.error("❌ Error saving settings:", error);
+            updateSettingsSyncStatus('error');
             return false;
         }
     }
 
     // Replace _maybeSaveUserSettings with _maybeLoadUserSettings to avoid overwriting Firestore
     async _maybeLoadUserSettings() {
+        if (!this.currentUser) return null;
+        if (this._settingsLoadPromise && this._settingsLoadUserId === this.currentUser.uid) {
+            return this._settingsLoadPromise;
+        }
+        this._settingsLoadUserId = this.currentUser.uid;
+        this._settingsLoadPromise = this._loadUserSettingsOnce(this.currentUser.uid);
+        return this._settingsLoadPromise;
+    }
+
+    async _loadUserSettingsOnce(userId) {
         try {
             const db = firebase.firestore();
-            const userDocRef = db.collection("users").doc(this.currentUser.uid);
+            const userDocRef = db.collection("users").doc(userId);
             const doc = await userDocRef.get();
             
             if (doc.exists) {
                 console.info("User settings found in Firestore, loading them.");
-                // Use loadUserSettings() helper to fetch and merge into localStorage
-                const settings = await loadUserSettings(); // Get the loaded settings (and mirror into localStorage)
+                const settings = doc.data()?.settings || {};
+                applyUserSettingsToLocalStorage(settings);
                 if (settings) {
                     // Apply visual settings without overwriting other local preferences
                     document.body.style.backgroundImage = '';
@@ -551,24 +609,31 @@ class AuthManager {
                     }
 
                     // Visual settings
-                    if (settings.fontFamily) document.body.style.fontFamily = settings.fontFamily;
+                    if (settings.fontFamily) {
+                        if (typeof window.applyInterfaceFont === 'function') window.applyInterfaceFont(settings.fontFamily);
+                        else document.body.style.fontFamily = settings.fontFamily;
+                    }
 
                     // Load settings into UI
                     if (typeof loadSettings === 'function') {
-                        loadSettings();
+                        await loadSettings(settings);
                     }
 
                     updateToastIcon();
+                    updateSettingsSyncStatus('saved');
                     console.info("✅ Settings applied successfully");
                     return settings;
                 }
             } else {
                 console.info("No settings found in Firestore, saving current local settings.");
-                await this.saveAllUserSettings(this.currentUser.uid);
+                await this.saveAllUserSettings(userId);
                 updateToastIcon();
             }
         } catch (e) {
             console.error("Error handling user settings:", e);
+            updateSettingsSyncStatus('error');
+            this._settingsLoadPromise = null;
+            this._settingsLoadUserId = null;
         }
         return null;
     }
@@ -588,6 +653,12 @@ class AuthManager {
         const form = document.getElementById('email-auth-form');
         if (!modal || !form || modal.dataset.authBound === 'true') return;
         modal.dataset.authBound = 'true';
+        modal.querySelectorAll('input, button').forEach((control) => { control.disabled = false; });
+        const unavailableMessage = document.getElementById('login-error');
+        if (unavailableMessage?.textContent.includes('Account services are unavailable')) {
+            unavailableMessage.textContent = '';
+            unavailableMessage.style.display = 'none';
+        }
 
         const modeButtons = Array.from(modal.querySelectorAll('[data-auth-mode]'));
         const nameGroup = document.getElementById('auth-name-group');
@@ -694,8 +765,7 @@ class AuthManager {
             const result = await this.auth.signInWithPopup(this.provider);
             
             if (result?.credential?.accessToken) {
-                this.handleAuthSuccess(result.credential);
-                window.location.reload();
+                await this.handleAuthSuccess(result.credential);
             }
         } catch (error) {
             this.handleAuthError(error);
@@ -709,9 +779,7 @@ class AuthManager {
         try {
             const result = await this.auth.getRedirectResult();
             if (result?.credential?.accessToken) {
-                this.handleAuthSuccess(result.credential);
-                this.hideLoginModal();
-                window.location.reload();
+                await this.handleAuthSuccess(result.credential);
             }
         } catch (error) {
             this.handleAuthError(error);
@@ -822,6 +890,10 @@ class AuthManager {
                 `;
             }
         }
+        const loginModal = document.getElementById('login-modal');
+        if (loginModal?.getAttribute('aria-hidden') === 'false' && !loginModal.contains(document.activeElement)) {
+            requestAnimationFrame(() => document.getElementById('auth-email')?.focus());
+        }
     }
 
     checkAuthentication() {
@@ -876,6 +948,7 @@ class AuthManager {
     showLoginModal(options = {}) {
         const modal = document.getElementById('login-modal');
         if (modal) {
+            document.getElementById('today-card-close')?.click();
             const requestedMode = options.mode === 'create' ? 'create' : 'signin';
             modal.dataset.onboardingEntry = options.onboarding ? 'true' : 'false';
             modal._setAuthMode?.(requestedMode);
@@ -888,6 +961,11 @@ class AuthManager {
             // Add the 'show' class to trigger the fade-in animation
             modal.style.display = 'flex';
             modal.setAttribute('aria-hidden', 'false');
+            window.IndyDialogManager?.open(modal, {
+                trigger: document.activeElement,
+                initialFocus: document.getElementById('auth-email'),
+                onRequestClose: () => this.hideLoginModal()
+            });
             requestAnimationFrame(() => {
                 modal.classList.add('show');
                 document.getElementById('auth-email')?.focus();
@@ -902,20 +980,11 @@ class AuthManager {
                 }
             };
             
-            // Add escape key to close
-            const handleEscape = (e) => {
-                if (e.key === 'Escape') {
-                    this.hideLoginModal();
-                }
-            };
-            
             modal.addEventListener('click', handleClick);
-            document.addEventListener('keydown', handleEscape);
             
             // Store event listeners for cleanup
             modal._cleanup = () => {
                 modal.removeEventListener('click', handleClick);
-                document.removeEventListener('keydown', handleEscape);
             };
         }
     }
@@ -925,6 +994,7 @@ class AuthManager {
         if (modal) {
             modal.classList.remove('show');
             modal.setAttribute('aria-hidden', 'true');
+            window.IndyDialogManager?.close(modal);
             // Clean up event listeners
             if (modal._cleanup) {
                 modal._cleanup();
@@ -986,49 +1056,50 @@ document.addEventListener('DOMContentLoaded', updateToastIcon);
 document.addEventListener('DOMContentLoaded', initializeAnalyticsConsentUI);
 document.addEventListener('DOMContentLoaded', initializeLocalDataControls);
 
-// New helper function to load user settings from Firestore
-async function loadUserSettings() {
-    if (!window.authManager || !window.authManager.currentUser) return null;
-    try {
-        const db = firebase.firestore();
-        const userDoc = await db.collection("users").doc(window.authManager.currentUser.uid).get();
-        if (userDoc.exists) {
-            const settings = userDoc.data().settings;
-            console.info("✅ Loaded settings from Firestore:", settings);
-            // Update localStorage to mirror Firestore settings (merge safely)
-            Object.keys(settings).forEach(key => {
-                const val = settings[key];
-                if (val === null || typeof val === 'undefined') return;
-
-                try {
-                    if (key === 'gradientSettings' && typeof val === 'object') {
-                        localStorage.setItem(key, JSON.stringify(val));
-                    } else if (key === 'periodRenames' || key === 'globalPeriodNames') {
-                        // Ensure JSON string storage
-                        if (typeof val === 'object') {
-                            localStorage.setItem(key, JSON.stringify(val));
-                        } else {
-                            // Could be string: try to parse or store raw
-                            try { JSON.parse(val); localStorage.setItem(key, val); }
-                            catch (e) { localStorage.setItem(key, JSON.stringify(val)); }
-                        }
-                    } else {
-                        // Default: store primitive or stringify object
-                        if (typeof val === 'object') localStorage.setItem(key, JSON.stringify(val));
-                        else localStorage.setItem(key, String(val));
-                    }
-                } catch (e) {
-                    console.warn('Could not mirror setting', key, e);
-                }
-            });
-            updateToastIcon();
-            return settings;
+function applyUserSettingsToLocalStorage(settings = {}) {
+    Object.keys(settings).forEach(key => {
+        const val = settings[key];
+        if (key === 'indyScheduleOverride_v1' && val === null) {
+            localStorage.removeItem(key);
+            return;
         }
-    } catch (error) {
-        console.error("❌ Error loading settings from Firestore:", error);
-    }
-    return null;
+        if (val === null || typeof val === 'undefined') return;
+        try {
+            if (typeof val === 'object') localStorage.setItem(key, JSON.stringify(val));
+            else localStorage.setItem(key, String(val));
+        } catch (error) {
+            console.warn('Could not mirror setting', key, error);
+        }
+    });
+    updateToastIcon();
+    return settings;
 }
 
-// Initialize immediately
-window.authManager = new AuthManager();
+// Compatibility helper for callers outside AuthManager. AuthManager itself
+// coalesces the initial account read through _maybeLoadUserSettings().
+async function loadUserSettings() {
+    return window.authManager?._maybeLoadUserSettings() || null;
+}
+
+function initializeFirebaseAuthManager() {
+    if (window.authManager) return window.authManager;
+    try {
+        if (typeof window.firebase === 'undefined' || typeof window.firebase.auth !== 'function' || typeof window.firebase.firestore !== 'function') {
+            return null;
+        }
+        window.authManager = new AuthManager();
+        return window.authManager;
+    } catch (error) {
+        window.authManager = null;
+        console.warn('Firebase did not initialize; Indy Schedule is continuing in guest mode.', error);
+        return null;
+    }
+}
+
+window.authManager = null;
+window.addEventListener('indy-firebase-ready', initializeFirebaseAuthManager);
+window.addEventListener('indy-auth-unavailable', () => {
+    updateSettingsSyncStatus('local');
+    console.warn('Firebase did not load; Indy Schedule is continuing in guest mode.');
+});
+initializeFirebaseAuthManager();
