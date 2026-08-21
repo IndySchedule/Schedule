@@ -170,6 +170,7 @@ assert(musicPlayerSource.includes('function moveQueueTrack') && musicPlayerSourc
 assert(musicPlayerSource.includes('Recently played') && musicPlayerSource.includes('function recordPlayedTrack'), 'Music Player keeps a short playback history');
 assert(['refresh', 'shuffle', 'rename', 'remove'].every((action) => musicPlayerSource.includes(`data-playlist-action="${action}"`)), 'Music Player exposes all playlist menu actions');
 assert(musicPlayerSource.includes('id="shortcutDialog"') && musicPlayerSource.includes('id="toastRegion"'), 'Music Player includes keyboard help and toast feedback');
+assert(musicPlayerSource.includes("storedVolumeValue === null ? 1") && musicPlayerSource.includes('id="volumeBar"') && musicPlayerSource.includes('value="1" aria-label="Volume"'), 'Music Player defaults new sessions to full volume while preserving saved preferences');
 assert(!/fetch\(|XMLHttpRequest|sendBeacon|indexedDB|firestore/i.test(musicPlayerSource), 'Music Player keeps filesystem and playback data local');
 assert(indexSource.includes('indy_schedule_logo_sizes/indy-schedule-logo-16x16-optimized.png'), 'Optimized new logo is used for the small favicon');
 assert(indexSource.includes('indy_schedule_logo_sizes/indy-schedule-logo-32x32.png'), 'New 32px logo is used for standard browser icons');

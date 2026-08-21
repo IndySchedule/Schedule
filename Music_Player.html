@@ -1899,7 +1899,7 @@
               <path class="volume-muted" d="m16 9 5 5m0-5-5 5"/>
             </svg>
           </button>
-          <input id="volumeBar" class="range" type="range" min="0" max="1" step="0.01" value="0.8" aria-label="Volume" />
+          <input id="volumeBar" class="range" type="range" min="0" max="1" step="0.01" value="1" aria-label="Volume" />
         </div>
 
         <div id="status" class="status">Local files only · no uploads</div>
@@ -2061,9 +2061,10 @@
   let repeatMode = Number(localStorage.getItem('localMusic_repeat') || 0);
   if (![0, 1, 2].includes(repeatMode)) repeatMode = 0;
 
-  const storedVolume = Number(localStorage.getItem('localMusic_volume'));
-  audio.volume = Number.isFinite(storedVolume) ? Math.max(0, Math.min(1, storedVolume)) : 0.8;
-  previousVolume = audio.volume || 0.8;
+  const storedVolumeValue = localStorage.getItem('localMusic_volume');
+  const storedVolume = storedVolumeValue === null ? 1 : Number(storedVolumeValue);
+  audio.volume = Number.isFinite(storedVolume) ? Math.max(0, Math.min(1, storedVolume)) : 1;
+  previousVolume = audio.volume || 1;
   volumeBar.value = audio.volume;
 
   function setRangeProgress(input, value, max = 100) {
@@ -3468,7 +3469,7 @@
   volumeToggle.addEventListener('click', () => {
     if (audio.muted || audio.volume === 0) {
       audio.muted = false;
-      audio.volume = previousVolume || 0.8;
+      audio.volume = previousVolume || 1;
     } else {
       previousVolume = audio.volume;
       audio.muted = true;
