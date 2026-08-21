@@ -2,27 +2,16 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-08-17T08:25:51.911Z",
-  "lastCheckedAt": "2026-08-17T08:25:51.911Z",
-  "contentUpdatedAt": "2026-08-17T08:25:51.911Z",
+  "generatedAt": "2026-08-20T08:08:05.843Z",
+  "lastCheckedAt": "2026-08-20T08:08:05.843Z",
+  "contentUpdatedAt": "2026-08-20T08:08:05.843Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
   "timeZone": "America/Chicago",
-  "rangeStart": "2026-08-15",
-  "rangeEnd": "2026-12-15",
+  "rangeStart": "2026-08-18",
+  "rangeEnd": "2026-12-18",
   "events": [
-    {
-      "id": "0d26vcchm049v3gcf58huj3vu0@google.com-2026-08-17T22:00:00.000Z",
-      "title": "IHS JV/V Volleyball @ Harpeth Hall",
-      "start": "2026-08-17T22:00:00.000Z",
-      "end": "2026-08-18T00:30:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-08-17"
-      ],
-      "location": "Harpeth Hall School, 3801 Hobbs Rd, Nashville, TN 37215, USA"
-    },
     {
       "id": "31e4rq7v14bpk1aq6hgolofq4c@google.com-2026-08-18T00:00:00.000Z",
       "title": "IHS Late Start",
@@ -134,17 +123,6 @@
       "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     },
     {
-      "id": "7p1rb19thv28o7chu92a2pghbp@google.com-2026-08-25T21:30:00.000Z",
-      "title": "IHS JV/V Girls Soccer vs BGA",
-      "start": "2026-08-25T21:30:00.000Z",
-      "end": "2026-08-26T01:30:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-08-25"
-      ],
-      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
-    },
-    {
       "id": "724frd0cltcensjf07jsvqgub1@google.com-2026-08-25T23:00:00.000Z",
       "title": "IHS Checkpoint Driving",
       "start": "2026-08-25T23:00:00.000Z",
@@ -154,6 +132,17 @@
         "2026-08-25"
       ],
       "location": "Zoom"
+    },
+    {
+      "id": "7p1rb19thv28o7chu92a2pghbp@google.com-2026-08-26T21:30:00.000Z",
+      "title": "IHS JV/V Girls Soccer vs BGA",
+      "start": "2026-08-26T21:30:00.000Z",
+      "end": "2026-08-27T01:30:00.000Z",
+      "allDay": false,
+      "days": [
+        "2026-08-26"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     },
     {
       "id": "0agi21thes54ih594p3lcjqbrb@google.com-2026-08-27T21:30:00.000Z",
@@ -1135,6 +1124,28 @@
         "2026-12-12"
       ],
       "location": "Kirkwood High School, 2702 Rossview Rd, Clarksville, TN 37043, USA"
+    },
+    {
+      "id": "233ckp3ah8c811qn32ntbkdsgj@google.com-2026-12-18T00:00:00.000Z",
+      "title": "IHS JV Wrestling @ Brentwood Academy",
+      "start": "2026-12-18T00:00:00.000Z",
+      "end": "2026-12-19T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2026-12-18"
+      ],
+      "location": "Brentwood Academy, 219 Granny White Pike, Brentwood, TN 37027, USA"
+    },
+    {
+      "id": "71n29vkndt788orajf3knf35aa@google.com-2026-12-18T00:00:00.000Z",
+      "title": "IHS G Wrestling @ Northwest HS",
+      "start": "2026-12-18T00:00:00.000Z",
+      "end": "2026-12-19T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2026-12-18"
+      ],
+      "location": "Northwest High School, 800 Lafayette Rd, Clarksville, TN 37042, USA"
     }
   ]
 }
