@@ -41,8 +41,11 @@ body.release-notice-open {
     place-items: center;
     padding: var(--space-5);
     box-sizing: border-box;
-    background: rgba(var(--theme-primary-rgb), 0.5);
-    backdrop-filter: blur(8px);
+    background:
+        radial-gradient(circle at 50% 32%, rgba(var(--theme-dashboard-glow-rgb), 0.1), transparent 38%),
+        rgba(var(--theme-primary-rgb), 0.56);
+    backdrop-filter: blur(10px) saturate(0.9);
+    animation: releaseNoticeBackdropIn 160ms ease-out;
 }
 
 .release-notice-backdrop[hidden] {
@@ -50,19 +53,40 @@ body.release-notice-open {
 }
 
 .release-notice-dialog {
+    position: relative;
     width: min(640px, 100%);
     max-height: calc(100dvh - 40px);
     display: flex;
     overflow: hidden;
     flex-direction: column;
-    border: 1px solid rgba(var(--theme-on-panel-rgb), 0.16);
-    border-radius: 20px;
+    border: 1px solid rgba(var(--theme-panel-accent-rgb), 0.28);
+    border-radius: 18px;
     color: var(--theme-on-panel);
     background:
-        radial-gradient(circle at 12% 4%, rgba(var(--theme-panel-accent-rgb), 0.13), transparent 34%),
-        var(--theme-panel);
-    box-shadow: 0 30px 90px rgba(var(--color-overlay-rgb), 0.42);
+        radial-gradient(circle at 10% 0%, rgba(var(--theme-panel-accent-rgb), 0.15), transparent 34%),
+        linear-gradient(145deg, rgba(var(--theme-on-panel-rgb), 0.025), transparent 46%),
+        color-mix(in srgb, var(--theme-panel) 96%, var(--theme-primary));
+    box-shadow:
+        0 30px 90px rgba(var(--color-overlay-rgb), 0.46),
+        inset 0 1px rgba(var(--theme-on-panel-rgb), 0.06);
     animation: releaseNoticeIn 180ms ease-out;
+}
+
+.release-notice-dialog::before {
+    content: "";
+    position: absolute;
+    inset: 0 18px auto;
+    z-index: 2;
+    height: 2px;
+    border-radius: 0 0 var(--radius-pill) var(--radius-pill);
+    background: var(--theme-panel-accent);
+    box-shadow: 0 0 16px rgba(var(--theme-panel-accent-rgb), 0.38);
+    pointer-events: none;
+}
+
+@keyframes releaseNoticeBackdropIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 @keyframes releaseNoticeIn {
@@ -80,9 +104,11 @@ body.release-notice-open {
 .release-notice-header {
     justify-content: space-between;
     gap: var(--space-4);
-    padding: 15px var(--space-5);
+    padding: 14px var(--space-5);
     border-bottom: 1px solid rgba(var(--theme-on-panel-rgb), 0.11);
-    background: rgba(var(--theme-on-panel-rgb), 0.035);
+    background:
+        linear-gradient(90deg, rgba(var(--theme-panel-accent-rgb), 0.07), transparent 42%),
+        rgba(var(--theme-on-panel-rgb), 0.025);
 }
 
 .release-notice-brand {
@@ -90,8 +116,13 @@ body.release-notice-open {
 }
 
 .release-notice-brand img {
-    width: 38px;
-    height: 38px;
+    width: 40px;
+    height: 40px;
+    padding: 4px;
+    box-sizing: border-box;
+    border: 1px solid rgba(var(--theme-panel-accent-rgb), 0.3);
+    background: rgba(var(--theme-on-panel-rgb), 0.055);
+    box-shadow: 0 6px 16px rgba(var(--theme-primary-rgb), 0.2);
 }
 
 .release-notice-brand div {
@@ -124,10 +155,20 @@ body.release-notice-open {
     color: var(--theme-on-panel) !important;
     background: rgba(var(--theme-on-panel-rgb), 0.065) !important;
     box-shadow: none !important;
+    cursor: pointer;
+    transition: transform 150ms ease, border-color 150ms ease, background 150ms ease, box-shadow 150ms ease;
 }
 
 .release-notice-dialog .release-notice-close:hover {
-    background: rgba(var(--theme-on-panel-rgb), 0.13) !important;
+    border-color: rgba(var(--theme-panel-accent-rgb), 0.5) !important;
+    background: rgba(var(--theme-panel-accent-rgb), 0.12) !important;
+    box-shadow: 0 5px 14px rgba(var(--theme-primary-rgb), 0.2) !important;
+    transform: rotate(6deg) translateY(-1px);
+}
+
+.release-notice-dialog .release-notice-close:active {
+    box-shadow: none !important;
+    transform: scale(0.92);
 }
 
 .release-notice-content {
@@ -143,7 +184,8 @@ body.release-notice-open {
     border: 1px solid rgba(var(--theme-panel-accent-rgb), 0.28);
     border-radius: var(--radius-pill);
     color: var(--theme-panel-accent);
-    background: rgba(var(--theme-panel-accent-rgb), 0.09);
+    background: rgba(var(--theme-panel-accent-rgb), 0.1);
+    box-shadow: inset 0 0 0 1px rgba(var(--theme-on-panel-rgb), 0.025);
     font-size: 9px;
     font-weight: 850;
     letter-spacing: 0.08em;
@@ -179,7 +221,18 @@ body.release-notice-open {
     padding: 14px;
     border: 1px solid rgba(var(--theme-on-panel-rgb), 0.11);
     border-radius: 13px;
-    background: rgba(var(--theme-on-panel-rgb), 0.05);
+    background:
+        linear-gradient(90deg, rgba(var(--theme-on-panel-rgb), 0.045), transparent 62%),
+        rgba(var(--theme-on-panel-rgb), 0.035);
+    box-shadow: inset 3px 0 rgba(var(--theme-on-panel-rgb), 0.08);
+}
+
+.release-notice-summary article:last-child {
+    border-color: rgba(var(--theme-panel-accent-rgb), 0.24);
+    background:
+        linear-gradient(90deg, rgba(var(--theme-panel-accent-rgb), 0.09), transparent 68%),
+        rgba(var(--theme-on-panel-rgb), 0.035);
+    box-shadow: inset 3px 0 var(--theme-panel-accent);
 }
 
 .release-notice-summary article > span {
@@ -216,33 +269,67 @@ body.release-notice-open {
     gap: var(--space-2-5);
     padding: 14px var(--space-5);
     border-top: 1px solid rgba(var(--theme-on-panel-rgb), 0.11);
-    background: rgba(var(--theme-on-panel-rgb), 0.025);
+    background: color-mix(in srgb, var(--theme-panel) 94%, var(--theme-primary));
+    box-shadow: 0 -8px 24px rgba(var(--theme-primary-rgb), 0.08);
 }
 
 .release-notice-dialog .release-notice-primary,
-.release-notice-dialog .release-notice-secondary,
-.release-notice-dialog .release-notice-primary:hover,
-.release-notice-dialog .release-notice-secondary:hover {
+.release-notice-dialog .release-notice-secondary {
     min-height: 40px;
     padding: 0 15px !important;
     border-radius: 10px !important;
-    box-shadow: none !important;
     font-size: 11px;
     font-weight: 800;
+    cursor: pointer;
+    transition: transform 150ms ease, border-color 150ms ease, background 150ms ease, box-shadow 150ms ease;
 }
 
-.release-notice-dialog .release-notice-primary,
-.release-notice-dialog .release-notice-primary:hover {
+.release-notice-dialog .release-notice-primary {
     border: 1px solid var(--theme-settings-action) !important;
     color: var(--theme-on-settings-action) !important;
     background: var(--theme-settings-action) !important;
+    box-shadow: 0 7px 18px rgba(var(--theme-primary-rgb), 0.24) !important;
 }
 
-.release-notice-dialog .release-notice-secondary,
-.release-notice-dialog .release-notice-secondary:hover {
+.release-notice-dialog .release-notice-secondary {
     border: 1px solid rgba(var(--theme-on-panel-rgb), 0.14) !important;
     color: var(--theme-on-panel) !important;
     background: rgba(var(--theme-on-panel-rgb), 0.055) !important;
+    box-shadow: none !important;
+}
+
+.release-notice-dialog .release-notice-primary:hover {
+    border-color: color-mix(in srgb, var(--theme-settings-action) 84%, var(--theme-on-settings-action)) !important;
+    background: color-mix(in srgb, var(--theme-settings-action) 90%, var(--theme-on-settings-action)) !important;
+    box-shadow: 0 10px 24px rgba(var(--theme-primary-rgb), 0.3) !important;
+    transform: translateY(-2px);
+}
+
+.release-notice-dialog .release-notice-primary i {
+    margin-left: 3px;
+    transition: transform 150ms ease;
+}
+
+.release-notice-dialog .release-notice-primary:hover i {
+    transform: translateX(3px);
+}
+
+.release-notice-dialog .release-notice-secondary:hover {
+    border-color: rgba(var(--theme-panel-accent-rgb), 0.48) !important;
+    background: rgba(var(--theme-panel-accent-rgb), 0.1) !important;
+    box-shadow: 0 7px 18px rgba(var(--theme-primary-rgb), 0.16) !important;
+    transform: translateY(-2px);
+}
+
+.release-notice-dialog .release-notice-primary:active,
+.release-notice-dialog .release-notice-secondary:active {
+    box-shadow: none !important;
+    transform: translateY(0) scale(0.97);
+}
+
+.release-notice-dialog button:focus-visible {
+    outline: 3px solid rgba(var(--theme-panel-accent-rgb), 0.42) !important;
+    outline-offset: 3px;
 }
 
 @media (max-width: 540px) {
@@ -275,8 +362,12 @@ body.release-notice-open {
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .release-notice-dialog {
+    .release-notice-backdrop,
+    .release-notice-dialog,
+    .release-notice-dialog button,
+    .release-notice-dialog button i {
         animation: none;
+        transition: none !important;
     }
 }
 

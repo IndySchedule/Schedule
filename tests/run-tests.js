@@ -308,6 +308,9 @@ assert(indexSource.includes("const storageKey = 'indyReleaseNotice_v1_3_1'") && 
 assert(indexSource.includes('Schedules and setup') && indexSource.includes('Palettes and polish') && indexSource.includes('See all updates'), 'The release notice provides two short summaries and a route to the full history');
 assert(!indexSource.includes('updateNoticeShown_v4_0_0'), 'The obsolete release-notice storage key is removed');
 assert(secondaryStyles.includes('.release-notice-dialog') && secondaryStyles.includes('var(--theme-panel)'), 'The release notice follows the active palette');
+assert(secondaryStyles.includes('.release-notice-dialog::before') && secondaryStyles.includes('.release-notice-summary article:last-child'), 'The release notice uses a palette accent line and emphasizes the newest update');
+assert(secondaryStyles.includes('.release-notice-primary:hover') && secondaryStyles.includes('transform: translateX(3px)') && secondaryStyles.includes('.release-notice-primary:active'), 'Release-notice buttons provide hover, arrow, and pressed feedback');
+assert(secondaryStyles.includes('.release-notice-dialog button:focus-visible') && secondaryStyles.includes('outline-offset: 3px'), 'Release-notice buttons provide a visible keyboard focus state');
 assert(!indexSource.includes('Music Player') && !indexSource.includes('music player'), 'Public update notes do not reveal the hidden music player');
 assertEqual(JSON.parse(readFile('package.json')).version, '1.3.1', 'Package metadata identifies version 1.3.1');
 assert([privacySource, termsSource].every((source) => source.includes('Version 1.3.1')), 'Privacy and Terms identify the current 1.3.1 version');

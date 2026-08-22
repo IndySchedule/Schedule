@@ -56,6 +56,7 @@ const scenarios = [
     { name: 'terms-page-phone', viewport: 'phone', time: schoolTimes.duringClass, page: 'terms.html', action: 'legal-page', legalTitle: 'Simple terms for using the service.', legalSections: 8 },
     { name: 'today-at-indy', viewport: 'phone', time: schoolTimes.lunch, action: 'today' },
     { name: 'release-notice', viewport: 'chromebook', time: schoolTimes.duringClass, action: 'release-notice' },
+    { name: 'release-notice-daylight', viewport: 'chromebook', time: schoolTimes.duringClass, palette: 'daylight', action: 'release-notice' },
     { name: 'release-notice-phone', viewport: 'phone', time: schoolTimes.duringClass, action: 'release-notice' },
     { name: 'today-at-indy-daylight', viewport: 'chromebook', time: schoolTimes.lunch, palette: 'daylight', action: 'today' },
     { name: 'onboarding-first-step', viewport: 'phone', time: schoolTimes.beforeSchool, onboarding: true },
