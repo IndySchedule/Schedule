@@ -161,7 +161,31 @@ assert(appSource.includes("scheduleName === 'automatic'"), 'Automatic mode expli
 assert(!appSource.includes('const middleSchoolSchedules'), 'Middle-school schedules removed');
 assert(!appSource.includes('const grade5Schedules'), 'Fifth-grade schedules removed');
 assert(!appSource.includes('sendScheduleToExtension'), 'Website extension sync removed');
+assert(appSource.includes("overlay.setAttribute('role', 'dialog')") && appSource.includes('window.IndyDialogManager?.open(layer'), 'Developer tools opens as a keyboard-contained dialog');
+assert(appSource.includes("storageSearch.placeholder = 'Search saved settings…'") && appSource.includes('No saved settings match your search.'), 'Developer tools can search saved settings and explains empty results');
+assert(appSource.includes("debugContent.style.display = 'grid'") && appSource.includes("tabs.addEventListener('keydown'"), 'Developer tools preserves its storage grid and supports arrow-key tab navigation');
+assert(appSource.includes('innerWidth - width - 16') && appSource.includes('devtools-resize-handle'), 'Saved developer-tools placement is kept within the viewport');
+assert(appSource.includes('Sharp grayscale developer-board theme') && appSource.includes("title.textContent = 'Developer Tools'"), 'Developer tools uses the grayscale dashboard treatment');
+assert(appSource.includes("debugTab.textContent = 'Saved Settings'") && appSource.includes("internalToggleBtn.textContent = window.__devShowInternal"), 'Developer tools labels saved settings clearly and hides internal keys by default');
+assert(appSource.includes("sourcesTab.textContent = 'Sources'") && appSource.includes('async function loadSourceFile(path)'), 'Developer tools includes a read-only source-file browser');
+assert(appSource.includes("sourceSearch.placeholder = 'Find in file…'") && appSource.includes("copySourceBtn.textContent = 'Copy File'"), 'Source browser supports in-file search and copying');
+assert(appSource.includes("e.composedPath().includes(overlay)"), 'Developer-tools inside clicks remain inside when a control rerenders itself');
+assert(appSource.includes('scrollbar-color: #3b3b3b #101010') && appSource.includes('width: 8px;\n            height: 8px;'), 'Developer-tools scrollbars are thin and low-contrast');
 const indexSource = readFile('index.html');
+const notFoundSource = readFile('404.html');
+assert(notFoundSource.includes('We couldn’t find that page.') && notFoundSource.includes('Return to Dashboard'), '404 page provides a branded explanation and clear route home');
+assert(notFoundSource.includes('your schedule, and any settings saved in this browser are still safe'), '404 page reassures visitors that their saved data is unaffected');
+assert(notFoundSource.includes('id="requested-path"') && notFoundSource.includes('Report broken link'), '404 page shows the missing address and provides support reporting');
+assert(!notFoundSource.includes('Firebase Command-Line Interface'), 'Default Firebase 404 copy is removed');
+const privacySource = readFile('privacy.html');
+const termsSource = readFile('terms.html');
+const legalStyles = readFile('legal.css');
+assert([privacySource, termsSource].every((source) => source.includes('/legal.css') && source.includes('class="legal-hero"') && source.includes('class="legal-sidebar"')), 'Privacy and Terms share the themed legal-page structure');
+assert(privacySource.includes('Local by default') && privacySource.includes('Analytics by choice'), 'Privacy page summarizes its main choices in plain language');
+assert(termsSource.includes('Use it responsibly') && termsSource.includes('Unofficial resource'), 'Terms page summarizes its main responsibilities in plain language');
+assert(termsSource.includes('Apache License 2.0') && termsSource.includes('not operated by, affiliated with, or endorsed by'), 'Terms distinguish the open-source license and clearly describe the unofficial service');
+assert(privacySource.includes('Storage, Retention, and Security') && privacySource.includes('Children’s Privacy'), 'Privacy page covers retention, deletion, security, and its high-school audience');
+assert(legalStyles.includes('.legal-layout') && legalStyles.includes('.table-of-contents') && legalStyles.includes('@media (max-width: 840px)'), 'Legal pages include desktop navigation and responsive layouts');
 const musicPlayerSource = readFile('Music_Player.html');
 assert(musicPlayerSource.includes('const METADATA_CONCURRENCY = 3'), 'Music Player bounds concurrent metadata work for large libraries');
 assert(musicPlayerSource.includes("art.loading = 'lazy'") && musicPlayerSource.includes("art.decoding = 'async'"), 'Music Player lazily decodes sidebar artwork');
@@ -233,7 +257,7 @@ assert(!authSource.includes("localStorage.setItem('authToken'"), 'Firebase acces
 assert(appSource.includes('return window.authManager || null') && !appSource.includes('setTimeout(checkAuth, 50)'), 'Core schedule initialization does not wait indefinitely for optional authentication');
 const dialogManagerSource = readFile('dialog-manager.js');
 assert(dialogManagerSource.includes("event.key !== 'Tab'") && dialogManagerSource.includes('sibling.inert = true'), 'Modal dialogs trap focus and make background branches inert');
-assert(indexSource.includes('id="palette-more-toggle"') && readFile('styles2.css').includes('.palette-option.palette-extra:not(.selected)'), 'The palette chooser presents a compact featured set with an expandable remainder');
+assert(!indexSource.includes('id="palette-more-toggle"') && !readFile('script2.js').includes('initializePaletteDisclosure'), 'The curated palette collection no longer hides choices behind a disclosure');
 assert(indexSource.includes('data-edition-src=') && !indexSource.includes('class="edition-hero-sign edition-hero-sign-music" src='), 'Edition artwork loads only when its edition is active');
 assert(appSource.includes("document.body.appendChild(card)"), 'Today dialog escapes the blurred dashboard stacking context');
 const primaryStyles = readFile('styles.css');
@@ -262,8 +286,8 @@ assert(calendarGenerator.includes('first.id.localeCompare(second.id)'), 'Calenda
 assert(liveDataValidator.includes('Lunch menu has no dated entries.') && liveDataValidator.includes('Calendar events must be an array.'), 'Publication validation covers both live-data sources');
 assert(initialCalendarData.source === 'https://ihs.wcs.edu/calendar', 'Initial calendar fallback identifies the official source');
 assert(initialCalendarData.schemaVersion === 1 && initialCalendarData.staleAfterHours === 8, 'Calendar fallback declares its schema and freshness threshold');
-assert(secondaryStyles.includes('.brand-logo-art') && secondaryStyles.includes('clip-path: inset(0 0 0 3px)'), 'Shared logo treatment clips the source image edge artifact');
-assertEqual((indexSource.match(/brand-logo-art/g) || []).length, 6, 'Every visible brand-logo instance, including account and onboarding marks, uses the shared artifact fix');
+assert(secondaryStyles.includes('.brand-logo-art') && secondaryStyles.includes('clip-path: circle(48% at 52% 50%)'), 'Shared logo treatment crops the square source artwork to its circular mark');
+assertEqual((indexSource.match(/brand-logo-art/g) || []).length, 7, 'Every visible brand-logo instance, including account, release-notice, and onboarding marks, uses the shared artifact fix');
 assert(indexSource.includes('class="settings-form-grid"'), 'Schedule and lunch controls use the responsive settings grid');
 assert(indexSource.includes('class="schedule-tools-grid"'), 'Secondary schedule controls share a responsive tools grid');
 assert(indexSource.includes('class="settings-group display-options-card"'), 'Display options remain an independent settings card');
@@ -275,12 +299,19 @@ assert(secondaryStyles.includes('overflow-x: auto;\n        overflow-y: hidden;'
 assert(indexSource.includes('class="settings-group legal-overview-card"'), 'Privacy and Terms uses the unified full-width card');
 assert(indexSource.includes('id="delete-local-data"') && indexSource.includes('id="delete-local-data-confirmation"'), 'Privacy controls provide a guarded local-data deletion action');
 assert(authSource.includes('localStorage.clear()') && authSource.includes('initializeLocalDataControls'), 'Local-data deletion clears browser storage through its initialized privacy control');
-assert(indexSource.includes('Version 1.3.0') && indexSource.includes('v1.3.0'), 'About and release notes identify the current 1.3.0 version');
-assert(indexSource.includes('v1.2.0') && indexSource.includes('v1.1.0'), 'Previous releases remain in the update history');
+assert(indexSource.includes('Version 1.3.1') && indexSource.includes('v1.3.1'), 'About and release notes identify the current 1.3.1 version');
+assert(indexSource.includes('v1.3.0') && indexSource.includes('v1.2.0') && indexSource.includes('v1.1.0'), 'Previous releases remain in the update history');
 assert(indexSource.includes('change just today’s schedule') && indexSource.includes('font menu') && indexSource.includes('account syncing more reliable'), 'The 1.3.0 notes explain its major schedule and preference changes in plain language');
+assert(indexSource.includes('twenty choices grouped into Essentials') && indexSource.includes('built-in code file viewer') && indexSource.includes('entire window follows your selected palette'), 'The 1.3.1 notes explain its palette, Developer Tools, and Today at Indy improvements');
+assert(indexSource.includes('id="release-notice-backdrop"') && indexSource.includes('Versions 1.3.0 + 1.3.1'), 'Returning users receive a combined 1.3.0 and 1.3.1 release notice');
+assert(indexSource.includes("const storageKey = 'indyReleaseNotice_v1_3_1'") && indexSource.includes("localStorage.setItem('indyReleaseNotice_v1_3_1', 'true')"), 'The 1.3.1 release notice uses a new one-time dismissal key');
+assert(indexSource.includes('Schedules and setup') && indexSource.includes('Palettes and polish') && indexSource.includes('See all updates'), 'The release notice provides two short summaries and a route to the full history');
+assert(!indexSource.includes('updateNoticeShown_v4_0_0'), 'The obsolete release-notice storage key is removed');
+assert(secondaryStyles.includes('.release-notice-dialog') && secondaryStyles.includes('var(--theme-panel)'), 'The release notice follows the active palette');
 assert(!indexSource.includes('Music Player') && !indexSource.includes('music player'), 'Public update notes do not reveal the hidden music player');
-assertEqual(JSON.parse(readFile('package.json')).version, '1.3.0', 'Package metadata identifies version 1.3.0');
-assertEqual((indexSource.match(/<div class="wn-entry(?: current-release)?">/g) || []).length, 8, 'What’s New includes the initial release and seven focused updates');
+assertEqual(JSON.parse(readFile('package.json')).version, '1.3.1', 'Package metadata identifies version 1.3.1');
+assert([privacySource, termsSource].every((source) => source.includes('Version 1.3.1')), 'Privacy and Terms identify the current 1.3.1 version');
+assertEqual((indexSource.match(/<div class="wn-entry(?: current-release)?">/g) || []).length, 9, 'What’s New includes the initial release and eight focused updates');
 assertEqual((indexSource.match(/<div class="wn-entry current-release">/g) || []).length, 1, 'Exactly one update is marked as the current release');
 assert(!indexSource.includes('id="bg-image"'), 'Retired background-image upload is removed from Appearance settings');
 assert(!indexSource.includes('id="bg-image-drop-area"'), 'Retired background-image drop area is removed');
@@ -289,16 +320,18 @@ assert(!['custom-schedule', 'schedule-name', 'num-periods', 'save-schedule-butto
 assert(indexSource.includes('id="gradient-preview"'), 'Gradient editor includes a live preview');
 assert(indexSource.includes('id="reset-gradient"'), 'Gradient editor can restore the Indy default');
 assert(!indexSource.includes('id="gradient-enabled"'), 'Always-on gradient does not show a redundant enable switch');
-assertEqual((indexSource.match(/class="palette-option/g) || []).length, 25, 'Appearance offers twenty-four optimized presets and one custom palette');
+assertEqual((indexSource.match(/class="palette-option/g) || []).length, 21, 'Appearance offers twenty balanced presets and one custom palette');
 assertEqual((indexSource.match(/class="edition-option"/g) || []).length, 3, 'Appearance retains three special-edition controls');
 assert(['friday-night-lights', 'historic-franklin', 'music-city'].every((id) => indexSource.includes(`data-edition="${id}"`)), 'Every special edition retains an Appearance control');
 assert(/data-edition="friday-night-lights"[^>]*hidden/.test(indexSource), 'Friday Night Lights is temporarily hidden from Appearance');
 assert(/data-edition="historic-franklin"[^>]*hidden/.test(indexSource), 'Historic Franklin is temporarily hidden from Appearance');
 assert(!/data-edition="music-city"[^>]*hidden/.test(indexSource), 'Music City remains available in Appearance');
-assert(['midnight', 'dark-plum', 'graphite', 'forest-night'].every((id) => indexSource.includes(`data-palette="${id}"`)), 'Four dedicated dark palettes are available');
-assert(['monochrome', 'slate', 'aurora', 'rose-quartz', 'lavender', 'cherry-blossom', 'sunset-sorbet', 'sage-rose'].every((id) => indexSource.includes(`data-palette="${id}"`)), 'Modern, monochrome, and soft-color palette additions are available');
-assert(['prism-rush', 'tropical', 'candy-pop', 'daylight', 'cotton-candy', 'lemonade'].every((id) => indexSource.includes(`data-palette="${id}"`)), 'Vivid and light-dashboard palette additions are available');
-assert(!indexSource.includes('class="palette-grid-label"'), 'Palette presets appear in one uncategorized collection');
+assert(['indy', 'daylight', 'monochrome', 'slate', 'dark-mode'].every((id) => indexSource.includes(`data-palette="${id}"`)), 'Essentials provides five everyday palette choices');
+assert(['midnight', 'graphite', 'deep-ocean', 'plum-night', 'forest-night'].every((id) => indexSource.includes(`data-palette="${id}"`)), 'The Dark category provides five distinct palette choices');
+assert(['coastal-sky', 'lavender-mist', 'soft-sage', 'blush', 'lemonade'].every((id) => indexSource.includes(`data-palette="${id}"`)), 'The collection offers a varied group of genuinely light palettes');
+assert(['prism-rush', 'tropical', 'candy-pop', 'sunset', 'mango-wave'].every((id) => indexSource.includes(`data-palette="${id}"`)), 'The Colorful category provides five distinct palette choices');
+assertEqual((indexSource.match(/class="palette-grid-label"/g) || []).length, 5, 'Palette presets are grouped into five understandable categories');
+assert(['Dark Teal', 'Dark Plum', 'Rose Quartz', 'Cherry Blossom'].every((name) => !indexSource.includes(`<span>${name}</span>`)), 'Redundant palette choices remain removed from the visible collection');
 assert(indexSource.includes('id="palette-accent-color"') && indexSource.includes('id="palette-surface-color"'), 'Custom palette exposes all four color roles');
 assert(indexSource.includes('id="lunch-wave"'), 'Lunch-wave selector is available');
 assert(['A', 'B', 'C'].every((wave) => indexSource.includes(`<option value="${wave}">`)), 'All three lunch-wave options are available');
@@ -367,6 +400,9 @@ assert(secondaryStyles.includes('opacity: 0.82 !important') && secondaryStyles.i
 assert(secondaryStyles.includes('rgba(var(--theme-dashboard-accent-rgb), 0.34)'), 'Progress fill receives a restrained palette-aware accent glow');
 assert(secondaryStyles.includes('#schedule .period.is-current') && secondaryStyles.includes('transform: none !important'), 'Current schedule row stays aligned with neighboring rows');
 assert(secondaryStyles.includes('var(--page-gradient) !important') && secondaryStyles.includes('rgba(var(--color-black-rgb), 0.46)'), 'Selected Settings item follows the active palette gradient');
+assert(secondaryStyles.includes('#settings-sidebar .palette-option.selected::after') && secondaryStyles.includes('margin-top: 4px'), 'Selected palette label stays clear of the palette description');
+assert(!secondaryStyles.includes(':root[data-dashboard-tone="light"] .today-card'), 'Light palettes do not force Today at Indy back to a dark legacy surface');
+assert(secondaryStyles.includes('Today at Indy — anchored, palette-aware dashboard popover.') && secondaryStyles.includes('var(--theme-panel) !important'), 'Today at Indy uses the active palette panel roles');
 assert(!primaryStyles.includes('.nav-item.active.nav-item'), 'Legacy active-nav specificity override is removed from the base stylesheet');
 assert(secondaryStyles.includes('Complete palette coverage for Settings'), 'Specialized Settings panels use the final palette-aware cascade layer');
 assert(['#legal-panel', '#whatsnew-panel', '#contact-panel'].every((selector) => secondaryStyles.includes(selector)), 'Legal, What’s New, and Contact have explicit palette coverage');
@@ -425,7 +461,7 @@ gradientElements['palette-surface-hex'] = mockGradientElement();
 gradientElements['gradient-settings'] = mockGradientElement();
 gradientElements['gradient-preview'] = mockGradientElement();
 gradientElements['reset-gradient'] = mockGradientElement();
-const mockPaletteButtons = ['indy', 'ocean', 'dark-teal', 'earth', 'neon', 'pastel', 'midnight', 'dark-plum', 'graphite', 'forest-night', 'monochrome', 'slate', 'aurora', 'rose-quartz', 'lavender', 'cherry-blossom', 'sunset-sorbet', 'sage-rose', 'prism-rush', 'tropical', 'candy-pop', 'daylight', 'cotton-candy', 'lemonade', 'custom'].map((id) => {
+const mockPaletteButtons = ['indy', 'daylight', 'monochrome', 'slate', 'dark-mode', 'coastal-sky', 'lavender-mist', 'soft-sage', 'blush', 'lemonade', 'prism-rush', 'tropical', 'candy-pop', 'sunset', 'mango-wave', 'midnight', 'graphite', 'deep-ocean', 'plum-night', 'forest-night', 'custom'].map((id) => {
     const button = mockGradientElement();
     button.dataset.palette = id;
     return button;
@@ -462,9 +498,11 @@ assert(document.body.style.background.includes('#123456 0%'), 'Changing the star
 assert(document.documentElement.style['--page-gradient'].includes('#123456 0%'), 'Changing the picker updates the dashboard gradient variable');
 assertEqual((document.body.style.background.match(/#/g) || []).length, 2, 'Rendered page gradient contains exactly two color stops');
 assertEqual(window.gradientManager.paletteId, 'custom', 'Editing a color activates the Custom palette');
-mockPaletteButtons.find((button) => button.dataset.palette === 'ocean').listeners.click();
-assertEqual(window.gradientManager.paletteId, 'ocean', 'Clicking a preset applies that palette');
-assertEqual(window.gradientManager.colors.join(','), '#112D4E,#3F72AF,#DBE2EF,#F9F7F7', 'Ocean preset applies all four source colors');
+mockPaletteButtons.find((button) => button.dataset.palette === 'coastal-sky').listeners.click();
+assertEqual(window.gradientManager.paletteId, 'coastal-sky', 'Clicking a preset applies that palette');
+assertEqual(window.gradientManager.colors.join(','), '#E0F2FE,#BAE6FD,#0369A1,#F8FCFF', 'Coastal Sky applies all four source colors');
+window.gradientManager.loadExternalSettings({ paletteId: 'ocean' });
+assertEqual(window.gradientManager.paletteId, 'coastal-sky', 'A retired saved palette migrates to its closest current replacement');
 assert(document.documentElement.style['--theme-on-surface'], 'Palette application derives a surface text color');
 function testLuminance(hex) {
     const channels = [1, 3, 5].map((offset) => parseInt(hex.slice(offset, offset + 2), 16) / 255);
@@ -474,6 +512,15 @@ function testLuminance(hex) {
 function testContrast(first, second) {
     const values = [testLuminance(first), testLuminance(second)].sort((a, b) => b - a);
     return (values[0] + 0.05) / (values[1] + 0.05);
+}
+function testMix(first, second, firstWeight) {
+    const channels = (hex) => [1, 3, 5].map((offset) => parseInt(hex.slice(offset, offset + 2), 16));
+    const firstChannels = channels(first);
+    const secondChannels = channels(second);
+    return `#${firstChannels.map((channel, index) => (
+        Math.round(channel * firstWeight + secondChannels[index] * (1 - firstWeight))
+            .toString(16).padStart(2, '0')
+    )).join('')}`;
 }
 const presetContrastIsSafe = Object.keys(window.IndyPalettes).every((paletteId) => {
     window.gradientManager.selectPalette(paletteId);
@@ -493,7 +540,7 @@ assert(Object.keys(window.IndyPalettes).filter((paletteId) => {
     window.gradientManager.selectPalette(paletteId);
     return testContrast(document.documentElement.style['--theme-panel'], '#FFFFFF') >= 7;
 }), 'Dark dashboard palettes keep a strongly contrasted schedule panel');
-assert(['pastel', 'daylight', 'cotton-candy', 'lemonade'].every((paletteId) => {
+assert(['daylight', 'monochrome', 'slate', 'coastal-sky', 'lavender-mist', 'soft-sage', 'blush', 'lemonade', 'prism-rush', 'tropical', 'candy-pop', 'sunset'].every((paletteId) => {
     window.gradientManager.selectPalette(paletteId);
     return document.documentElement.dataset.dashboardTone === 'light'
         && testLuminance(document.documentElement.style['--theme-panel']) > 0.5
@@ -502,9 +549,9 @@ assert(['pastel', 'daylight', 'cotton-candy', 'lemonade'].every((paletteId) => {
             document.documentElement.style['--theme-on-panel']
         ) >= 4.5;
 }), 'Pale presets render a genuinely light dashboard and readable light schedule panel');
-assert(['midnight', 'dark-plum', 'graphite', 'forest-night'].every((paletteId) => (
+assert(['dark-mode', 'midnight', 'graphite', 'deep-ocean', 'plum-night', 'forest-night'].every((paletteId) => (
     testLuminance(window.IndyPalettes[paletteId].colors[3]) < 0.2
-)), 'Every dedicated dark palette uses a genuinely dark card surface');
+)), 'Every neutral or dedicated dark palette uses a genuinely dark card surface');
 assert(Object.keys(window.IndyPalettes).every((paletteId) => {
     window.gradientManager.selectPalette(paletteId);
     return testContrast(
@@ -522,6 +569,16 @@ assert(Object.keys(window.IndyPalettes).every((paletteId) => {
         document.documentElement.style['--theme-panel']
     ) >= 3;
 }), 'Every preset derives readable dashboard and schedule accents');
+assert(Object.keys(window.IndyPalettes).every((paletteId) => {
+    window.gradientManager.selectPalette(paletteId);
+    const opacity = Number(document.documentElement.style['--theme-dashboard-glow-opacity']);
+    const background = document.documentElement.style['--theme-dashboard-base'];
+    const glow = document.documentElement.style['--theme-dashboard-glow'];
+    const renderedGlow = testMix(glow, background, opacity);
+    const renderedContrast = testContrast(renderedGlow, background);
+    return opacity >= 0.08 && opacity <= 0.3
+        && renderedContrast >= 1.18 && renderedContrast <= 1.38;
+}), 'Every palette normalizes the timer glow to a consistently subtle visible contrast');
 assert(Object.keys(window.IndyPalettes).every((paletteId) => {
     window.gradientManager.selectPalette(paletteId);
     return ['settings-canvas', 'settings-card', 'settings-inset', 'settings-action'].every((role) => (
@@ -542,5 +599,7 @@ window.gradientManager.loadExternalSettings({ paletteId: 'custom', colors: ['#00
 assertEqual(document.documentElement.style['--theme-ui-accent'], '#FFFFFF', 'All-dark custom palettes shift UI accents to light text');
 assert(secondaryStyles.includes('Eliminate legacy fixed text colors'), 'Settings text follows palette-aware foreground colors');
 assert(secondaryStyles.includes(':root[data-dashboard-tone="light"] .dashboard-shell'), 'Light palettes have a dedicated readable main-page treatment');
+assert(secondaryStyles.includes('rgba(var(--theme-dashboard-glow-rgb), var(--theme-dashboard-glow-opacity))'), 'Timer panels consume the normalized palette glow role');
+assert(designTokens.includes('--theme-dashboard-glow-opacity: 0.18'), 'Design tokens provide a safe timer-glow fallback before palette setup');
 
 print(`Passed ${passed} checks.`);

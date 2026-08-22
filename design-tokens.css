@@ -38,6 +38,9 @@
     --theme-dashboard-ink-rgb: 255, 255, 255;
     --theme-dashboard-accent: #c4ad62;
     --theme-dashboard-accent-rgb: 196, 173, 98;
+    --theme-dashboard-glow: #c4ad62;
+    --theme-dashboard-glow-rgb: 196, 173, 98;
+    --theme-dashboard-glow-opacity: 0.18;
     --theme-settings-canvas: #bcbec3;
     --theme-settings-canvas-rgb: 188, 190, 195;
     --theme-on-settings-canvas: #111827;

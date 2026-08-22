@@ -48,7 +48,16 @@ const scenarios = [
     { name: 'dashboard-after-school', viewport: 'chromebook', time: schoolTimes.afterSchool, state: 'after-school', heading: 'School’s Out!' },
     { name: 'dashboard-no-school', viewport: 'chromebook', time: schoolTimes.noSchool, state: 'no-school', heading: 'Next class:' },
     { name: 'dashboard-phone', viewport: 'phone', time: schoolTimes.duringClass, state: 'in-class', heading: 'Period 1' },
+    { name: 'not-found-page', viewport: 'chromebook', time: schoolTimes.duringClass, page: '404.html', action: 'not-found' },
+    { name: 'not-found-page-phone', viewport: 'phone', time: schoolTimes.duringClass, page: '404.html', action: 'not-found' },
+    { name: 'privacy-page', viewport: 'chromebook', time: schoolTimes.duringClass, page: 'privacy.html', action: 'legal-page', legalTitle: 'Your choices stay under your control.', legalSections: 9 },
+    { name: 'privacy-page-phone', viewport: 'phone', time: schoolTimes.duringClass, page: 'privacy.html', action: 'legal-page', legalTitle: 'Your choices stay under your control.', legalSections: 9 },
+    { name: 'terms-page', viewport: 'chromebook', time: schoolTimes.duringClass, page: 'terms.html', action: 'legal-page', legalTitle: 'Simple terms for using the service.', legalSections: 8 },
+    { name: 'terms-page-phone', viewport: 'phone', time: schoolTimes.duringClass, page: 'terms.html', action: 'legal-page', legalTitle: 'Simple terms for using the service.', legalSections: 8 },
     { name: 'today-at-indy', viewport: 'phone', time: schoolTimes.lunch, action: 'today' },
+    { name: 'release-notice', viewport: 'chromebook', time: schoolTimes.duringClass, action: 'release-notice' },
+    { name: 'release-notice-phone', viewport: 'phone', time: schoolTimes.duringClass, action: 'release-notice' },
+    { name: 'today-at-indy-daylight', viewport: 'chromebook', time: schoolTimes.lunch, palette: 'daylight', action: 'today' },
     { name: 'onboarding-first-step', viewport: 'phone', time: schoolTimes.beforeSchool, onboarding: true },
     { name: 'onboarding-first-step-chromebook', viewport: 'chromebook', time: schoolTimes.beforeSchool, onboarding: true },
     { name: 'onboarding-guest-confirmation', viewport: 'chromebook', time: schoolTimes.beforeSchool, onboarding: true, action: 'onboarding-guest-confirmation' },
@@ -56,7 +65,11 @@ const scenarios = [
     { name: 'onboarding-create-account', viewport: 'phone', time: schoolTimes.beforeSchool, onboarding: true, action: 'onboarding-create' },
     { name: 'onboarding-account-created', viewport: 'chromebook', time: schoolTimes.beforeSchool, onboarding: true, action: 'onboarding-account-created' },
     { name: 'palette-daylight', viewport: 'chromebook', time: schoolTimes.duringClass, palette: 'daylight', state: 'in-class', heading: 'Period 1' },
-    { name: 'palette-dark-plum', viewport: 'chromebook', time: schoolTimes.duringClass, palette: 'dark-plum', state: 'in-class', heading: 'Period 1' },
+    { name: 'palette-dark-mode', viewport: 'chromebook', time: schoolTimes.duringClass, palette: 'dark-mode', state: 'in-class', heading: 'Period 1' },
+    { name: 'palette-mango-wave', viewport: 'chromebook', time: schoolTimes.duringClass, palette: 'mango-wave', state: 'in-class', heading: 'Period 1' },
+    { name: 'palette-midnight', viewport: 'chromebook', time: schoolTimes.duringClass, palette: 'midnight', state: 'in-class', heading: 'Period 1' },
+    { name: 'palette-deep-ocean', viewport: 'chromebook', time: schoolTimes.duringClass, palette: 'deep-ocean', state: 'in-class', heading: 'Period 1' },
+    { name: 'palette-forest-night', viewport: 'chromebook', time: schoolTimes.duringClass, palette: 'forest-night', state: 'in-class', heading: 'Period 1' },
     { name: 'edition-friday-night-lights', viewport: 'chromebook', time: schoolTimes.duringClass, edition: 'friday-night-lights', state: 'in-class', heading: 'Period 1' },
     { name: 'edition-historic-franklin', viewport: 'chromebook', time: schoolTimes.duringClass, edition: 'historic-franklin', state: 'in-class', heading: 'Period 1' },
     { name: 'edition-music-city', viewport: 'chromebook', time: schoolTimes.duringClass, edition: 'music-city', state: 'in-class', heading: 'Period 1' },
@@ -75,6 +88,10 @@ const scenarios = [
     { name: 'settings-modal-accessibility', viewport: 'chromebook', time: schoolTimes.duringClass, settings: 'appearance', action: 'settings-a11y' },
     { name: 'font-local-restoration', viewport: 'chromebook', time: schoolTimes.duringClass, settings: 'appearance', fontFamily: 'Open Sans', expectedFont: "'Open Sans'" },
     { name: 'font-firestore-restoration', viewport: 'chromebook', time: schoolTimes.duringClass, settings: 'appearance', action: 'font-firestore', expectedFont: "'Source Sans Pro'" },
+    { name: 'devtools-popup', viewport: 'chromebook', time: schoolTimes.duringClass, action: 'devtools' },
+    { name: 'devtools-popup-phone', viewport: 'phone', time: schoolTimes.duringClass, action: 'devtools' },
+    { name: 'devtools-sources', viewport: 'chromebook', time: schoolTimes.duringClass, action: 'devtools-sources' },
+    { name: 'devtools-sources-phone', viewport: 'phone', time: schoolTimes.duringClass, action: 'devtools-sources' },
     { name: 'settings-schedule-override', viewport: 'chromebook', time: schoolTimes.duringClass, settings: 'schedule', scheduleOverride: 'normalNoSoar' },
     ...['schedule', 'appearance', 'about', 'legal', 'whatsnew', 'contact'].map((panel) => ({
         name: `settings-${panel}`,
@@ -252,6 +269,9 @@ function initializationScript(scenario) {
             window.Date = FixedDate;
             localStorage.setItem('showPeriodTimes', 'true');
             localStorage.setItem('progressBarEnabled', 'true');
+            ${scenario.action === 'release-notice'
+                ? "localStorage.removeItem('indyReleaseNotice_v1_3_1');"
+                : "localStorage.setItem('indyReleaseNotice_v1_3_1', 'true');"}
             ${scenario.onboarding
                 ? "localStorage.removeItem('lunchWave'); localStorage.removeItem('indyAnalyticsConsent_v1'); localStorage.removeItem('indyOnboardingComplete_v2');"
                 : "localStorage.setItem('lunchWave', 'A'); localStorage.setItem('indyAnalyticsConsent_v1', 'denied'); localStorage.setItem('indyOnboardingComplete_v2', 'true');"}
@@ -264,9 +284,14 @@ function initializationScript(scenario) {
     `;
 }
 
-async function waitForReady(page) {
+async function waitForReady(page, scenario) {
     for (let attempt = 0; attempt < 80; attempt += 1) {
-        const ready = await page.evaluate(`document.readyState === 'complete' && Boolean(document.querySelector('.dashboard-shell'))`);
+        const readySelector = scenario.action === 'not-found'
+            ? '.not-found-shell'
+            : scenario.action === 'legal-page'
+                ? '.legal-document'
+                : '.dashboard-shell';
+        const ready = await page.evaluate(`document.readyState === 'complete' && Boolean(document.querySelector(${JSON.stringify(readySelector)}))`);
         if (ready) {
             await page.evaluate(`document.fonts?.ready || Promise.resolve()`);
             await delay(350);
@@ -320,6 +345,7 @@ async function prepareScenario(page, scenario) {
         await page.evaluate(`document.getElementById('today-toggle')?.click()`);
         await delay(250);
     }
+    if (scenario.action === 'release-notice') await delay(600);
     if (scenario.action === 'account') {
         await page.evaluate(`document.querySelector('#sign-in-button .account-trigger')?.click()`);
         await delay(250);
@@ -402,6 +428,16 @@ async function prepareScenario(page, scenario) {
         await page.evaluate(`loadSettings({ fontFamily: 'Source Sans 3' })`);
         await delay(200);
     }
+    if (scenario.action === 'devtools' || scenario.action === 'devtools-sources') {
+        await page.evaluate(`window.dispatchEvent(new KeyboardEvent('keydown', { key: 'd', ctrlKey: true, shiftKey: true }))`);
+        await delay(250);
+    }
+    if (scenario.action === 'devtools-sources') {
+        await page.evaluate(`document.getElementById('devtools-tab-sources')?.click()`);
+        await delay(500);
+        await page.evaluate(`document.querySelector('.devtools-source-file[title="script.js"]')?.click()`);
+        await delay(500);
+    }
     if (scenario.account === 'signed-in' || scenario.account === 'signed-in-fallback') {
         await page.evaluate(`
             (() => {
@@ -465,6 +501,19 @@ async function inspectScenario(page, scenario) {
             const signOutTopElement = signOutRect ? document.elementFromPoint(signOutRect.left + signOutRect.width / 2, signOutRect.top + signOutRect.height / 2) : null;
             const fallbackAvatar = document.querySelector('.account-avatar-initial');
             const fallbackAvatarRect = fallbackAvatar?.getBoundingClientRect();
+            const devtools = document.getElementById('devtools-debug-overlay');
+            const devtoolsRect = devtools?.getBoundingClientRect();
+            const devtoolsTitleRect = document.getElementById('devtools-title')?.getBoundingClientRect();
+            const devtoolsTabsRect = document.querySelector('.devtools-tabs')?.getBoundingClientRect();
+            const notFoundShell = document.querySelector('.not-found-shell');
+            const notFoundRect = notFoundShell?.getBoundingClientRect();
+            const legalHero = document.querySelector('.legal-hero');
+            const legalHeroRect = legalHero?.getBoundingClientRect();
+            const legalDocument = document.querySelector('.legal-document');
+            const legalDocumentRect = legalDocument?.getBoundingClientRect();
+            const releaseNotice = document.getElementById('release-notice-backdrop');
+            const releaseNoticeDialog = releaseNotice?.querySelector('.release-notice-dialog');
+            const releaseNoticeRect = releaseNoticeDialog?.getBoundingClientRect();
             return {
                 viewport: { width: innerWidth, height: innerHeight },
                 horizontalOverflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
@@ -504,6 +553,11 @@ async function inspectScenario(page, scenario) {
                 imagesWithoutAlt,
                 activeOnboardingStep: Number(document.querySelector('.onboarding-step.active')?.dataset.step ?? -1),
                 onboardingFocusContained: Boolean(onboarding?.contains(document.activeElement)),
+                releaseNoticeOpen: Boolean(releaseNotice && !releaseNotice.hidden && releaseNotice.getAttribute('aria-hidden') === 'false'),
+                releaseNoticeContained: !releaseNoticeRect || (releaseNoticeRect.left >= -1 && releaseNoticeRect.right <= innerWidth + 1 && releaseNoticeRect.top >= -1 && releaseNoticeRect.bottom <= innerHeight + 1),
+                releaseNoticeFocusContained: Boolean(releaseNotice?.contains(document.activeElement)),
+                releaseNoticeTitle: document.getElementById('release-notice-title')?.textContent?.trim() || '',
+                releaseNoticeSummaryCount: document.querySelectorAll('.release-notice-summary article').length,
                 backgroundInert: Boolean(document.querySelector('.container')?.inert),
                 firebaseAvailable: Boolean(window.authManager),
                 countdownInitialized: Boolean(document.getElementById('countdown-heading')?.textContent?.trim()),
@@ -519,7 +573,37 @@ async function inspectScenario(page, scenario) {
                 interfaceFontToken: document.documentElement.style.getPropertyValue('--interface-font-family'),
                 bodyFontFamily: getComputedStyle(document.body).fontFamily,
                 settingsFontFamily: sidebar ? getComputedStyle(sidebar).fontFamily : '',
-                sourceSansLoaded: Boolean(document.getElementById('indy-font-source-sans-3'))
+                sourceSansLoaded: Boolean(document.getElementById('indy-font-source-sans-3')),
+                devtoolsOpen: visible(devtools),
+                devtoolsContained: !devtoolsRect || (devtoolsRect.left >= -1 && devtoolsRect.right <= innerWidth + 1 && devtoolsRect.top >= -1 && devtoolsRect.bottom <= innerHeight + 1),
+                devtoolsDialogRole: devtools?.getAttribute('role') || '',
+                devtoolsFocusContained: Boolean(document.getElementById('devtools-layer')?.contains(document.activeElement)),
+                devtoolsBackgroundInert: Boolean(document.querySelector('.container')?.inert),
+                devtoolsStorageGrid: devtools ? getComputedStyle(document.getElementById('devtools-debug-content')).display : '',
+                devtoolsSearchVisible: visible(document.querySelector('.devtools-storage-toolbar input')),
+                devtoolsTitleVisible: visible(document.getElementById('devtools-title')),
+                devtoolsTabsVisible: visible(document.querySelector('.devtools-tabs')),
+                devtoolsTitleRect: devtoolsTitleRect ? { left: devtoolsTitleRect.left, top: devtoolsTitleRect.top, right: devtoolsTitleRect.right, bottom: devtoolsTitleRect.bottom } : null,
+                devtoolsTabsRect: devtoolsTabsRect ? { left: devtoolsTabsRect.left, top: devtoolsTabsRect.top, right: devtoolsTabsRect.right, bottom: devtoolsTabsRect.bottom } : null,
+                devtoolsScheduleActionCount: [...document.querySelectorAll('.devtools-action-group button')].filter((button) => button.textContent === 'Next Schedule').length,
+                devtoolsInternalSettingHidden: ![...document.querySelectorAll('.devtools-key-cell')].some((cell) => cell.textContent === 'devtoolsOverlayPlacement'),
+                devtoolsSourcesVisible: visible(document.getElementById('devtools-sources-content')),
+                devtoolsActiveSource: document.querySelector('.devtools-source-file.is-active')?.textContent || '',
+                devtoolsSourceLineCount: document.querySelectorAll('.devtools-source-line').length,
+                devtoolsSourceFileCount: document.querySelectorAll('.devtools-source-file').length,
+                devtoolsScrollbarWidth: devtools ? getComputedStyle(document.querySelector('.devtools-source-code'), '::-webkit-scrollbar').width : '',
+                notFoundVisible: visible(notFoundShell),
+                notFoundContained: !notFoundRect || (notFoundRect.left >= -1 && notFoundRect.right <= innerWidth + 1),
+                notFoundTitle: document.getElementById('not-found-title')?.textContent || '',
+                notFoundPath: document.getElementById('requested-path')?.textContent || '',
+                notFoundHelpCount: document.querySelectorAll('.help-list li').length,
+                legalHeroVisible: visible(legalHero),
+                legalHeroContained: !legalHeroRect || (legalHeroRect.left >= -1 && legalHeroRect.right <= innerWidth + 1),
+                legalDocumentContained: !legalDocumentRect || (legalDocumentRect.left >= -1 && legalDocumentRect.right <= innerWidth + 1),
+                legalTitle: document.getElementById('page-title')?.textContent || '',
+                legalSectionCount: document.querySelectorAll('.legal-section').length,
+                legalTocCount: document.querySelectorAll('.table-of-contents a').length,
+                legalCurrentDocument: document.querySelector('.document-switcher [aria-current="page"]')?.textContent || ''
             };
         })()
     `);
@@ -565,9 +649,52 @@ function validateScenario(scenario, result) {
         check(result.settingsFontFamily.includes(expectedCssFamily), `Settings does not use ${expectedCssFamily}: ${result.settingsFontFamily}`);
         if (scenario.action === 'font-firestore') check(result.sourceSansLoaded, 'Source Sans 3 stylesheet was not loaded on demand');
     }
+    if (scenario.action === 'devtools' || scenario.action === 'devtools-sources') {
+        check(result.devtoolsOpen, 'developer tools did not open');
+        check(result.devtoolsContained, 'developer tools is outside the viewport');
+        check(result.devtoolsDialogRole === 'dialog', `developer tools role is ${result.devtoolsDialogRole || 'missing'}`);
+        check(result.devtoolsFocusContained && result.devtoolsBackgroundInert, 'developer tools did not contain focus and isolate the dashboard');
+        check(result.devtoolsTitleVisible && result.devtoolsTabsVisible, 'developer-tools title or tabs are not visible');
+        check(result.devtoolsScheduleActionCount === 1, `schedule action appears ${result.devtoolsScheduleActionCount} times`);
+        check(result.devtoolsInternalSettingHidden, 'internal developer-tools settings are visible by default');
+    }
+    if (scenario.action === 'devtools') {
+        check(result.devtoolsStorageGrid === 'grid', `saved-settings layout is ${result.devtoolsStorageGrid}`);
+        check(result.devtoolsSearchVisible, 'saved-settings search is not visible');
+    }
+    if (scenario.action === 'devtools-sources') {
+        check(result.devtoolsSourcesVisible, 'Sources panel is not visible');
+        check(result.devtoolsOpen, 'developer tools closed after selecting a source file');
+        check(result.devtoolsActiveSource === 'script.js', `expected script.js after file selection, received ${result.devtoolsActiveSource || 'no file'}`);
+        check(result.devtoolsSourceLineCount > 100, `source viewer rendered only ${result.devtoolsSourceLineCount} lines`);
+        check(result.devtoolsSourceFileCount >= 15, `source tree contains only ${result.devtoolsSourceFileCount} files`);
+        check(result.devtoolsScrollbarWidth === '8px', `source scrollbar width is ${result.devtoolsScrollbarWidth || 'unknown'}`);
+    }
+    if (scenario.action === 'not-found') {
+        check(result.notFoundVisible, '404 recovery card is not visible');
+        check(result.notFoundContained, '404 recovery card is clipped horizontally');
+        check(result.notFoundTitle === 'We couldn’t find that page.', `unexpected 404 title: ${result.notFoundTitle}`);
+        check(result.notFoundPath.includes('404.html'), `requested address is missing: ${result.notFoundPath}`);
+        check(result.notFoundHelpCount === 3, `expected three recovery tips, received ${result.notFoundHelpCount}`);
+    }
+    if (scenario.action === 'legal-page') {
+        check(result.legalHeroVisible, 'legal-page hero is not visible');
+        check(result.legalHeroContained && result.legalDocumentContained, 'legal-page content is clipped horizontally');
+        check(result.legalTitle === scenario.legalTitle, `unexpected legal-page title: ${result.legalTitle}`);
+        check(result.legalSectionCount === scenario.legalSections, `expected ${scenario.legalSections} legal sections, received ${result.legalSectionCount}`);
+        check(result.legalTocCount === scenario.legalSections, `table of contents has ${result.legalTocCount} links`);
+        check(Boolean(result.legalCurrentDocument), 'current legal document is not identified');
+    }
     if (scenario.action === 'today') {
         check(result.todayOpen, 'Today at Indy did not open');
         check(result.todayContained, 'Today at Indy is clipped outside the viewport');
+    }
+    if (scenario.action === 'release-notice') {
+        check(result.releaseNoticeOpen, 'release notice did not open');
+        check(result.releaseNoticeContained, 'release notice is clipped outside the viewport');
+        check(result.releaseNoticeFocusContained && result.backgroundInert, 'release notice did not contain focus and inert the dashboard');
+        check(result.releaseNoticeTitle === 'A more personal Indy Schedule.', `unexpected release-notice title: ${result.releaseNoticeTitle}`);
+        check(result.releaseNoticeSummaryCount === 2, `expected two release summaries, received ${result.releaseNoticeSummaryCount}`);
     }
     if (scenario.action === 'account') {
         check(result.accountDialogOpen, 'account dialog did not open');
@@ -593,7 +720,7 @@ function validateScenario(scenario, result) {
     if (scenario.action === 'settings-a11y') {
         check(result.settingsFocusContained, 'keyboard focus did not enter the Settings dialog');
         check(result.dashboardInertWhileSettingsOpen, 'dashboard was not inert while Settings was modal');
-        check(result.visiblePaletteCount < result.totalPaletteCount, 'additional palettes were not collapsed');
+        check(result.visiblePaletteCount === result.totalPaletteCount, 'the curated palette collection is not fully visible');
     }
     if (scenario.action === 'onboarding-create') {
         check(result.accountDialogOpen, 'create-account dialog did not open');
@@ -683,8 +810,8 @@ async function run() {
                 ] });
                 const initialization = await page.send('Page.addScriptToEvaluateOnNewDocument', { source: initializationScript(scenario) });
                 initializationId = initialization.identifier;
-                await page.send('Page.navigate', { url: `http://127.0.0.1:${port}/index.html` });
-                await waitForReady(page);
+                await page.send('Page.navigate', { url: `http://127.0.0.1:${port}/${scenario.page || 'index.html'}` });
+                await waitForReady(page, scenario);
                 await page.send('Page.removeScriptToEvaluateOnNewDocument', { identifier: initializationId });
                 initializationId = null;
                 await prepareScenario(page, scenario);

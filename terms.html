@@ -1,98 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Terms of Service - Indy Schedule</title>
-  <link rel="icon" type="image/png" sizes="32x32" href="indy_schedule_logo_sizes/indy-schedule-logo-32x32.png">
-  <style>
-    :root {
-      --bg-shell: #F4F4F1;
-      --card-bg: #FFFFFF;
-      --card-border: rgba(0,0,0,0.08);
-      --navy: #000035;
-      --text: #1A213A;
-      --muted: #6E758A;
-      --gold: #C4AD62;
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background: var(--bg-shell);
-      color: var(--text);
-      font-family: 'Inter','Roboto',sans-serif;
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
-      padding: 32px 16px;
-      overflow-y: auto;
-    }
-    .legal-shell {
-      width: 100%;
-      max-width: 920px;
-    }
-    .legal-card {
-      position: relative;
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 20px;
-      box-shadow: 0 10px 24px rgba(0,0,0,0.08);
-      padding: 28px 32px;
-      line-height: 1.6;
-      overflow: hidden;
-    }
-    .legal-card::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 6px;
-      background: linear-gradient(90deg, #000035 0%, #1A213A 60%, #C4AD62 100%);
-      border-radius: 20px 20px 0 0;
-    }
-    h1, h2, h3 { margin: 0 0 12px 0; color: var(--navy); }
-    h1 { font-size: 28px; }
-    h2 { font-size: 20px; }
-    h3 { font-size: 18px; }
-    p { margin: 0 0 12px 0; color: var(--text); }
-    ul { margin: 0 0 12px 20px; color: var(--text); }
-    a { color: var(--navy); font-weight: 600; text-decoration: none; }
-    a:hover { color: var(--gold); text-decoration: underline; }
-    .meta { color: var(--muted); margin-bottom: 16px; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Review the terms that apply when using Indy Schedule.">
+    <title>Terms of Service · Indy Schedule</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="/indy_schedule_logo_sizes/indy-schedule-logo-32x32.png">
+    <link rel="stylesheet" href="/design-tokens.css">
+    <link rel="stylesheet" href="/legal.css">
 </head>
 <body>
-    <div class="legal-shell">
-    <div class="legal-card">
-      <h1>Terms of Service</h1>
-      <p class="meta"><strong>Last Updated:</strong> August 12, 2026</p>
+    <a class="skip-link" href="#legal-document">Skip to terms</a>
+    <header class="site-header">
+        <a class="brand" href="/" aria-label="Go to the Indy Schedule dashboard">
+            <img src="/indy_schedule_logo_sizes/indy-schedule-logo-128x128.png" alt="">
+            <span class="brand-copy"><strong>Indy Schedule</strong><span>Independence High School</span></span>
+        </a>
+        <nav class="header-actions" aria-label="Page actions">
+            <a class="header-link secondary" href="/privacy.html">View Privacy</a>
+            <a class="header-link" href="/">Dashboard</a>
+        </nav>
+    </header>
 
-      <h2>Introduction</h2>
-      <p>Welcome to Indy Schedule. These Terms govern your use of the Indy Schedule website (the “Service”). By using the Service, you agree to these Terms.</p>
+    <main class="legal-page">
+        <section class="legal-hero" aria-labelledby="page-title">
+            <span class="legal-eyebrow">Using Indy Schedule</span>
+            <h1 id="page-title">Simple terms for using the service.</h1>
+            <p class="legal-intro">These terms explain the rules and responsibilities that apply when you use Indy Schedule, including optional accounts and third-party services.</p>
+            <div class="legal-meta"><span>Terms of Service</span><span>Last updated August 21, 2026</span><span>Version 1.3.1</span></div>
+            <div class="summary-grid" aria-label="Terms summary">
+                <div class="summary-item"><strong>Use it responsibly</strong><span>Do not misuse the site, its accounts, or its services.</span></div>
+                <div class="summary-item"><strong>Optional accounts</strong><span>You are responsible for keeping your sign-in credentials secure.</span></div>
+                <div class="summary-item"><strong>Unofficial resource</strong><span>Verify important schedule information with the school.</span></div>
+            </div>
+        </section>
 
-      <h2>Use License</h2>
-      <p>Permission is granted to temporarily access and use the Service for personal, non-commercial purposes. This is a license, not a transfer of title. You may not copy, modify, distribute, or reverse engineer the Service except where allowed by applicable law.</p>
+        <div class="legal-layout">
+            <aside class="legal-sidebar" aria-label="Terms navigation">
+                <nav class="document-switcher" aria-label="Legal documents">
+                    <a href="/privacy.html">Privacy</a><a href="/terms.html" aria-current="page">Terms</a>
+                </nav>
+                <span class="toc-label">On this page</span>
+                <nav class="table-of-contents">
+                    <a href="#introduction">Introduction</a><a href="#license">Using the site &amp; code</a>
+                    <a href="#accounts">Accounts</a><a href="#third-party">Third-party services</a>
+                    <a href="#disclaimer">Disclaimer</a><a href="#liability">Liability</a>
+                    <a href="#changes">Changes</a><a href="#contact">Contact</a>
+                </nav>
+                <p class="sidebar-help">Questions about these terms? <a href="mailto:indyschedule@outlook.com">Email support</a>.</p>
+            </aside>
 
-      <h2>Accounts and Authentication</h2>
-      <p>If you create an email/password account or use Google sign-in, you are responsible for maintaining the confidentiality of your credentials and for activity under your account.</p>
-
-      <h2>Third-Party Services</h2>
-      <p>The Service uses Google Firebase Authentication and Cloud Firestore for login and preference syncing, and Google Analytics for optional, consent-based usage analytics. Your use of these components is also subject to the providers’ terms and policies.</p>
-
-      <h2>Disclaimer</h2>
-      <p>The Service is provided “as is” without warranties of any kind, express or implied, including implied warranties of merchantability, fitness for a particular purpose, or non-infringement. Availability and uptime are not guaranteed.</p>
-
-      <h2>Limitations of Liability</h2>
-      <p>To the maximum extent permitted by law, Indy Schedule is not liable for any indirect, incidental, special, consequential, or punitive damages, or for loss of data or profits arising from your use of the Service or inability to use it.</p>
-
-      <h2>Changes to the Service or Terms</h2>
-      <p>We may update the Service or these Terms from time to time. Material changes will be posted with an updated “Last Updated” date. Continued use after changes constitutes acceptance.</p>
-
-      <h2>Contact Us</h2>
-      <p>If you have any questions regarding these Terms, please <a href="mailto:indyschedule@outlook.com">contact support</a>.</p>
-    </div>
-  </div>
+            <article class="legal-document" id="legal-document">
+                <section class="legal-section" id="introduction">
+                    <div class="section-heading"><span class="section-number">01</span><h2>Introduction</h2></div>
+                    <p>These Terms govern your use of the hosted Indy Schedule website and its account features (the “Service”). By using the Service, you agree to these Terms. If you do not agree, do not use the Service.</p>
+                </section>
+                <section class="legal-section" id="license">
+                    <div class="section-heading"><span class="section-number">02</span><h2>Using the Site and Source Code</h2></div>
+                    <p>You may use the hosted Service for lawful purposes. Do not try to disrupt the site, bypass its security, gain unauthorized access to accounts or data, overload its services, or use it to harm another person.</p>
+                    <p>These Terms apply to the hosted Service. Source code that Indy Schedule publishes with its project files is licensed separately under the <a href="/LICENSE">Apache License 2.0</a>, which permits uses such as copying, modifying, and distributing the licensed code subject to that license’s conditions.</p>
+                </section>
+                <section class="legal-section" id="accounts">
+                    <div class="section-heading"><span class="section-number">03</span><h2>Accounts and Authentication</h2></div>
+                    <p>Accounts are optional. If you create an email/password account or use Google sign-in, you are responsible for keeping your credentials secure and for activity under your account. Tell us promptly if you believe your account has been used without permission.</p>
+                    <p>Account features are intended for people age 13 or older. If you are under 13, do not create an account or submit personal information through the Service.</p>
+                </section>
+                <section class="legal-section" id="third-party">
+                    <div class="section-heading"><span class="section-number">04</span><h2>Third-Party Services</h2></div>
+                    <p>The Service uses Google Firebase Authentication and Cloud Firestore for optional login and preference syncing. Google Analytics is used for usage measurement only when you allow it. These services may be governed by Google’s terms and policies. Our handling of personal information is explained in the <a href="/privacy.html">Privacy Policy</a>.</p>
+                </section>
+                <section class="legal-section" id="disclaimer">
+                    <div class="section-heading"><span class="section-number">05</span><h2>Disclaimer</h2></div>
+                    <p>Indy Schedule is an independent, unofficial resource. It is not operated by, affiliated with, or endorsed by Independence High School or Williamson County Schools. Schedules, countdowns, calendar information, lunch information, and notices may be incomplete, delayed, or incorrect.</p>
+                    <p>Always follow instructions from the school and verify important information through official school sources. Do not rely on the Service for emergencies, school closures, attendance decisions, transportation, or other time-sensitive decisions.</p>
+                    <p>The Service is provided “as is” and “as available,” without warranties of accuracy, availability, merchantability, fitness for a particular purpose, or non-infringement, to the extent permitted by law.</p>
+                </section>
+                <section class="legal-section" id="liability">
+                    <div class="section-heading"><span class="section-number">06</span><h2>Limitations of Liability</h2></div>
+                    <p>To the maximum extent permitted by law, Indy Schedule and its maintainers are not liable for indirect, incidental, special, consequential, or punitive damages, or for loss of data, profits, opportunities, or school-related consequences arising from your use of—or reliance on—the Service.</p>
+                    <p>Some laws do not allow certain warranty exclusions or limits on liability. In those places, these provisions apply only to the extent the law allows and do not remove rights that cannot legally be waived.</p>
+                </section>
+                <section class="legal-section" id="changes">
+                    <div class="section-heading"><span class="section-number">07</span><h2>Changes to the Service or Terms</h2></div>
+                    <p>We may update the Service or these Terms from time to time. Material changes will be posted with an updated “Last Updated” date. Continued use after changes constitutes acceptance.</p>
+                </section>
+                <section class="legal-section" id="contact">
+                    <div class="section-heading"><span class="section-number">08</span><h2>Contact Us</h2></div>
+                    <p>If you have any questions regarding these Terms, please <a href="mailto:indyschedule@outlook.com">contact support</a>.</p>
+                </section>
+            </article>
+        </div>
+        <footer class="legal-footer"><span>Indy Schedule · Unofficial Independence High School resource</span><a href="/">Return to Dashboard</a></footer>
+    </main>
 </body>
 </html>

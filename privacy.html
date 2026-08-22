@@ -3,117 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Privacy Policy - Indy Schedule</title>
-    <link rel="icon" type="image/png" sizes="32x32" href="indy_schedule_logo_sizes/indy-schedule-logo-32x32.png">
-    <style>
-      :root {
-        --bg-shell: #F4F4F1;
-        --card-bg: #FFFFFF;
-        --card-border: rgba(0,0,0,0.08);
-        --navy: #000035;
-        --text: #1A213A;
-        --muted: #6E758A;
-        --gold: #C4AD62;
-      }
-      * { box-sizing: border-box; }
-      body {
-        margin: 0;
-        min-height: 100vh;
-        background: var(--bg-shell);
-        color: var(--text);
-        font-family: 'Inter','Roboto',sans-serif;
-        display: flex;
-        align-items: flex-start;
-        justify-content: center;
-        padding: 32px 16px;
-        overflow-y: auto;
-      }
-      .legal-shell {
-        width: 100%;
-        max-width: 920px;
-      }
-      .legal-card {
-        position: relative;
-        background: var(--card-bg);
-        border: 1px solid var(--card-border);
-        border-radius: 20px;
-        box-shadow: 0 10px 24px rgba(0,0,0,0.08);
-        padding: 28px 32px;
-        line-height: 1.6;
-        overflow: hidden;
-      }
-      .legal-card::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 6px;
-        background: linear-gradient(90deg, #000035 0%, #1A213A 60%, #C4AD62 100%);
-        border-radius: 20px 20px 0 0;
-      }
-      h1, h2, h3 { margin: 0 0 12px 0; color: var(--navy); }
-      h1 { font-size: 28px; }
-      h2 { font-size: 20px; }
-      h3 { font-size: 18px; }
-      p { margin: 0 0 12px 0; color: var(--text); }
-      ul { margin: 0 0 12px 20px; color: var(--text); }
-      a { color: var(--navy); font-weight: 600; text-decoration: none; }
-      a:hover { color: var(--gold); text-decoration: underline; }
-      .meta { color: var(--muted); margin-bottom: 16px; }
-    </style>
+    <meta name="description" content="Learn how Indy Schedule handles account information, preferences, and optional analytics.">
+    <title>Privacy Policy · Indy Schedule</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="/indy_schedule_logo_sizes/indy-schedule-logo-32x32.png">
+    <link rel="stylesheet" href="/design-tokens.css">
+    <link rel="stylesheet" href="/legal.css">
 </head>
 <body>
-    <div class="legal-shell">
-      <div class="legal-card">
-        <h1>Privacy Policy</h1>
-        <p class="meta"><strong>Last Updated:</strong> August 12, 2026</p>
-        <p>At Indy Schedule, we take your privacy seriously. This Privacy Policy explains how we collect, use, and protect your information when you use our website.</p>
+    <a class="skip-link" href="#legal-document">Skip to policy</a>
+    <header class="site-header">
+        <a class="brand" href="/" aria-label="Go to the Indy Schedule dashboard">
+            <img src="/indy_schedule_logo_sizes/indy-schedule-logo-128x128.png" alt="">
+            <span class="brand-copy"><strong>Indy Schedule</strong><span>Independence High School</span></span>
+        </a>
+        <nav class="header-actions" aria-label="Page actions">
+            <a class="header-link secondary" href="/terms.html">View Terms</a>
+            <a class="header-link" href="/">Dashboard</a>
+        </nav>
+    </header>
 
-        <h2>1. Information We Collect</h2>
-        <ul>
-            <li><strong>Account data:</strong> If you create an email/password account, Firebase stores your email address and securely manages your password credential; Indy Schedule does not receive your plaintext password. If you use Google sign-in, we receive your name, email address, and profile image from Google.</li>
-            <li><strong>Site usage and analytics:</strong> If you allow analytics, Google Analytics records page views, feature interactions, device/browser category, traffic source, and approximate location derived from IP. We do not send names, email addresses, schedules, period names, or lunch choices to Analytics.</li>
-            <li><strong>App preferences:</strong> Your palette, lunch wave, period names, and display settings are saved in your browser’s localStorage. If you sign in, these preferences may also be stored in Cloud Firestore for cross-device sync.</li>
-            <li><strong>Analytics preference:</strong> Your allow-or-decline choice is stored locally in your browser so the site can respect it on future visits.</li>
-        </ul>
+    <main class="legal-page">
+        <section class="legal-hero" aria-labelledby="page-title">
+            <span class="legal-eyebrow">Privacy at Indy Schedule</span>
+            <h1 id="page-title">Your choices stay under your control.</h1>
+            <p class="legal-intro">This policy explains what information Indy Schedule handles, where it is stored, and the choices available to you. Most features work without an account.</p>
+            <div class="legal-meta"><span>Privacy Policy</span><span>Last updated August 21, 2026</span><span>Version 1.3.1</span></div>
+            <div class="summary-grid" aria-label="Privacy summary">
+                <div class="summary-item"><strong>Local by default</strong><span>Preferences stay in this browser unless you choose to sign in.</span></div>
+                <div class="summary-item"><strong>Optional account sync</strong><span>Firebase can restore selected preferences across devices.</span></div>
+                <div class="summary-item"><strong>Analytics by choice</strong><span>Analytics runs only after you allow it and can be disabled later.</span></div>
+            </div>
+        </section>
 
-        <h2>2. How We Use Information</h2>
-        <ul>
-            <li>Provide and maintain the service, including authentication, personalization, and feature settings.</li>
-            <li>Operate consent-based analytics to measure visits and improve usability.</li>
-            <li>Sync or restore your preferences across devices when you sign in.</li>
-        </ul>
+        <div class="legal-layout">
+            <aside class="legal-sidebar" aria-label="Privacy policy navigation">
+                <nav class="document-switcher" aria-label="Legal documents">
+                    <a href="/privacy.html" aria-current="page">Privacy</a><a href="/terms.html">Terms</a>
+                </nav>
+                <span class="toc-label">On this page</span>
+                <nav class="table-of-contents">
+                    <a href="#information">Information we collect</a><a href="#use">How we use it</a>
+                    <a href="#storage">Storage &amp; retention</a><a href="#sharing">Sharing</a>
+                    <a href="#choices">Your choices</a><a href="#browser-storage">Browser storage</a>
+                    <a href="#children">Children's privacy</a><a href="#changes">Policy changes</a><a href="#contact">Contact</a>
+                </nav>
+                <p class="sidebar-help">Questions or deletion requests? <a href="mailto:indyschedule@outlook.com">Email support</a>.</p>
+            </aside>
 
-        <h2>3. Data Storage and Security</h2>
-        <ul>
-            <li>Authentication and preference sync use Google Firebase Authentication and Cloud Firestore. Local preferences also reside in your browser’s localStorage.</li>
-            <li>We apply reasonable security controls but cannot guarantee absolute security on the internet.</li>
-        </ul>
-
-        <h2>4. Sharing Your Information</h2>
-        <ul>
-            <li><strong>Service providers:</strong> Google Firebase processes optional authentication and preference syncing. If you consent, Google Analytics processes visitor usage measurements.</li>
-            <li><strong>Legal:</strong> We may disclose information if required by law or to protect users and the service.</li>
-            <li><strong>We do not sell or rent</strong> personal data.</li>
-        </ul>
-
-        <h2>5. Your Choices and Rights</h2>
-        <ul>
-            <li>You can sign out or request a password-reset email at any time. To request deletion of your Firebase account and synced data, <a href="mailto:indyschedule@outlook.com">email support</a>.</li>
-            <li>You can clear localStorage through your browser to remove on-device preferences.</li>
-            <li>You can allow or disable Analytics at any time under <strong>Settings → Privacy &amp; Terms</strong>. Declining Analytics does not affect schedule functionality.</li>
-        </ul>
-
-        <h2>6. Cookies and Local Storage</h2>
-        <p>We use localStorage to remember site preferences and your Analytics choice. When you allow Analytics, Google Analytics may use browser storage to distinguish visits and sessions. Advertising storage, advertising user data, and ad personalization remain disabled.</p>
-
-        <h2>7. Changes to This Policy</h2>
-        <p>We may update this Privacy Policy from time to time. Changes will be posted here with an updated “Last Updated” date.</p>
-
-        <h2>8. Contact Us</h2>
-        <p>If you have questions about this Privacy Policy, <a href="mailto:indyschedule@outlook.com">contact support</a>.</p>
-      </div>
-    </div>
+            <article class="legal-document" id="legal-document">
+                <section class="legal-section" id="information">
+                    <div class="section-heading"><span class="section-number">01</span><h2>Information We Collect</h2></div>
+                    <ul>
+                        <li><strong>Account data:</strong> If you create an email/password account, Firebase Authentication processes your display name, email address, and password credential. Indy Schedule does not receive or store your plaintext password. If you use Google sign-in, Google provides your name, email address, and profile image. Firebase may also process technical information such as your IP address, browser or user agent, and security logs to operate and protect authentication.</li>
+                        <li><strong>Site usage and analytics:</strong> If you allow analytics, Google Analytics measures page views, feature interactions, device and browser category, traffic source, and approximate location. We do not intentionally send names, email addresses, schedules, period names, or lunch choices to Analytics.</li>
+                        <li><strong>App preferences:</strong> Your palette, lunch wave, period names, schedule choice, and display settings are saved in your browser’s localStorage. If you sign in, selected preferences are also stored in Cloud Firestore so they can sync across devices.</li>
+                        <li><strong>Privacy choices:</strong> Your allow-or-decline Analytics choice is stored in your browser and may be included with your synced settings when you are signed in.</li>
+                        <li><strong>Messages you send:</strong> If you contact support, we receive the email address and information you choose to include in your message.</li>
+                    </ul>
+                </section>
+                <section class="legal-section" id="use">
+                    <div class="section-heading"><span class="section-number">02</span><h2>How We Use Information</h2></div>
+                    <ul><li>Show schedules and provide the features you request.</li><li>Create and secure optional accounts.</li><li>Save, sync, and restore your preferences when you sign in.</li><li>Measure consent-based usage trends so we can find problems and improve the site.</li><li>Respond to support, privacy, or deletion requests.</li></ul>
+                </section>
+                <section class="legal-section" id="storage">
+                    <div class="section-heading"><span class="section-number">03</span><h2>Storage, Retention, and Security</h2></div>
+                    <ul><li><strong>On your device:</strong> Local preferences remain until you clear the site’s data or your browser removes them.</li><li><strong>In your account:</strong> Firebase keeps authentication records and synced preferences while your account is active. After a valid deletion request, we delete the account and its synced Indy Schedule data; service-provider backup and security records may remain for the limited periods described in Google’s policies.</li><li><strong>Analytics:</strong> Analytics information is kept according to the retention settings for Indy Schedule’s Google Analytics property. Aggregated measurements may no longer identify a particular browser or visit.</li><li><strong>Location and security:</strong> Google may process data in the United States or other locations where it operates. We use reasonable safeguards, but no online service can guarantee absolute security.</li></ul>
+                </section>
+                <section class="legal-section" id="sharing">
+                    <div class="section-heading"><span class="section-number">04</span><h2>Sharing Your Information</h2></div>
+                    <ul><li><strong>Google service providers:</strong> Firebase processes authentication and preference syncing. If you consent, Google Analytics processes usage measurements. Their handling of data is also described in <a href="https://firebase.google.com/support/privacy">Firebase Privacy and Security</a> and <a href="https://policies.google.com/privacy">Google’s Privacy Policy</a>.</li><li><strong>Safety and legal requests:</strong> We may disclose information when reasonably necessary to comply with law, protect a person’s safety, prevent abuse, or protect the service.</li><li><strong>No selling:</strong> We do not sell or rent personal information, and we do not use it for personalized advertising.</li></ul>
+                </section>
+                <section class="legal-section" id="choices">
+                    <div class="section-heading"><span class="section-number">05</span><h2>Your Choices and Rights</h2></div>
+                    <ul><li>You can use the schedule without creating an account, sign out at any time, or request a password-reset email.</li><li>To request deletion of your Firebase account and synced settings, <a href="mailto:indyschedule@outlook.com?subject=Indy%20Schedule%20account%20deletion">email support</a>, preferably from the address connected to the account. We may need to verify that the account belongs to you. Clearing browser data alone does not delete cloud data.</li><li>You can use the site’s local-data control or your browser settings to remove preferences stored on that device.</li><li>You can allow or disable Analytics at any time under <strong>Settings → Privacy &amp; Terms</strong>. Declining Analytics does not affect schedule functionality.</li><li>Depending on where you live, privacy law may give you additional rights to access, correct, delete, or restrict the use of personal information. Contact us to make a request.</li></ul>
+                </section>
+                <section class="legal-section" id="browser-storage">
+                    <div class="section-heading"><span class="section-number">06</span><h2>Cookies and Local Storage</h2></div>
+                    <p>We use browser storage to remember site preferences, keep you signed in when requested, and remember your Analytics choice. We initialize Google Analytics measurement only after you allow it; Analytics may then use browser storage to distinguish visits and sessions. Advertising storage, advertising user data, and ad personalization remain disabled.</p>
+                </section>
+                <section class="legal-section" id="children">
+                    <div class="section-heading"><span class="section-number">07</span><h2>Children’s Privacy</h2></div>
+                    <p>Indy Schedule is designed for a high-school audience, and its account features are not intended for children under 13. If you are under 13, do not create an account or send personal information through the site. A parent or guardian who believes a child under 13 provided personal information can <a href="mailto:indyschedule@outlook.com?subject=Children's%20privacy%20request">contact us</a> to request its deletion.</p>
+                </section>
+                <section class="legal-section" id="changes">
+                    <div class="section-heading"><span class="section-number">08</span><h2>Changes to This Policy</h2></div>
+                    <p>We may update this Privacy Policy from time to time. Changes will be posted here with an updated “Last Updated” date.</p>
+                </section>
+                <section class="legal-section" id="contact">
+                    <div class="section-heading"><span class="section-number">09</span><h2>Contact Us</h2></div>
+                    <p>Indy Schedule is an independently maintained, unofficial project. If you have a privacy question or request, email <a href="mailto:indyschedule@outlook.com">indyschedule@outlook.com</a>.</p>
+                </section>
+            </article>
+        </div>
+        <footer class="legal-footer"><span>Indy Schedule · Unofficial Independence High School resource</span><a href="/">Return to Dashboard</a></footer>
+    </main>
 </body>
 </html>

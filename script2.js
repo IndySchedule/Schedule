@@ -121,25 +121,6 @@ function applyInterfaceFont(fontFamily) {
 window.applyInterfaceFont = applyInterfaceFont;
 window.normalizeInterfaceFont = normalizeInterfaceFont;
 
-function initializePaletteDisclosure() {
-    const grid = document.getElementById('palette-grid');
-    const toggle = document.getElementById('palette-more-toggle');
-    if (!grid || !toggle) return;
-    const featured = new Set(['indy', 'ocean', 'aurora', 'daylight', 'midnight', 'custom']);
-    grid.querySelectorAll('.palette-option').forEach((button) => {
-        button.classList.toggle('palette-extra', !featured.has(button.dataset.palette));
-    });
-    const render = (expanded) => {
-        grid.dataset.expanded = expanded ? 'true' : 'false';
-        toggle.setAttribute('aria-expanded', String(expanded));
-        toggle.innerHTML = expanded
-            ? 'Show fewer palettes <i class="fas fa-chevron-up" aria-hidden="true"></i>'
-            : 'Show more palettes <i class="fas fa-chevron-down" aria-hidden="true"></i>';
-    };
-    toggle.addEventListener('click', () => render(grid.dataset.expanded !== 'true'));
-    render(false);
-}
-
 function initializeOptionalAuthFallback() {
     if (window.authManager) return;
     const trigger = document.querySelector('#sign-in-button .account-trigger');
@@ -171,7 +152,6 @@ function initializeOptionalAuthFallback() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    initializePaletteDisclosure();
     initializeOptionalAuthFallback();
     applyInterfaceFont(localStorage.getItem('fontFamily'));
 });

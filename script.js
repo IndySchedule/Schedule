@@ -1083,8 +1083,573 @@ window.populateRenamePeriods = populateRenamePeriods;
             background: rgba(255,255,255,0.05);
             border-radius: 999px;
         }
+        #devtools-layer {
+            position: fixed;
+            inset: 0;
+            z-index: 2147483646;
+            pointer-events: none;
+        }
+        #devtools-debug-backdrop,
+        #devtools-debug-overlay { pointer-events: auto; }
+        #devtools-debug-overlay {
+            box-sizing: border-box;
+            width: min(920px, calc(100vw - 32px));
+            height: min(720px, calc(100dvh - 32px));
+        }
+        #devtools-debug-overlay button,
+        #devtools-debug-overlay input,
+        #devtools-debug-overlay select,
+        #devtools-debug-overlay textarea { font: inherit; }
+        #devtools-debug-overlay button:focus-visible,
+        #devtools-debug-overlay input:focus-visible,
+        #devtools-debug-overlay select:focus-visible,
+        #devtools-debug-overlay textarea:focus-visible {
+            outline: 2px solid #f5d77d;
+            outline-offset: 2px;
+        }
+        #devtools-debug-overlay button[aria-label^="Edit "]:focus-visible {
+            opacity: 1 !important;
+        }
+        #devtools-debug-overlay select option {
+            background: #0b1024;
+            color: #eef2ff;
+        }
+        .devtools-header {
+            flex: 0 0 auto;
+            padding-bottom: 14px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .devtools-heading-group { min-width: 0; flex: 1 1 380px; }
+        .devtools-action-group {
+            align-items: center;
+            justify-content: flex-end;
+            flex: 1 1 360px;
+        }
+        .devtools-action-group button,
+        .devtools-console-controls button,
+        .devtools-console-controls select,
+        .devtools-console-controls input,
+        .devtools-storage-toolbar input {
+            min-height: 38px;
+            box-sizing: border-box;
+        }
+        .devtools-tabs button[aria-selected="true"] {
+            box-shadow: inset 0 0 0 1px rgba(245,215,125,0.2);
+        }
+        #devtools-clean-status:empty { display: none; }
+        .devtools-storage-toolbar,
+        .devtools-console-controls {
+            flex: 0 0 auto;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .devtools-storage-toolbar input,
+        .devtools-console-controls input {
+            min-width: 180px;
+            flex: 1 1 220px;
+        }
+        #devtools-debug-content,
+        #devtools-console-content {
+            flex: 1 1 auto;
+            min-height: 0;
+            max-height: none !important;
+        }
+        .devtools-resize-handle { touch-action: none; }
+
+        /* Sharp grayscale developer-board theme. */
+        #devtools-debug-backdrop {
+            background: rgba(0, 0, 0, 0.74) !important;
+            backdrop-filter: blur(3px);
+        }
+        #devtools-debug-overlay {
+            background: #0b0b0b !important;
+            color: #ededed !important;
+            border: 1px solid #303030 !important;
+            border-radius: 8px !important;
+            box-shadow: 0 24px 80px rgba(0,0,0,0.72) !important;
+            backdrop-filter: none !important;
+            font-family: Inter, "SF Pro Text", "Segoe UI", system-ui, sans-serif !important;
+        }
+        #devtools-debug-overlay::-webkit-scrollbar-thumb,
+        #devtools-debug-content::-webkit-scrollbar-thumb,
+        #devtools-console-content::-webkit-scrollbar-thumb {
+            background: #4a4a4a;
+            border: 2px solid #111;
+            border-radius: 2px;
+        }
+        #devtools-debug-overlay::-webkit-scrollbar-track,
+        #devtools-debug-content::-webkit-scrollbar-track,
+        #devtools-console-content::-webkit-scrollbar-track {
+            background: #151515;
+            border-radius: 0;
+        }
+        #devtools-debug-overlay button:focus-visible,
+        #devtools-debug-overlay input:focus-visible,
+        #devtools-debug-overlay select:focus-visible,
+        #devtools-debug-overlay textarea:focus-visible {
+            outline-color: #f5f5f5;
+        }
+        #devtools-debug-overlay select option { background: #111; color: #eee; }
+        .devtools-header {
+            display: grid !important;
+            grid-template-columns: minmax(0, 1fr) auto;
+            align-items: start !important;
+            gap: 14px 18px !important;
+            border-bottom-color: #292929;
+            cursor: default !important;
+        }
+        .devtools-heading-group { grid-column: 1; }
+        .devtools-title {
+            color: #fafafa;
+            font-size: 19px !important;
+            letter-spacing: -0.02em !important;
+        }
+        .devtools-subtitle {
+            margin-top: 4px;
+            color: #888;
+            font-size: 12px;
+        }
+        #devtools-error-badge {
+            min-width: 18px !important;
+            padding: 2px 5px !important;
+            border-color: #3a3a3a !important;
+            border-radius: 4px !important;
+            background: #181818 !important;
+            color: #a9a9a9 !important;
+        }
+        .devtools-action-group {
+            grid-column: 2;
+            align-self: start;
+            max-width: 430px;
+            padding-right: 42px;
+        }
+        .devtools-action-group button,
+        .devtools-console-controls button,
+        .devtools-console-controls select,
+        .devtools-storage-toolbar button {
+            padding: 8px 11px !important;
+            border: 1px solid #333 !important;
+            border-radius: 5px !important;
+            background: #171717 !important;
+            color: #d7d7d7 !important;
+            box-shadow: none !important;
+            font-weight: 650 !important;
+        }
+        .devtools-action-group button:hover,
+        .devtools-console-controls button:hover,
+        .devtools-storage-toolbar button:hover {
+            background: #242424 !important;
+            border-color: #515151 !important;
+            color: #fff !important;
+        }
+        .devtools-danger-action { color: #bdbdbd !important; }
+        .devtools-danger-action { margin-left: 0 !important; }
+        .devtools-danger-action:hover {
+            border-color: #744 !important;
+            background: #261818 !important;
+            color: #ffd7d7 !important;
+        }
+        .devtools-close-button {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            z-index: 2;
+            width: 34px;
+            min-width: 34px !important;
+            min-height: 34px !important;
+            padding: 0 !important;
+            font-size: 0 !important;
+        }
+        .devtools-close-button::before {
+            content: "×";
+            font-size: 21px;
+            font-weight: 400;
+            line-height: 1;
+        }
+        .devtools-state-line {
+            grid-column: 1 / -1;
+            display: grid !important;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 8px !important;
+            margin: 0 !important;
+            opacity: 1 !important;
+        }
+        .devtools-state-line > span {
+            min-width: 0;
+            padding: 9px 10px;
+            overflow: hidden;
+            border: 1px solid #292929;
+            border-radius: 5px;
+            background: #111;
+            color: #787878;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .devtools-state-line strong {
+            color: #e3e3e3;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+            font-weight: 600;
+        }
+        .devtools-tabs {
+            grid-column: 1 / -1;
+            gap: 0 !important;
+            margin: 0 !important;
+            border-bottom: 1px solid #292929;
+        }
+        .devtools-tabs button {
+            min-width: 140px !important;
+            padding: 10px 14px !important;
+            border: 0 !important;
+            border-bottom: 2px solid transparent !important;
+            border-radius: 0 !important;
+            background: transparent !important;
+            color: #777 !important;
+            box-shadow: none !important;
+        }
+        .devtools-tabs button[aria-selected="true"] {
+            border-bottom-color: #f1f1f1 !important;
+            color: #f1f1f1 !important;
+        }
+        #devtools-clean-status {
+            margin-top: 10px !important;
+            padding: 8px 10px !important;
+            border: 1px solid #292929;
+            border-radius: 4px !important;
+            background: #111 !important;
+            color: #aaa;
+        }
+        .devtools-storage-toolbar,
+        .devtools-console-controls { margin-top: 10px !important; }
+        .devtools-storage-toolbar input,
+        .devtools-console-controls input,
+        .devtools-console-controls select {
+            border: 1px solid #303030 !important;
+            border-radius: 5px !important;
+            background: #111 !important;
+            color: #e7e7e7 !important;
+            box-shadow: none !important;
+        }
+        #devtools-debug-content,
+        #devtools-console-content {
+            border-color: #292929 !important;
+            border-radius: 5px !important;
+            background: #080808 !important;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace !important;
+        }
+        #devtools-debug-content { gap: 1px 1px !important; padding: 1px !important; }
+        .devtools-table-header {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            padding: 9px 10px !important;
+            border: 0 !important;
+            border-bottom: 1px solid #333 !important;
+            border-radius: 0 !important;
+            background: #151515 !important;
+            color: #aaa !important;
+        }
+        .devtools-key-cell,
+        .devtools-value-cell {
+            min-height: 34px;
+            padding: 8px 10px !important;
+            border: 0 !important;
+            border-bottom: 1px solid #202020 !important;
+            border-radius: 0 !important;
+            background: #0d0d0d !important;
+        }
+        .devtools-key-cell { color: #bdbdbd; }
+        .devtools-value-cell { color: #ededed; }
+        #devtools-sources-content {
+            flex: 1 1 auto;
+            min-height: 0;
+            margin-top: 10px;
+            overflow: hidden;
+            border: 1px solid #292929;
+            border-radius: 5px;
+            background: #080808;
+        }
+        .devtools-sources-workspace {
+            display: grid;
+            grid-template-columns: 210px minmax(0, 1fr);
+            height: 100%;
+            min-height: 0;
+        }
+        .devtools-source-sidebar {
+            min-width: 0;
+            overflow: auto;
+            border-right: 1px solid #292929;
+            background: #0d0d0d;
+        }
+        .devtools-source-sidebar-header,
+        .devtools-source-editor-header {
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            min-height: 38px;
+            padding: 0 10px;
+            border-bottom: 1px solid #292929;
+            background: #141414;
+            color: #aaa;
+            font-size: 11px;
+            font-weight: 750;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+        }
+        .devtools-source-filter {
+            width: calc(100% - 16px);
+            min-height: 34px;
+            margin: 8px;
+            padding: 7px 9px;
+            box-sizing: border-box;
+            border: 1px solid #303030;
+            border-radius: 4px;
+            background: #111;
+            color: #eee;
+        }
+        .devtools-source-group-label {
+            padding: 11px 10px 5px;
+            color: #666;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.09em;
+            text-transform: uppercase;
+        }
+        .devtools-source-file {
+            display: block;
+            width: 100%;
+            min-height: 32px !important;
+            padding: 7px 10px 7px 18px !important;
+            overflow: hidden;
+            border: 0 !important;
+            border-left: 2px solid transparent !important;
+            border-radius: 0 !important;
+            background: transparent !important;
+            color: #aaa !important;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace !important;
+            font-size: 11px !important;
+            text-align: left;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .devtools-source-file:hover { background: #171717 !important; color: #eee !important; }
+        .devtools-source-file.is-active {
+            border-left-color: #eee !important;
+            background: #1b1b1b !important;
+            color: #fff !important;
+        }
+        .devtools-source-editor {
+            display: flex;
+            min-width: 0;
+            min-height: 0;
+            flex-direction: column;
+        }
+        .devtools-source-editor-header {
+            position: static;
+            justify-content: space-between;
+            gap: 10px;
+            text-transform: none;
+        }
+        .devtools-source-path {
+            min-width: 0;
+            overflow: hidden;
+            color: #ddd;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .devtools-source-meta { color: #666; white-space: nowrap; }
+        .devtools-source-tools {
+            display: flex;
+            flex: 0 0 auto;
+            gap: 6px;
+            padding: 8px;
+            border-bottom: 1px solid #242424;
+            background: #0d0d0d;
+        }
+        .devtools-source-tools input {
+            min-width: 0;
+            flex: 1 1 auto;
+            padding: 7px 9px;
+            border: 1px solid #303030;
+            border-radius: 4px;
+            background: #111;
+            color: #eee;
+        }
+        .devtools-source-tools button {
+            padding: 7px 10px !important;
+            border: 1px solid #333 !important;
+            border-radius: 4px !important;
+            background: #171717 !important;
+            color: #ddd !important;
+        }
+        .devtools-source-code {
+            flex: 1 1 auto;
+            min-height: 0;
+            overflow: auto;
+            padding: 5px 0 24px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;
+            font-size: 12px;
+            line-height: 1.55;
+            tab-size: 4;
+        }
+        .devtools-source-line {
+            display: grid;
+            grid-template-columns: 52px minmax(max-content, 1fr);
+            min-height: 19px;
+        }
+        .devtools-source-line:hover { background: #121212; }
+        .devtools-source-line-number {
+            position: sticky;
+            left: 0;
+            padding-right: 12px;
+            border-right: 1px solid #202020;
+            background: #080808;
+            color: #505050;
+            text-align: right;
+            user-select: none;
+        }
+        .devtools-source-line-code {
+            padding: 0 14px;
+            color: #d0d0d0;
+            white-space: pre;
+        }
+        .devtools-source-line mark {
+            border-radius: 2px;
+            background: #dedede;
+            color: #080808;
+        }
+        .devtools-source-empty {
+            padding: 22px 12px;
+            color: #777;
+            text-align: center;
+        }
+        .devtools-resize-handle {
+            border-color: #555 !important;
+        }
+        @media (max-width: 720px) {
+            #devtools-debug-overlay {
+                inset: 8px !important;
+                width: auto !important;
+                height: auto !important;
+                max-width: none !important;
+                max-height: none !important;
+                transform: none !important;
+                padding: 12px !important;
+                border-radius: 6px !important;
+            }
+            .devtools-header {
+                align-items: stretch !important;
+                display: grid !important;
+                grid-template-columns: 1fr !important;
+                gap: 10px !important;
+            }
+            .devtools-heading-group,
+            .devtools-action-group { flex-basis: auto; }
+            .devtools-heading-group { grid-column: 1; padding-right: 48px; }
+            .devtools-action-group {
+                grid-column: 1;
+                justify-content: flex-start;
+                flex-wrap: nowrap !important;
+                max-height: none;
+                overflow-x: auto;
+                overflow-y: hidden;
+                padding: 2px 2px 8px;
+                scrollbar-width: thin;
+            }
+            .devtools-action-group button {
+                flex: 0 0 auto;
+            }
+            .devtools-close-button {
+                top: 12px;
+                right: 12px;
+            }
+            .devtools-state-line {
+                grid-column: 1;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 6px !important;
+            }
+            .devtools-tabs { grid-column: 1; }
+            .devtools-tabs button {
+                min-width: 0 !important;
+                flex: 1 1 0;
+                padding-inline: 6px !important;
+            }
+            #devtools-debug-content {
+                grid-template-columns: minmax(105px, 0.8fr) minmax(0, 1.5fr) !important;
+                padding: 8px !important;
+                font-size: 11px !important;
+            }
+            .devtools-console-controls {
+                max-height: 92px;
+                overflow: auto;
+                justify-content: flex-start !important;
+            }
+            .devtools-sources-workspace {
+                grid-template-columns: 1fr;
+                grid-template-rows: 132px minmax(0, 1fr);
+            }
+            .devtools-source-sidebar {
+                border-right: 0;
+                border-bottom: 1px solid #292929;
+            }
+            .devtools-source-sidebar-header { display: none; }
+            .devtools-source-filter {
+                position: sticky;
+                top: 0;
+                z-index: 2;
+                width: calc(100% - 12px);
+                margin: 6px;
+            }
+            .devtools-source-group-label { padding-top: 6px; }
+            .devtools-source-code { font-size: 11px; }
+            .devtools-source-line { grid-template-columns: 42px minmax(max-content, 1fr); }
+            .devtools-resize-handle { display: none; }
+        }
+        #devtools-debug-overlay,
+        #devtools-debug-overlay * {
+            scrollbar-width: thin;
+            scrollbar-color: #3b3b3b #101010;
+        }
+        #devtools-debug-overlay::-webkit-scrollbar,
+        #devtools-debug-overlay *::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        #devtools-debug-overlay::-webkit-scrollbar-track,
+        #devtools-debug-overlay *::-webkit-scrollbar-track {
+            background: #101010;
+            border-radius: 0;
+        }
+        #devtools-debug-overlay::-webkit-scrollbar-thumb,
+        #devtools-debug-overlay *::-webkit-scrollbar-thumb {
+            min-width: 28px;
+            min-height: 28px;
+            border: 2px solid #101010;
+            border-radius: 4px;
+            background: #3b3b3b;
+        }
+        #devtools-debug-overlay::-webkit-scrollbar-thumb:hover,
+        #devtools-debug-overlay *::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        #devtools-debug-overlay::-webkit-scrollbar-corner,
+        #devtools-debug-overlay *::-webkit-scrollbar-corner {
+            background: #101010;
+        }
         `;
         document.head.appendChild(style);
+    }
+
+    function closeDebugOverlay(options = {}) {
+        const layer = document.getElementById('devtools-layer');
+        const overlay = document.getElementById('devtools-debug-overlay');
+        if (layer) window.IndyDialogManager?.close(layer, options);
+        else if (overlay) window.IndyDialogManager?.close(overlay, options);
+        layer?.remove();
+        overlay?.remove();
+        document.getElementById('devtools-debug-backdrop')?.remove();
     }
 
     function toggleDevtoolsHud() {
@@ -1226,6 +1791,10 @@ window.populateRenamePeriods = populateRenamePeriods;
     function showDebugOverlay() {
     if (document.getElementById('devtools-debug-overlay')) return;
     ensureDevtoolsStyles();
+    const trigger = document.activeElement;
+    const layer = document.createElement('div');
+    layer.id = 'devtools-layer';
+    document.body.appendChild(layer);
     // create backdrop
     const backdrop = document.createElement('div');
     backdrop.id = 'devtools-debug-backdrop';
@@ -1233,10 +1802,13 @@ window.populateRenamePeriods = populateRenamePeriods;
     backdrop.style.inset = '0';
     backdrop.style.zIndex = 2147483646;
     backdrop.style.background = 'radial-gradient(circle at 20% 20%, rgba(0,0,53,0.18), transparent 35%), radial-gradient(circle at 80% 0%, rgba(196,173,98,0.18), transparent 40%), rgba(7,10,26,0.6)';
-    document.body.appendChild(backdrop);
+    layer.appendChild(backdrop);
 
     const overlay = document.createElement('div');
     overlay.id = 'devtools-debug-overlay';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.setAttribute('aria-labelledby', 'devtools-title');
     overlay.style.position = 'fixed';
         overlay.style.left = '50%';
         overlay.style.top = '50%';
@@ -1247,8 +1819,8 @@ window.populateRenamePeriods = populateRenamePeriods;
         overlay.style.padding = '16px 18px';
         overlay.style.borderRadius = '18px';
         overlay.style.fontFamily = 'ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace';
-        overlay.style.maxWidth = '760px';
-        overlay.style.maxHeight = '80vh';
+        overlay.style.maxWidth = '920px';
+        overlay.style.maxHeight = 'calc(100dvh - 32px)';
         overlay.style.boxShadow = '0 20px 50px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.06)';
         overlay.style.backdropFilter = 'blur(12px) saturate(140%)';
         overlay.style.border = '1px solid rgba(255,255,255,0.08)';
@@ -1259,14 +1831,20 @@ window.populateRenamePeriods = populateRenamePeriods;
         // Restore saved position/size if available
         try {
             const saved = JSON.parse(localStorage.getItem('devtoolsOverlayPlacement') || '{}');
-            if (saved.top !== undefined) { overlay.style.top = `${saved.top}px`; overlay.style.transform = 'none'; }
-            if (saved.left !== undefined) { overlay.style.left = `${saved.left}px`; overlay.style.transform = 'none'; }
-            if (saved.width !== undefined) overlay.style.width = `${saved.width}px`;
-            if (saved.height !== undefined) overlay.style.height = `${saved.height}px`;
+            if (innerWidth > 720 && [saved.top, saved.left, saved.width, saved.height].every(Number.isFinite)) {
+                const width = Math.min(Math.max(560, saved.width), innerWidth - 32);
+                const height = Math.min(Math.max(380, saved.height), innerHeight - 32);
+                overlay.style.width = `${width}px`;
+                overlay.style.height = `${height}px`;
+                overlay.style.left = `${Math.min(Math.max(16, saved.left), innerWidth - width - 16)}px`;
+                overlay.style.top = `${Math.min(Math.max(16, saved.top), innerHeight - height - 16)}px`;
+                overlay.style.transform = 'none';
+            }
         } catch (e) {}
 
         // Header with title, tabs and button group so buttons don't overlap the title
         const header = document.createElement('div');
+        header.className = 'devtools-header';
         header.style.display = 'flex';
         header.style.justifyContent = 'space-between';
         header.style.alignItems = 'center';
@@ -1274,14 +1852,17 @@ window.populateRenamePeriods = populateRenamePeriods;
         header.style.marginBottom = '12px';
 
         const leftGroup = document.createElement('div');
+        leftGroup.className = 'devtools-heading-group';
         leftGroup.style.display = 'flex';
         leftGroup.style.flexDirection = 'column';
 
         const title = document.createElement('div');
+        title.id = 'devtools-title';
+        title.className = 'devtools-title';
         title.style.fontWeight = '800';
         title.style.letterSpacing = '0.02em';
         title.style.fontSize = '16px';
-        title.textContent = 'Dev Tools';
+        title.textContent = 'Developer Tools';
         title.style.display = 'flex';
         title.style.alignItems = 'center';
         title.style.gap = '8px';
@@ -1303,7 +1884,12 @@ window.populateRenamePeriods = populateRenamePeriods;
         errorBadge.title = 'Errors in console';
         title.appendChild(errorBadge);
 
+        const subtitle = document.createElement('div');
+        subtitle.className = 'devtools-subtitle';
+        subtitle.textContent = 'Inspect site state, saved settings, and logs.';
+
         const stateLine = document.createElement('div');
+        stateLine.className = 'devtools-state-line';
         stateLine.style.display = 'flex';
         stateLine.style.flexWrap = 'wrap';
         stateLine.style.gap = '10px';
@@ -1317,25 +1903,38 @@ window.populateRenamePeriods = populateRenamePeriods;
             const toastOn = typeof isToastIconEnabled === 'function'
                 ? isToastIconEnabled()
                 : (localStorage.getItem('toastIconEnabled') === 'true');
-            stateLine.innerHTML = `
-                <span>Schedule: <strong>${schedule}</strong></span>
-                <span>Auth: <strong>${authUser}</strong></span>
-                <span>Timer: <strong>${timerRunning ? 'running' : 'idle'}</strong></span>
-                <span>Toast icon: <strong>${toastOn ? 'on' : 'off'}</strong></span>
-            `;
+            const stateItem = (label, value) => {
+                const item = document.createElement('span');
+                item.append(`${label}: `);
+                const strong = document.createElement('strong');
+                strong.textContent = value;
+                item.appendChild(strong);
+                return item;
+            };
+            stateLine.replaceChildren(
+                stateItem('Schedule', schedule),
+                stateItem('Account', authUser),
+                stateItem('Timer', timerRunning ? 'running' : 'idle'),
+                stateItem('Toast icon', toastOn ? 'on' : 'off')
+            );
         }
         computeStateLine();
 
         // Tabs: Debug | Console
         const tabs = document.createElement('div');
+        tabs.className = 'devtools-tabs';
+        tabs.setAttribute('role', 'tablist');
+        tabs.setAttribute('aria-label', 'Developer tools views');
         tabs.style.display = 'flex';
         tabs.style.gap = '8px';
         tabs.style.marginTop = '10px';
 
         const debugTab = document.createElement('button');
-        debugTab.textContent = 'Local Storage';
+        debugTab.textContent = 'Saved Settings';
+        debugTab.id = 'devtools-tab-storage';
         debugTab.setAttribute('role','tab');
-        debugTab.setAttribute('aria-pressed','true');
+        debugTab.setAttribute('aria-selected','true');
+        debugTab.setAttribute('aria-controls', 'devtools-debug-content');
         debugTab.tabIndex = 0;
         debugTab.style.cursor = 'pointer';
         debugTab.style.padding = '10px 16px';
@@ -1350,8 +1949,10 @@ window.populateRenamePeriods = populateRenamePeriods;
 
         const consoleTab = document.createElement('button');
         consoleTab.textContent = 'Console';
+        consoleTab.id = 'devtools-tab-console';
         consoleTab.setAttribute('role','tab');
-        consoleTab.setAttribute('aria-pressed','false');
+        consoleTab.setAttribute('aria-selected','false');
+        consoleTab.setAttribute('aria-controls', 'devtools-console-content');
         consoleTab.tabIndex = 0;
         consoleTab.style.cursor = 'pointer';
         consoleTab.style.padding = '10px 16px';
@@ -1364,14 +1965,33 @@ window.populateRenamePeriods = populateRenamePeriods;
         consoleTab.style.textAlign = 'center';
         consoleTab.dataset.tab = 'console';
 
+        const sourcesTab = document.createElement('button');
+        sourcesTab.textContent = 'Sources';
+        sourcesTab.id = 'devtools-tab-sources';
+        sourcesTab.setAttribute('role', 'tab');
+        sourcesTab.setAttribute('aria-selected', 'false');
+        sourcesTab.setAttribute('aria-controls', 'devtools-sources-content');
+        sourcesTab.tabIndex = -1;
+        sourcesTab.style.cursor = 'pointer';
+        sourcesTab.style.padding = '10px 16px';
+        sourcesTab.style.borderRadius = '999px';
+        sourcesTab.style.background = 'transparent';
+        sourcesTab.style.border = '1px solid rgba(255,255,255,0.08)';
+        sourcesTab.style.color = 'rgba(232,236,247,0.88)';
+        sourcesTab.style.fontWeight = '700';
+        sourcesTab.style.minWidth = '80px';
+        sourcesTab.style.textAlign = 'center';
+        sourcesTab.dataset.tab = 'sources';
+
         tabs.appendChild(debugTab);
         tabs.appendChild(consoleTab);
+        tabs.appendChild(sourcesTab);
 
         leftGroup.appendChild(title);
-        leftGroup.appendChild(stateLine);
-        leftGroup.appendChild(tabs);
+        leftGroup.appendChild(subtitle);
 
         const btnGroup = document.createElement('div');
+        btnGroup.className = 'devtools-action-group';
         btnGroup.style.display = 'flex';
         btnGroup.style.gap = '8px';
         btnGroup.style.flexWrap = 'wrap';
@@ -1388,7 +2008,7 @@ window.populateRenamePeriods = populateRenamePeriods;
             const enabled = typeof isToastIconEnabled === 'function'
                 ? isToastIconEnabled()
                 : (localStorage.getItem('toastIconEnabled') === 'true');
-            toastToggleBtn.textContent = enabled ? 'Toast icon: on (click to disable)' : 'Toast icon: off (click to enable)';
+            toastToggleBtn.textContent = enabled ? 'Toast: On' : 'Toast: Off';
         }
         syncToastToggleLabel();
         toastToggleBtn.addEventListener('click', async (ev) => {
@@ -1415,7 +2035,7 @@ window.populateRenamePeriods = populateRenamePeriods;
         });
 
         const simulateScheduleBtn = document.createElement('button');
-        simulateScheduleBtn.textContent = 'Simulate schedule change';
+        simulateScheduleBtn.textContent = 'Next Schedule';
         simulateScheduleBtn.style.cursor = 'pointer';
         simulateScheduleBtn.style.padding = '10px 12px';
         simulateScheduleBtn.style.borderRadius = '10px';
@@ -1438,12 +2058,12 @@ window.populateRenamePeriods = populateRenamePeriods;
             } catch (e) {
                 console.error('Failed to simulate schedule change', e);
                 simulateScheduleBtn.textContent = 'Sim failed';
-                setTimeout(() => { simulateScheduleBtn.textContent = 'Simulate schedule change'; }, 1600);
+                setTimeout(() => { simulateScheduleBtn.textContent = 'Next Schedule'; }, 1600);
             }
         });
 
         const hudBtn = document.createElement('button');
-        hudBtn.textContent = 'Live HUD';
+        hudBtn.textContent = 'Show HUD';
         hudBtn.style.cursor = 'pointer';
         hudBtn.style.padding = '10px 12px';
         hudBtn.style.borderRadius = '10px';
@@ -1454,7 +2074,7 @@ window.populateRenamePeriods = populateRenamePeriods;
         hudBtn.style.fontFamily = 'Inter, "SF Pro Text", "Segoe UI", system-ui, -apple-system, sans-serif';
         const syncHudBtnLabel = () => {
             const on = document.getElementById('devtools-hud');
-            hudBtn.textContent = on ? 'Hide HUD' : 'Live HUD';
+            hudBtn.textContent = on ? 'Hide HUD' : 'Show HUD';
         };
         hudBtn.addEventListener('click', (ev) => {
             ev.stopPropagation();
@@ -1462,7 +2082,7 @@ window.populateRenamePeriods = populateRenamePeriods;
             syncHudBtnLabel();
         });
         const musicPlayerBtn = document.createElement('button');
-        musicPlayerBtn.textContent = 'Music Player';
+        musicPlayerBtn.textContent = 'Open Player';
         musicPlayerBtn.style.cursor = 'pointer';
         musicPlayerBtn.style.padding = '10px 12px';
         musicPlayerBtn.style.borderRadius = '10px';
@@ -1476,18 +2096,21 @@ musicPlayerBtn.addEventListener('click', (ev) => {
     window.open('/Music_Player.html', '_blank', 'noopener');
 });
         const closeBtn = document.createElement('button');
+        closeBtn.className = 'devtools-close-button';
         closeBtn.textContent = 'Close';
+        closeBtn.setAttribute('aria-label', 'Close developer tools');
         closeBtn.style.cursor = 'pointer';
         closeBtn.style.padding = '10px 12px';
         closeBtn.style.borderRadius = '10px';
         closeBtn.style.border = '1px solid rgba(255,255,255,0.12)';
         closeBtn.style.background = 'rgba(255,255,255,0.08)';
         closeBtn.style.color = '#E8ECF7';
-        closeBtn.addEventListener('click', (ev) => { ev.stopPropagation(); overlay.remove(); const bd = document.getElementById('devtools-debug-backdrop'); if (bd) bd.remove(); });
+        closeBtn.addEventListener('click', (ev) => { ev.stopPropagation(); closeDebugOverlay(); });
         
         // Add Clear localStorage button (with snapshot so Undo can restore)
         const clearBtn = document.createElement('button');
-        clearBtn.textContent = 'Clear localStorage';
+        clearBtn.className = 'devtools-danger-action';
+        clearBtn.textContent = 'Clear Data';
         clearBtn.style.cursor = 'pointer';
         clearBtn.style.marginLeft = '8px';
         clearBtn.style.padding = '10px 12px';
@@ -1520,26 +2143,33 @@ musicPlayerBtn.addEventListener('click', (ev) => {
 
         header.appendChild(leftGroup);
         header.appendChild(btnGroup);
+        header.appendChild(stateLine);
+        header.appendChild(tabs);
         overlay.appendChild(header);
 
         // Draggable overlay (header as drag handle)
         (function enableDrag() {
             let dragging = false;
-            let startX = 0, startY = 0, startLeft = 0, startTop = 0;
+            let startX = 0, startY = 0, startLeft = 0, startTop = 0, dragWidth = 0, dragHeight = 0;
             header.style.cursor = 'move';
             header.addEventListener('mousedown', (e) => {
+                if (e.target.closest('button, input, select, textarea, a') || innerWidth <= 720) return;
                 dragging = true;
                 startX = e.clientX; startY = e.clientY;
                 const rect = overlay.getBoundingClientRect();
                 startLeft = rect.left; startTop = rect.top;
+                dragWidth = rect.width; dragHeight = rect.height;
+                overlay.style.left = `${rect.left}px`;
+                overlay.style.top = `${rect.top}px`;
+                overlay.style.transform = 'none';
                 document.body.style.userSelect = 'none';
             });
             window.addEventListener('mousemove', (e) => {
                 if (!dragging) return;
                 const dx = e.clientX - startX;
                 const dy = e.clientY - startY;
-                overlay.style.left = `${startLeft + dx}px`;
-                overlay.style.top = `${startTop + dy}px`;
+                overlay.style.left = `${Math.min(Math.max(8, startLeft + dx), innerWidth - dragWidth - 8)}px`;
+                overlay.style.top = `${Math.min(Math.max(8, startTop + dy), innerHeight - dragHeight - 8)}px`;
                 overlay.style.right = '';
                 overlay.style.bottom = '';
             });
@@ -1561,6 +2191,7 @@ musicPlayerBtn.addEventListener('click', (ev) => {
 
         // Resize handle
         const resizeHandle = document.createElement('div');
+        resizeHandle.className = 'devtools-resize-handle';
         resizeHandle.style.position = 'absolute';
         resizeHandle.style.right = '6px';
         resizeHandle.style.bottom = '6px';
@@ -1577,6 +2208,9 @@ musicPlayerBtn.addEventListener('click', (ev) => {
                 e.stopPropagation();
                 resizing = true;
                 const rect = overlay.getBoundingClientRect();
+                overlay.style.left = `${rect.left}px`;
+                overlay.style.top = `${rect.top}px`;
+                overlay.style.transform = 'none';
                 startX = e.clientX; startY = e.clientY;
                 startW = rect.width; startH = rect.height;
                 document.body.style.userSelect = 'none';
@@ -1585,8 +2219,8 @@ musicPlayerBtn.addEventListener('click', (ev) => {
                 if (!resizing) return;
                 const dx = e.clientX - startX;
                 const dy = e.clientY - startY;
-                overlay.style.width = `${Math.max(420, startW + dx)}px`;
-                overlay.style.height = `${Math.max(300, startH + dy)}px`;
+                overlay.style.width = `${Math.min(innerWidth - 32, Math.max(560, startW + dx))}px`;
+                overlay.style.height = `${Math.min(innerHeight - 32, Math.max(380, startH + dy))}px`;
             });
             window.addEventListener('mouseup', () => {
                 if (!resizing) return;
@@ -1612,11 +2246,69 @@ musicPlayerBtn.addEventListener('click', (ev) => {
     status.style.padding = '8px 10px';
     status.style.borderRadius = '10px';
     status.style.background = 'rgba(255,255,255,0.06)';
+    status.setAttribute('role', 'status');
+    status.setAttribute('aria-live', 'polite');
     overlay.appendChild(status);
+    let statusClearTimer = null;
+    new MutationObserver(() => {
+        window.clearTimeout(statusClearTimer);
+        if (!status.textContent.trim()) return;
+        statusClearTimer = window.setTimeout(() => { status.textContent = ''; }, 3500);
+    }).observe(status, { childList: true, characterData: true, subtree: true });
+
+    const storageToolbar = document.createElement('div');
+    storageToolbar.className = 'devtools-storage-toolbar';
+    storageToolbar.style.display = 'flex';
+    storageToolbar.style.gap = '8px';
+    storageToolbar.style.marginTop = '10px';
+    const storageSearch = document.createElement('input');
+    storageSearch.type = 'search';
+    storageSearch.placeholder = 'Search saved settings…';
+    storageSearch.setAttribute('aria-label', 'Search local storage');
+    storageSearch.style.padding = '8px 12px';
+    storageSearch.style.borderRadius = '10px';
+    storageSearch.style.border = '1px solid rgba(255,255,255,0.12)';
+    storageSearch.style.background = 'rgba(255,255,255,0.06)';
+    storageSearch.style.color = '#E8ECF7';
+    storageSearch.value = window.__devStorageSearch || '';
+    storageSearch.addEventListener('input', (event) => {
+        window.__devStorageSearch = event.target.value;
+        refreshDebugOverlay();
+    });
+    const refreshStorageBtn = document.createElement('button');
+    refreshStorageBtn.textContent = 'Refresh';
+    refreshStorageBtn.style.padding = '8px 12px';
+    refreshStorageBtn.style.borderRadius = '10px';
+    refreshStorageBtn.style.border = '1px solid rgba(255,255,255,0.12)';
+    refreshStorageBtn.style.background = 'rgba(255,255,255,0.08)';
+    refreshStorageBtn.style.color = '#E8ECF7';
+    refreshStorageBtn.style.cursor = 'pointer';
+    refreshStorageBtn.addEventListener('click', (event) => {
+        event.stopPropagation();
+        refreshDebugOverlay();
+        status.textContent = 'Saved settings refreshed.';
+    });
+    const internalToggleBtn = document.createElement('button');
+    const syncInternalToggleLabel = () => {
+        internalToggleBtn.textContent = window.__devShowInternal ? 'Hide Internal' : 'Show Internal';
+    };
+    syncInternalToggleLabel();
+    internalToggleBtn.addEventListener('click', (event) => {
+        event.stopPropagation();
+        window.__devShowInternal = !window.__devShowInternal;
+        syncInternalToggleLabel();
+        refreshDebugOverlay();
+    });
+    storageToolbar.appendChild(storageSearch);
+    storageToolbar.appendChild(refreshStorageBtn);
+    storageToolbar.appendChild(internalToggleBtn);
+    overlay.appendChild(storageToolbar);
 
     // Debug JSON content
     const debugContent = document.createElement('div');
     debugContent.id = 'devtools-debug-content';
+    debugContent.setAttribute('role', 'tabpanel');
+    debugContent.setAttribute('aria-labelledby', 'devtools-tab-storage');
     debugContent.style.whiteSpace = 'normal';
     debugContent.style.marginTop = '14px';
     debugContent.style.display = 'block';
@@ -1638,6 +2330,8 @@ musicPlayerBtn.addEventListener('click', (ev) => {
     // Console content (hidden by default)
     const consoleContent = document.createElement('div');
     consoleContent.id = 'devtools-console-content';
+    consoleContent.setAttribute('role', 'tabpanel');
+    consoleContent.setAttribute('aria-labelledby', 'devtools-tab-console');
     consoleContent.style.marginTop = '12px';
     consoleContent.style.display = 'none';
     consoleContent.style.maxHeight = 'calc(80vh - 230px)';
@@ -1653,6 +2347,7 @@ musicPlayerBtn.addEventListener('click', (ev) => {
 
     // Small console controls
     const consoleControls = document.createElement('div');
+    consoleControls.className = 'devtools-console-controls';
     consoleControls.style.display = 'none';
     consoleControls.style.gap = '8px';
     consoleControls.style.marginTop = '10px';
@@ -1811,60 +2506,266 @@ musicPlayerBtn.addEventListener('click', (ev) => {
     consoleControls.appendChild(downloadConsoleBtn);
     consoleControls.appendChild(copySettingsBtn);
     consoleControls.appendChild(clearConsoleBtn);
-    overlay.appendChild(consoleControls);
+    overlay.insertBefore(consoleControls, consoleContent);
 
-        document.body.appendChild(overlay);
+    // Read-only source browser, modeled after the Sources area in browser developer tools.
+    const sourceGroups = [
+        { name: 'Pages', files: ['index.html', 'privacy.html', 'terms.html', '404.html'] },
+        { name: 'Scripts', files: ['script.js', 'script2.js', 'auth.js', 'gradient.js', 'dialog-manager.js', 'firebase-loader.js', 'school-calendar.js', 'lunch-menu.js'] },
+        { name: 'Styles', files: ['styles.css', 'styles2.css', 'design-tokens.css'] },
+        { name: 'Data', files: ['data/ihs-calendar-events.json'] },
+        { name: 'Tools', files: ['Music_Player.html'] }
+    ];
+    const sourceCache = new Map();
+    let activeSourcePath = '';
+    let activeSourceText = '';
+
+    const sourcesContent = document.createElement('div');
+    sourcesContent.id = 'devtools-sources-content';
+    sourcesContent.setAttribute('role', 'tabpanel');
+    sourcesContent.setAttribute('aria-labelledby', 'devtools-tab-sources');
+    sourcesContent.style.display = 'none';
+
+    const sourcesWorkspace = document.createElement('div');
+    sourcesWorkspace.className = 'devtools-sources-workspace';
+    const sourceSidebar = document.createElement('aside');
+    sourceSidebar.className = 'devtools-source-sidebar';
+    sourceSidebar.setAttribute('aria-label', 'Source files');
+    const sourceSidebarHeader = document.createElement('div');
+    sourceSidebarHeader.className = 'devtools-source-sidebar-header';
+    sourceSidebarHeader.textContent = 'Files';
+    const sourceFilter = document.createElement('input');
+    sourceFilter.className = 'devtools-source-filter';
+    sourceFilter.type = 'search';
+    sourceFilter.placeholder = 'Filter files…';
+    sourceFilter.setAttribute('aria-label', 'Filter source files');
+    const sourceFileList = document.createElement('div');
+    sourceFileList.className = 'devtools-source-file-list';
+    sourceSidebar.append(sourceSidebarHeader, sourceFilter, sourceFileList);
+
+    const sourceEditor = document.createElement('section');
+    sourceEditor.className = 'devtools-source-editor';
+    sourceEditor.setAttribute('aria-label', 'Source code viewer');
+    const sourceEditorHeader = document.createElement('div');
+    sourceEditorHeader.className = 'devtools-source-editor-header';
+    const sourcePath = document.createElement('span');
+    sourcePath.className = 'devtools-source-path';
+    sourcePath.textContent = 'Select a file';
+    const sourceMeta = document.createElement('span');
+    sourceMeta.className = 'devtools-source-meta';
+    sourceEditorHeader.append(sourcePath, sourceMeta);
+    const sourceTools = document.createElement('div');
+    sourceTools.className = 'devtools-source-tools';
+    const sourceSearch = document.createElement('input');
+    sourceSearch.type = 'search';
+    sourceSearch.placeholder = 'Find in file…';
+    sourceSearch.setAttribute('aria-label', 'Find text in source file');
+    const sourceMatchCount = document.createElement('span');
+    sourceMatchCount.className = 'devtools-source-meta';
+    sourceMatchCount.setAttribute('aria-live', 'polite');
+    const copySourceBtn = document.createElement('button');
+    copySourceBtn.textContent = 'Copy File';
+    const sourceCode = document.createElement('div');
+    sourceCode.className = 'devtools-source-code';
+    sourceCode.setAttribute('tabindex', '0');
+    sourceCode.setAttribute('aria-label', 'Source code');
+    sourceTools.append(sourceSearch, sourceMatchCount, copySourceBtn);
+    sourceEditor.append(sourceEditorHeader, sourceTools, sourceCode);
+    sourcesWorkspace.append(sourceSidebar, sourceEditor);
+    sourcesContent.appendChild(sourcesWorkspace);
+    overlay.appendChild(sourcesContent);
+
+    function appendSourceText(container, text, query) {
+        if (!query) {
+            container.textContent = text || ' ';
+            return 0;
+        }
+        const lowerText = text.toLowerCase();
+        const lowerQuery = query.toLowerCase();
+        let cursor = 0;
+        let matchCount = 0;
+        while (cursor < text.length) {
+            const matchIndex = lowerText.indexOf(lowerQuery, cursor);
+            if (matchIndex < 0) {
+                container.append(text.slice(cursor));
+                break;
+            }
+            container.append(text.slice(cursor, matchIndex));
+            const mark = document.createElement('mark');
+            mark.textContent = text.slice(matchIndex, matchIndex + query.length);
+            container.appendChild(mark);
+            cursor = matchIndex + query.length;
+            matchCount += 1;
+        }
+        return matchCount;
+    }
+
+    function renderSourceCode() {
+        sourceCode.replaceChildren();
+        const query = sourceSearch.value.trim();
+        let matches = 0;
+        activeSourceText.split('\n').forEach((line, index) => {
+            const row = document.createElement('div');
+            row.className = 'devtools-source-line';
+            const number = document.createElement('span');
+            number.className = 'devtools-source-line-number';
+            number.textContent = String(index + 1);
+            const code = document.createElement('span');
+            code.className = 'devtools-source-line-code';
+            matches += appendSourceText(code, line, query);
+            row.append(number, code);
+            sourceCode.appendChild(row);
+        });
+        sourceMatchCount.textContent = query ? `${matches} match${matches === 1 ? '' : 'es'}` : '';
+        sourceCode.querySelector('mark')?.scrollIntoView({ block: 'center' });
+    }
+
+    function renderSourceFiles() {
+        const query = sourceFilter.value.trim().toLowerCase();
+        sourceFileList.replaceChildren();
+        let visibleCount = 0;
+        sourceGroups.forEach((group) => {
+            const files = group.files.filter((path) => !query || path.toLowerCase().includes(query));
+            if (!files.length) return;
+            const label = document.createElement('div');
+            label.className = 'devtools-source-group-label';
+            label.textContent = group.name;
+            sourceFileList.appendChild(label);
+            files.forEach((path) => {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = `devtools-source-file${path === activeSourcePath ? ' is-active' : ''}`;
+                button.textContent = path;
+                button.title = path;
+                button.addEventListener('click', () => loadSourceFile(path));
+                sourceFileList.appendChild(button);
+                visibleCount += 1;
+            });
+        });
+        if (!visibleCount) {
+            const empty = document.createElement('div');
+            empty.className = 'devtools-source-empty';
+            empty.textContent = 'No files match your search.';
+            sourceFileList.appendChild(empty);
+        }
+    }
+
+    async function loadSourceFile(path) {
+        activeSourcePath = path;
+        sourcePath.textContent = path;
+        sourceMeta.textContent = 'Loading…';
+        sourceCode.setAttribute('aria-busy', 'true');
+        sourceCode.innerHTML = '<div class="devtools-source-empty">Loading source…</div>';
+        renderSourceFiles();
+        try {
+            let text = sourceCache.get(path);
+            if (text === undefined) {
+                const response = await fetch(`./${path}`, { cache: 'no-store' });
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                text = await response.text();
+                sourceCache.set(path, text);
+            }
+            activeSourceText = text;
+            const lineCount = text.split('\n').length;
+            sourceMeta.textContent = `${lineCount.toLocaleString()} lines · ${(new Blob([text]).size / 1024).toFixed(1)} KB`;
+            renderSourceCode();
+        } catch (error) {
+            activeSourceText = '';
+            sourceMeta.textContent = 'Unavailable';
+            sourceCode.innerHTML = '';
+            const empty = document.createElement('div');
+            empty.className = 'devtools-source-empty';
+            empty.textContent = `Could not load ${path}: ${error.message}`;
+            sourceCode.appendChild(empty);
+        } finally {
+            sourceCode.removeAttribute('aria-busy');
+        }
+    }
+
+    sourceFilter.addEventListener('input', renderSourceFiles);
+    sourceSearch.addEventListener('input', renderSourceCode);
+    copySourceBtn.addEventListener('click', async () => {
+        if (!activeSourcePath) return;
+        try {
+            await navigator.clipboard.writeText(activeSourceText);
+            status.textContent = `Copied ${activeSourcePath}.`;
+        } catch (error) {
+            status.textContent = 'Could not copy this file.';
+        }
+    });
+    renderSourceFiles();
+
+        layer.appendChild(overlay);
         // clicking backdrop closes overlay too
-    backdrop.addEventListener('click', () => { overlay.remove(); backdrop.remove(); });
+    backdrop.addEventListener('click', () => closeDebugOverlay());
         refreshDebugOverlay();
         refreshConsoleOverlay();
 
         // Tab switching with accessible styles and aria states
         function setActiveTab(tabName) {
-            if (tabName === 'debug') {
-                debugTab.style.background = 'linear-gradient(120deg, rgba(196,173,98,0.28), rgba(0,0,53,0.35))';
-                debugTab.style.border = '1px solid rgba(255,255,255,0.2)';
-                debugTab.setAttribute('aria-pressed','true');
-                consoleTab.style.background = 'transparent';
-                consoleTab.style.border = '1px solid rgba(255,255,255,0.08)';
-                consoleTab.setAttribute('aria-pressed','false');
-                debugContent.style.display = 'block';
-                consoleContent.style.display = 'none';
-                consoleControls.style.display = 'none';
-            } else {
-        consoleTab.style.background = 'linear-gradient(120deg, rgba(196,173,98,0.28), rgba(0,0,53,0.35))';
-        consoleTab.style.border = '1px solid rgba(255,255,255,0.2)';
-        consoleTab.setAttribute('aria-pressed','true');
-        debugTab.style.background = 'transparent';
-                debugTab.style.border = '1px solid rgba(255,255,255,0.08)';
-                debugTab.setAttribute('aria-pressed','false');
-                debugContent.style.display = 'none';
-                consoleContent.style.display = 'block';
-                consoleControls.style.display = 'flex';
-                refreshConsoleOverlay();
-            }
-            // maintain focus outline for keyboard users
-            try { (tabName === 'debug' ? debugTab : consoleTab).focus(); } catch(e){}
+            const views = {
+                debug: { tab: debugTab, panel: debugContent },
+                console: { tab: consoleTab, panel: consoleContent },
+                sources: { tab: sourcesTab, panel: sourcesContent }
+            };
+            Object.entries(views).forEach(([name, view]) => {
+                const active = name === tabName;
+                view.tab.setAttribute('aria-selected', String(active));
+                view.tab.tabIndex = active ? 0 : -1;
+                view.tab.style.background = active ? 'rgba(255,255,255,0.08)' : 'transparent';
+                view.tab.style.border = active ? '1px solid rgba(255,255,255,0.2)' : '1px solid rgba(255,255,255,0.08)';
+                view.panel.style.display = active ? (name === 'debug' ? 'grid' : name === 'sources' ? 'block' : 'block') : 'none';
+            });
+            storageToolbar.style.display = tabName === 'debug' ? 'flex' : 'none';
+            consoleControls.style.display = tabName === 'console' ? 'flex' : 'none';
+            if (tabName === 'console') refreshConsoleOverlay();
+            if (tabName === 'sources' && !activeSourcePath) loadSourceFile('index.html');
+            views[tabName].tab.focus();
         }
 
         debugTab.addEventListener('click', (ev) => { ev.stopPropagation(); setActiveTab('debug'); });
         consoleTab.addEventListener('click', (ev) => { ev.stopPropagation(); setActiveTab('console'); });
+        sourcesTab.addEventListener('click', (ev) => { ev.stopPropagation(); setActiveTab('sources'); });
 
         // Keyboard support: Enter or Space toggles tabs
         debugTab.addEventListener('keydown', (ev) => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); setActiveTab('debug'); } });
         consoleTab.addEventListener('keydown', (ev) => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); setActiveTab('console'); } });
+        sourcesTab.addEventListener('keydown', (ev) => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); setActiveTab('sources'); } });
+        tabs.addEventListener('keydown', (event) => {
+            if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
+            event.preventDefault();
+            const tabOrder = ['debug', 'console', 'sources'];
+            const currentIndex = tabOrder.findIndex((name) => ({ debug: debugTab, console: consoleTab, sources: sourcesTab })[name] === document.activeElement);
+            const direction = event.key === 'ArrowRight' ? 1 : -1;
+            setActiveTab(tabOrder[(currentIndex + direction + tabOrder.length) % tabOrder.length]);
+        });
 
         // Initialize default active tab
         setActiveTab('debug');
+        window.IndyDialogManager?.open(layer, {
+            trigger,
+            initialFocus: debugTab,
+            onRequestClose: closeDebugOverlay
+        });
     }
 
     function refreshDebugOverlay() {
         const content = document.getElementById('devtools-debug-content');
         if (!content) return;
         content.innerHTML = '';
-        const keys = Object.keys(localStorage).sort();
+        const allKeys = Object.keys(localStorage).sort();
+        const visibleKeys = window.__devShowInternal
+            ? allKeys
+            : allKeys.filter((key) => !key.startsWith('devtools') && !key.startsWith('__dev'));
+        const query = (window.__devStorageSearch || '').trim().toLowerCase();
+        const keys = query
+            ? visibleKeys.filter((key) => key.toLowerCase().includes(query) || (localStorage.getItem(key) || '').toLowerCase().includes(query))
+            : visibleKeys;
         const hdrKey = document.createElement('div');
-        hdrKey.textContent = `Key (${keys.length})`;
+        hdrKey.className = 'devtools-table-header';
+        hdrKey.textContent = (query || visibleKeys.length !== allKeys.length)
+            ? `Key (${keys.length} of ${allKeys.length})`
+            : `Key (${keys.length})`;
         hdrKey.style.fontWeight = '800';
         hdrKey.style.letterSpacing = '0.02em';
         hdrKey.style.textTransform = 'uppercase';
@@ -1874,6 +2775,7 @@ musicPlayerBtn.addEventListener('click', (ev) => {
         hdrKey.style.background = 'rgba(255,255,255,0.08)';
         hdrKey.style.border = '1px solid rgba(255,255,255,0.12)';
         const hdrVal = document.createElement('div');
+        hdrVal.className = 'devtools-table-header';
         hdrVal.textContent = `Value — ${new Date().toLocaleTimeString()}`;
         hdrVal.style.fontWeight = '800';
         hdrVal.style.letterSpacing = '0.02em';
@@ -1886,11 +2788,22 @@ musicPlayerBtn.addEventListener('click', (ev) => {
         content.appendChild(hdrKey);
         content.appendChild(hdrVal);
 
+        if (!keys.length) {
+            const empty = document.createElement('div');
+            empty.textContent = query ? 'No saved settings match your search.' : 'No settings are saved in this browser yet.';
+            empty.style.gridColumn = '1 / -1';
+            empty.style.padding = '24px 12px';
+            empty.style.textAlign = 'center';
+            empty.style.color = 'rgba(232,236,247,0.72)';
+            content.appendChild(empty);
+        }
+
         keys.forEach((k, idx) => {
             const raw = localStorage.getItem(k);
             let parsed = raw;
             try { parsed = JSON.parse(raw); } catch (e) { parsed = raw; }
             const keyCell = document.createElement('div');
+            keyCell.className = 'devtools-key-cell';
             keyCell.textContent = k;
             keyCell.style.padding = '6px 10px';
             keyCell.style.borderRadius = '8px';
@@ -1899,6 +2812,7 @@ musicPlayerBtn.addEventListener('click', (ev) => {
             keyCell.style.wordBreak = 'break-word';
 
             const valCell = document.createElement('div');
+            valCell.className = 'devtools-value-cell';
             valCell.style.padding = '6px 10px';
             valCell.style.borderRadius = '8px';
             valCell.style.background = idx % 2 === 0 ? 'rgba(255,255,255,0.07)' : 'rgba(255,255,255,0.05)';
@@ -1929,6 +2843,7 @@ musicPlayerBtn.addEventListener('click', (ev) => {
             const editBtn = document.createElement('button');
             editBtn.innerHTML = '✎';
             editBtn.title = 'Edit value';
+            editBtn.setAttribute('aria-label', `Edit ${k}`);
             editBtn.style.position = 'absolute';
             editBtn.style.top = '6px';
             editBtn.style.left = '6px';
@@ -2106,6 +3021,14 @@ musicPlayerBtn.addEventListener('click', (ev) => {
             pausedNote.style.color = '#ffdede';
             c.appendChild(pausedNote);
         }
+        if (!filtered.length) {
+            const empty = document.createElement('div');
+            empty.textContent = search || filter !== 'all' ? 'No console messages match these filters.' : 'No console messages have been captured yet.';
+            empty.style.padding = '24px 12px';
+            empty.style.textAlign = 'center';
+            empty.style.color = 'rgba(232,236,247,0.72)';
+            c.appendChild(empty);
+        }
         filtered.slice().reverse().forEach((entry, idx) => {
             const row = document.createElement('div');
             row.style.padding = '8px 10px';
@@ -2262,9 +3185,7 @@ musicPlayerBtn.addEventListener('click', (ev) => {
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
             const overlay = document.getElementById('devtools-debug-overlay');
-            const backdrop = document.getElementById('devtools-debug-backdrop');
-            if (overlay) overlay.remove();
-            if (backdrop) backdrop.remove();
+            if (overlay) closeDebugOverlay();
         }
     });
 
@@ -2272,11 +3193,15 @@ musicPlayerBtn.addEventListener('click', (ev) => {
     document.addEventListener('click', (e) => {
         const overlay = document.getElementById('devtools-debug-overlay');
         if (!overlay) return;
-        const isInside = overlay.contains(e.target);
+        // Some controls rebuild themselves during their click handler (for
+        // example, selecting a source file rerenders the file tree). Use the
+        // event's original path so a now-detached button is still recognized
+        // as a click that began inside the developer-tools dialog.
+        const isInside = typeof e.composedPath === 'function'
+            ? e.composedPath().includes(overlay)
+            : overlay.contains(e.target);
         if (!isInside) {
-            const backdrop = document.getElementById('devtools-debug-backdrop');
-            overlay.remove();
-            if (backdrop) backdrop.remove();
+            closeDebugOverlay();
         }
     });
 
@@ -2303,10 +3228,8 @@ musicPlayerBtn.addEventListener('click', (ev) => {
         if (!isToggleShortcut) return;
         e.preventDefault();
         const overlay = document.getElementById('devtools-debug-overlay');
-        const backdrop = document.getElementById('devtools-debug-backdrop');
         if (overlay) {
-            overlay.remove();
-            if (backdrop) backdrop.remove();
+            closeDebugOverlay();
         } else {
             showDebugOverlay();
         }

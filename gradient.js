@@ -5,121 +5,119 @@ const COLOR_PALETTES = Object.freeze({
         colors: ['#000035', '#1B2455', '#C4AD62', '#FFFFFF'],
         angle: 90
     },
-    ocean: {
-        name: 'Ocean',
-        colors: ['#112D4E', '#3F72AF', '#DBE2EF', '#F9F7F7'],
+    daylight: {
+        name: 'Daylight',
+        colors: ['#EEF6FF', '#D6E7FF', '#1D4ED8', '#FFFFFF'],
         angle: 120
-    },
-    'dark-teal': {
-        name: 'Dark Teal',
-        colors: ['#222831', '#393E46', '#00ADB5', '#EEEEEE'],
-        angle: 125
-    },
-    earth: {
-        name: 'Earth',
-        colors: ['#2C3639', '#3F4E4F', '#A27B5C', '#DCD7C9'],
-        angle: 120
-    },
-    neon: {
-        name: 'Neon',
-        colors: ['#252A34', '#08D9D6', '#FF2E63', '#EAEAEA'],
-        angle: 135
-    },
-    pastel: {
-        name: 'Pastel',
-        colors: ['#F38181', '#95E1D3', '#FCE38A', '#EAFFD0'],
-        angle: 120
-    },
-    midnight: {
-        name: 'Midnight',
-        colors: ['#070F2B', '#1B1A55', '#9290C3', '#535C91'],
-        angle: 120
-    },
-    'dark-plum': {
-        name: 'Dark Plum',
-        colors: ['#030637', '#3C0753', '#910A67', '#720455'],
-        angle: 125
-    },
-    graphite: {
-        name: 'Graphite',
-        colors: ['#222831', '#76ABAE', '#EEEEEE', '#31363F'],
-        angle: 130
-    },
-    'forest-night': {
-        name: 'Forest Night',
-        colors: ['#12372A', '#ADBC9F', '#FBFADA', '#436850'],
-        angle: 125
     },
     monochrome: {
         name: 'Monochrome',
-        colors: ['#090909', '#2B2B2B', '#BDBDBD', '#FAFAFA'],
+        colors: ['#F9FAFB', '#E5E7EB', '#111827', '#FFFFFF'],
         angle: 115
     },
     slate: {
         name: 'Slate',
-        colors: ['#0F172A', '#334155', '#38BDF8', '#F8FAFC'],
+        colors: ['#E2E8F0', '#CBD5E1', '#0F766E', '#F8FAFC'],
         angle: 125
     },
-    aurora: {
-        name: 'Aurora',
-        colors: ['#101828', '#344054', '#12B76A', '#F9FAFB'],
-        angle: 135
-    },
-    'rose-quartz': {
-        name: 'Rose Quartz',
-        colors: ['#4A1D36', '#8F3B62', '#E8A0BF', '#FFF4F8'],
-        angle: 125
-    },
-    lavender: {
-        name: 'Lavender',
-        colors: ['#29234F', '#62558A', '#C4B5FD', '#F6F3FF'],
-        angle: 130
-    },
-    'cherry-blossom': {
-        name: 'Cherry Blossom',
-        colors: ['#542333', '#A64D68', '#F2A7B9', '#FFF5F7'],
+    'dark-mode': {
+        name: 'Dark Mode',
+        colors: ['#0F1115', '#1C2128', '#E5E7EB', '#171B22'],
         angle: 120
     },
-    'sunset-sorbet': {
-        name: 'Sunset Sorbet',
-        colors: ['#44233F', '#A64B67', '#F59E8B', '#FFF1EA'],
-        angle: 135
-    },
-    'sage-rose': {
-        name: 'Sage Rose',
-        colors: ['#263C36', '#557A6E', '#D6A0AA', '#F6F1ED'],
-        angle: 125
-    },
-    'prism-rush': {
-        name: 'Prism Rush',
-        colors: ['#3A0CA3', '#4361EE', '#F72585', '#F8F9FF'],
-        angle: 130
-    },
-    tropical: {
-        name: 'Tropical',
-        colors: ['#005F73', '#0A9396', '#FFB703', '#FFF7E6'],
-        angle: 125
-    },
-    'candy-pop': {
-        name: 'Candy Pop',
-        colors: ['#6D28D9', '#EC4899', '#2DD4BF', '#FFF1F8'],
-        angle: 135
-    },
-    daylight: {
-        name: 'Daylight',
-        colors: ['#F8FAFC', '#E2E8F0', '#2563EB', '#FFFFFF'],
+    'coastal-sky': {
+        name: 'Coastal Sky',
+        colors: ['#E0F2FE', '#BAE6FD', '#0369A1', '#F8FCFF'],
         angle: 120
     },
-    'cotton-candy': {
-        name: 'Cotton Candy',
-        colors: ['#FFF1F7', '#EDE9FE', '#EC4899', '#FFFFFF'],
+    'lavender-mist': {
+        name: 'Lavender Mist',
+        colors: ['#F3E8FF', '#EDE9FE', '#7C3AED', '#FDFBFF'],
         angle: 125
+    },
+    'soft-sage': {
+        name: 'Soft Sage',
+        colors: ['#ECF4EA', '#D5E7D3', '#477A5A', '#FBFDF9'],
+        angle: 125
+    },
+    blush: {
+        name: 'Blush',
+        colors: ['#FFF1F5', '#FCE7F3', '#DB2777', '#FFFBFC'],
+        angle: 120
     },
     lemonade: {
         name: 'Lemonade',
         colors: ['#FFF8CC', '#FFD6A5', '#F97316', '#FFFEF5'],
         angle: 130
+    },
+    'prism-rush': {
+        name: 'Prism Rush',
+        colors: ['#DDD6FE', '#BFDBFE', '#E11D48', '#FAFAFF'],
+        angle: 130
+    },
+    tropical: {
+        name: 'Tropical',
+        colors: ['#CCFBF1', '#99F6E4', '#F59E0B', '#FFF7ED'],
+        angle: 125
+    },
+    'candy-pop': {
+        name: 'Candy Pop',
+        colors: ['#C4B5FD', '#F9A8D4', '#0F766E', '#FFF7FB'],
+        angle: 135
+    },
+    sunset: {
+        name: 'Sunset',
+        colors: ['#FFE4D6', '#FECACA', '#EA580C', '#FFF8F3'],
+        angle: 135
+    },
+    'mango-wave': {
+        name: 'Mango Wave',
+        colors: ['#FEF3C7', '#FED7AA', '#BE123C', '#FFFBEB'],
+        angle: 130
+    },
+    midnight: {
+        name: 'Midnight',
+        colors: ['#080B21', '#19173B', '#A78BFA', '#11152E'],
+        angle: 120
+    },
+    graphite: {
+        name: 'Graphite',
+        colors: ['#171717', '#2F3540', '#38BDF8', '#20242B'],
+        angle: 130
+    },
+    'deep-ocean': {
+        name: 'Deep Ocean',
+        colors: ['#061826', '#0B3342', '#22D3EE', '#0D2633'],
+        angle: 125
+    },
+    'plum-night': {
+        name: 'Plum Night',
+        colors: ['#1E0A26', '#3B164A', '#E879F9', '#281131'],
+        angle: 130
+    },
+    'forest-night': {
+        name: 'Forest Night',
+        colors: ['#071B14', '#123A2A', '#6EE7B7', '#0C271D'],
+        angle: 125
     }
+});
+
+// Keep previously saved palette IDs working after the preset collection was
+// simplified. Retired choices move to the closest current visual style.
+const PALETTE_ALIASES = Object.freeze({
+    ocean: 'coastal-sky',
+    aurora: 'soft-sage',
+    'dark-teal': 'graphite',
+    earth: 'soft-sage',
+    neon: 'candy-pop',
+    pastel: 'candy-pop',
+    'dark-plum': 'midnight',
+    'rose-quartz': 'blush',
+    lavender: 'lavender-mist',
+    'cherry-blossom': 'blush',
+    'sunset-sorbet': 'sunset',
+    'sage-rose': 'soft-sage',
+    'cotton-candy': 'blush'
 });
 
 const DEFAULT_PALETTE_ID = 'indy';
@@ -218,6 +216,18 @@ const visibleRoleColor = (background, candidates, minimumContrast = 3) => (
     || readableTextColor(background)
 );
 
+// Aim for the same subtle amount of visible separation on every dashboard.
+// Bright accents need less opacity on dark backgrounds, while gentler palette
+// combinations need more before the glow becomes perceptible.
+const normalizedGlowOpacity = (glow, background, targetContrast = 1.22) => {
+    for (let opacity = 0.08; opacity <= 0.3; opacity += 0.01) {
+        if (contrastRatio(mixColors(glow, background, opacity), background) >= targetContrast) {
+            return Number(opacity.toFixed(2));
+        }
+    }
+    return 0.3;
+};
+
 const buildGradient = (angle, colors) => (
     `linear-gradient(${angle}deg, ${colors[0]} 0%, ${colors[1]} 100%)`
 );
@@ -252,7 +262,8 @@ class GradientManager {
         if (!settings || typeof settings !== 'object') return;
 
         const edition = SPECIAL_EDITIONS[settings.editionId];
-        const preset = COLOR_PALETTES[settings.paletteId];
+        const paletteId = PALETTE_ALIASES[settings.paletteId] || settings.paletteId;
+        const preset = COLOR_PALETTES[paletteId];
         if (edition) {
             this.editionId = settings.editionId;
             this.paletteId = `edition-${settings.editionId}`;
@@ -260,7 +271,7 @@ class GradientManager {
             this.angle = Number.isFinite(Number(settings.angle)) ? Number(settings.angle) : edition.angle;
         } else if (preset) {
             this.editionId = null;
-            this.paletteId = settings.paletteId;
+            this.paletteId = paletteId;
             this.colors = [...preset.colors];
             this.angle = Number.isFinite(Number(settings.angle)) ? Number(settings.angle) : preset.angle;
         } else if (Array.isArray(settings.colors) && settings.colors.length === 4) {
@@ -328,9 +339,10 @@ class GradientManager {
         if (paletteId === 'custom') {
             this.paletteId = 'custom';
         } else {
-            const palette = COLOR_PALETTES[paletteId];
+            const resolvedPaletteId = PALETTE_ALIASES[paletteId] || paletteId;
+            const palette = COLOR_PALETTES[resolvedPaletteId];
             if (!palette) return;
-            this.paletteId = paletteId;
+            this.paletteId = resolvedPaletteId;
             this.colors = [...palette.colors];
             this.angle = palette.angle;
         }
@@ -422,6 +434,8 @@ class GradientManager {
             dashboardBase,
             [this.colors[2], this.colors[3], this.colors[1], '#FFFFFF']
         );
+        const dashboardGlow = dashboardAccent;
+        const dashboardGlowOpacity = normalizedGlowOpacity(dashboardGlow, dashboardBase);
         const panelAccent = visibleRoleColor(
             panelColor,
             [this.colors[2], this.colors[0], this.colors[3], '#FFFFFF']
@@ -448,6 +462,9 @@ class GradientManager {
         root.style.setProperty('--theme-dashboard-ink-rgb', hexToChannels(dashboardInk).join(', '));
         root.style.setProperty('--theme-dashboard-accent', dashboardAccent);
         root.style.setProperty('--theme-dashboard-accent-rgb', hexToChannels(dashboardAccent).join(', '));
+        root.style.setProperty('--theme-dashboard-glow', dashboardGlow);
+        root.style.setProperty('--theme-dashboard-glow-rgb', hexToChannels(dashboardGlow).join(', '));
+        root.style.setProperty('--theme-dashboard-glow-opacity', String(dashboardGlowOpacity));
         root.style.setProperty('--theme-panel-accent', panelAccent);
         root.style.setProperty('--theme-panel-accent-rgb', hexToChannels(panelAccent).join(', '));
         root.style.setProperty('--theme-frame-border', mixColors(this.colors[0], readableTextColor(this.colors[0]), 0.9));
