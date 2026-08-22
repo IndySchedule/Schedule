@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-08-21T08:09:24.473Z",
-  "lastCheckedAt": "2026-08-21T08:09:24.473Z",
-  "contentUpdatedAt": "2026-08-21T08:09:24.473Z",
+  "generatedAt": "2026-08-22T02:58:19.684Z",
+  "lastCheckedAt": "2026-08-22T02:58:19.684Z",
+  "contentUpdatedAt": "2026-08-22T02:58:19.684Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -12,17 +12,6 @@
   "rangeStart": "2026-08-19",
   "rangeEnd": "2026-12-19",
   "events": [
-    {
-      "id": "4gigfht8m62j8b0jmcs9ls4t95@google.com-2026-08-19T21:30:00.000Z",
-      "title": "IHS JV/V Volleyball vs Franklin HS",
-      "start": "2026-08-19T21:30:00.000Z",
-      "end": "2026-08-20T01:00:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-08-19"
-      ],
-      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
-    },
     {
       "id": "3a6thu6lcsnts45pk0matt54ch@google.com-2026-08-20T21:30:00.000Z",
       "title": "IHS JV/V Volleyball @ Centennial HS",
@@ -1147,6 +1136,17 @@
         "2026-12-20"
       ],
       "location": "Bob Carpenter Center"
+    },
+    {
+      "id": "48ekbek4fecr6qp8me4q9qvfqv@google.com-2026-12-20T00:00:00.000Z",
+      "title": "IHS G Wrestling @ Rossview HS",
+      "start": "2026-12-20T00:00:00.000Z",
+      "end": "2026-12-21T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2026-12-20"
+      ],
+      "location": "Rossview High School, 1237 Rossview Rd, Clarksville, TN 37043, USA"
     }
   ]
 }
