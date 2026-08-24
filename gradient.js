@@ -239,6 +239,14 @@ class GradientManager {
         this.colors = [...defaultPalette.colors];
         this.angle = defaultPalette.angle;
         this.editionId = null;
+        this.appearanceMode = 'manual';
+        this.manualPalette = null;
+        this.undoSnapshot = null;
+        this.undoLabel = '';
+        this.activeInputGroup = null;
+        this.deviceAppearanceQuery = typeof window.matchMedia === 'function'
+            ? window.matchMedia('(prefers-color-scheme: dark)')
+            : null;
         this.stops = [];
         this.initialized = false;
 
@@ -293,6 +301,13 @@ class GradientManager {
             this.angle = Number.isFinite(Number(settings.angle)) ? Number(settings.angle) : 90;
         }
 
+        this.appearanceMode = settings.appearanceMode === 'device' ? 'device' : 'manual';
+        this.manualPalette = this.normalizeSnapshot(settings.manualPalette);
+        if (this.appearanceMode === 'device') {
+            if (!this.manualPalette) this.manualPalette = this.snapshotPalette();
+            this.applyDevicePalette();
+        }
+
         this.syncStops();
         if (commit) this.commitChange();
     }
@@ -309,6 +324,7 @@ class GradientManager {
         });
 
         document.getElementById('gradient-angle')?.addEventListener('input', (event) => {
+            this.rememberUndoState('custom-edit');
             this.angle = Number(event.target.value);
             this.activateCustomPalette();
         });
@@ -321,12 +337,27 @@ class GradientManager {
         ];
         colorInputs.forEach(([id, index]) => {
             document.getElementById(id)?.addEventListener('input', (event) => {
+                this.rememberUndoState('custom-edit');
                 this.colors[index] = normalizeColor(event.target.value, this.colors[index]);
                 this.activateCustomPalette();
             });
         });
 
         document.getElementById('reset-gradient')?.addEventListener('click', () => this.selectPalette(DEFAULT_PALETTE_ID));
+        document.getElementById('palette-undo-button')?.addEventListener('click', () => this.undoPaletteChange());
+        document.getElementById('follow-device-appearance')?.addEventListener('change', (event) => {
+            this.setFollowDeviceAppearance(event.target.checked);
+        });
+        const onDeviceAppearanceChange = () => {
+            if (this.appearanceMode !== 'device') return;
+            this.applyDevicePalette();
+            this.commitChange();
+        };
+        if (typeof this.deviceAppearanceQuery?.addEventListener === 'function') {
+            this.deviceAppearanceQuery.addEventListener('change', onDeviceAppearanceChange);
+        } else if (typeof this.deviceAppearanceQuery?.addListener === 'function') {
+            this.deviceAppearanceQuery.addListener(onDeviceAppearanceChange);
+        }
         this.commitChange();
     }
 
@@ -335,6 +366,8 @@ class GradientManager {
     }
 
     selectPalette(paletteId) {
+        this.rememberUndoState();
+        this.useManualAppearance();
         this.editionId = null;
         if (paletteId === 'custom') {
             this.paletteId = 'custom';
@@ -351,6 +384,7 @@ class GradientManager {
     }
 
     activateCustomPalette() {
+        this.useManualAppearance();
         this.editionId = null;
         this.paletteId = 'custom';
         this.commitChange();
@@ -359,6 +393,8 @@ class GradientManager {
     selectEdition(editionId) {
         const edition = SPECIAL_EDITIONS[editionId];
         if (!edition) return;
+        this.rememberUndoState();
+        this.useManualAppearance();
         this.editionId = editionId;
         this.paletteId = `edition-${editionId}`;
         this.colors = [...edition.colors];
@@ -368,8 +404,114 @@ class GradientManager {
     }
 
     updateAngle(value) {
+        this.rememberUndoState('custom-edit');
         this.angle = Number(value);
         this.activateCustomPalette();
+    }
+
+    snapshotPalette() {
+        return {
+            paletteId: this.paletteId,
+            editionId: this.editionId,
+            colors: [...this.colors],
+            angle: this.angle
+        };
+    }
+
+    snapshotState() {
+        return {
+            ...this.snapshotPalette(),
+            appearanceMode: this.appearanceMode,
+            manualPalette: this.manualPalette ? { ...this.manualPalette, colors: [...this.manualPalette.colors] } : null
+        };
+    }
+
+    normalizeSnapshot(snapshot) {
+        if (!snapshot || typeof snapshot !== 'object' || !Array.isArray(snapshot.colors) || snapshot.colors.length !== 4) return null;
+        return {
+            paletteId: typeof snapshot.paletteId === 'string' ? snapshot.paletteId : 'custom',
+            editionId: typeof snapshot.editionId === 'string' ? snapshot.editionId : null,
+            colors: snapshot.colors.map((color, index) => normalizeColor(color, COLOR_PALETTES.indy.colors[index])),
+            angle: Number.isFinite(Number(snapshot.angle)) ? Number(snapshot.angle) : 90
+        };
+    }
+
+    applySnapshot(snapshot) {
+        const normalized = this.normalizeSnapshot(snapshot);
+        if (!normalized) return false;
+        this.paletteId = normalized.paletteId;
+        this.editionId = normalized.editionId;
+        this.colors = [...normalized.colors];
+        this.angle = normalized.angle;
+        return true;
+    }
+
+    rememberUndoState(group = null) {
+        if (group && this.activeInputGroup === group) return;
+        const previousName = this.currentPaletteName();
+        this.undoSnapshot = this.snapshotState();
+        this.undoLabel = previousName;
+        this.activeInputGroup = group;
+    }
+
+    undoPaletteChange() {
+        if (!this.undoSnapshot) return;
+        const snapshot = this.undoSnapshot;
+        this.undoSnapshot = null;
+        this.activeInputGroup = null;
+        this.appearanceMode = snapshot.appearanceMode === 'device' ? 'device' : 'manual';
+        this.manualPalette = this.normalizeSnapshot(snapshot.manualPalette);
+        this.applySnapshot(snapshot);
+        if (this.appearanceMode === 'device') this.applyDevicePalette();
+        this.commitChange();
+        this.updateUndoNotice();
+        window.trackAnalyticsEvent?.('palette_change_undone');
+    }
+
+    currentPaletteName() {
+        return SPECIAL_EDITIONS[this.editionId]?.name
+            || COLOR_PALETTES[this.paletteId]?.name
+            || 'Custom';
+    }
+
+    useManualAppearance() {
+        if (this.appearanceMode === 'device') this.appearanceMode = 'manual';
+    }
+
+    devicePaletteId() {
+        return this.deviceAppearanceQuery?.matches ? 'dark-mode' : 'daylight';
+    }
+
+    applyDevicePalette() {
+        const paletteId = this.devicePaletteId();
+        const palette = COLOR_PALETTES[paletteId];
+        this.editionId = null;
+        this.paletteId = paletteId;
+        this.colors = [...palette.colors];
+        this.angle = palette.angle;
+    }
+
+    setFollowDeviceAppearance(enabled) {
+        if (enabled && this.appearanceMode !== 'device') {
+            this.rememberUndoState();
+            this.manualPalette = this.snapshotPalette();
+            this.appearanceMode = 'device';
+            this.applyDevicePalette();
+        } else if (!enabled && this.appearanceMode === 'device') {
+            this.rememberUndoState();
+            this.appearanceMode = 'manual';
+            if (!this.applySnapshot(this.manualPalette)) this.applySnapshot({
+                paletteId: DEFAULT_PALETTE_ID,
+                editionId: null,
+                colors: COLOR_PALETTES[DEFAULT_PALETTE_ID].colors,
+                angle: COLOR_PALETTES[DEFAULT_PALETTE_ID].angle
+            });
+        } else {
+            return;
+        }
+        this.activeInputGroup = null;
+        this.commitChange();
+        window.trackAnalyticsEvent?.('device_appearance_changed', { enabled: Boolean(enabled) });
     }
 
     syncStops() {
@@ -480,6 +622,7 @@ class GradientManager {
         }
         document.body.style.background = gradient;
         document.body.style.backgroundAttachment = 'fixed';
+        document.getElementById('theme-color-meta')?.setAttribute('content', dashboardBase);
 
         const preview = document.getElementById('gradient-preview');
         if (preview) {
@@ -551,6 +694,42 @@ class GradientManager {
         customSwatches.forEach((swatch, index) => {
             swatch.style.setProperty('--swatch', this.colors[index]);
         });
+        const followDevice = document.getElementById('follow-device-appearance');
+        if (followDevice) followDevice.checked = this.appearanceMode === 'device';
+        const deviceStatus = document.getElementById('device-appearance-status');
+        if (deviceStatus) {
+            deviceStatus.textContent = this.appearanceMode === 'device'
+                ? `Using ${COLOR_PALETTES[this.devicePaletteId()].name} to match this device.`
+                : 'Use Daylight in light mode and Dark Mode in dark mode.';
+        }
+        this.updateUndoNotice();
+        this.updateContrastStatus();
+    }
+
+    updateUndoNotice() {
+        const notice = document.getElementById('palette-undo-notice');
+        if (!notice) return;
+        notice.hidden = !this.undoSnapshot;
+        const message = document.getElementById('palette-undo-message');
+        if (message && this.undoSnapshot) {
+            message.textContent = this.undoLabel === 'Custom'
+                ? 'Custom colors changed.'
+                : `Changed from ${this.undoLabel}.`;
+        }
+    }
+
+    updateContrastStatus() {
+        const status = document.getElementById('custom-contrast-status');
+        const message = document.getElementById('custom-contrast-message');
+        const icon = document.getElementById('custom-contrast-icon');
+        if (!status || !message) return;
+        const accentNeedsHelp = contrastRatio(this.colors[2], this.colors[3]) < 3
+            && contrastRatio(this.colors[2], this.colors[0]) < 3;
+        status.dataset.state = accentNeedsHelp ? 'adjusted' : 'safe';
+        message.textContent = accentNeedsHelp
+            ? 'Automatic contrast help is active because some of these colors are too similar.'
+            : 'Good contrast — text and controls will stay easy to read.';
+        if (icon) icon.className = accentNeedsHelp ? 'fas fa-wand-magic-sparkles' : 'fas fa-circle-check';
     }
 
     updateGradientSettingsVisibility() {
@@ -566,8 +745,11 @@ class GradientManager {
             angle: this.angle,
             startColor: this.colors[0],
             endColor: this.colors[1],
-            stops: this.stops
+            stops: this.stops,
+            appearanceMode: this.appearanceMode,
+            manualPalette: this.manualPalette
         }));
+        window.authManager?.scheduleUserSettingsSave?.();
     }
 }
 

@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" id="theme-color-meta" content="#000035">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Indy Schedule">
     <title>Indy Schedule</title>
     <script>
         try {
@@ -40,6 +44,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="indy_schedule_logo_sizes/indy-schedule-logo-16x16-optimized.png">
     <link rel="icon" type="image/png" sizes="32x32" href="indy_schedule_logo_sizes/indy-schedule-logo-32x32.png">
     <link rel="apple-touch-icon" sizes="128x128" href="indy_schedule_logo_sizes/indy-schedule-logo-128x128.png">
+    <link rel="manifest" href="./manifest.webmanifest">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script defer src="./dialog-manager.js"></script>
     <script defer src="auth.js"></script>
@@ -281,6 +286,16 @@
                             <div><h3>Color palette</h3><p class="settings-card-description">Recolor the complete dashboard with a preset or create your own four-color palette.</p></div>
                             <span class="settings-status-pill"><i class="fas fa-eye" aria-hidden="true"></i> Live preview</span>
                         </div>
+                        <div class="device-appearance-row settings-inset-row">
+                            <div class="settings-control-copy">
+                                <label class="switch-label" for="follow-device-appearance">Follow device appearance</label>
+                                <p id="device-appearance-status">Use Daylight in light mode and Dark Mode in dark mode.</p>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="follow-device-appearance">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
                         <div class="palette-grid" id="palette-grid" role="radiogroup" aria-label="Color palette">
                             <span class="palette-grid-label" aria-hidden="true">Essentials</span>
                             <button type="button" class="palette-option" data-palette="indy" role="radio" aria-checked="false">
@@ -376,6 +391,10 @@
                                 <span>Custom</span><small>Your four colors</small>
                             </button>
                         </div>
+                        <div id="palette-undo-notice" class="palette-undo-notice" role="status" aria-live="polite" hidden>
+                            <span><i class="fas fa-clock-rotate-left" aria-hidden="true"></i> <span id="palette-undo-message">Palette changed.</span></span>
+                            <button type="button" id="palette-undo-button">Undo</button>
+                        </div>
                         <div id="gradient-settings" class="gradient-controls">
                             <div class="custom-palette-heading"><strong>Custom palette</strong><span>Changes appear instantly</span></div>
                             <div id="gradient-preview" class="gradient-preview" aria-label="Gradient preview"></div>
@@ -417,6 +436,10 @@
                                     </div>
                                     <div class="hex-value" id="palette-surface-hex" style="margin-left:auto;color:var(--text-muted);font-size:13px;">#FFFFFF</div>
                                 </div>
+                            </div>
+                            <div id="custom-contrast-status" class="custom-contrast-status" data-state="safe" role="status" aria-live="polite">
+                                <i id="custom-contrast-icon" class="fas fa-circle-check" aria-hidden="true"></i>
+                                <span id="custom-contrast-message">Good contrast — text and controls will stay easy to read.</span>
                             </div>
                             <button type="button" id="reset-gradient" class="text-btn gradient-reset-btn">
                                 <i class="fas fa-rotate-left" aria-hidden="true"></i> Use Indy palette
@@ -574,7 +597,7 @@
                     <div class="settings-group about-overview-card">
                         <div class="about-content about-dashboard">
                             <div class="about-intro">
-                                <div><span class="about-version">Version 1.3.1</span><h2>Built for the Indy school day.</h2><p>Indy Schedule is a fast, lightweight countdown and daily schedule dashboard for Independence High School.</p></div>
+                                <div><span class="about-version">Version 1.3.2</span><h2>Built for the Indy school day.</h2><p>Indy Schedule is a fast, lightweight countdown and daily schedule dashboard for Independence High School.</p></div>
                                 <div class="about-intro-mark"><i class="fas fa-clock" aria-hidden="true"></i></div>
                             </div>
 
@@ -583,6 +606,14 @@
                                 <div class="about-feature"><i class="fas fa-calendar-check" aria-hidden="true"></i><strong>Calendar aware</strong><span>Regular, late-start, and half-day schedules switch automatically.</span></div>
                                 <div class="about-feature"><i class="fas fa-palette" aria-hidden="true"></i><strong>Made yours</strong><span>Choose a palette, class names, lunch wave, and display details.</span></div>
                                 <div class="about-feature"><i class="fas fa-cloud-arrow-up" aria-hidden="true"></i><strong>Optional sync</strong><span>An Indy Schedule account can restore preferences after Chromebook storage is cleared.</span></div>
+                            </div>
+
+                            <div id="install-app-card" class="about-install-card" hidden>
+                                <div class="settings-section-heading compact">
+                                    <div class="settings-section-icon"><i class="fas fa-download" aria-hidden="true"></i></div>
+                                    <div><h3>Install Indy Schedule</h3><p>Open it like an app and keep the dashboard available after your first visit, even when you are offline.</p></div>
+                                </div>
+                                <button type="button" id="install-app-button" class="replay-onboarding-btn"><i class="fas fa-download" aria-hidden="true"></i> Install app</button>
                             </div>
 
                             <div class="about-details-grid">
@@ -633,6 +664,19 @@
 
                         <div id="whatsnew-website" class="whatsnew-log" role="tabpanel">
                             <div class="wn-entry current-release">
+                                <div class="wn-entry-header">
+                                    <span class="wn-version">v1.3.2</span>
+                                    <span class="wn-date">Aug 24, 2026</span>
+                                    <span class="wn-tag">Smarter colors &amp; offline access</span>
+                                </div>
+                                <ul>
+                                    <li>Added an Undo button for palette changes and a warning when custom colors need automatic contrast help.</li>
+                                    <li>Added an option to follow your device’s light or dark appearance automatically.</li>
+                                    <li>Made Indy Schedule installable and able to reopen from a saved copy after your first visit when the internet is unavailable.</li>
+                                </ul>
+                            </div>
+
+                            <div class="wn-entry">
                                 <div class="wn-entry-header">
                                     <span class="wn-version">v1.3.1</span>
                                     <span class="wn-date">Aug 21, 2026</span>
@@ -881,7 +925,7 @@
                                     </div>
                                     <div class="legal-card-footer">
                                         <a class="legal-btn" href="terms.html" target="_blank" rel="noopener">View Terms</a>
-                                        <span class="legal-updated">Last updated: Sep 21, 2025</span>
+                                        <span class="legal-updated">Last updated: Aug 21, 2026</span>
                                     </div>
                                 </div>
 
@@ -897,7 +941,7 @@
                                     </div>
                                     <div class="legal-card-footer">
                                         <a class="legal-btn" href="privacy.html" target="_blank" rel="noopener">View Privacy Policy</a>
-                                        <span class="legal-updated">Last updated: Aug 5, 2026</span>
+                                        <span class="legal-updated">Last updated: Aug 24, 2026</span>
                                     </div>
                                 </div>
                             </div>
@@ -945,7 +989,7 @@
             <p class="managed-device-note"><i class="fas fa-circle-info" aria-hidden="true"></i> If Chrome clears site data, sign in again to restore your saved settings.</p>
         </div>
     </div>
-    <!-- One-time notice for returning users after the 1.3.1 release. -->
+    <!-- One-time notice for returning users after the 1.3.2 release. -->
     <div id="release-notice-backdrop" class="release-notice-backdrop" aria-hidden="true" hidden>
         <section class="release-notice-dialog" role="dialog" aria-modal="true" aria-labelledby="release-notice-title" aria-describedby="release-notice-description">
             <header class="release-notice-header">
@@ -956,17 +1000,13 @@
                 <button type="button" id="release-notice-close" class="release-notice-close" aria-label="Close update notice"><i class="fas fa-times" aria-hidden="true"></i></button>
             </header>
             <div class="release-notice-content">
-                <span class="release-notice-version">Versions 1.3.0 + 1.3.1</span>
-                <h1 id="release-notice-title">A more personal Indy Schedule.</h1>
-                <p id="release-notice-description">The latest updates make your schedule easier to set up, personalize, and trust throughout the school day.</p>
+                <span class="release-notice-version">Version 1.3.2</span>
+                <h1 id="release-notice-title">Your schedule, ready anywhere.</h1>
+                <p id="release-notice-description">This update makes palettes safer to experiment with and keeps the dashboard useful when your connection drops.</p>
                 <div class="release-notice-summary">
                     <article>
-                        <span>1.3.0</span>
-                        <div><strong>Schedules and setup</strong><p>Change today’s schedule when needed, replay the Welcome Tour, restore your font correctly, and sync settings more reliably.</p></div>
-                    </article>
-                    <article>
-                        <span>1.3.1</span>
-                        <div><strong>Palettes and polish</strong><p>Choose from a redesigned palette collection, enjoy a fully themed Today at Indy, and find clearer pages and improved Developer Tools.</p></div>
+                        <span>1.3.2</span>
+                        <div><strong>Smarter appearance and offline access</strong><p>Undo palette changes, match your device’s light or dark appearance, get help with hard-to-read custom colors, and install Indy Schedule for offline use.</p></div>
                     </article>
                 </div>
             </div>
@@ -1280,7 +1320,7 @@
                     localStorage.removeItem('indyOnboardingReplayRequested_v1');
                     // First-time users already saw the full walkthrough, so do
                     // not immediately stack the release-summary dialog after it.
-                    localStorage.setItem('indyReleaseNotice_v1_3_1', 'true');
+                    localStorage.setItem('indyReleaseNotice_v1_3_2', 'true');
                     const currentUser = window.authManager?.currentUser;
                     nextButton.disabled = true;
                     nextButton.innerHTML = currentUser
@@ -1425,7 +1465,7 @@
         })();
 
         (function initializeReleaseNotice() {
-            const storageKey = 'indyReleaseNotice_v1_3_1';
+            const storageKey = 'indyReleaseNotice_v1_3_2';
 
             document.addEventListener('DOMContentLoaded', () => {
                 const backdrop = document.getElementById('release-notice-backdrop');
@@ -1435,12 +1475,17 @@
                 const detailsButton = document.getElementById('release-notice-details');
                 if (!backdrop || !dialog || !closeButton || !continueButton || !detailsButton) return;
 
-                function dismissNotice(openUpdates = false) {
-                    localStorage.setItem(storageKey, 'true');
+                function hideNotice(restoreFocus = true) {
                     backdrop.hidden = true;
                     backdrop.setAttribute('aria-hidden', 'true');
                     document.body.classList.remove('release-notice-open');
-                    window.IndyDialogManager?.close(backdrop, { restoreFocus: !openUpdates });
+                    window.IndyDialogManager?.close(backdrop, { restoreFocus });
+                }
+
+                function dismissNotice(openUpdates = false) {
+                    localStorage.setItem(storageKey, 'true');
+                    hideNotice(!openUpdates);
+                    window.authManager?.scheduleUserSettingsSave(0).catch(() => {});
                     if (openUpdates) {
                         window.setTimeout(() => {
                             document.getElementById('settings-button')?.click();
@@ -1470,6 +1515,13 @@
                 closeButton.addEventListener('click', () => dismissNotice());
                 continueButton.addEventListener('click', () => dismissNotice());
                 detailsButton.addEventListener('click', () => dismissNotice(true));
+                window.addEventListener('indy-account-authenticated', () => {
+                    if (localStorage.getItem(storageKey) !== 'true') return;
+                    if (!backdrop.hidden) hideNotice(false);
+                    // Covers the short startup window where the user dismisses
+                    // before Firebase has finished restoring their session.
+                    window.authManager?.scheduleUserSettingsSave(0).catch(() => {});
+                });
                 window.setTimeout(showNotice, 450);
             });
         })();

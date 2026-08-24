@@ -513,6 +513,7 @@ class AuthManager {
                 indyScheduleOverride_v1: null,
                 indyOnboardingComplete_v2: localStorage.getItem("indyOnboardingComplete_v2"),
                 indyAnalyticsConsent_v1: localStorage.getItem(ANALYTICS_CONSENT_KEY),
+                indyReleaseNotice_v1_3_2: localStorage.getItem("indyReleaseNotice_v1_3_2"),
                 sawUpdateNotice: localStorage.getItem("sawUpdateNotice")
             };
 

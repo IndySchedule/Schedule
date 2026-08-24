@@ -21,6 +21,7 @@ const mimeTypes = {
     '.html': 'text/html; charset=utf-8',
     '.js': 'text/javascript; charset=utf-8',
     '.json': 'application/json; charset=utf-8',
+    '.webmanifest': 'application/manifest+json; charset=utf-8',
     '.png': 'image/png',
     '.svg': 'image/svg+xml'
 };
@@ -87,6 +88,7 @@ const scenarios = [
     { name: 'onboarding-replay-signed-in', viewport: 'chromebook', time: schoolTimes.beforeSchool, onboardingReplay: true, action: 'replay-signed-in' },
     { name: 'firestore-schedule-sync', viewport: 'chromebook', time: schoolTimes.duringClass, settings: 'schedule', action: 'firestore-sync' },
     { name: 'settings-modal-accessibility', viewport: 'chromebook', time: schoolTimes.duringClass, settings: 'appearance', action: 'settings-a11y' },
+    { name: 'settings-appearance-features', viewport: 'chromebook', time: schoolTimes.duringClass, settings: 'appearance', action: 'appearance-features' },
     { name: 'font-local-restoration', viewport: 'chromebook', time: schoolTimes.duringClass, settings: 'appearance', fontFamily: 'Open Sans', expectedFont: "'Open Sans'" },
     { name: 'font-firestore-restoration', viewport: 'chromebook', time: schoolTimes.duringClass, settings: 'appearance', action: 'font-firestore', expectedFont: "'Source Sans Pro'" },
     { name: 'devtools-popup', viewport: 'chromebook', time: schoolTimes.duringClass, action: 'devtools' },
@@ -271,8 +273,8 @@ function initializationScript(scenario) {
             localStorage.setItem('showPeriodTimes', 'true');
             localStorage.setItem('progressBarEnabled', 'true');
             ${scenario.action === 'release-notice'
-                ? "localStorage.removeItem('indyReleaseNotice_v1_3_1');"
-                : "localStorage.setItem('indyReleaseNotice_v1_3_1', 'true');"}
+                ? "localStorage.removeItem('indyReleaseNotice_v1_3_2');"
+                : "localStorage.setItem('indyReleaseNotice_v1_3_2', 'true');"}
             ${scenario.onboarding
                 ? "localStorage.removeItem('lunchWave'); localStorage.removeItem('indyAnalyticsConsent_v1'); localStorage.removeItem('indyOnboardingComplete_v2');"
                 : "localStorage.setItem('lunchWave', 'A'); localStorage.setItem('indyAnalyticsConsent_v1', 'denied'); localStorage.setItem('indyOnboardingComplete_v2', 'true');"}
@@ -425,6 +427,40 @@ async function prepareScenario(page, scenario) {
         `);
         await delay(700);
     }
+    if (scenario.action === 'appearance-features') {
+        await page.evaluate(`
+            (async () => {
+                const manager = window.gradientManager;
+                const originalPalette = manager.paletteId;
+                manager.selectPalette('midnight');
+                document.getElementById('palette-undo-button')?.click();
+                const undoRestored = manager.paletteId === originalPalette;
+                manager.deviceAppearanceQuery = { matches: true };
+                manager.setFollowDeviceAppearance(true);
+                const deviceDarkApplied = manager.paletteId === 'dark-mode'
+                    && JSON.parse(localStorage.getItem('gradientSettings')).appearanceMode === 'device';
+                manager.selectPalette('custom');
+                ['gradient-start-color', 'gradient-end-color', 'palette-accent-color', 'palette-surface-color'].forEach((id) => {
+                    const input = document.getElementById(id);
+                    input.value = '#ffffff';
+                    input.dispatchEvent(new Event('input', { bubbles: true }));
+                });
+                window.__appearanceFeatureResults = {
+                    undoRestored,
+                    deviceDarkApplied,
+                    manualAfterSelection: manager.appearanceMode === 'manual'
+                };
+                document.getElementById('gradient-settings')?.scrollIntoView({ block: 'center' });
+                try {
+                    await Promise.race([
+                        navigator.serviceWorker.ready.then(() => { window.__pwaReady = true; }),
+                        new Promise((resolve) => setTimeout(resolve, 2500))
+                    ]);
+                } catch {}
+            })()
+        `);
+        await delay(300);
+    }
     if (scenario.action === 'font-firestore') {
         await page.evaluate(`loadSettings({ fontFamily: 'Source Sans 3' })`);
         await delay(200);
@@ -575,6 +611,10 @@ async function inspectScenario(page, scenario) {
                 bodyFontFamily: getComputedStyle(document.body).fontFamily,
                 settingsFontFamily: sidebar ? getComputedStyle(sidebar).fontFamily : '',
                 sourceSansLoaded: Boolean(document.getElementById('indy-font-source-sans-3')),
+                appearanceFeatures: window.__appearanceFeatureResults || null,
+                customContrastState: document.getElementById('custom-contrast-status')?.dataset.state || '',
+                paletteUndoVisible: visible(document.getElementById('palette-undo-notice')),
+                pwaReady: Boolean(window.__pwaReady),
                 devtoolsOpen: visible(devtools),
                 devtoolsContained: !devtoolsRect || (devtoolsRect.left >= -1 && devtoolsRect.right <= innerWidth + 1 && devtoolsRect.top >= -1 && devtoolsRect.bottom <= innerHeight + 1),
                 devtoolsDialogRole: devtools?.getAttribute('role') || '',
@@ -694,8 +734,8 @@ function validateScenario(scenario, result) {
         check(result.releaseNoticeOpen, 'release notice did not open');
         check(result.releaseNoticeContained, 'release notice is clipped outside the viewport');
         check(result.releaseNoticeFocusContained && result.backgroundInert, 'release notice did not contain focus and inert the dashboard');
-        check(result.releaseNoticeTitle === 'A more personal Indy Schedule.', `unexpected release-notice title: ${result.releaseNoticeTitle}`);
-        check(result.releaseNoticeSummaryCount === 2, `expected two release summaries, received ${result.releaseNoticeSummaryCount}`);
+        check(result.releaseNoticeTitle === 'Your schedule, ready anywhere.', `unexpected release-notice title: ${result.releaseNoticeTitle}`);
+        check(result.releaseNoticeSummaryCount === 1, `expected one release summary, received ${result.releaseNoticeSummaryCount}`);
     }
     if (scenario.action === 'account') {
         check(result.accountDialogOpen, 'account dialog did not open');
@@ -717,11 +757,20 @@ function validateScenario(scenario, result) {
         check(result.firestoreWrites.length === 2, `expected two debounced Firestore writes, received ${result.firestoreWrites.length}`);
         check(result.firestoreWrites[0]?.settings?.indyScheduleOverride_v1?.schedule === 'normalNoSoar', 'manual override was not written to Firestore');
         check(result.firestoreWrites[1]?.settings?.indyScheduleOverride_v1 === null, 'Automatic mode did not clear the Firestore override');
+        check(result.firestoreWrites.every((write) => write?.settings?.indyReleaseNotice_v1_3_2 === 'true'), 'release-notice dismissal was not included in Firestore settings');
     }
     if (scenario.action === 'settings-a11y') {
         check(result.settingsFocusContained, 'keyboard focus did not enter the Settings dialog');
         check(result.dashboardInertWhileSettingsOpen, 'dashboard was not inert while Settings was modal');
         check(result.visiblePaletteCount === result.totalPaletteCount, 'the curated palette collection is not fully visible');
+    }
+    if (scenario.action === 'appearance-features') {
+        check(result.appearanceFeatures?.undoRestored, 'palette Undo did not restore the previous selection');
+        check(result.appearanceFeatures?.deviceDarkApplied, 'device appearance did not apply and persist Dark Mode');
+        check(result.appearanceFeatures?.manualAfterSelection, 'a direct palette choice did not leave device appearance mode');
+        check(result.customContrastState === 'adjusted', `custom contrast guidance is ${result.customContrastState || 'missing'}`);
+        check(result.paletteUndoVisible, 'custom palette edit did not expose Undo');
+        check(result.pwaReady, 'offline service worker did not become ready');
     }
     if (scenario.action === 'onboarding-create') {
         check(result.accountDialogOpen, 'create-account dialog did not open');

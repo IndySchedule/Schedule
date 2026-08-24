@@ -75,10 +75,10 @@ body.release-notice-open {
 .release-notice-dialog::before {
     content: "";
     position: absolute;
-    inset: 0 18px auto;
+    inset: 0 0 auto;
     z-index: 2;
     height: 2px;
-    border-radius: 0 0 var(--radius-pill) var(--radius-pill);
+    border-radius: 18px 18px 0 0;
     background: var(--theme-panel-accent);
     box-shadow: 0 0 16px rgba(var(--theme-panel-accent-rgb), 0.38);
     pointer-events: none;
@@ -1703,6 +1703,98 @@ body.today-popup-open {
 
 #settings-sidebar .palette-color-fields {
     margin: 0 0 var(--space-3) !important;
+}
+
+#settings-sidebar .device-appearance-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin: 0 0 var(--space-3-5);
+    padding: 12px 13px;
+    border: 1px solid var(--settings-inset-line);
+    border-radius: 12px;
+    color: var(--settings-inset-ink);
+    background: var(--settings-inset);
+}
+
+#settings-sidebar .device-appearance-row .settings-control-copy {
+    min-width: 0;
+}
+
+#settings-sidebar .device-appearance-row .settings-control-copy p {
+    margin: 3px 0 0;
+    color: var(--settings-inset-muted) !important;
+    font-size: 9px;
+}
+
+#settings-sidebar .palette-undo-notice {
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    margin-top: var(--space-3);
+    padding: 9px 11px;
+    border: 1px solid rgba(var(--theme-ui-accent-rgb), 0.32);
+    border-radius: 11px;
+    color: var(--settings-inset-ink);
+    background: color-mix(in srgb, var(--settings-inset) 90%, var(--theme-ui-accent));
+    font-size: 10px;
+    font-weight: 650;
+}
+
+#settings-sidebar .palette-undo-notice:not([hidden]) {
+    display: flex;
+}
+
+#settings-sidebar .palette-undo-notice > span {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+}
+
+#settings-sidebar .palette-undo-notice i {
+    color: var(--theme-ui-accent);
+}
+
+#settings-sidebar .palette-undo-notice button,
+#settings-sidebar .palette-undo-notice button:hover {
+    min-width: auto !important;
+    min-height: 30px !important;
+    margin: 0 !important;
+    padding: 5px 11px !important;
+    border: 1px solid var(--settings-inset-line) !important;
+    border-radius: 8px !important;
+    color: var(--settings-action-ink) !important;
+    background: var(--settings-action) !important;
+    box-shadow: none !important;
+}
+
+#settings-sidebar .palette-undo-notice button:hover {
+    transform: translateY(-1px) !important;
+    filter: brightness(1.06);
+}
+
+#settings-sidebar .custom-contrast-status {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin: 0 0 var(--space-3);
+    padding: 9px 10px;
+    border: 1px solid rgba(var(--theme-ui-accent-rgb), 0.24);
+    border-radius: 10px;
+    color: var(--settings-inset-ink);
+    background: color-mix(in srgb, var(--settings-inset) 94%, var(--theme-ui-accent));
+    font-size: 9px;
+    line-height: 1.45;
+}
+
+#settings-sidebar .custom-contrast-status i {
+    margin-top: 2px;
+    color: var(--theme-ui-accent);
+}
+
+#settings-sidebar .custom-contrast-status[data-state="adjusted"] {
+    border-style: dashed;
 }
 
 
@@ -5954,6 +6046,40 @@ body {
     box-shadow:
         inset 0 3px 0 rgba(var(--theme-ui-accent-rgb), 0.72),
         0 9px 24px rgba(var(--theme-primary-rgb), 0.1) !important;
+}
+
+#settings-sidebar #about-panel .about-install-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin: var(--space-4) 0 0;
+    padding: 14px;
+    border: 1px solid rgba(var(--theme-ui-accent-rgb), 0.28);
+    border-radius: 13px;
+    color: var(--settings-inset-ink);
+    background: color-mix(in srgb, var(--settings-inset) 91%, var(--theme-ui-accent));
+}
+
+#settings-sidebar #about-panel .about-install-card[hidden] {
+    display: none !important;
+}
+
+#settings-sidebar #about-panel .about-install-card .settings-section-heading {
+    flex: 1;
+    margin: 0;
+}
+
+#settings-sidebar #about-panel .about-install-card .replay-onboarding-btn {
+    flex: 0 0 auto;
+    margin: 0 !important;
+}
+
+@media (max-width: 620px) {
+    #settings-sidebar #about-panel .about-install-card {
+        align-items: stretch;
+        flex-direction: column;
+    }
 }
 
 #settings-sidebar #about-panel .about-dashboard {

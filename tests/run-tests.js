@@ -247,6 +247,7 @@ assert(authSource.includes('createUserWithEmailAndPassword') && authSource.inclu
 assert(authSource.includes('sendPasswordResetEmail'), 'Firebase password-reset email is wired');
 assert(authSource.includes('firebase.auth.Auth.Persistence.LOCAL'), 'Authentication requests persistent Firebase sessions when browser policy permits');
 assert(authSource.includes('indyAnalyticsConsent_v1: localStorage.getItem'), 'Analytics consent is included in account preference sync');
+assert(authSource.includes('indyReleaseNotice_v1_3_2: localStorage.getItem'), 'The 1.3.2 release-notice dismissal is included in account preference sync');
 assert(authSource.includes("indyScheduleOverride_v1: null") && authSource.includes("localStorage.getItem('indyScheduleOverride_v1')"), 'Dated schedule overrides are included in Firestore account sync');
 assert(authSource.includes("key === 'indyScheduleOverride_v1' && val === null") && authSource.includes('localStorage.removeItem(key)'), 'Automatic schedule mode clears a synced override on other devices');
 assert(appSource.includes("if (typeof saveSettings === 'function') saveSettings();"), 'Changing today’s schedule immediately requests an account settings sync');
@@ -299,22 +300,25 @@ assert(secondaryStyles.includes('overflow-x: auto;\n        overflow-y: hidden;'
 assert(indexSource.includes('class="settings-group legal-overview-card"'), 'Privacy and Terms uses the unified full-width card');
 assert(indexSource.includes('id="delete-local-data"') && indexSource.includes('id="delete-local-data-confirmation"'), 'Privacy controls provide a guarded local-data deletion action');
 assert(authSource.includes('localStorage.clear()') && authSource.includes('initializeLocalDataControls'), 'Local-data deletion clears browser storage through its initialized privacy control');
-assert(indexSource.includes('Version 1.3.1') && indexSource.includes('v1.3.1'), 'About and release notes identify the current 1.3.1 version');
-assert(indexSource.includes('v1.3.0') && indexSource.includes('v1.2.0') && indexSource.includes('v1.1.0'), 'Previous releases remain in the update history');
+assert(indexSource.includes('Version 1.3.2') && indexSource.includes('v1.3.2'), 'About and release notes identify the current 1.3.2 version');
+assert(indexSource.includes('v1.3.1') && indexSource.includes('v1.3.0') && indexSource.includes('v1.2.0') && indexSource.includes('v1.1.0'), 'Previous releases remain in the update history');
 assert(indexSource.includes('change just today’s schedule') && indexSource.includes('font menu') && indexSource.includes('account syncing more reliable'), 'The 1.3.0 notes explain its major schedule and preference changes in plain language');
 assert(indexSource.includes('twenty choices grouped into Essentials') && indexSource.includes('built-in code file viewer') && indexSource.includes('entire window follows your selected palette'), 'The 1.3.1 notes explain its palette, Developer Tools, and Today at Indy improvements');
-assert(indexSource.includes('id="release-notice-backdrop"') && indexSource.includes('Versions 1.3.0 + 1.3.1'), 'Returning users receive a combined 1.3.0 and 1.3.1 release notice');
-assert(indexSource.includes("const storageKey = 'indyReleaseNotice_v1_3_1'") && indexSource.includes("localStorage.setItem('indyReleaseNotice_v1_3_1', 'true')"), 'The 1.3.1 release notice uses a new one-time dismissal key');
-assert(indexSource.includes('Schedules and setup') && indexSource.includes('Palettes and polish') && indexSource.includes('See all updates'), 'The release notice provides two short summaries and a route to the full history');
+assert(indexSource.includes('Undo button for palette changes') && indexSource.includes('follow your device’s light or dark appearance') && indexSource.includes('installable'), 'The 1.3.2 notes explain Undo, device appearance, and offline installation in everyday language');
+assert(indexSource.includes('id="release-notice-backdrop"') && indexSource.includes('Version 1.3.2'), 'Returning users receive the 1.3.2 release notice');
+assert(indexSource.includes("const storageKey = 'indyReleaseNotice_v1_3_2'") && indexSource.includes("localStorage.setItem('indyReleaseNotice_v1_3_2', 'true')"), 'The 1.3.2 release notice uses a new one-time dismissal key');
+assert(indexSource.includes('window.authManager?.scheduleUserSettingsSave(0)') && indexSource.includes("window.addEventListener('indy-account-authenticated'"), 'Dismissing the release notice saves immediately and respects restored account state');
+assert(indexSource.includes('Smarter appearance and offline access') && indexSource.includes('See all updates'), 'The release notice summarizes 1.3.2 and links to the full history');
 assert(!indexSource.includes('updateNoticeShown_v4_0_0'), 'The obsolete release-notice storage key is removed');
 assert(secondaryStyles.includes('.release-notice-dialog') && secondaryStyles.includes('var(--theme-panel)'), 'The release notice follows the active palette');
 assert(secondaryStyles.includes('.release-notice-dialog::before') && secondaryStyles.includes('.release-notice-summary article:last-child'), 'The release notice uses a palette accent line and emphasizes the newest update');
+assert(secondaryStyles.includes('inset: 0 0 auto') && secondaryStyles.includes('border-radius: 18px 18px 0 0'), 'The release-notice accent line spans its full rounded top edge');
 assert(secondaryStyles.includes('.release-notice-primary:hover') && secondaryStyles.includes('transform: translateX(3px)') && secondaryStyles.includes('.release-notice-primary:active'), 'Release-notice buttons provide hover, arrow, and pressed feedback');
 assert(secondaryStyles.includes('.release-notice-dialog button:focus-visible') && secondaryStyles.includes('outline-offset: 3px'), 'Release-notice buttons provide a visible keyboard focus state');
 assert(!indexSource.includes('Music Player') && !indexSource.includes('music player'), 'Public update notes do not reveal the hidden music player');
-assertEqual(JSON.parse(readFile('package.json')).version, '1.3.1', 'Package metadata identifies version 1.3.1');
-assert([privacySource, termsSource].every((source) => source.includes('Version 1.3.1')), 'Privacy and Terms identify the current 1.3.1 version');
-assertEqual((indexSource.match(/<div class="wn-entry(?: current-release)?">/g) || []).length, 9, 'What’s New includes the initial release and eight focused updates');
+assertEqual(JSON.parse(readFile('package.json')).version, '1.3.2', 'Package metadata identifies version 1.3.2');
+assert([privacySource, termsSource].every((source) => source.includes('Version 1.3.2')), 'Privacy and Terms identify the current 1.3.2 version');
+assertEqual((indexSource.match(/<div class="wn-entry(?: current-release)?">/g) || []).length, 10, 'What’s New includes the initial release and nine focused updates');
 assertEqual((indexSource.match(/<div class="wn-entry current-release">/g) || []).length, 1, 'Exactly one update is marked as the current release');
 assert(!indexSource.includes('id="bg-image"'), 'Retired background-image upload is removed from Appearance settings');
 assert(!indexSource.includes('id="bg-image-drop-area"'), 'Retired background-image drop area is removed');
@@ -464,6 +468,15 @@ gradientElements['palette-surface-hex'] = mockGradientElement();
 gradientElements['gradient-settings'] = mockGradientElement();
 gradientElements['gradient-preview'] = mockGradientElement();
 gradientElements['reset-gradient'] = mockGradientElement();
+gradientElements['follow-device-appearance'] = mockGradientElement();
+gradientElements['device-appearance-status'] = mockGradientElement();
+gradientElements['palette-undo-notice'] = mockGradientElement();
+gradientElements['palette-undo-message'] = mockGradientElement();
+gradientElements['palette-undo-button'] = mockGradientElement();
+gradientElements['custom-contrast-status'] = mockGradientElement();
+gradientElements['custom-contrast-message'] = mockGradientElement();
+gradientElements['custom-contrast-icon'] = mockGradientElement();
+gradientElements['theme-color-meta'] = mockGradientElement();
 const mockPaletteButtons = ['indy', 'daylight', 'monochrome', 'slate', 'dark-mode', 'coastal-sky', 'lavender-mist', 'soft-sage', 'blush', 'lemonade', 'prism-rush', 'tropical', 'candy-pop', 'sunset', 'mango-wave', 'midnight', 'graphite', 'deep-ocean', 'plum-night', 'forest-night', 'custom'].map((id) => {
     const button = mockGradientElement();
     button.dataset.palette = id;
@@ -494,6 +507,12 @@ globalThis.document = {
     }
 };
 globalThis.window = globalThis;
+const mockDeviceAppearance = {
+    matches: false,
+    listener: null,
+    addEventListener(type, listener) { if (type === 'change') this.listener = listener; }
+};
+globalThis.matchMedia = () => mockDeviceAppearance;
 load('gradient.js');
 assertEqual(localStorage.getItem('bgImage'), null, 'Gradient migration removes a legacy uploaded background');
 gradientElements['gradient-start-color'].listeners.input({ target: { value: '#123456' } });
@@ -504,6 +523,17 @@ assertEqual(window.gradientManager.paletteId, 'custom', 'Editing a color activat
 mockPaletteButtons.find((button) => button.dataset.palette === 'coastal-sky').listeners.click();
 assertEqual(window.gradientManager.paletteId, 'coastal-sky', 'Clicking a preset applies that palette');
 assertEqual(window.gradientManager.colors.join(','), '#E0F2FE,#BAE6FD,#0369A1,#F8FCFF', 'Coastal Sky applies all four source colors');
+window.gradientManager.selectPalette('midnight');
+gradientElements['palette-undo-button'].listeners.click();
+assertEqual(window.gradientManager.paletteId, 'coastal-sky', 'Palette Undo restores the previous palette');
+window.gradientManager.setFollowDeviceAppearance(true);
+assertEqual(window.gradientManager.paletteId, 'daylight', 'Device appearance uses Daylight for a light device');
+mockDeviceAppearance.matches = true;
+mockDeviceAppearance.listener();
+assertEqual(window.gradientManager.paletteId, 'dark-mode', 'Device appearance follows a change to device dark mode');
+assertEqual(JSON.parse(localStorage.getItem('gradientSettings')).appearanceMode, 'device', 'Device appearance preference persists with synced palette settings');
+window.gradientManager.selectPalette('mango-wave');
+assertEqual(window.gradientManager.appearanceMode, 'manual', 'Choosing a palette turns off device appearance mode');
 window.gradientManager.loadExternalSettings({ paletteId: 'ocean' });
 assertEqual(window.gradientManager.paletteId, 'coastal-sky', 'A retired saved palette migrates to its closest current replacement');
 assert(document.documentElement.style['--theme-on-surface'], 'Palette application derives a surface text color');
@@ -598,11 +628,21 @@ assert(Object.keys(window.IndyPalettes).every((paletteId) => {
 }), 'Every preset keeps Settings cards visibly layered from their canvas and inset controls');
 window.gradientManager.loadExternalSettings({ paletteId: 'custom', colors: ['#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF'], angle: 90 });
 assertEqual(document.documentElement.style['--theme-ui-accent'], '#111827', 'All-light custom palettes shift UI accents to dark text');
+assertEqual(gradientElements['custom-contrast-status'].dataset.state, 'adjusted', 'Custom palette warns when automatic contrast help is needed');
 window.gradientManager.loadExternalSettings({ paletteId: 'custom', colors: ['#000000', '#000000', '#000000', '#000000'], angle: 90 });
 assertEqual(document.documentElement.style['--theme-ui-accent'], '#FFFFFF', 'All-dark custom palettes shift UI accents to light text');
 assert(secondaryStyles.includes('Eliminate legacy fixed text colors'), 'Settings text follows palette-aware foreground colors');
 assert(secondaryStyles.includes(':root[data-dashboard-tone="light"] .dashboard-shell'), 'Light palettes have a dedicated readable main-page treatment');
 assert(secondaryStyles.includes('rgba(var(--theme-dashboard-glow-rgb), var(--theme-dashboard-glow-opacity))'), 'Timer panels consume the normalized palette glow role');
 assert(designTokens.includes('--theme-dashboard-glow-opacity: 0.18'), 'Design tokens provide a safe timer-glow fallback before palette setup');
+
+const manifest = JSON.parse(readFile('manifest.webmanifest'));
+const serviceWorkerSource = readFile('service-worker.js');
+assert(indexSource.includes('rel="manifest" href="./manifest.webmanifest"') && indexSource.includes('id="theme-color-meta"'), 'Dashboard publishes install metadata and a palette-aware browser color');
+assertEqual(manifest.display, 'standalone', 'Web app installs in a standalone window');
+assert(manifest.icons.some((icon) => icon.sizes === '192x192'), 'Web app manifest provides the standard install icon');
+assert(manifest.icons.some((icon) => icon.sizes === '512x512'), 'Web app manifest provides a large install icon');
+assert(serviceWorkerSource.includes("request.mode === 'navigate'") && serviceWorkerSource.includes("url.pathname.includes('/data/')"), 'Offline worker caches the app shell while keeping calendar data network-first');
+assert(readFile('script2.js').includes("navigator.serviceWorker.register('./service-worker.js')") && indexSource.includes('id="install-app-button"'), 'Dashboard registers offline support and exposes an install action when supported');
 
 print(`Passed ${passed} checks.`);

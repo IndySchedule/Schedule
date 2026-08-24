@@ -64,6 +64,43 @@ function initializeSettingsControls() {
 
 document.addEventListener('DOMContentLoaded', initializeSettingsControls);
 
+let deferredInstallPrompt = null;
+
+function updateInstallAppControl(available) {
+    const card = document.getElementById('install-app-card');
+    if (card) card.hidden = !available;
+}
+
+window.addEventListener('beforeinstallprompt', (event) => {
+    event.preventDefault();
+    deferredInstallPrompt = event;
+    updateInstallAppControl(true);
+});
+
+window.addEventListener('appinstalled', () => {
+    deferredInstallPrompt = null;
+    updateInstallAppControl(false);
+    window.trackAnalyticsEvent?.('pwa_installed');
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('install-app-button')?.addEventListener('click', async () => {
+        if (!deferredInstallPrompt) return;
+        deferredInstallPrompt.prompt();
+        await deferredInstallPrompt.userChoice;
+        deferredInstallPrompt = null;
+        updateInstallAppControl(false);
+    });
+
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./service-worker.js').catch((error) => {
+                console.warn('Offline support could not be started.', error);
+            });
+        }, { once: true });
+    }
+});
+
 const DEFAULT_INTERFACE_FONT = 'Inter';
 const INTERFACE_FONTS = Object.freeze({
     'Arial': { stack: 'Arial, sans-serif' },
