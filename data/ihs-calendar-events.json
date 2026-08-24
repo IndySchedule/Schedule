@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-08-23T07:52:12.439Z",
-  "lastCheckedAt": "2026-08-23T07:52:12.439Z",
-  "contentUpdatedAt": "2026-08-23T07:52:12.439Z",
+  "generatedAt": "2026-08-24T03:37:36.196Z",
+  "lastCheckedAt": "2026-08-24T03:37:36.196Z",
+  "contentUpdatedAt": "2026-08-24T03:37:36.196Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -12,17 +12,6 @@
   "rangeStart": "2026-08-21",
   "rangeEnd": "2026-12-21",
   "events": [
-    {
-      "id": "3is264vncqinbd7h3b59to3e60@google.com-2026-08-22T00:00:00.000Z",
-      "title": "IHS Varsity Football vs Rockvale HS Senior Night",
-      "start": "2026-08-22T00:00:00.000Z",
-      "end": "2026-08-22T02:00:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-08-21"
-      ],
-      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
-    },
     {
       "id": "2o4r3tktqqhcgbctqsepfbd6j7@google.com-2026-08-24T00:00:00.000Z",
       "title": "IHS Late Start",
