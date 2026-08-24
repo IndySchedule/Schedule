@@ -2,49 +2,16 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-08-22T07:49:28.987Z",
-  "lastCheckedAt": "2026-08-22T07:49:28.987Z",
-  "contentUpdatedAt": "2026-08-22T07:49:28.987Z",
+  "generatedAt": "2026-08-24T08:31:20.878Z",
+  "lastCheckedAt": "2026-08-24T08:31:20.878Z",
+  "contentUpdatedAt": "2026-08-24T08:31:20.878Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
   "timeZone": "America/Chicago",
-  "rangeStart": "2026-08-20",
-  "rangeEnd": "2026-12-20",
+  "rangeStart": "2026-08-22",
+  "rangeEnd": "2026-12-22",
   "events": [
-    {
-      "id": "3a6thu6lcsnts45pk0matt54ch@google.com-2026-08-20T21:30:00.000Z",
-      "title": "IHS JV/V Volleyball @ Centennial HS",
-      "start": "2026-08-20T21:30:00.000Z",
-      "end": "2026-08-21T00:30:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-08-20"
-      ],
-      "location": "Centennial High School, 5050 Mallory Ln, Franklin, TN 37067, USA"
-    },
-    {
-      "id": "748rq85koius87ie1ad0v05qkp@google.com-2026-08-20T22:30:00.000Z",
-      "title": "IHS Open House",
-      "start": "2026-08-20T22:30:00.000Z",
-      "end": "2026-08-21T01:00:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-08-20"
-      ],
-      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
-    },
-    {
-      "id": "3is264vncqinbd7h3b59to3e60@google.com-2026-08-22T00:00:00.000Z",
-      "title": "IHS Varsity Football vs Rockvale HS Senior Night",
-      "start": "2026-08-22T00:00:00.000Z",
-      "end": "2026-08-22T02:00:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-08-21"
-      ],
-      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
-    },
     {
       "id": "2o4r3tktqqhcgbctqsepfbd6j7@google.com-2026-08-24T00:00:00.000Z",
       "title": "IHS Late Start",
@@ -1147,6 +1114,28 @@
         "2026-12-20"
       ],
       "location": "Rossview High School, 1237 Rossview Rd, Clarksville, TN 37043, USA"
+    },
+    {
+      "id": "795h20lmrlt2bl6o3pmkq0kntt@google.com-2026-12-21T00:00:00.000Z",
+      "title": "IHS Winter Break - System Closed",
+      "start": "2026-12-21T00:00:00.000Z",
+      "end": "2027-01-02T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2026-12-21",
+        "2026-12-22",
+        "2026-12-23",
+        "2026-12-24",
+        "2026-12-25",
+        "2026-12-26",
+        "2026-12-27",
+        "2026-12-28",
+        "2026-12-29",
+        "2026-12-30",
+        "2026-12-31",
+        "2027-01-01"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     }
   ]
 }
