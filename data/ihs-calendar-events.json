@@ -2,71 +2,16 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-08-26T08:24:31.546Z",
-  "lastCheckedAt": "2026-08-26T08:24:31.546Z",
-  "contentUpdatedAt": "2026-08-26T08:24:31.546Z",
+  "generatedAt": "2026-08-28T01:05:01.682Z",
+  "lastCheckedAt": "2026-08-28T01:05:01.682Z",
+  "contentUpdatedAt": "2026-08-28T01:05:01.682Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
   "timeZone": "America/Chicago",
-  "rangeStart": "2026-08-24",
-  "rangeEnd": "2026-12-24",
+  "rangeStart": "2026-08-25",
+  "rangeEnd": "2026-12-25",
   "events": [
-    {
-      "id": "2o4r3tktqqhcgbctqsepfbd6j7@google.com-2026-08-24T00:00:00.000Z",
-      "title": "IHS Late Start",
-      "start": "2026-08-24T00:00:00.000Z",
-      "end": "2026-08-25T00:00:00.000Z",
-      "allDay": true,
-      "days": [
-        "2026-08-24"
-      ],
-      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
-    },
-    {
-      "id": "06or5b144reief0qig7snm97rf@google.com-2026-08-24T21:30:00.000Z",
-      "title": "IHS JV/V Volleyball @ FCA",
-      "start": "2026-08-24T21:30:00.000Z",
-      "end": "2026-08-25T00:30:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-08-24"
-      ],
-      "location": "Franklin Christian Academy, 1 Falcon Way, Franklin, TN 37064, USA"
-    },
-    {
-      "id": "1s4bvltldqsuj849clsu6rtv39@google.com-2026-08-24T22:30:00.000Z",
-      "title": "IHS JV Football @ Ravenwood HS",
-      "start": "2026-08-24T22:30:00.000Z",
-      "end": "2026-08-25T00:30:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-08-24"
-      ],
-      "location": "Ravenwood High School, 1724 Wilson Pike, Brentwood, TN 37027, USA"
-    },
-    {
-      "id": "3tmjji1s6nf70rkq5a41l0gp6u@google.com-2026-08-24T22:30:00.000Z",
-      "title": "IHS Freshman Football vs Ravenwood HS",
-      "start": "2026-08-24T22:30:00.000Z",
-      "end": "2026-08-25T00:30:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-08-24"
-      ],
-      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
-    },
-    {
-      "id": "724frd0cltcensjf07jsvqgub1@google.com-2026-08-25T23:00:00.000Z",
-      "title": "IHS Checkpoint Driving",
-      "start": "2026-08-25T23:00:00.000Z",
-      "end": "2026-08-26T01:00:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-08-25"
-      ],
-      "location": "Zoom"
-    },
     {
       "id": "7p1rb19thv28o7chu92a2pghbp@google.com-2026-08-26T21:30:00.000Z",
       "title": "IHS JV/V Girls Soccer vs BGA",
@@ -868,6 +813,17 @@
       "location": ""
     },
     {
+      "id": "5e5gkgmmrrso62g2g9lm52p84h@google.com-2026-11-18T00:00:00.000Z",
+      "title": "IHS Girls Basketball @ Rockvale HS",
+      "start": "2026-11-18T00:00:00.000Z",
+      "end": "2026-11-18T01:30:00.000Z",
+      "allDay": false,
+      "days": [
+        "2026-11-17"
+      ],
+      "location": "Rockvale High School, 6545 TN-99, Rockvale, TN 37153, USA"
+    },
+    {
       "id": "2r2o525f117g30g40avcllq14q@google.com-2026-11-19T23:30:00.000Z",
       "title": "IHS JV/V/G Wrestling @ Franklin HS",
       "start": "2026-11-19T23:30:00.000Z",
@@ -888,6 +844,17 @@
         "2026-11-21"
       ],
       "location": "Franklin High School, 810 Hillsboro Rd, Franklin, TN 37064, USA"
+    },
+    {
+      "id": "3pt6dhn3di1rkvmr5pe6gq95ff@google.com-2026-11-21T00:00:00.000Z",
+      "title": "IHS Girls Basketball vs Stewarts Creek HS",
+      "start": "2026-11-21T00:00:00.000Z",
+      "end": "2026-11-21T01:30:00.000Z",
+      "allDay": false,
+      "days": [
+        "2026-11-20"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     },
     {
       "id": "55tg2d6f40d662ic8qdlrod7cf@google.com-2026-11-21T00:00:00.000Z",
@@ -927,6 +894,18 @@
       "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     },
     {
+      "id": "0vvkcsh1c18lq51384q9r2eudt@google.com-2026-11-27T00:00:00.000Z",
+      "title": "IHS Girls Basketball @ Ezell-Harding",
+      "start": "2026-11-27T00:00:00.000Z",
+      "end": "2026-11-29T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2026-11-27",
+        "2026-11-28"
+      ],
+      "location": "Ezell-Harding Christian School, 574 Bell Rd, Antioch, TN 37013, USA"
+    },
+    {
       "id": "5v30p5bqmj3idk70eff0muj53f@google.com-2026-11-28T00:00:00.000Z",
       "title": "IHS JV/G Wrestling @ Kirkwood HS",
       "start": "2026-11-28T00:00:00.000Z",
@@ -947,6 +926,17 @@
         "2026-11-30"
       ],
       "location": ""
+    },
+    {
+      "id": "377v0acdaon3dsn9dpcd7et05k@google.com-2026-12-02T00:00:00.000Z",
+      "title": "IHS Girls Basketball @ Franklin HS",
+      "start": "2026-12-02T00:00:00.000Z",
+      "end": "2026-12-02T01:30:00.000Z",
+      "allDay": false,
+      "days": [
+        "2026-12-01"
+      ],
+      "location": "Franklin High School, 810 Hillsboro Rd, Franklin, TN 37064, USA"
     },
     {
       "id": "7a7hhqih2r59esarqfqtver8ks@google.com-2026-12-02T00:00:00.000Z",
@@ -981,6 +971,17 @@
         "2026-12-03"
       ],
       "location": "Brentwood High School, 5304 Murray Ln, Brentwood, TN 37027, USA"
+    },
+    {
+      "id": "4t3410370j3rrikcrhalu6ph2u@google.com-2026-12-05T00:00:00.000Z",
+      "title": "IHS Girls Basketball vs Hillsboro HS",
+      "start": "2026-12-05T00:00:00.000Z",
+      "end": "2026-12-05T01:30:00.000Z",
+      "allDay": false,
+      "days": [
+        "2026-12-04"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     },
     {
       "id": "5r7osrt50rc68eo3a6cbj8hop5@google.com-2026-12-05T00:00:00.000Z",
