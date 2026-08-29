@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-08-28T21:55:20.867Z",
-  "lastCheckedAt": "2026-08-28T21:55:20.867Z",
-  "contentUpdatedAt": "2026-08-28T21:55:20.867Z",
+  "generatedAt": "2026-08-29T03:22:16.821Z",
+  "lastCheckedAt": "2026-08-29T03:22:16.821Z",
+  "contentUpdatedAt": "2026-08-29T03:22:16.821Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -12,17 +12,6 @@
   "rangeStart": "2026-08-26",
   "rangeEnd": "2026-12-26",
   "events": [
-    {
-      "id": "7p1rb19thv28o7chu92a2pghbp@google.com-2026-08-26T21:30:00.000Z",
-      "title": "IHS JV/V Girls Soccer vs BGA",
-      "start": "2026-08-26T21:30:00.000Z",
-      "end": "2026-08-27T01:30:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-08-26"
-      ],
-      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
-    },
     {
       "id": "0agi21thes54ih594p3lcjqbrb@google.com-2026-08-27T21:30:00.000Z",
       "title": "IHS JV/V Volleyball vs Summit HS",
