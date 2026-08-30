@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-08-29T06:22:29.135Z",
-  "lastCheckedAt": "2026-08-29T06:22:29.135Z",
-  "contentUpdatedAt": "2026-08-29T06:22:29.135Z",
+  "generatedAt": "2026-08-30T03:22:16.534Z",
+  "lastCheckedAt": "2026-08-30T03:22:16.534Z",
+  "contentUpdatedAt": "2026-08-30T03:22:16.534Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -12,17 +12,6 @@
   "rangeStart": "2026-08-27",
   "rangeEnd": "2026-12-27",
   "events": [
-    {
-      "id": "0agi21thes54ih594p3lcjqbrb@google.com-2026-08-27T21:30:00.000Z",
-      "title": "IHS JV/V Volleyball vs Summit HS",
-      "start": "2026-08-27T21:30:00.000Z",
-      "end": "2026-08-28T00:30:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-08-27"
-      ],
-      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
-    },
     {
       "id": "3ph9pmu9kb99u85qr7gq491bge@google.com-2026-08-29T00:00:00.000Z",
       "title": "IHS Varsity Football @ Lincoln County",
