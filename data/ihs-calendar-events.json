@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-08-31T06:22:34.159Z",
-  "lastCheckedAt": "2026-08-31T06:22:34.159Z",
-  "contentUpdatedAt": "2026-08-31T06:22:34.159Z",
+  "generatedAt": "2026-08-31T18:22:16.985Z",
+  "lastCheckedAt": "2026-08-31T18:22:16.985Z",
+  "contentUpdatedAt": "2026-08-31T18:22:16.985Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -995,6 +995,17 @@
       "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     },
     {
+      "id": "2emtv8kqqcvt3mkui025bh1bis@google.com-2026-12-11T00:00:00.000Z",
+      "title": "IHS Girls Basketball @ Brentwood HS",
+      "start": "2026-12-11T00:00:00.000Z",
+      "end": "2026-12-11T01:30:00.000Z",
+      "allDay": false,
+      "days": [
+        "2026-12-10"
+      ],
+      "location": "Brentwood High School, 5304 Murray Ln, Brentwood, TN 37027, USA"
+    },
+    {
       "id": "524m14akh908ivi6rqoqgd5962@google.com-2026-12-11T00:00:00.000Z",
       "title": "IHS JV Wrestling @ Kirkwood HS",
       "start": "2026-12-11T00:00:00.000Z",
@@ -1015,6 +1026,17 @@
         "2026-12-12"
       ],
       "location": "Siegel High School, 3300 Siegel Rd, Murfreesboro, TN 37129, USA"
+    },
+    {
+      "id": "0n3402417b18lhppivoakhi64k@google.com-2026-12-12T00:00:00.000Z",
+      "title": "IHS Girls Basketball vs Ravenwood HS",
+      "start": "2026-12-12T00:00:00.000Z",
+      "end": "2026-12-12T01:30:00.000Z",
+      "allDay": false,
+      "days": [
+        "2026-12-11"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     },
     {
       "id": "3abjpikf8tk7dcjvorpnog9ove@google.com-2026-12-12T00:00:00.000Z",
@@ -1073,6 +1095,17 @@
       "location": "Bob Carpenter Center"
     },
     {
+      "id": "4qj3q7h1lg7l66bipd89cndd8a@google.com-2026-12-19T00:00:00.000Z",
+      "title": "IHS Girls Basketball vs Nolensville HS",
+      "start": "2026-12-19T00:00:00.000Z",
+      "end": "2026-12-19T01:30:00.000Z",
+      "allDay": false,
+      "days": [
+        "2026-12-18"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
       "id": "48ekbek4fecr6qp8me4q9qvfqv@google.com-2026-12-20T00:00:00.000Z",
       "title": "IHS G Wrestling @ Rossview HS",
       "start": "2026-12-20T00:00:00.000Z",
@@ -1082,6 +1115,18 @@
         "2026-12-20"
       ],
       "location": "Rossview High School, 1237 Rossview Rd, Clarksville, TN 37043, USA"
+    },
+    {
+      "id": "363qfdvfolj2c1gsg88669jid7@google.com-2026-12-21T00:00:00.000Z",
+      "title": "IHS Girls Basketball @ Lebanon HS",
+      "start": "2026-12-21T00:00:00.000Z",
+      "end": "2026-12-23T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2026-12-21",
+        "2026-12-22"
+      ],
+      "location": "Lebanon High School, 500 Blue Devil Blvd, Lebanon, TN 37087, USA"
     },
     {
       "id": "795h20lmrlt2bl6o3pmkq0kntt@google.com-2026-12-21T00:00:00.000Z",
@@ -1104,6 +1149,19 @@
         "2027-01-01"
       ],
       "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "1jglmsf9pb65nhgtm7koth15kb@google.com-2026-12-28T00:00:00.000Z",
+      "title": "IHS Girls Basketball @ Liberty HS Christmas Classic",
+      "start": "2026-12-28T00:00:00.000Z",
+      "end": "2026-12-31T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2026-12-28",
+        "2026-12-29",
+        "2026-12-30"
+      ],
+      "location": "Liberty High School"
     }
   ]
 }
