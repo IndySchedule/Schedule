@@ -17,7 +17,7 @@ const SETTINGS_KEYS = Object.freeze([
     'progressBarEnabled', 'progressBarColor', 'progressBarOpacity',
     'gradientSettings', 'currentScheduleName', 'indyScheduleOverride_v1',
     'indyOnboardingComplete_v2', 'indyAnalyticsConsent_v1',
-    'indyReleaseNotice_v1_3_3', 'sawUpdateNotice', 'periodRenames',
+    'indyReleaseNotice_v1_3_4', 'sawUpdateNotice', 'periodRenames',
     'globalPeriodNames'
 ]);
 
@@ -58,7 +58,7 @@ function sanitizeSettingValue(key, value) {
     if (value === null || typeof value === 'undefined') return undefined;
 
     if (['toastIconEnabled', 'showPeriodTimes', 'progressBarEnabled',
-        'indyOnboardingComplete_v2', 'indyReleaseNotice_v1_3_3', 'sawUpdateNotice'].includes(key)) {
+        'indyOnboardingComplete_v2', 'indyReleaseNotice_v1_3_4', 'sawUpdateNotice'].includes(key)) {
         return sanitizeBooleanSetting(value) ?? undefined;
     }
     if (key === 'fontFamily') return typeof value === 'string' && value.length <= 80 ? value : undefined;
@@ -118,7 +118,7 @@ function collectLocalUserSettings() {
         indyScheduleOverride_v1: null,
         indyOnboardingComplete_v2: localStorage.getItem('indyOnboardingComplete_v2'),
         indyAnalyticsConsent_v1: localStorage.getItem(ANALYTICS_CONSENT_KEY),
-        indyReleaseNotice_v1_3_3: localStorage.getItem('indyReleaseNotice_v1_3_3'),
+        indyReleaseNotice_v1_3_4: localStorage.getItem('indyReleaseNotice_v1_3_4'),
         sawUpdateNotice: localStorage.getItem('sawUpdateNotice')
     };
 

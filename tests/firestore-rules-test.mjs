@@ -39,7 +39,7 @@ const validSettings = {
     indyScheduleOverride_v1: null,
     indyOnboardingComplete_v2: 'true',
     indyAnalyticsConsent_v1: 'granted',
-    indyReleaseNotice_v1_3_3: 'true',
+    indyReleaseNotice_v1_3_4: 'true',
     periodRenames: { 1: 'Example Class A', 2: 'Example Class B' },
     globalPeriodNames: { 1: 'Example Class A', 2: 'Example Class B' }
 };
@@ -100,6 +100,14 @@ try {
         updatedBy: 'test-client',
         settingsUpdatedAt: { ...settingsUpdatedAt, adminFlag: Date.now() },
         settings: { ...validSettings, adminFlag: 'not allowed' }
+    }, { mergeFields: schemaFields }));
+    await assertFails(setDoc(doc(ownerDb, userPath), {
+        schemaVersion: 2,
+        revision: 3,
+        updatedAt: serverTimestamp(),
+        updatedBy: 'test-client',
+        settingsUpdatedAt,
+        settings: { ...validSettings, progressBarColor: 'not-a-color' }
     }, { mergeFields: schemaFields }));
 
     console.log('Firestore rules: owner isolation, migration, and validation passed.');

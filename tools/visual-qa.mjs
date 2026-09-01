@@ -273,8 +273,8 @@ function initializationScript(scenario) {
             localStorage.setItem('showPeriodTimes', 'true');
             localStorage.setItem('progressBarEnabled', 'true');
             ${scenario.action === 'release-notice'
-                ? "localStorage.removeItem('indyReleaseNotice_v1_3_3');"
-                : "localStorage.setItem('indyReleaseNotice_v1_3_3', 'true');"}
+                ? "localStorage.removeItem('indyReleaseNotice_v1_3_4');"
+                : "localStorage.setItem('indyReleaseNotice_v1_3_4', 'true');"}
             ${scenario.onboarding
                 ? "localStorage.removeItem('lunchWave'); localStorage.removeItem('indyAnalyticsConsent_v1'); localStorage.removeItem('indyOnboardingComplete_v2');"
                 : "localStorage.setItem('lunchWave', 'A'); localStorage.setItem('indyAnalyticsConsent_v1', 'denied'); localStorage.setItem('indyOnboardingComplete_v2', 'true');"}
@@ -787,7 +787,7 @@ function validateScenario(scenario, result) {
         check(result.firestoreWrites.length === 2, `expected two debounced Firestore writes, received ${result.firestoreWrites.length}`);
         check(result.firestoreWrites[0]?.settings?.indyScheduleOverride_v1?.schedule === 'normalNoSoar', 'manual override was not written to Firestore');
         check(result.firestoreWrites[1]?.settings?.indyScheduleOverride_v1 === null, 'Automatic mode did not clear the Firestore override');
-        check(result.firestoreWrites.every((write) => write?.settings?.indyReleaseNotice_v1_3_3 === 'true'), 'release-notice dismissal was not included in Firestore settings');
+        check(result.firestoreWrites.every((write) => write?.settings?.indyReleaseNotice_v1_3_4 === 'true'), 'release-notice dismissal was not included in Firestore settings');
         check(result.firestoreWrites.every((write) => write?.schemaVersion === 2), 'settings writes did not use schema version 2');
         check(result.firestoreWrites[0]?.revision === 5 && result.firestoreWrites[1]?.revision === 6, 'transaction revisions did not advance from the remote document');
         check(result.firestoreWrites.every((write) => write?.settings?.fontFamily === 'Roboto'), 'concurrent remote font change was overwritten by the local schedule edit');
