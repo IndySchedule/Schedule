@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-08-31T18:22:16.985Z",
-  "lastCheckedAt": "2026-08-31T18:22:16.985Z",
-  "contentUpdatedAt": "2026-08-31T18:22:16.985Z",
+  "generatedAt": "2026-09-01T02:39:35.232Z",
+  "lastCheckedAt": "2026-09-01T02:39:35.232Z",
+  "contentUpdatedAt": "2026-09-01T02:39:35.232Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -1162,6 +1162,17 @@
         "2026-12-30"
       ],
       "location": "Liberty High School"
+    },
+    {
+      "id": "4n9evjp73co06p727tlrr6478p@google.com-2026-12-30T02:30:00.000Z",
+      "title": "IHS V/G Wrestling Battle for Independence",
+      "start": "2026-12-30T02:30:00.000Z",
+      "end": "2026-12-30T04:30:00.000Z",
+      "allDay": false,
+      "days": [
+        "2026-12-29"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     }
   ]
 }
