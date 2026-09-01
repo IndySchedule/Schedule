@@ -8,6 +8,8 @@
     "ignore": [
       "firebase.json",
       "firestore.rules",
+      "firebase-debug.log",
+      "firestore-debug.log",
       ".firebaserc",
       ".firebase/**",
       ".git/**",

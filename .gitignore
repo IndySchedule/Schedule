@@ -3,3 +3,5 @@ node_modules/
 .firebase/
 .artifacts/
 assets/special-editions/*-master.png
+firebase-debug.log
+firestore-debug.log
