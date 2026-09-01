@@ -227,7 +227,7 @@ body.release-notice-open {
     box-shadow: inset 3px 0 rgba(var(--theme-on-panel-rgb), 0.08);
 }
 
-.release-notice-summary article:last-child {
+.release-notice-summary article:first-child {
     border-color: rgba(var(--theme-panel-accent-rgb), 0.24);
     background:
         linear-gradient(90deg, rgba(var(--theme-panel-accent-rgb), 0.09), transparent 68%),
@@ -1869,6 +1869,32 @@ body.today-popup-open {
 
 #settings-sidebar .settings-sync-status[data-state="error"] {
     color: #fecaca;
+}
+
+#settings-sidebar .settings-sync-details summary {
+    cursor: pointer;
+    list-style: none;
+}
+
+#settings-sidebar .settings-sync-details summary::-webkit-details-marker {
+    display: none;
+}
+
+#settings-sidebar .settings-sync-details p {
+    position: absolute;
+    right: 20px;
+    top: calc(100% + 8px);
+    z-index: 3;
+    width: min(260px, 70vw);
+    margin: 0;
+    padding: 9px 11px;
+    border: 1px solid rgba(var(--color-white-rgb), 0.18);
+    border-radius: 8px;
+    background: var(--theme-panel);
+    color: var(--theme-on-panel);
+    font-size: 11px;
+    line-height: 1.4;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.22);
 }
 
 #settings-sidebar .settings-header .header-left {
@@ -4609,6 +4635,10 @@ body {
         gap: var(--space-1-5);
         overflow-x: auto;
         overflow-y: hidden;
+        scrollbar-width: thin;
+        scrollbar-color: color-mix(in srgb, var(--theme-accent) 65%, transparent) transparent;
+        scroll-padding-inline: 12px;
+        overscroll-behavior-inline: contain;
         border-right: 0;
         border-bottom: 1px solid rgba(var(--theme-on-settings-canvas-rgb), 0.1);
         box-shadow: 0 5px 16px var(--settings-soft-shadow) !important;

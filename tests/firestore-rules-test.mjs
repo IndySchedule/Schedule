@@ -39,7 +39,7 @@ const validSettings = {
     indyScheduleOverride_v1: null,
     indyOnboardingComplete_v2: 'true',
     indyAnalyticsConsent_v1: 'granted',
-    indyReleaseNotice_v1_3_4: 'true',
+    indyReleaseNotice_v1_3_5: 'true',
     periodRenames: { 1: 'Example Class A', 2: 'Example Class B' },
     globalPeriodNames: { 1: 'Example Class A', 2: 'Example Class B' }
 };

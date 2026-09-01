@@ -4,9 +4,10 @@
 
 1. Update the version and What’s New copy.
 2. Run `npm run release:check`.
-3. Open a pull request. GitHub creates a Firebase preview after quality checks pass.
-4. Merge to `main` to deploy the live site.
-5. Create and push a signed or annotated `vX.Y.Z` tag. The release workflow reruns checks, deploys Hosting and Firestore rules together, and creates the GitHub release notes.
+3. Follow [`deployment-checklist.md`](deployment-checklist.md), especially the app-settings/rules compatibility check and post-deploy save smoke test.
+4. Open a pull request. GitHub creates a Firebase preview after quality checks pass.
+5. Merge to `main` to deploy the live site.
+6. Create and push a signed or annotated `vX.Y.Z` tag. The release workflow reruns checks, deploys Hosting and Firestore rules together, and creates the GitHub release notes.
 
 ## Rollback
 

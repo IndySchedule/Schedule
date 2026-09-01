@@ -241,7 +241,10 @@
             </div>
 
             <div class="settings-header-actions">
-                <span class="settings-sync-status" id="settings-sync-status" role="status" aria-live="polite">Saved on this device</span>
+                <details class="settings-sync-details">
+                    <summary><span class="settings-sync-status" id="settings-sync-status" role="status" aria-live="polite">Saved on this device</span></summary>
+                    <p id="settings-sync-detail">Your preferences are stored in this browser.</p>
+                </details>
             <button class="close-settings" aria-label="Close Settings">
                 <i class="fas fa-times"></i>
                 <span>Done</span>
@@ -407,34 +410,34 @@
                             </div>
                             <div class="gradient-main-colors palette-color-fields">
                                 <div class="gradient-stop">
-                                    <input type="color" id="gradient-start-color">
+                                    <input type="color" id="gradient-start-color" aria-label="Primary page background color" aria-describedby="gradient-start-description">
                                     <div style="display:flex;flex-direction:column;font-size:13px;color:var(--text-muted);">
                                         <span><strong>Primary</strong></span>
-                                        <span style="font-size:12px;color:var(--text-muted);">Page background</span>
+                                        <span id="gradient-start-description" style="font-size:12px;color:var(--text-muted);">Page background</span>
                                     </div>
                                     <div class="hex-value" id="gradient-start-hex" style="margin-left:auto;color:var(--text-muted);font-size:13px;">#000035</div>
                                 </div>
                                 <div class="gradient-stop">
-                                    <input type="color" id="gradient-end-color">
+                                    <input type="color" id="gradient-end-color" aria-label="Secondary panels and gradient color" aria-describedby="gradient-end-description">
                                     <div style="display:flex;flex-direction:column;font-size:13px;color:var(--text-muted);">
                                         <span><strong>Secondary</strong></span>
-                                        <span style="font-size:12px;color:var(--text-muted);">Panels and gradient</span>
+                                        <span id="gradient-end-description" style="font-size:12px;color:var(--text-muted);">Panels and gradient</span>
                                     </div>
                                     <div class="hex-value" id="gradient-end-hex" style="margin-left:auto;color:var(--text-muted);font-size:13px;">#C4AD62</div>
                                 </div>
                                 <div class="gradient-stop">
-                                    <input type="color" id="palette-accent-color" value="#C4AD62">
+                                    <input type="color" id="palette-accent-color" value="#C4AD62" aria-label="Accent highlights and progress color" aria-describedby="palette-accent-description">
                                     <div style="display:flex;flex-direction:column;font-size:13px;color:var(--text-muted);">
                                         <span><strong>Accent</strong></span>
-                                        <span style="font-size:12px;color:var(--text-muted);">Highlights and progress</span>
+                                        <span id="palette-accent-description" style="font-size:12px;color:var(--text-muted);">Highlights and progress</span>
                                     </div>
                                     <div class="hex-value" id="palette-accent-hex" style="margin-left:auto;color:var(--text-muted);font-size:13px;">#C4AD62</div>
                                 </div>
                                 <div class="gradient-stop">
-                                    <input type="color" id="palette-surface-color" value="#FFFFFF">
+                                    <input type="color" id="palette-surface-color" value="#FFFFFF" aria-label="Surface cards and schedule color" aria-describedby="palette-surface-description">
                                     <div style="display:flex;flex-direction:column;font-size:13px;color:var(--text-muted);">
                                         <span><strong>Surface</strong></span>
-                                        <span style="font-size:12px;color:var(--text-muted);">Cards and schedule</span>
+                                        <span id="palette-surface-description" style="font-size:12px;color:var(--text-muted);">Cards and schedule</span>
                                     </div>
                                     <div class="hex-value" id="palette-surface-hex" style="margin-left:auto;color:var(--text-muted);font-size:13px;">#FFFFFF</div>
                                 </div>
@@ -530,7 +533,7 @@
                             <span><i class="fas fa-cloud-arrow-up" aria-hidden="true"></i> Saves automatically</span>
                         </div>
                     </div>
-                    <select id="grade-level-dropdown" hidden aria-hidden="true">
+                    <select id="grade-level-dropdown" hidden aria-hidden="true" aria-label="School level">
                         <option value="highSchool" selected>Independence High School</option>
                     </select>
                     <div class="settings-group schedule-selection-card">
@@ -599,7 +602,7 @@
                     <div class="settings-group about-overview-card">
                         <div class="about-content about-dashboard">
                             <div class="about-intro">
-                                <div><span class="about-version">Version 1.3.4</span><h2>Built for the Indy school day.</h2><p>Indy Schedule is a fast, lightweight countdown and daily schedule dashboard for Independence High School.</p></div>
+                                <div><span class="about-version">Version 1.3.5</span><h2>Built for the Indy school day.</h2><p>Indy Schedule is a fast, lightweight countdown and daily schedule dashboard for Independence High School.</p></div>
                                 <div class="about-intro-mark"><i class="fas fa-clock" aria-hidden="true"></i></div>
                             </div>
 
@@ -666,6 +669,19 @@
 
                         <div id="whatsnew-website" class="whatsnew-log" role="tabpanel">
                             <div class="wn-entry current-release">
+                                <div class="wn-entry-header">
+                                    <span class="wn-version">v1.3.5</span>
+                                    <span class="wn-date">Sep 1, 2026</span>
+                                    <span class="wn-tag">Accessibility &amp; clearer sync</span>
+                                </div>
+                                <ul>
+                                    <li>Added clearer names for color controls so screen readers can identify them.</li>
+                                    <li>Made high-zoom Settings navigation easier to scroll and added a small sync-details view.</li>
+                                    <li>Kept Firestore validation, release checks, and account sync compatible with older devices.</li>
+                                </ul>
+                            </div>
+
+                            <div class="wn-entry">
                                 <div class="wn-entry-header">
                                     <span class="wn-version">v1.3.4</span>
                                     <span class="wn-date">Sep 1, 2026</span>
@@ -1017,7 +1033,7 @@
             <p class="managed-device-note"><i class="fas fa-circle-info" aria-hidden="true"></i> If Chrome clears site data, sign in again to restore your saved settings.</p>
         </div>
     </div>
-    <!-- One-time notice for returning users after the 1.3.4 release. -->
+    <!-- One-time notice for returning users after the 1.3.5 release. -->
     <div id="release-notice-backdrop" class="release-notice-backdrop" aria-hidden="true" hidden>
         <section class="release-notice-dialog" role="dialog" aria-modal="true" aria-labelledby="release-notice-title" aria-describedby="release-notice-description">
             <header class="release-notice-header">
@@ -1028,13 +1044,17 @@
                 <button type="button" id="release-notice-close" class="release-notice-close" aria-label="Close update notice"><i class="fas fa-times" aria-hidden="true"></i></button>
             </header>
             <div class="release-notice-content">
-                <span class="release-notice-version">Version 1.3.4</span>
-                <h1 id="release-notice-title">Your saved settings stay safer.</h1>
-                <p id="release-notice-description">This update adds stronger checks for saved settings and removes an internal debugging file from the published project.</p>
+                <span class="release-notice-version">Version 1.3.5</span>
+                <h1 id="release-notice-title">A clearer, more accessible Indy Schedule.</h1>
+                <p id="release-notice-description">This update makes Settings easier to navigate and understand, while keeping saved settings safer and more reliable.</p>
                 <div class="release-notice-summary">
                     <article>
+                        <span>1.3.5</span>
+                        <div><strong>Accessibility and clearer sync</strong><p>Color controls are easier for screen readers to identify, high-zoom Settings navigation is clearer, and sync details are easier to view.</p></div>
+                    </article>
+                    <article>
                         <span>1.3.4</span>
-                        <div><strong>Safer saved settings</strong><p>Settings now have stronger format checks, while the existing sync and release behavior stays intact.</p></div>
+                        <div><strong>Safer saved settings</strong><p>Settings gained stronger format checks, and an internal debugging file was removed from the published project.</p></div>
                     </article>
                 </div>
             </div>
@@ -1348,7 +1368,7 @@
                     localStorage.removeItem('indyOnboardingReplayRequested_v1');
                     // First-time users already saw the full walkthrough, so do
                     // not immediately stack the release-summary dialog after it.
-                    localStorage.setItem('indyReleaseNotice_v1_3_4', 'true');
+                    localStorage.setItem('indyReleaseNotice_v1_3_5', 'true');
                     const currentUser = window.authManager?.currentUser;
                     nextButton.disabled = true;
                     nextButton.innerHTML = currentUser
@@ -1493,7 +1513,7 @@
         })();
 
         (function initializeReleaseNotice() {
-            const storageKey = 'indyReleaseNotice_v1_3_4';
+            const storageKey = 'indyReleaseNotice_v1_3_5';
 
             document.addEventListener('DOMContentLoaded', () => {
                 const backdrop = document.getElementById('release-notice-backdrop');

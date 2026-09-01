@@ -17,7 +17,7 @@ const SETTINGS_KEYS = Object.freeze([
     'progressBarEnabled', 'progressBarColor', 'progressBarOpacity',
     'gradientSettings', 'currentScheduleName', 'indyScheduleOverride_v1',
     'indyOnboardingComplete_v2', 'indyAnalyticsConsent_v1',
-    'indyReleaseNotice_v1_3_4', 'sawUpdateNotice', 'periodRenames',
+    'indyReleaseNotice_v1_3_5', 'sawUpdateNotice', 'periodRenames',
     'globalPeriodNames'
 ]);
 
@@ -58,7 +58,7 @@ function sanitizeSettingValue(key, value) {
     if (value === null || typeof value === 'undefined') return undefined;
 
     if (['toastIconEnabled', 'showPeriodTimes', 'progressBarEnabled',
-        'indyOnboardingComplete_v2', 'indyReleaseNotice_v1_3_4', 'sawUpdateNotice'].includes(key)) {
+        'indyOnboardingComplete_v2', 'indyReleaseNotice_v1_3_5', 'sawUpdateNotice'].includes(key)) {
         return sanitizeBooleanSetting(value) ?? undefined;
     }
     if (key === 'fontFamily') return typeof value === 'string' && value.length <= 80 ? value : undefined;
@@ -118,7 +118,7 @@ function collectLocalUserSettings() {
         indyScheduleOverride_v1: null,
         indyOnboardingComplete_v2: localStorage.getItem('indyOnboardingComplete_v2'),
         indyAnalyticsConsent_v1: localStorage.getItem(ANALYTICS_CONSENT_KEY),
-        indyReleaseNotice_v1_3_4: localStorage.getItem('indyReleaseNotice_v1_3_4'),
+        indyReleaseNotice_v1_3_5: localStorage.getItem('indyReleaseNotice_v1_3_5'),
         sawUpdateNotice: localStorage.getItem('sawUpdateNotice')
     };
 
@@ -152,6 +152,7 @@ function getSettingsClientId() {
 function updateSettingsSyncStatus(state = 'local') {
     const status = document.getElementById('settings-sync-status');
     if (!status) return;
+    const detail = document.getElementById('settings-sync-detail');
     const labels = {
         local: 'Saved on this device',
         loading: 'Restoring settings…',
@@ -161,6 +162,19 @@ function updateSettingsSyncStatus(state = 'local') {
     };
     status.dataset.state = state;
     status.textContent = labels[state] || labels.local;
+    if (detail) {
+        const revision = Number(window.authManager?._lastSyncedRevision || 0);
+        const suffix = revision > 0 ? ` Sync revision ${revision}.` : '';
+        detail.textContent = state === 'saved'
+            ? `Your preferences are saved to your account and this browser.${suffix}`
+            : state === 'saving'
+                ? 'Your latest preference change is being saved to your account.'
+                : state === 'loading'
+                    ? 'Your account preferences are being restored on this device.'
+                    : state === 'error'
+                        ? 'We could not save to your account. Your local preferences are still available.'
+                        : 'Your preferences are stored in this browser.';
+    }
 }
 window.updateSettingsSyncStatus = updateSettingsSyncStatus;
 

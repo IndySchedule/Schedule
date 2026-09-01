@@ -12,7 +12,7 @@ service cloud.firestore {
         'lunchWave', 'progressBarEnabled', 'progressBarColor',
         'progressBarOpacity', 'gradientSettings', 'currentScheduleName',
         'indyScheduleOverride_v1', 'indyOnboardingComplete_v2',
-        'indyAnalyticsConsent_v1', 'indyReleaseNotice_v1_3_3', 'indyReleaseNotice_v1_3_4',
+        'indyAnalyticsConsent_v1', 'indyReleaseNotice_v1_3_3', 'indyReleaseNotice_v1_3_4', 'indyReleaseNotice_v1_3_5',
         'sawUpdateNotice', 'periodRenames', 'globalPeriodNames'
       ];
     }
@@ -41,6 +41,7 @@ service cloud.firestore {
         && (!('indyAnalyticsConsent_v1' in settings) || (settings.indyAnalyticsConsent_v1 is string && settings.indyAnalyticsConsent_v1 in ['granted', 'denied']))
         && (!('indyReleaseNotice_v1_3_3' in settings) || settings.indyReleaseNotice_v1_3_3 is string)
         && (!('indyReleaseNotice_v1_3_4' in settings) || settings.indyReleaseNotice_v1_3_4 is string)
+        && (!('indyReleaseNotice_v1_3_5' in settings) || settings.indyReleaseNotice_v1_3_5 is string)
         && (!('sawUpdateNotice' in settings) || settings.sawUpdateNotice is string)
         && (!('periodRenames' in settings) || (settings.periodRenames is map && settings.periodRenames.keys().size() <= 100))
         && (!('globalPeriodNames' in settings) || (settings.globalPeriodNames is map && settings.globalPeriodNames.keys().size() <= 100));
