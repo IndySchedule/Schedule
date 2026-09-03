@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-09-02T06:37:08.640Z",
-  "lastCheckedAt": "2026-09-02T06:37:08.640Z",
-  "contentUpdatedAt": "2026-09-02T06:37:08.640Z",
+  "generatedAt": "2026-09-03T00:38:00.709Z",
+  "lastCheckedAt": "2026-09-03T00:38:00.709Z",
+  "contentUpdatedAt": "2026-09-03T00:38:00.709Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -12,39 +12,6 @@
   "rangeStart": "2026-08-31",
   "rangeEnd": "2026-12-31",
   "events": [
-    {
-      "id": "2sqbqs49nu1ph87nss5624dpms@google.com-2026-08-31T00:00:00.000Z",
-      "title": "IHS Late Start",
-      "start": "2026-08-31T00:00:00.000Z",
-      "end": "2026-09-01T00:00:00.000Z",
-      "allDay": true,
-      "days": [
-        "2026-08-31"
-      ],
-      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
-    },
-    {
-      "id": "6aqkicfeiu1dggvh7msapodl2s@google.com-2026-08-31T22:30:00.000Z",
-      "title": "IHS Freshman Football @ Franklin HS",
-      "start": "2026-08-31T22:30:00.000Z",
-      "end": "2026-09-01T00:30:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-08-31"
-      ],
-      "location": "Franklin High School, 810 Hillsboro Rd, Franklin, TN 37064, USA"
-    },
-    {
-      "id": "7q0d73domm783auugcoun44807@google.com-2026-08-31T22:30:00.000Z",
-      "title": "IHS JV Football vs Franklin HS",
-      "start": "2026-08-31T22:30:00.000Z",
-      "end": "2026-09-01T00:30:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-08-31"
-      ],
-      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
-    },
     {
       "id": "32lfee1bdugvsim229i0kaiti9@google.com-2026-09-01T21:30:00.000Z",
       "title": "IHS JV/V Volleyball vs Brentwood HS",
