@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-09-04T06:38:20.027Z",
-  "lastCheckedAt": "2026-09-04T06:38:20.027Z",
-  "contentUpdatedAt": "2026-09-04T06:38:20.027Z",
+  "generatedAt": "2026-09-05T04:33:05.657Z",
+  "lastCheckedAt": "2026-09-05T04:33:05.657Z",
+  "contentUpdatedAt": "2026-09-05T04:33:05.657Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -12,17 +12,6 @@
   "rangeStart": "2026-09-02",
   "rangeEnd": "2027-01-02",
   "events": [
-    {
-      "id": "4oqkin4bg1no25aet2l8h0o8li@google.com-2026-09-02T21:30:00.000Z",
-      "title": "IHS JV/V Volleyball vs Nolensville HS",
-      "start": "2026-09-02T21:30:00.000Z",
-      "end": "2026-09-03T00:30:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-09-02"
-      ],
-      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
-    },
     {
       "id": "15h6vb4hbd25umo4g95pq2agfu@google.com-2026-09-03T21:30:00.000Z",
       "title": "IHS JV/V Girls Soccer vs Page HS",
