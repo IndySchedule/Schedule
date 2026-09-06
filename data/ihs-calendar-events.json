@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-09-05T10:37:56.853Z",
-  "lastCheckedAt": "2026-09-05T10:37:56.853Z",
-  "contentUpdatedAt": "2026-09-05T10:37:56.853Z",
+  "generatedAt": "2026-09-06T04:42:10.501Z",
+  "lastCheckedAt": "2026-09-06T04:42:10.501Z",
+  "contentUpdatedAt": "2026-09-06T04:42:10.501Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -12,28 +12,6 @@
   "rangeStart": "2026-09-03",
   "rangeEnd": "2027-01-03",
   "events": [
-    {
-      "id": "15h6vb4hbd25umo4g95pq2agfu@google.com-2026-09-03T21:30:00.000Z",
-      "title": "IHS JV/V Girls Soccer vs Page HS",
-      "start": "2026-09-03T21:30:00.000Z",
-      "end": "2026-09-04T01:30:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-09-03"
-      ],
-      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
-    },
-    {
-      "id": "6uu9acqpop1cg451vfuv4n5cvh@google.com-2026-09-03T21:30:00.000Z",
-      "title": "IHS JV/V Volleyball @ Franklin HS",
-      "start": "2026-09-03T21:30:00.000Z",
-      "end": "2026-09-04T00:30:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-09-03"
-      ],
-      "location": "Franklin High School, 810 Hillsboro Rd, Franklin, TN 37064, USA"
-    },
     {
       "id": "16gvjjgc5nhtlatl1d68cdl4dv@google.com-2026-09-05T00:00:00.000Z",
       "title": "IHS JV/V/G Wrestling Grapple on the Gridiron",
