@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-09-06T11:00:09.145Z",
-  "lastCheckedAt": "2026-09-06T11:00:09.145Z",
-  "contentUpdatedAt": "2026-09-06T11:00:09.145Z",
+  "generatedAt": "2026-09-07T04:45:08.462Z",
+  "lastCheckedAt": "2026-09-07T04:45:08.462Z",
+  "contentUpdatedAt": "2026-09-07T04:45:08.462Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -22,17 +22,6 @@
         "2026-09-05"
       ],
       "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
-    },
-    {
-      "id": "37ikcvbn1824o8sn72k31eveaa@google.com-2026-09-05T00:00:00.000Z",
-      "title": "IHS Varsity Football @ Columbia HS",
-      "start": "2026-09-05T00:00:00.000Z",
-      "end": "2026-09-05T02:00:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-09-04"
-      ],
-      "location": "Columbia High School, 921 Lion Parkway, Columbia, TN 37801"
     },
     {
       "id": "06l3mf3li1fhtsgiph4bv4f786@google.com-2026-09-07T00:00:00.000Z",
@@ -1118,6 +1107,17 @@
         "2027-01-02"
       ],
       "location": "Franklin High School, 810 Hillsboro Rd, Franklin, TN 37064, USA"
+    },
+    {
+      "id": "IHS Late Start-2027-01-05T00:00:00.000Z",
+      "title": "IHS Late Start",
+      "start": "2027-01-05T00:00:00.000Z",
+      "end": "2027-01-06T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2027-01-05"
+      ],
+      "location": ""
     }
   ]
 }
