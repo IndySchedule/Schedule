@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-09-07T12:37:23.008Z",
-  "lastCheckedAt": "2026-09-07T12:37:23.008Z",
-  "contentUpdatedAt": "2026-09-07T12:37:23.008Z",
+  "generatedAt": "2026-09-07T19:11:24.178Z",
+  "lastCheckedAt": "2026-09-07T19:11:24.178Z",
+  "contentUpdatedAt": "2026-09-07T19:11:24.178Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -1118,6 +1118,17 @@
         "2027-01-05"
       ],
       "location": ""
+    },
+    {
+      "id": "4bgdur370b264i27o66ttvao0e@google.com-2027-01-05T13:40:00.000Z",
+      "title": "IHS Second Semester Begins",
+      "start": "2027-01-05T13:40:00.000Z",
+      "end": "2027-01-05T20:47:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-01-05"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     }
   ]
 }
