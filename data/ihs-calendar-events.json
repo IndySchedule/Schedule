@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-09-08T11:22:22.204Z",
-  "lastCheckedAt": "2026-09-08T11:22:22.204Z",
-  "contentUpdatedAt": "2026-09-08T11:22:22.204Z",
+  "generatedAt": "2026-09-08T21:11:26.381Z",
+  "lastCheckedAt": "2026-09-08T21:11:26.381Z",
+  "contentUpdatedAt": "2026-09-08T21:11:26.381Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -681,10 +681,32 @@
       "location": ""
     },
     {
+      "id": "1c52nmdp5oqm4tcgrk33gea505@google.com-2026-11-17T22:15:00.000Z",
+      "title": "IHS JV Boys Basketball @ Rockvale HS",
+      "start": "2026-11-17T22:15:00.000Z",
+      "end": "2026-11-17T23:45:00.000Z",
+      "allDay": false,
+      "days": [
+        "2026-11-17"
+      ],
+      "location": "Rockvale High School, 6545 TN-99, Rockvale, TN 37153, USA"
+    },
+    {
       "id": "5e5gkgmmrrso62g2g9lm52p84h@google.com-2026-11-18T00:00:00.000Z",
       "title": "IHS Girls Basketball @ Rockvale HS",
       "start": "2026-11-18T00:00:00.000Z",
       "end": "2026-11-18T01:30:00.000Z",
+      "allDay": false,
+      "days": [
+        "2026-11-17"
+      ],
+      "location": "Rockvale High School, 6545 TN-99, Rockvale, TN 37153, USA"
+    },
+    {
+      "id": "4ee0fluve2lvnuhdgp71pqd4ai@google.com-2026-11-18T01:30:00.000Z",
+      "title": "IHS V Boys Basketball @ Rockvale HS",
+      "start": "2026-11-18T01:30:00.000Z",
+      "end": "2026-11-18T03:30:00.000Z",
       "allDay": false,
       "days": [
         "2026-11-17"
@@ -701,6 +723,17 @@
         "2026-11-19"
       ],
       "location": "Franklin High School, 810 Hillsboro Rd, Franklin, TN 37064, USA"
+    },
+    {
+      "id": "7qknttgnt7eo0b0la44j5qpa33@google.com-2026-11-20T22:30:00.000Z",
+      "title": "IHS JV Boys Basketball vs Stewarts Creek HS",
+      "start": "2026-11-20T22:30:00.000Z",
+      "end": "2026-11-21T00:00:00.000Z",
+      "allDay": false,
+      "days": [
+        "2026-11-20"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     },
     {
       "id": "2d0c17ofik2a169km9tbvfkenf@google.com-2026-11-21T00:00:00.000Z",
@@ -736,6 +769,17 @@
       "location": "Ravenwood High School, 1724 Wilson Pike, Brentwood, TN 37027, USA"
     },
     {
+      "id": "7qrb2c32u6p19ke6odmm8q5lr2@google.com-2026-11-21T01:30:00.000Z",
+      "title": "IHS V Boys Basketball vs Stewarts Creek HS",
+      "start": "2026-11-21T01:30:00.000Z",
+      "end": "2026-11-21T03:30:00.000Z",
+      "allDay": false,
+      "days": [
+        "2026-11-20"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
       "id": "278n549fgdi6b00ipdugigkev9@google.com-2026-11-23T00:00:00.000Z",
       "title": "IHS JV Wrestling @ Nolensville HS",
       "start": "2026-11-23T00:00:00.000Z",
@@ -760,6 +804,18 @@
         "2026-11-27"
       ],
       "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "4ugcpp6m1qs1jdbidk13bmggp8@google.com-2026-11-23T00:00:00.000Z",
+      "title": "IHS V Boys Basketball @ Lebanon HS",
+      "start": "2026-11-23T00:00:00.000Z",
+      "end": "2026-11-25T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2026-11-23",
+        "2026-11-24"
+      ],
+      "location": "Lebanon High School, 500 Blue Devil Blvd, Lebanon, TN 37087, USA"
     },
     {
       "id": "0vvkcsh1c18lq51384q9r2eudt@google.com-2026-11-27T00:00:00.000Z",
@@ -796,6 +852,28 @@
       "location": ""
     },
     {
+      "id": "0sg0kngqr4fjh3rqc768s7bsrm@google.com-2026-12-01T22:30:00.000Z",
+      "title": "IHS Freshman Boys Basketball @ Franklin HS",
+      "start": "2026-12-01T22:30:00.000Z",
+      "end": "2026-12-02T00:00:00.000Z",
+      "allDay": false,
+      "days": [
+        "2026-12-01"
+      ],
+      "location": "Franklin High School, 810 Hillsboro Rd, Franklin, TN 37064, USA"
+    },
+    {
+      "id": "35im8btv2rmujdueqp0at7kc37@google.com-2026-12-01T22:30:00.000Z",
+      "title": "IHS JV Boys Basketball @ Franklin HS",
+      "start": "2026-12-01T22:30:00.000Z",
+      "end": "2026-12-02T00:00:00.000Z",
+      "allDay": false,
+      "days": [
+        "2026-12-01"
+      ],
+      "location": "Franklin High School, 810 Hillsboro Rd, Franklin, TN 37064, USA"
+    },
+    {
       "id": "377v0acdaon3dsn9dpcd7et05k@google.com-2026-12-02T00:00:00.000Z",
       "title": "IHS Girls Basketball @ Franklin HS",
       "start": "2026-12-02T00:00:00.000Z",
@@ -818,6 +896,17 @@
       "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     },
     {
+      "id": "0o65mf2p4kktodhdqggonc7t2l@google.com-2026-12-02T01:30:00.000Z",
+      "title": "IHS V Boys Basketball @ Franklin HS",
+      "start": "2026-12-02T01:30:00.000Z",
+      "end": "2026-12-02T03:30:00.000Z",
+      "allDay": false,
+      "days": [
+        "2026-12-01"
+      ],
+      "location": "Franklin High School, 810 Hillsboro Rd, Franklin, TN 37064, USA"
+    },
+    {
       "id": "669gpv49scv7plunov04721r7c@google.com-2026-12-04T00:00:00.000Z",
       "title": "IHS V Wrestling Beat Down in the Mountains",
       "start": "2026-12-04T00:00:00.000Z",
@@ -828,6 +917,17 @@
         "2026-12-05"
       ],
       "location": "Rocky Top Complex"
+    },
+    {
+      "id": "7oevsppvap1qousrdsmfi905pt@google.com-2026-12-04T00:15:00.000Z",
+      "title": "IHS Freshman Boys Basketball @ Summit HS",
+      "start": "2026-12-04T00:15:00.000Z",
+      "end": "2026-12-04T01:45:00.000Z",
+      "allDay": false,
+      "days": [
+        "2026-12-03"
+      ],
+      "location": "SUMMIT HIGH SCHOOL, 2830 Austins Wy, Thompson's Station, TN 37179, USA"
     },
     {
       "id": "54bcjt5lvra4dp4skobja3mk5n@google.com-2026-12-04T00:30:00.000Z",
@@ -863,6 +963,17 @@
       "location": "Tullahoma High School, 927 North Jackson St. Tullahoma, TN 37388"
     },
     {
+      "id": "7efn6b2lmt1hh6qcnbhdb5ofbu@google.com-2026-12-05T01:30:00.000Z",
+      "title": "IHS V Boys Basketball vs Hillsboro HS",
+      "start": "2026-12-05T01:30:00.000Z",
+      "end": "2026-12-05T03:30:00.000Z",
+      "allDay": false,
+      "days": [
+        "2026-12-04"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
       "id": "IHS Late Start-2026-12-07T00:00:00.000Z",
       "title": "IHS Late Start",
       "start": "2026-12-07T00:00:00.000Z",
@@ -896,6 +1007,28 @@
       "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     },
     {
+      "id": "751vjqlp89emmq9a4227dml31v@google.com-2026-12-10T22:30:00.000Z",
+      "title": "IHS JV Boys Basketball @ Brentwood HS",
+      "start": "2026-12-10T22:30:00.000Z",
+      "end": "2026-12-11T00:00:00.000Z",
+      "allDay": false,
+      "days": [
+        "2026-12-10"
+      ],
+      "location": "Brentwood High School, 5304 Murray Ln, Brentwood, TN 37027, USA"
+    },
+    {
+      "id": "207rc7576h71nabp5eg0patktt@google.com-2026-12-10T23:30:00.000Z",
+      "title": "IHS Freshman Boys Basketball @ Brentwood HS",
+      "start": "2026-12-10T23:30:00.000Z",
+      "end": "2026-12-11T01:00:00.000Z",
+      "allDay": false,
+      "days": [
+        "2026-12-10"
+      ],
+      "location": "Brentwood High School, 5304 Murray Ln, Brentwood, TN 37027, USA"
+    },
+    {
       "id": "2emtv8kqqcvt3mkui025bh1bis@google.com-2026-12-11T00:00:00.000Z",
       "title": "IHS Girls Basketball @ Brentwood HS",
       "start": "2026-12-11T00:00:00.000Z",
@@ -916,6 +1049,39 @@
         "2026-12-11"
       ],
       "location": "Kirkwood High School, 2702 Rossview Rd, Clarksville, TN 37043, USA"
+    },
+    {
+      "id": "7dbtj1f3l5pmigf6ttpm175v54@google.com-2026-12-11T01:30:00.000Z",
+      "title": "IHS V Boys Basketball @ Brentwood HS",
+      "start": "2026-12-11T01:30:00.000Z",
+      "end": "2026-12-11T03:30:00.000Z",
+      "allDay": false,
+      "days": [
+        "2026-12-10"
+      ],
+      "location": "Brentwood High School, 5304 Murray Ln, Brentwood, TN 37027, USA"
+    },
+    {
+      "id": "1o5he0siae4ab4260npk1ifbga@google.com-2026-12-11T22:30:00.000Z",
+      "title": "IHS JV Boys Basketball vs Ravenwood HS",
+      "start": "2026-12-11T22:30:00.000Z",
+      "end": "2026-12-12T00:00:00.000Z",
+      "allDay": false,
+      "days": [
+        "2026-12-11"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "654e3q93u37lcbcebpnjv9oup2@google.com-2026-12-11T23:30:00.000Z",
+      "title": "IHS Freshman Boys Basketball vs Ravenwood HS",
+      "start": "2026-12-11T23:30:00.000Z",
+      "end": "2026-12-12T01:00:00.000Z",
+      "allDay": false,
+      "days": [
+        "2026-12-11"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     },
     {
       "id": "0ee53fdtltf8a2lo262rfisact@google.com-2026-12-12T00:00:00.000Z",
@@ -951,6 +1117,29 @@
       "location": "Kirkwood High School, 2702 Rossview Rd, Clarksville, TN 37043, USA"
     },
     {
+      "id": "6j1f1at55skcfllsabf5uv48uf@google.com-2026-12-12T00:00:00.000Z",
+      "title": "IHS Freshman Boys Basketball @ Ravenwood HS",
+      "start": "2026-12-12T00:00:00.000Z",
+      "end": "2026-12-14T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2026-12-12",
+        "2026-12-13"
+      ],
+      "location": "Ravenwood High School, 1724 Wilson Pike, Brentwood, TN 37027, USA"
+    },
+    {
+      "id": "39th7340m42ti4sijs5e3ql6k3@google.com-2026-12-12T01:30:00.000Z",
+      "title": "IHS V Boys Basketball vs Ravenwood HS",
+      "start": "2026-12-12T01:30:00.000Z",
+      "end": "2026-12-12T03:30:00.000Z",
+      "allDay": false,
+      "days": [
+        "2026-12-11"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
       "id": "233ckp3ah8c811qn32ntbkdsgj@google.com-2026-12-18T00:00:00.000Z",
       "title": "IHS JV Wrestling @ Brentwood Academy",
       "start": "2026-12-18T00:00:00.000Z",
@@ -971,6 +1160,28 @@
         "2026-12-18"
       ],
       "location": "Northwest High School, 800 Lafayette Rd, Clarksville, TN 37042, USA"
+    },
+    {
+      "id": "19387bccgrrhijm6l9kqlru8el@google.com-2026-12-18T22:30:00.000Z",
+      "title": "IHS JV Boys Basketball vs Nolensville HS",
+      "start": "2026-12-18T22:30:00.000Z",
+      "end": "2026-12-19T00:00:00.000Z",
+      "allDay": false,
+      "days": [
+        "2026-12-18"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "2ugpgnhk11stm0biihgvd78vc6@google.com-2026-12-18T23:30:00.000Z",
+      "title": "IHS Freshman Boys Basketball vs Nolensville HS",
+      "start": "2026-12-18T23:30:00.000Z",
+      "end": "2026-12-19T01:00:00.000Z",
+      "allDay": false,
+      "days": [
+        "2026-12-18"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     },
     {
       "id": "1f8428ofjo80k9r26b1theirss@google.com-2026-12-19T00:00:00.000Z",
@@ -1000,6 +1211,17 @@
       "title": "IHS Girls Basketball vs Nolensville HS",
       "start": "2026-12-19T00:00:00.000Z",
       "end": "2026-12-19T01:30:00.000Z",
+      "allDay": false,
+      "days": [
+        "2026-12-18"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "4ke5h3rr2omeafr865of08hmsr@google.com-2026-12-19T01:30:00.000Z",
+      "title": "IHS V Boys Basketball vs Nolensville HS",
+      "start": "2026-12-19T01:30:00.000Z",
+      "end": "2026-12-19T03:30:00.000Z",
       "allDay": false,
       "days": [
         "2026-12-18"
@@ -1052,6 +1274,17 @@
       "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     },
     {
+      "id": "26ge13r5ea9hopp2ms6ck320ol@google.com-2026-12-22T00:00:00.000Z",
+      "title": "IHS V Boys Basketball @ Freed-Hardeman",
+      "start": "2026-12-22T00:00:00.000Z",
+      "end": "2026-12-23T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2026-12-22"
+      ],
+      "location": "Freed-Hardeman University, 158 E Main St, Henderson, TN 38340, USA"
+    },
+    {
       "id": "1jglmsf9pb65nhgtm7koth15kb@google.com-2026-12-28T00:00:00.000Z",
       "title": "IHS Girls Basketball @ Liberty HS Christmas Classic",
       "start": "2026-12-28T00:00:00.000Z",
@@ -1063,6 +1296,20 @@
         "2026-12-30"
       ],
       "location": "Liberty High School"
+    },
+    {
+      "id": "5142bpg6nh12gb91pgieuutp27@google.com-2026-12-28T00:00:00.000Z",
+      "title": "IHS V Boys Basketball Battle for Nashville @ BGA",
+      "start": "2026-12-28T00:00:00.000Z",
+      "end": "2027-01-01T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2026-12-28",
+        "2026-12-29",
+        "2026-12-30",
+        "2026-12-31"
+      ],
+      "location": "Battle Ground Academy, 336 Ernest Rice Ln, Franklin, TN 37069, USA"
     },
     {
       "id": "4n9evjp73co06p727tlrr6478p@google.com-2026-12-30T02:30:00.000Z",
@@ -1098,6 +1345,17 @@
       "location": "Franklin High School, 810 Hillsboro Rd, Franklin, TN 37064, USA"
     },
     {
+      "id": "0ui0n77qbjud1l40mimbjqbskl@google.com-2027-01-04T22:30:00.000Z",
+      "title": "IHS JV Boys Basketball vs LaVergne HS",
+      "start": "2027-01-04T22:30:00.000Z",
+      "end": "2027-01-05T00:00:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-01-04"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
       "id": "IHS Late Start-2027-01-05T00:00:00.000Z",
       "title": "IHS Late Start",
       "start": "2027-01-05T00:00:00.000Z",
@@ -1109,6 +1367,17 @@
       "location": ""
     },
     {
+      "id": "37q2j5p8ojqm978jer50usst8r@google.com-2027-01-05T01:30:00.000Z",
+      "title": "IHS V Boys Basketball vs LaVergne HS",
+      "start": "2027-01-05T01:30:00.000Z",
+      "end": "2027-01-05T03:30:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-01-04"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
       "id": "4bgdur370b264i27o66ttvao0e@google.com-2027-01-05T13:40:00.000Z",
       "title": "IHS Second Semester Begins",
       "start": "2027-01-05T13:40:00.000Z",
@@ -1118,6 +1387,17 @@
         "2027-01-05"
       ],
       "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "0voakufc8hbs2von2875tviv5v@google.com-2027-01-05T22:30:00.000Z",
+      "title": "IHS JV Boys Basketball @ Ravenwood HS",
+      "start": "2027-01-05T22:30:00.000Z",
+      "end": "2027-01-06T00:00:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-01-05"
+      ],
+      "location": "Ravenwood High School, 1724 Wilson Pike, Brentwood, TN 37027, USA"
     },
     {
       "id": "61tru1qdqj8d9q2ifooitdhcq6@google.com-2027-01-06T00:00:00.000Z",
@@ -1140,6 +1420,28 @@
         "2027-01-05"
       ],
       "location": "SUMMIT HIGH SCHOOL, 2830 Austins Wy, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "5nobj5383upvokcpc8uh41v88r@google.com-2027-01-06T01:00:00.000Z",
+      "title": "IHS Freshman Boys Basketball @ Ravenwood HS",
+      "start": "2027-01-06T01:00:00.000Z",
+      "end": "2027-01-06T02:30:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-01-05"
+      ],
+      "location": "Ravenwood High School, 1724 Wilson Pike, Brentwood, TN 37027, USA"
+    },
+    {
+      "id": "062gf92patc205q0sl1j3m9dba@google.com-2027-01-06T01:30:00.000Z",
+      "title": "IHS V Boys Basketball @ Ravenwood HS",
+      "start": "2027-01-06T01:30:00.000Z",
+      "end": "2027-01-06T03:30:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-01-05"
+      ],
+      "location": "Ravenwood High School, 1724 Wilson Pike, Brentwood, TN 37027, USA"
     }
   ]
 }
