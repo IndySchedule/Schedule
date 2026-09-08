@@ -604,7 +604,7 @@
                     <div class="settings-group about-overview-card">
                         <div class="about-content about-dashboard">
                             <div class="about-intro">
-                                <div><span class="about-version">Version 1.3.5</span><h2>Built for the Indy school day.</h2><p>Indy Schedule is a fast, lightweight countdown and daily schedule dashboard for Independence High School.</p></div>
+                                <div><span class="about-version">Version 1.4.0</span><h2>Built for the Indy school day.</h2><p>Indy Schedule is a fast, lightweight countdown and daily schedule dashboard for Independence High School.</p></div>
                                 <div class="about-intro-mark"><i class="fas fa-clock" aria-hidden="true"></i></div>
                             </div>
 
@@ -671,6 +671,19 @@
 
                         <div id="whatsnew-website" class="whatsnew-log" role="tabpanel">
                             <div class="wn-entry current-release">
+                                <div class="wn-entry-header">
+                                    <span class="wn-version">v1.4.0</span>
+                                    <span class="wn-date">Sep 8, 2026</span>
+                                    <span class="wn-tag">Send Feedback</span>
+                                </div>
+                                <ul>
+                                    <li>Send schedule corrections, bug reports, and ideas directly from Settings → Send Feedback, without opening an email app.</li>
+                                    <li>Feedback is saved privately, with optional contact details if you’d like a response.</li>
+                                    <li>We’re sorry we didn’t receive earlier contact attempts. School administrator restrictions blocked communication outside the organization. If you previously tried to reach us, please resend your message using Send Feedback.</li>
+                                </ul>
+                            </div>
+
+                            <div class="wn-entry">
                                 <div class="wn-entry-header">
                                     <span class="wn-version">v1.3.5</span>
                                     <span class="wn-date">Sep 1, 2026</span>
@@ -1046,7 +1059,7 @@
             <p class="managed-device-note"><i class="fas fa-circle-info" aria-hidden="true"></i> If Chrome clears site data, sign in again to restore your saved settings.</p>
         </div>
     </div>
-    <!-- One-time notice for returning users after the 1.3.5 release. -->
+    <!-- One-time notice for returning users after the 1.4.0 release. -->
     <div id="release-notice-backdrop" class="release-notice-backdrop" aria-hidden="true" hidden>
         <section class="release-notice-dialog" role="dialog" aria-modal="true" aria-labelledby="release-notice-title" aria-describedby="release-notice-description">
             <header class="release-notice-header">
@@ -1057,17 +1070,17 @@
                 <button type="button" id="release-notice-close" class="release-notice-close" aria-label="Close update notice"><i class="fas fa-times" aria-hidden="true"></i></button>
             </header>
             <div class="release-notice-content">
-                <span class="release-notice-version">Version 1.3.5</span>
-                <h1 id="release-notice-title">A clearer, more accessible Indy Schedule.</h1>
-                <p id="release-notice-description">This update makes Settings easier to navigate and understand, while keeping saved settings safer and more reliable.</p>
+                <span class="release-notice-version">Version 1.4.0</span>
+                <h1 id="release-notice-title">What’s new in 1.4.0</h1>
+                <p id="release-notice-description">You can now send feedback directly from Indy Schedule, without opening an email app.</p>
                 <div class="release-notice-summary">
                     <article>
-                        <span>1.3.5</span>
-                        <div><strong>Accessibility and clearer sync</strong><p>Color controls are easier for screen readers to identify, high-zoom Settings navigation is clearer, and sync details are easier to view.</p></div>
+                        <span>New</span>
+                        <div><strong>Send Feedback from Settings</strong><p>Report schedule issues, share ideas, or get help. Your feedback is saved privately, and you can leave an email if you’d like a response.</p></div>
                     </article>
                     <article>
-                        <span>1.3.4</span>
-                        <div><strong>Safer saved settings</strong><p>Settings gained stronger format checks, and an internal debugging file was removed from the published project.</p></div>
+                        <span>Sorry</span>
+                        <div><strong>We’re sorry we missed your messages</strong><p>School administrator restrictions blocked communication outside the organization, so we didn’t receive earlier contact attempts. Please resend your message using Settings → Send Feedback.</p></div>
                     </article>
                 </div>
             </div>
@@ -1381,7 +1394,7 @@
                     localStorage.removeItem('indyOnboardingReplayRequested_v1');
                     // First-time users already saw the full walkthrough, so do
                     // not immediately stack the release-summary dialog after it.
-                    localStorage.setItem('indyReleaseNotice_v1_3_5', 'true');
+                    localStorage.setItem('indyReleaseNotice_v1_4_0', 'true');
                     const currentUser = window.authManager?.currentUser;
                     nextButton.disabled = true;
                     nextButton.innerHTML = currentUser
@@ -1526,7 +1539,7 @@
         })();
 
         (function initializeReleaseNotice() {
-            const storageKey = 'indyReleaseNotice_v1_3_5';
+            const storageKey = 'indyReleaseNotice_v1_4_0';
 
             document.addEventListener('DOMContentLoaded', () => {
                 const backdrop = document.getElementById('release-notice-backdrop');

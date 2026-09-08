@@ -109,7 +109,7 @@ async function notifyFeedbackWithFormspree(feedback, feedbackId) {
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                 status: 'new',
                 pageUrl: page.href.slice(0, 2048),
-                appVersion: '1.3.5'
+                appVersion: '1.4.0'
             };
             const savedFeedback = await firebase.firestore().collection('feedback').add(feedback);
             clearTimeout(pendingNotice);

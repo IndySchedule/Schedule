@@ -14,3 +14,11 @@
 Firebase keeps prior Hosting releases. In Firebase Console, open **Hosting → Release history**, find the last known-good release, choose its menu, and select **Rollback**. This restores the site files without rewriting Git history.
 
 If Firestore rules caused the problem, restore the previous `firestore.rules` from Git and deploy only that file with `npx firebase-tools deploy --only firestore:rules --project indyschedule-1`. Then open a corrective pull request so the repository matches production.
+
+## Version 1.4.0
+
+The new one-time update notice uses `indyReleaseNotice_v1_4_0`. Deploy the updated Firestore rules with this release so dismissal can sync to accounts; older release keys remain allowed for older clients. Hosting-only deployment does not update these rules.
+
+```sh
+npx firebase deploy --only firestore:rules,hosting --project indyschedule-1
+```

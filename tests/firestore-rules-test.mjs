@@ -39,7 +39,7 @@ const validSettings = {
     indyScheduleOverride_v1: null,
     indyOnboardingComplete_v2: 'true',
     indyAnalyticsConsent_v1: 'granted',
-    indyReleaseNotice_v1_3_5: 'true',
+    indyReleaseNotice_v1_4_0: 'true',
     periodRenames: { 1: 'Example Class A', 2: 'Example Class B' },
     globalPeriodNames: { 1: 'Example Class A', 2: 'Example Class B' }
 };
@@ -111,7 +111,7 @@ try {
     }, { mergeFields: schemaFields }));
 
     const feedback = () => ({ category: 'schedule', message: 'Wrong bell time', name: '', email: '',
-        uid: '', createdAt: serverTimestamp(), status: 'new', pageUrl: 'https://indyschedule.com/', appVersion: '1.3.5' });
+        uid: '', createdAt: serverTimestamp(), status: 'new', pageUrl: 'https://indyschedule.com/', appVersion: '1.4.0' });
     await assertSucceeds(setDoc(doc(guestDb, 'feedback/guest'), feedback()));
     await assertSucceeds(setDoc(doc(ownerDb, 'feedback/owner'), { ...feedback(), uid: ownerId }));
     for (const db of [guestDb, ownerDb, otherDb]) {
