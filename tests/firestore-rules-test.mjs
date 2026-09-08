@@ -5,7 +5,7 @@ import {
     assertSucceeds,
     initializeTestEnvironment
 } from '@firebase/rules-unit-testing';
-import { doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDoc, getDocs, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
 
 const projectId = 'indy-schedule-rules-test';
 const rules = await readFile('firestore.rules', 'utf8');
@@ -110,6 +110,34 @@ try {
         settings: { ...validSettings, progressBarColor: 'not-a-color' }
     }, { mergeFields: schemaFields }));
 
+    const feedback = () => ({ category: 'schedule', message: 'Wrong bell time', name: '', email: '',
+        uid: '', createdAt: serverTimestamp(), status: 'new', pageUrl: 'https://indyschedule.com/', appVersion: '1.3.5' });
+    await assertSucceeds(setDoc(doc(guestDb, 'feedback/guest'), feedback()));
+    await assertSucceeds(setDoc(doc(ownerDb, 'feedback/owner'), { ...feedback(), uid: ownerId }));
+    for (const db of [guestDb, ownerDb, otherDb]) {
+        await assertFails(getDoc(doc(db, 'feedback/owner')));
+        await assertFails(getDocs(collection(db, 'feedback')));
+        await assertFails(updateDoc(doc(db, 'feedback/owner'), { status: 'resolved' }));
+        await assertFails(deleteDoc(doc(db, 'feedback/owner')));
+    }
+    const invalid = [
+        { category: 'invalid' }, { message: '' }, { message: ' \n\t' }, { message: 'x'.repeat(2001) },
+        { name: 'x'.repeat(101) }, { email: 'x'.repeat(255) }, { email: 'bad-email' },
+        { uid: ownerId }, { status: 'reviewed' }, { createdAt: new Date(0) },
+        { pageUrl: 'https://example.com/?token=secret' }, { appVersion: 'x'.repeat(33) },
+        { notificationSent: true }, { extra: 'no' }, { message: 42 }, { name: null }
+    ];
+    for (const [index, patch] of invalid.entries()) {
+        await assertFails(setDoc(doc(guestDb, `feedback/invalid-${index}`), { ...feedback(), ...patch }));
+    }
+    await assertFails(setDoc(doc(ownerDb, 'feedback/spoof'), { ...feedback(), uid: otherId }));
+    await assertFails(setDoc(doc(ownerDb, 'feedback/missing-uid'), feedback()));
+    const missing = feedback(); delete missing.status;
+    await assertFails(setDoc(doc(guestDb, 'feedback/missing-field'), missing));
+    await assertSucceeds(setDoc(doc(guestDb, 'feedback/boundary'), {
+        ...feedback(), message: 'x'.repeat(2000), name: 'x'.repeat(100)
+    }));
+    console.log('Feedback rules: create validation, UID binding, and denied read/list/update/delete passed.');
     console.log('Firestore rules: owner isolation, migration, and validation passed.');
 } finally {
     await testEnvironment.cleanup();

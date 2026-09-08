@@ -202,7 +202,7 @@ function updateGoogleConsent(granted, command = 'default') {
 updateGoogleConsent(getAnalyticsConsent() === 'granted');
 
 function ensureAnalytics() {
-    if (!window.authManager || typeof firebase?.analytics !== 'function') return null;
+    if (!window.authManager || window.authManager.usesEmulators || typeof firebase?.analytics !== 'function') return null;
     if (!window.authManager.analytics) {
         window.authManager.analytics = firebase.analytics();
     }
@@ -517,8 +517,18 @@ function applyBreadBackground() {
 class AuthManager {
     constructor() {
         // Initialize Firebase first
-        this.app = firebase.initializeApp(firebaseConfig);
+        const feedbackEmulators = ['localhost', '127.0.0.1'].includes(location.hostname);
+        this.usesEmulators = feedbackEmulators;
+        this.app = firebase.initializeApp(feedbackEmulators
+            ? { ...firebaseConfig, apiKey: 'demo-indy-feedback-key', projectId: 'demo-indy-feedback' } : firebaseConfig);
+        if (!feedbackEmulators && window.indyFeedbackConfig?.appCheckSiteKey) {
+            firebase.appCheck().activate(window.indyFeedbackConfig.appCheckSiteKey, true);
+        }
         this.auth = firebase.auth();
+        if (feedbackEmulators) {
+            this.auth.useEmulator('http://127.0.0.1:9099');
+            firebase.firestore().useEmulator('127.0.0.1', 8080);
+        }
         this.analytics = null;
         this.provider = new firebase.auth.GoogleAuthProvider();
         this.isAuthenticated = false;
@@ -535,8 +545,7 @@ class AuthManager {
         // Make auth manager globally available immediately
         window.authManager = this;
         if (getAnalyticsConsent() === 'granted') {
-            this.analytics = firebase.analytics();
-            this.analytics.setAnalyticsCollectionEnabled(true);
+            ensureAnalytics()?.setAnalyticsCollectionEnabled(true);
         }
         
         const initializeWhenReady = () => {

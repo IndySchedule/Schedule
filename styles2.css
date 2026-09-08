@@ -6850,3 +6850,33 @@ body {
         flex-direction: column;
     }
 }
+
+/* Feedback uses the settings palette in every appearance. */
+#settings-sidebar #contact-panel .support-grid {
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr);
+}
+#settings-sidebar #contact-panel .contact-form { width: 100%; gap: var(--space-4); }
+#settings-sidebar #contact-panel .contact-form input,
+#settings-sidebar #contact-panel .contact-form select,
+#settings-sidebar #contact-panel .contact-form textarea {
+    width: 100%; min-width: 0; box-sizing: border-box; padding: 12px; margin: 0;
+    border: 1px solid var(--settings-inset-line); border-radius: var(--radius-card-sm);
+    background: var(--settings-card); color: var(--settings-inset-ink);
+    font: inherit; font-size: 16px;
+}
+#settings-sidebar #contact-panel .contact-form :is(input, select, textarea, button):focus-visible {
+    outline: 2px solid var(--theme-ui-accent); outline-offset: 3px;
+}
+#settings-sidebar #contact-panel .contact-form label { color: inherit; }
+#settings-sidebar #contact-panel .contact-form small,
+#settings-sidebar #contact-panel .contact-form label span { font-size: 12px; font-weight: 400; }
+#feedback-count { align-self: flex-end; }
+#feedback-status { min-height: 1.5em; margin: 0; }
+#feedback-submit:disabled { opacity: 0.65; cursor: wait; transform: none; }
+#settings-sidebar #contact-panel .contact-address { flex-wrap: wrap; overflow-wrap: anywhere; }
+@media (max-width: 900px) {
+    #settings-sidebar #contact-panel .support-grid { grid-template-columns: minmax(0, 1fr); }
+}
+#settings-sidebar #contact-panel .contact-form :is(input, textarea)::placeholder {
+    color: var(--settings-inset-ink); opacity: 0.7;
+}

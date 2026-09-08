@@ -228,6 +228,19 @@ const firebaseLoaderSource = readFile('firebase-loader.js');
 assertEqual((firebaseLoaderSource.match(/firebase-analytics-compat\.js/g) || []).length, 1, 'Firebase provides the single consent-controlled Analytics loader');
 assert(!indexSource.includes('gstatic.com/firebasejs'), 'Optional Firebase downloads do not block the dashboard document');
 const authSource = readFile('auth.js');
+const analyticsFactory = new Function('window', 'firebase',
+    authSource.slice(authSource.indexOf('function ensureAnalytics()'), authSource.indexOf('function updateAnalyticsConsentUI()')) + '\nreturn ensureAnalytics;');
+let analyticsInitCalls = 0;
+const analyticsStub = { logEvent() {} };
+const analyticsFirebase = { analytics() { analyticsInitCalls++; return analyticsStub; } };
+const localAnalyticsWindow = { authManager: { usesEmulators: true, analytics: null } };
+assertEqual(analyticsFactory(localAnalyticsWindow, analyticsFirebase)(), null, 'Emulator previews never initialize Analytics');
+assertEqual(analyticsInitCalls, 0, 'Local test API keys are never used for Analytics requests');
+const productionAnalyticsWindow = { authManager: { usesEmulators: false, analytics: null } };
+assertEqual(analyticsFactory(productionAnalyticsWindow, analyticsFirebase)(), analyticsStub, 'Production Analytics still initializes');
+analyticsFactory(productionAnalyticsWindow, analyticsFirebase)();
+assertEqual(analyticsInitCalls, 1, 'Production Analytics reuses its initialized instance');
+
 const diagnosticsSource = readFile('diagnostics.js');
 const firestoreRules = readFile('firestore.rules');
 assert(authSource.includes('dashboard-account-menu'), 'Signed-in account actions use the compact dashboard menu');

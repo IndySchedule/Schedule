@@ -5,3 +5,7 @@ node_modules/
 assets/special-editions/*-master.png
 firebase-debug.log
 firestore-debug.log
+
+# Local environment files
+.env*
+*-debug.log

@@ -49,7 +49,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script defer src="./dialog-manager.js"></script>
     <script defer src="./diagnostics.js"></script>
+    <script defer src="./feedback-config.js"></script>
     <script defer src="auth.js"></script>
+    <script defer src="./feedback.js"></script>
     <script defer src="./firebase-loader.js"></script>
     <script defer src="./gradient.js"></script>
     <script defer src="./script2.js"></script>
@@ -274,7 +276,7 @@
                     <i class="fas fa-bolt"></i> What's New
                 </button>
                 <button class="nav-item" data-target="contact">
-                    <i class="fas fa-envelope"></i> Contact Us
+                    <i class="fas fa-envelope"></i> Send Feedback
                 </button>
             </div>
             
@@ -865,7 +867,7 @@
                 <div class="settings-panel" id="contact-panel">
                     <div class="settings-page-header">
                         <div class="settings-page-icon"><i class="fas fa-envelope"></i></div>
-                        <div><span>Support</span><h1>Contact Us</h1><p>Report a problem, suggest an improvement, or request a schedule correction.</p></div>
+                        <div><span>Support</span><h1>Send Feedback</h1><p>Report a problem, suggest an improvement, or request a schedule correction.</p></div>
                     </div>
                     <div class="settings-group contact-shell">
                         <div class="about-content contact-card">
@@ -882,13 +884,24 @@
                                         </div>
                                     </div>
                                     <p class="contact-intro">Send a direct message about the dashboard, bell times, calendar information, or an idea for the site.</p>
-                                    <a class="contact-btn" href="mailto:indyschedule@outlook.com">
-                                        <i class="fas fa-envelope" aria-hidden="true"></i>
-                                        <span>Email Indy Schedule</span>
-                                        <i class="fas fa-arrow-up-right-from-square contact-btn-arrow" aria-hidden="true"></i>
-                                    </a>
-                                    <p class="contact-action-note">Opens your default email app.</p>
-                                    <p class="contact-address"><i class="fas fa-at" aria-hidden="true"></i> indyschedule@outlook.com</p>
+                                    <form id="feedback-form" class="contact-form">
+                                        <div class="form-row"><label for="feedback-category">Category <span>(required)</span></label>
+                                            <select id="feedback-category" name="category" required>
+                                                <option value="">Choose a category</option>
+                                                <option value="schedule">Schedule Issue</option><option value="bug">Bug</option>
+                                                <option value="suggestion">Suggestion</option><option value="account">Account Issue</option><option value="other">Other</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-row"><label for="feedback-message">Message <span>(required)</span></label>
+                                            <textarea id="feedback-message" name="message" required maxlength="2000" rows="6" aria-describedby="feedback-count" placeholder="What happened, or what would you like to improve?"></textarea>
+                                            <small id="feedback-count">0 / 2,000</small>
+                                        </div>
+                                        <div class="form-row"><label for="feedback-name">Name <span>(optional)</span></label><input id="feedback-name" name="name" autocomplete="name" maxlength="100"></div>
+                                        <div class="form-row"><label for="feedback-email">Email <span>(optional)</span></label><input id="feedback-email" name="email" type="email" autocomplete="email" maxlength="254" aria-describedby="feedback-email-help"><small id="feedback-email-help">Only needed if you’d like a response.</small></div>
+                                        <button type="submit" class="contact-btn" id="feedback-submit">Send Feedback</button>
+                                        <p id="feedback-status" role="status" aria-live="polite" aria-atomic="true"></p>
+                                    </form>
+                                    <p class="contact-address">Prefer email? <a href="mailto:IndySchedule@outlook.com">IndySchedule@outlook.com</a></p>
                                     <p class="contact-privacy-note"><i class="fas fa-shield-halved" aria-hidden="true"></i> Only include information needed to explain the issue.</p>
                                 </div>
                                 <div class="support-col">
@@ -900,14 +913,14 @@
                                         <li><span class="contact-bullet-icon"><i class="fas fa-heading" aria-hidden="true"></i></span><span class="contact-bullet-text"><strong>Subject</strong> — briefly name the problem, correction, or idea.</span></li>
                                         <li><span class="contact-bullet-icon"><i class="fas fa-window-maximize" aria-hidden="true"></i></span><span class="contact-bullet-text"><strong>Page</strong> — say whether it happened on the dashboard, Today at Indy, or in Settings.</span></li>
                                         <li><span class="contact-bullet-icon"><i class="fas fa-align-left" aria-hidden="true"></i></span><span class="contact-bullet-text"><strong>Details</strong> — what happened, what you expected, and what should change.</span></li>
-                                        <li><span class="contact-bullet-icon"><i class="fas fa-paperclip" aria-hidden="true"></i></span><span class="contact-bullet-text"><strong>Screenshot</strong> — attach one when it helps explain the problem.</span></li>
+                                        <li><span class="contact-bullet-icon"><i class="fas fa-paperclip" aria-hidden="true"></i></span><span class="contact-bullet-text"><strong>Screenshot</strong> — use the fallback email address if you need to send an attachment.</span></li>
                                     </ul>
                                     <div class="contact-mini-faq">
                                         <p class="faq-title"><i class="fas fa-circle-check" aria-hidden="true"></i> Quick checks</p>
                                         <ul>
                                             <li>Wrong lunch wave? Change it under <strong>Settings → Schedule</strong>.</li>
                                             <li>Preferences not syncing? Refresh the page, then sign out and back in.</li>
-                                            <li>Bell time or calendar event looks wrong? <a href="mailto:indyschedule@outlook.com">Report the mismatch</a> so it can be checked against WCS information.</li>
+                                            <li>Bell time or calendar event looks wrong? Report the mismatch using the form so it can be checked against WCS information.</li>
                                         </ul>
                                     </div>
                                 </div>

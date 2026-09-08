@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'indy-schedule-v1.3.5-r1';
+const CACHE_VERSION = 'indy-schedule-v1.3.5-r5';
 const APP_SHELL = [
     './',
     './index.html',
@@ -9,6 +9,8 @@ const APP_SHELL = [
     './dialog-manager.js',
     './diagnostics.js',
     './auth.js',
+    './feedback-config.js',
+    './feedback.js',
     './firebase-loader.js',
     './gradient.js',
     './script2.js',

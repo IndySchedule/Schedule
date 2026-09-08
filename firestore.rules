@@ -97,6 +97,36 @@ service cloud.firestore {
       }
     }
 
+    // Guest submissions preserve the account-optional site experience.
+    // Enable App Check enforcement as described in docs/feedback-setup.md.
+    match /feedback/{feedbackId} {
+      allow create: if request.resource.data.keys().hasAll([
+          'category', 'message', 'name', 'email', 'uid', 'createdAt',
+          'status', 'pageUrl', 'appVersion'
+        ])
+        && request.resource.data.keys().hasOnly([
+          'category', 'message', 'name', 'email', 'uid', 'createdAt',
+          'status', 'pageUrl', 'appVersion'
+        ])
+        && request.resource.data.category in ['schedule', 'bug', 'suggestion', 'account', 'other']
+        && request.resource.data.message is string
+        && request.resource.data.message.size() > 0
+        && request.resource.data.message.size() <= 2000
+        && request.resource.data.message.matches('[\\s\\S]*[^\\s][\\s\\S]*')
+        && request.resource.data.name is string && request.resource.data.name.size() <= 100
+        && request.resource.data.email is string && request.resource.data.email.size() <= 254
+        && (request.resource.data.email == '' || request.resource.data.email.matches('^[^\\s@]+@[^\\s@]+[.][^\\s@]+$'))
+        && request.resource.data.uid is string
+        && ((request.auth == null && request.resource.data.uid == '')
+          || (request.auth != null && request.resource.data.uid == request.auth.uid))
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.status == 'new'
+        && request.resource.data.pageUrl is string && request.resource.data.pageUrl.size() <= 2048
+        && request.resource.data.pageUrl.matches('^https?://[^?#]*$')
+        && request.resource.data.appVersion is string && request.resource.data.appVersion.size() <= 32;
+      allow read, update, delete: if false;
+    }
+
     match /{document=**} {
       allow read, write: if false;
     }
