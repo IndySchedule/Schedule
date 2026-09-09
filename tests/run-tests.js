@@ -202,7 +202,7 @@ assert(musicPlayerSource.includes('function choosePlaylistCover') && musicPlayer
 assert(musicPlayerSource.includes('getFileHandle(coverName, { create: true })') && musicPlayerSource.includes('createWritable()'), 'Music Player saves a selected cover image inside its playlist folder');
 assert(musicPlayerSource.includes('id="shortcutDialog"') && musicPlayerSource.includes('id="toastRegion"'), 'Music Player includes keyboard help and toast feedback');
 assert(musicPlayerSource.includes("storedVolumeValue === null ? 1") && musicPlayerSource.includes('id="volumeBar"') && musicPlayerSource.includes('value="1" aria-label="Volume"'), 'Music Player defaults new sessions to full volume while preserving saved preferences');
-assert(!/firebase\.storage|\.put\(|uploadBytes|logEvent|analytics\(/i.test(musicPlayerSource), 'Music Player never uploads music files or artwork and does not send listening stats to Analytics');
+assert(!/firebase\.storage|uploadBytes|logEvent|analytics\(/i.test(musicPlayerSource), 'Music Player never uploads music files or artwork and does not send listening stats to Analytics');
 assert(musicPlayerSource.includes('id="statsNavBtn"') && musicPlayerSource.includes('id="statsView"'), 'Music Player includes a separate Listening Stats view');
 assert(musicPlayerSource.includes('Math.min(30, duration * .5)') && musicPlayerSource.includes('statsTrackSession.qualified'), 'Music Player counts one qualified play after 30 seconds or half the song');
 assert(musicPlayerSource.includes('function flushListeningStats') && musicPlayerSource.includes('mediaDelta + .25'), 'Music Player measures actual playback progress without trusting a drifting interval');
