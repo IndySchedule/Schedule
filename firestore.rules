@@ -93,6 +93,15 @@ service cloud.firestore {
       allow write: if validLegacySettingsDocument(userId)
         || (validSettingsDocument(userId) && validRevisionTransition(userId));
 
+      match /musicStats/{statsDocument} {
+        allow read, write: if isOwner(userId) && statsDocument == 'summary';
+
+        match /{statsCollection}/{statsEntry} {
+          allow read, write: if isOwner(userId)
+            && statsCollection in ['songs', 'artists', 'playlists', 'recent', 'daily', 'syncBatches'];
+        }
+      }
+
       match /{nestedDocument=**} {
         allow read, write: if false;
       }

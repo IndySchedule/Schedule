@@ -110,6 +110,16 @@ try {
         settings: { ...validSettings, progressBarColor: 'not-a-color' }
     }, { mergeFields: schemaFields }));
 
+    const statsSummaryPath = `${userPath}/musicStats/summary`;
+    const statsSongPath = `${statsSummaryPath}/songs/test-song`;
+    await assertSucceeds(setDoc(doc(ownerDb, statsSummaryPath), { totalListeningSeconds: 42, totalQualifiedPlays: 1 }));
+    await assertSucceeds(setDoc(doc(ownerDb, statsSongPath), { key: 'artist::song', title: 'Song', artist: 'Artist', plays: 1 }));
+    await assertSucceeds(getDoc(doc(ownerDb, statsSummaryPath)));
+    await assertFails(getDoc(doc(otherDb, statsSummaryPath)));
+    await assertFails(setDoc(doc(otherDb, statsSongPath), { plays: 99 }));
+    await assertFails(setDoc(doc(guestDb, statsSummaryPath), { totalListeningSeconds: 99 }));
+    await assertFails(setDoc(doc(ownerDb, `${statsSummaryPath}/private/not-allowed`), { value: true }));
+
     const feedback = () => ({ category: 'schedule', message: 'Wrong bell time', name: '', email: '',
         uid: '', createdAt: serverTimestamp(), status: 'new', pageUrl: 'https://indyschedule.com/', appVersion: '1.4.0' });
     await assertSucceeds(setDoc(doc(guestDb, 'feedback/guest'), feedback()));
