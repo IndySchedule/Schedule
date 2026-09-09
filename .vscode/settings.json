@@ -1,0 +1,15 @@
+{
+  "liveServer.settings.ignoreFiles": [
+    ".vscode/**",
+    "**/*.scss",
+    "**/*.sass",
+    "**/*.ts",
+    "node_modules/**",
+    "venv/**",
+    ".venv/**",
+    ".git/**",
+    ".artifacts/**",
+    "tests/**",
+    "Music_Player.html"
+  ]
+}
