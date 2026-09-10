@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-09-09T11:26:23.225Z",
-  "lastCheckedAt": "2026-09-09T11:26:23.225Z",
-  "contentUpdatedAt": "2026-09-09T11:26:23.225Z",
+  "generatedAt": "2026-09-10T04:45:46.235Z",
+  "lastCheckedAt": "2026-09-10T04:45:46.235Z",
+  "contentUpdatedAt": "2026-09-10T04:45:46.235Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -12,17 +12,6 @@
   "rangeStart": "2026-09-07",
   "rangeEnd": "2027-01-07",
   "events": [
-    {
-      "id": "06l3mf3li1fhtsgiph4bv4f786@google.com-2026-09-07T00:00:00.000Z",
-      "title": "IHS Labor Day - System Closed",
-      "start": "2026-09-07T00:00:00.000Z",
-      "end": "2026-09-08T00:00:00.000Z",
-      "allDay": true,
-      "days": [
-        "2026-09-07"
-      ],
-      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
-    },
     {
       "id": "619kuhebso85gbnp171ec621ki@google.com-2026-09-08T00:00:00.000Z",
       "title": "IHS Late Start",
@@ -1442,6 +1431,29 @@
         "2027-01-05"
       ],
       "location": "Ravenwood High School, 1724 Wilson Pike, Brentwood, TN 37027, USA"
+    },
+    {
+      "id": "16thl6ir9b0oo3hufioef5tmd1@google.com-2027-01-08T00:00:00.000Z",
+      "title": "IHS Freshman Boys Basketball @ Columbia Central",
+      "start": "2027-01-08T00:00:00.000Z",
+      "end": "2027-01-08T01:30:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-01-07"
+      ],
+      "location": "Columbia Central High School, Columbia, TN 38401"
+    },
+    {
+      "id": "3osp4fjcgcfgj34o2fr3li35uh@google.com-2027-01-08T00:00:00.000Z",
+      "title": "IHS V Wrestling @ Father Ryan HS",
+      "start": "2027-01-08T00:00:00.000Z",
+      "end": "2027-01-10T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2027-01-08",
+        "2027-01-09"
+      ],
+      "location": "Father Ryan High School, 700 Norwood Dr, Nashville, TN 37204, USA"
     }
   ]
 }
