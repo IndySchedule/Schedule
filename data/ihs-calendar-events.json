@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-09-10T11:23:09.541Z",
-  "lastCheckedAt": "2026-09-10T11:23:09.541Z",
-  "contentUpdatedAt": "2026-09-10T11:23:09.541Z",
+  "generatedAt": "2026-09-11T04:43:59.380Z",
+  "lastCheckedAt": "2026-09-11T04:43:59.380Z",
+  "contentUpdatedAt": "2026-09-11T04:43:59.380Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -12,50 +12,6 @@
   "rangeStart": "2026-09-08",
   "rangeEnd": "2027-01-08",
   "events": [
-    {
-      "id": "619kuhebso85gbnp171ec621ki@google.com-2026-09-08T00:00:00.000Z",
-      "title": "IHS Late Start",
-      "start": "2026-09-08T00:00:00.000Z",
-      "end": "2026-09-09T00:00:00.000Z",
-      "allDay": true,
-      "days": [
-        "2026-09-08"
-      ],
-      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
-    },
-    {
-      "id": "2a3avi23c0m7bn86tgl6f6i2i5@google.com-2026-09-08T21:30:00.000Z",
-      "title": "IHS JV/V Volleyball vs Page HS",
-      "start": "2026-09-08T21:30:00.000Z",
-      "end": "2026-09-09T00:30:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-09-08"
-      ],
-      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
-    },
-    {
-      "id": "3tleg0f3o3rufl0r69c2r3rpnd@google.com-2026-09-08T21:30:00.000Z",
-      "title": "IHS JV/V Girls Soccer vs Centennial HS",
-      "start": "2026-09-08T21:30:00.000Z",
-      "end": "2026-09-09T01:30:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-09-08"
-      ],
-      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
-    },
-    {
-      "id": "0e32b75nqfus2ojtrnl2nmqbqm@google.com-2026-09-08T23:00:00.000Z",
-      "title": "IHS Checkpoint Driving",
-      "start": "2026-09-08T23:00:00.000Z",
-      "end": "2026-09-09T01:00:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-09-08"
-      ],
-      "location": "Zoom"
-    },
     {
       "id": "4vjsjf59hmdojh2tsnfiusp4hf@google.com-2026-09-09T21:30:00.000Z",
       "title": "IHS JV/V Volleyball @ Ravenwood HS",
@@ -1454,6 +1410,17 @@
         "2027-01-09"
       ],
       "location": "Father Ryan High School, 700 Norwood Dr, Nashville, TN 37204, USA"
+    },
+    {
+      "id": "192ltqffia4c8qeqhge5r3in80@google.com-2027-01-09T00:30:00.000Z",
+      "title": "IHS JV/V Wrestling @ Nolensville HS",
+      "start": "2027-01-09T00:30:00.000Z",
+      "end": "2027-01-09T03:00:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-01-08"
+      ],
+      "location": "Nolensville High School, 1600 Summerlyn Dr, Nolensville, TN 37135, USA"
     }
   ]
 }
