@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-09-14T23:53:09.072Z",
-  "lastCheckedAt": "2026-09-14T23:53:09.072Z",
-  "contentUpdatedAt": "2026-09-14T23:53:09.072Z",
+  "generatedAt": "2026-09-15T04:57:18.078Z",
+  "lastCheckedAt": "2026-09-15T04:57:18.078Z",
+  "contentUpdatedAt": "2026-09-15T04:57:18.078Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -1416,6 +1416,39 @@
       "title": "IHS Freshman Boys Basketball vs Brentwood HS",
       "start": "2027-01-12T23:30:00.000Z",
       "end": "2027-01-13T01:00:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-01-12"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "0ebphn7kptb9unn48v3ron3vgc@google.com-2027-01-13T00:00:00.000Z",
+      "title": "IHS Girls Basketball vs Brentwood HS",
+      "start": "2027-01-13T00:00:00.000Z",
+      "end": "2027-01-13T01:30:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-01-12"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "4jcgp0ie1u5m4d7bi5b067fke6@google.com-2027-01-13T00:00:00.000Z",
+      "title": "IHS Checkpoint Driving",
+      "start": "2027-01-13T00:00:00.000Z",
+      "end": "2027-01-13T02:00:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-01-12"
+      ],
+      "location": "Zoom"
+    },
+    {
+      "id": "7rfebtvo86iauqa2dv68hbhnln@google.com-2027-01-13T01:30:00.000Z",
+      "title": "IHS V Boys Basketball vs Brentwood HS",
+      "start": "2027-01-13T01:30:00.000Z",
+      "end": "2027-01-13T03:30:00.000Z",
       "allDay": false,
       "days": [
         "2027-01-12"
