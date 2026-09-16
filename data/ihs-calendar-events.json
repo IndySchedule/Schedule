@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-09-16T11:38:08.022Z",
-  "lastCheckedAt": "2026-09-16T11:38:08.022Z",
-  "contentUpdatedAt": "2026-09-16T11:38:08.022Z",
+  "generatedAt": "2026-09-16T21:20:10.331Z",
+  "lastCheckedAt": "2026-09-16T21:20:10.331Z",
+  "contentUpdatedAt": "2026-09-16T21:20:10.331Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -421,6 +421,17 @@
       "allDay": true,
       "days": [
         "2026-10-19"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "1cl09k2kl22crlp68t63p0oa92@google.com-2026-10-21T00:00:00.000Z",
+      "title": "IHS PSAT and Senior ACT",
+      "start": "2026-10-21T00:00:00.000Z",
+      "end": "2026-10-22T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2026-10-21"
       ],
       "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     },
@@ -1039,6 +1050,20 @@
       "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     },
     {
+      "id": "1jgaevvjfhrnch4jkrg5divq3q@google.com-2026-12-15T00:00:00.000Z",
+      "title": "IHS Mid-Term Exams",
+      "start": "2026-12-15T00:00:00.000Z",
+      "end": "2026-12-19T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2026-12-15",
+        "2026-12-16",
+        "2026-12-17",
+        "2026-12-18"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
       "id": "233ckp3ah8c811qn32ntbkdsgj@google.com-2026-12-18T00:00:00.000Z",
       "title": "IHS JV Wrestling @ Brentwood Academy",
       "start": "2026-12-18T00:00:00.000Z",
@@ -1242,6 +1267,17 @@
         "2027-01-02"
       ],
       "location": "Franklin High School, 810 Hillsboro Rd, Franklin, TN 37064, USA"
+    },
+    {
+      "id": "5oaoenp536d8d2r9otnbjor5g8@google.com-2027-01-04T00:00:00.000Z",
+      "title": "IHS Admin Day - NO STDENTS",
+      "start": "2027-01-04T00:00:00.000Z",
+      "end": "2027-01-05T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2027-01-04"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     },
     {
       "id": "0ui0n77qbjud1l40mimbjqbskl@google.com-2027-01-04T22:30:00.000Z",
