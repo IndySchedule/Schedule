@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-09-15T11:46:47.973Z",
-  "lastCheckedAt": "2026-09-15T11:46:47.973Z",
-  "contentUpdatedAt": "2026-09-15T11:46:47.973Z",
+  "generatedAt": "2026-09-16T04:53:08.409Z",
+  "lastCheckedAt": "2026-09-16T04:53:08.409Z",
+  "contentUpdatedAt": "2026-09-16T04:53:08.409Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -12,19 +12,6 @@
   "rangeStart": "2026-09-13",
   "rangeEnd": "2027-01-13",
   "events": [
-    {
-      "id": "4vfa33270addbrltesvrhpcq6t@google.com-2026-09-11T00:00:00.000Z",
-      "title": "IHS V Volleyball Rocky Top Classic",
-      "start": "2026-09-11T00:00:00.000Z",
-      "end": "2026-09-14T00:00:00.000Z",
-      "allDay": true,
-      "days": [
-        "2026-09-11",
-        "2026-09-12",
-        "2026-09-13"
-      ],
-      "location": "Sevierville, TN, USA"
-    },
     {
       "id": "6p7e8rbo7hmt53tpnk50qpur1f@google.com-2026-09-14T00:00:00.000Z",
       "title": "IHS Late Start",
