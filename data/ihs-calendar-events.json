@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-09-16T21:20:10.331Z",
-  "lastCheckedAt": "2026-09-16T21:20:10.331Z",
-  "contentUpdatedAt": "2026-09-16T21:20:10.331Z",
+  "generatedAt": "2026-09-17T04:55:38.144Z",
+  "lastCheckedAt": "2026-09-17T04:55:38.144Z",
+  "contentUpdatedAt": "2026-09-17T04:55:38.144Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -12,39 +12,6 @@
   "rangeStart": "2026-09-14",
   "rangeEnd": "2027-01-14",
   "events": [
-    {
-      "id": "6p7e8rbo7hmt53tpnk50qpur1f@google.com-2026-09-14T00:00:00.000Z",
-      "title": "IHS Late Start",
-      "start": "2026-09-14T00:00:00.000Z",
-      "end": "2026-09-15T00:00:00.000Z",
-      "allDay": true,
-      "days": [
-        "2026-09-14"
-      ],
-      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
-    },
-    {
-      "id": "0km7mjuin3r1fochlvvof27b28@google.com-2026-09-14T22:30:00.000Z",
-      "title": "IHS Freshman Football @ Summit HS",
-      "start": "2026-09-14T22:30:00.000Z",
-      "end": "2026-09-15T00:30:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-09-14"
-      ],
-      "location": "SUMMIT HIGH SCHOOL, 2830 Austins Wy, Thompson's Station, TN 37179, USA"
-    },
-    {
-      "id": "4o5asjaju2dnhjoldar3bfod09@google.com-2026-09-14T22:30:00.000Z",
-      "title": "IHS JV Football vs Summit HS",
-      "start": "2026-09-14T22:30:00.000Z",
-      "end": "2026-09-15T00:30:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-09-14"
-      ],
-      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
-    },
     {
       "id": "4nmiui3qihab333imk2lm02tbr@google.com-2026-09-15T21:30:00.000Z",
       "title": "IHS JV/V Girls Soccer @ Franklin HS",
@@ -1475,6 +1442,39 @@
       "allDay": false,
       "days": [
         "2027-01-12"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "6392nd7i5o23n0cocjn12d3t04@google.com-2027-01-14T22:30:00.000Z",
+      "title": "IHS JV Boys Basketball vs Dickson Co HS",
+      "start": "2027-01-14T22:30:00.000Z",
+      "end": "2027-01-15T00:00:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-01-14"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "5d1gihamp7o0dm4fmd0h3nep64@google.com-2027-01-15T00:00:00.000Z",
+      "title": "IHS Girls Basketball vs Dickson Co. HS",
+      "start": "2027-01-15T00:00:00.000Z",
+      "end": "2027-01-15T01:30:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-01-14"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "2ahf8bvv2mudo68mmmuoohe60h@google.com-2027-01-15T01:30:00.000Z",
+      "title": "IHS V Boys Basketball vs Dickson Co HS",
+      "start": "2027-01-15T01:30:00.000Z",
+      "end": "2027-01-15T03:30:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-01-14"
       ],
       "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     }
