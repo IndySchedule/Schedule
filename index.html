@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" id="theme-color-meta" content="#000035">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Indy Schedule">
     <title>Indy Schedule</title>
@@ -47,6 +48,7 @@
     <link rel="manifest" href="./manifest.webmanifest">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script defer src="./dialog-manager.js"></script>
+    <script defer src="./diagnostics.js"></script>
     <script defer src="auth.js"></script>
     <script defer src="./firebase-loader.js"></script>
     <script defer src="./gradient.js"></script>
@@ -597,7 +599,7 @@
                     <div class="settings-group about-overview-card">
                         <div class="about-content about-dashboard">
                             <div class="about-intro">
-                                <div><span class="about-version">Version 1.3.2</span><h2>Built for the Indy school day.</h2><p>Indy Schedule is a fast, lightweight countdown and daily schedule dashboard for Independence High School.</p></div>
+                                <div><span class="about-version">Version 1.3.3</span><h2>Built for the Indy school day.</h2><p>Indy Schedule is a fast, lightweight countdown and daily schedule dashboard for Independence High School.</p></div>
                                 <div class="about-intro-mark"><i class="fas fa-clock" aria-hidden="true"></i></div>
                             </div>
 
@@ -665,14 +667,14 @@
                         <div id="whatsnew-website" class="whatsnew-log" role="tabpanel">
                             <div class="wn-entry current-release">
                                 <div class="wn-entry-header">
-                                    <span class="wn-version">v1.3.2</span>
-                                    <span class="wn-date">Aug 24, 2026</span>
-                                    <span class="wn-tag">Smarter colors &amp; offline access</span>
+                                    <span class="wn-version">v1.3.3</span>
+                                    <span class="wn-date">Sep 16, 2026</span>
+                                    <span class="wn-tag">Cleaner sync &amp; refresh safety</span>
                                 </div>
                                 <ul>
-                                    <li>Added an Undo button for palette changes and a warning when custom colors need automatic contrast help.</li>
-                                    <li>Added an option to follow your device’s light or dark appearance automatically.</li>
-                                    <li>Made Indy Schedule installable and able to reopen from a saved copy after your first visit when the internet is unavailable.</li>
+                                    <li>Improved Firestore save and restore behavior after a hard refresh.</li>
+                                    <li>Made account sync updates easier to verify with clear success messages.</li>
+                                    <li>Kept the release flow clearer and more reliable for follow-up updates.</li>
                                 </ul>
                             </div>
 
@@ -989,7 +991,7 @@
             <p class="managed-device-note"><i class="fas fa-circle-info" aria-hidden="true"></i> If Chrome clears site data, sign in again to restore your saved settings.</p>
         </div>
     </div>
-    <!-- One-time notice for returning users after the 1.3.2 release. -->
+    <!-- One-time notice for returning users after the 1.3.3 release. -->
     <div id="release-notice-backdrop" class="release-notice-backdrop" aria-hidden="true" hidden>
         <section class="release-notice-dialog" role="dialog" aria-modal="true" aria-labelledby="release-notice-title" aria-describedby="release-notice-description">
             <header class="release-notice-header">
@@ -1000,13 +1002,13 @@
                 <button type="button" id="release-notice-close" class="release-notice-close" aria-label="Close update notice"><i class="fas fa-times" aria-hidden="true"></i></button>
             </header>
             <div class="release-notice-content">
-                <span class="release-notice-version">Version 1.3.2</span>
-                <h1 id="release-notice-title">Your schedule, ready anywhere.</h1>
-                <p id="release-notice-description">This update makes palettes safer to experiment with and keeps the dashboard useful when your connection drops.</p>
+                <span class="release-notice-version">Version 1.3.3</span>
+                <h1 id="release-notice-title">Syncing stays reliable.</h1>
+                <p id="release-notice-description">This update keeps settings saving cleanly after a hard refresh and makes the account sync flow easier to trust.</p>
                 <div class="release-notice-summary">
                     <article>
-                        <span>1.3.2</span>
-                        <div><strong>Smarter appearance and offline access</strong><p>Undo palette changes, match your device’s light or dark appearance, get help with hard-to-read custom colors, and install Indy Schedule for offline use.</p></div>
+                        <span>1.3.3</span>
+                        <div><strong>Cleaner sync and refresh safety</strong><p>Hard-refresh saves now restore in the same clear, reliable way, and the release flow is easier to verify across devices.</p></div>
                     </article>
                 </div>
             </div>
@@ -1320,7 +1322,7 @@
                     localStorage.removeItem('indyOnboardingReplayRequested_v1');
                     // First-time users already saw the full walkthrough, so do
                     // not immediately stack the release-summary dialog after it.
-                    localStorage.setItem('indyReleaseNotice_v1_3_2', 'true');
+                    localStorage.setItem('indyReleaseNotice_v1_3_3', 'true');
                     const currentUser = window.authManager?.currentUser;
                     nextButton.disabled = true;
                     nextButton.innerHTML = currentUser
@@ -1465,7 +1467,7 @@
         })();
 
         (function initializeReleaseNotice() {
-            const storageKey = 'indyReleaseNotice_v1_3_2';
+            const storageKey = 'indyReleaseNotice_v1_3_3';
 
             document.addEventListener('DOMContentLoaded', () => {
                 const backdrop = document.getElementById('release-notice-backdrop');

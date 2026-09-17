@@ -1,0 +1,30 @@
+name: Verify and publish release
+
+on:
+  push:
+    tags: ['v*.*.*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - run: npm install --no-package-lock --ignore-scripts
+      - run: npm test
+      - run: npm run test:firestore-rules
+      - run: npm run validate-live-data
+      - run: npm run check:performance
+      - uses: google-github-actions/auth@v3
+        with:
+          credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_INDYSCHEDULE_1 }}
+      - run: npx firebase-tools deploy --only hosting,firestore:rules --project indyschedule-1 --non-interactive
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" --verify-tag --generate-notes --title "$GITHUB_REF_NAME"

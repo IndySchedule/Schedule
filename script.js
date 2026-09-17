@@ -473,7 +473,8 @@ function renderIhsCalendarEvents(dateKey) {
             more.textContent = `View ${todaysEvents.length - visibleEvents.length} more on the official calendar`;
             container.appendChild(more);
         }
-    }).catch(() => {
+    }).catch((error) => {
+        window.reportAppError?.('calendar', error, navigator.onLine === false ? 'offline_no_cache' : 'load_failed');
         container.dataset.state = 'error';
         updateTodayEventBadge(0);
         updateTodayCalendarFreshness(null, 'error');
@@ -603,7 +604,8 @@ function updateTodayAtIndy(now = new Date()) {
                     day: 'numeric',
                     year: 'numeric'
                 }).format(updatedAt);
-                const monthCovered = dateKey.startsWith(menuService.MENU_MONTH || '');
+                const monthCovered = Object.keys(menuService?.MENUS || {})
+                    .some((menuDate) => menuDate.startsWith(dateKey.slice(0, 7)));
                 menuUpdated.dataset.state = monthCovered ? 'ready' : 'outdated';
                 menuUpdated.textContent = monthCovered
                     ? `Menu updated ${updatedLabel}`

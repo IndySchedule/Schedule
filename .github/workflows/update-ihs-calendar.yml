@@ -1,4 +1,4 @@
-name: Update IHS calendar and deploy site
+name: Update IHS calendar and lunch, then deploy
 
 on:
   push:
@@ -29,23 +29,33 @@ jobs:
           node-version: 24
           package-manager-cache: false
 
-      - name: Install calendar parser
+      - name: Install data parsers
         run: npm install --no-package-lock --ignore-scripts
+
+      - name: Run site regressions
+        run: npm test
 
       - name: Build calendar data
         id: calendar
         run: npm run update-calendar
 
+      - name: Build high-school lunch data
+        id: lunch
+        run: npm run update-lunch
+
       - name: Validate calendar and lunch data
         run: npm run validate-live-data
 
-      - name: Commit changed calendar content
-        if: steps.calendar.outputs.content_changed == 'true'
+      - name: Enforce Chromebook performance budgets
+        run: npm run check:performance
+
+      - name: Commit changed school data
+        if: steps.calendar.outputs.content_changed == 'true' || steps.lunch.outputs.content_changed == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/ihs-calendar-events.json
-          git commit -m "Update IHS calendar events"
+          git add data/ihs-calendar-events.json lunch-menu.js
+          git commit -m "Update IHS calendar and lunch data"
           git push
 
       - name: Prepare static site

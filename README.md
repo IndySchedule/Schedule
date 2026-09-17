@@ -19,6 +19,7 @@ Indy Schedule is an unofficial schedule countdown website for Independence High 
 - Custom period names, selectable interface fonts, and optional times beside schedule entries
 - First-visit setup with account or guest paths, lunch selection, and replayable guidance
 - Optional email/password or Google sign-in with resilient Firebase preference syncing
+- Versioned, validated Firestore settings with owner-only access and conflict-safe multi-device merging
 - Installable app support with a cached dashboard and school data for offline reopening
 - Responsive layouts for desktop and smaller screens
 
@@ -33,7 +34,18 @@ npm install
 npm run refresh-live-data
 ```
 
-That command downloads the public IHS calendar feed, writes the browser-friendly cache at `data/ihs-calendar-events.json`, and validates both calendar and lunch data.
+That command downloads the public IHS calendar feed and the official WCS high-school lunch PDF, writes browser-friendly data, and validates both sources.
+
+## Firestore Settings
+
+Signed-in preferences use settings schema version 2. Each save runs in a Firestore transaction, preserves unrelated changes made on another device, and records a revision, server update time, per-setting update times, and a device identifier. Invalid or unknown fields are discarded before they reach browser storage.
+
+`firestore.rules` restricts `/users/{uid}` to the matching authenticated user, validates supported settings, and denies every other Firestore path by default. Compile-check changes before deployment with:
+
+```sh
+npm run test:firestore-rules
+npx firebase-tools deploy --only firestore:rules --dry-run
+```
 
 ## Calendar Automation
 
@@ -41,10 +53,10 @@ That command downloads the public IHS calendar feed, writes the browser-friendly
 
 1. Downloads the public Independence High School calendar feed.
 2. Generates and validates `data/ihs-calendar-events.json` for the next 120 days.
-3. Validates the active monthly lunch menu before anything is published.
+3. Discovers, downloads, parses, and validates the current WCS high-school lunch menu PDF.
 4. Deploys the refreshed working tree directly to the `production` Firebase Hosting target.
 5. Publishes the same validated tree through GitHub Pages as a secondary host.
-6. Commits the calendar cache only when event content changes, avoiding timestamp-only commits.
+6. Commits calendar or lunch data only when source content changes, avoiding timestamp-only commits.
 
 For the workflow to push content updates, enable **Read and write permissions** under **Settings → Actions → General → Workflow permissions**. The repository must retain the `FIREBASE_SERVICE_ACCOUNT_INDYSCHEDULE_1` Actions secret created by `firebase init hosting:github`. Set the Pages deployment source to **GitHub Actions** under **Settings → Pages**.
 
@@ -52,12 +64,14 @@ Today at Indy identifies whether calendar data is live, a saved browser copy, st
 
 ## Lunch Menu Updates
 
-Monthly cafeteria items live in one clearly marked block in `lunch-menu.js`. To replace a month:
+Monthly cafeteria items are generated in `lunch-menu.js` from the High School Lunch Menu PDF linked by WCS. To refresh them manually:
 
-1. Update `MENU_MONTH`, `UPDATED_AT`, `COVERAGE_START`, and `COVERAGE_END`.
-2. Replace the dated `MENUS` entries using `YYYY-MM-DD` keys.
+1. Run `npm run update-lunch`.
+2. Review the generated diff against the official PDF.
 3. Run `npm run validate-live-data`.
-4. Check several dates in Today at Indy, then commit the month together.
+4. Check several dates in Today at Indy.
+
+The scheduled workflow performs this automatically every three hours. WCS often posts the next menu before the current month ends, so the generator keeps both the posted month and its immediately preceding month; Today at Indy continues using the correct date until the calendar actually rolls over. Older months are removed when the following menu arrives. If WCS removes the link or changes the PDF structure, the updater fails safely and does not replace the last validated menu.
 
 The validator rejects malformed dates, empty meals, dates outside the declared month, and lunches assigned to non-instructional days. If a date has no uploaded menu, Today at Indy displays the source and directs visitors to the [official WCS Menus & Nutrition page](https://www.wcs.edu/about-us/menus-nutrition).
 
@@ -76,11 +90,12 @@ school-calendar.js                 School dates and schedule selection
 lunch-menu.js                      Daily cafeteria menu data
 data/ihs-calendar-events.json      Generated IHS calendar cache
 tools/update-calendar-events.mjs   Calendar cache generator
+tools/update-lunch-menu.mjs        Official WCS lunch PDF generator
 tools/validate-live-data.mjs       Calendar and lunch publication checks
 tools/run-regression.mjs           Portable Node regression-test launcher
 tools/visual-qa.mjs                Browser screenshots and responsive QA
 tests/run-tests.js                 Schedule and regression checks
-.github/workflows/                 GitHub Actions calendar automation
+.github/workflows/                 GitHub Actions data and release automation
 ```
 
 ## Testing
@@ -99,11 +114,13 @@ Validate publishable live data separately with:
 npm run validate-live-data
 ```
 
-Run the complete v1.3.2 release check with:
+Run the complete v1.3.3 release check with:
 
 ```sh
 npm run qa
 ```
+
+`npm run check:performance` prevents the uncompressed app shell and its largest files from quietly growing beyond the Chromebook-oriented limits in `tools/check-performance-budget.mjs`. Release steps, preview behavior, and rollback are documented in `docs/releasing.md`; the manual student and accessibility checks are in `docs/student-chromebook-test.md` and `docs/accessibility-audit.md`.
 
 The browser QA runner (`npm run test:browser`, also used by `test:visual`) uses local Chrome or Chromium to freeze representative school times and capture Chromebook, tablet, and phone screenshots. It covers all dashboard states, every Settings page, onboarding, Today at Indy, signed-in and signed-out headers, Firestore preference behavior, signed-in tour replay, optional-auth failure, modal accessibility, and representative light and dark palettes. Screenshots and a machine-readable report are written to `.artifacts/visual-qa/` and are intentionally excluded from deployment and version control.
 

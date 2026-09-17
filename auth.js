@@ -10,6 +10,144 @@ const firebaseConfig = {
 };
 
 const ANALYTICS_CONSENT_KEY = 'indyAnalyticsConsent_v1';
+const SETTINGS_SCHEMA_VERSION = 2;
+const SETTINGS_CLIENT_ID_KEY = 'indySettingsClientId_v1';
+const SETTINGS_KEYS = Object.freeze([
+    'toastIconEnabled', 'fontFamily', 'theme', 'showPeriodTimes', 'lunchWave',
+    'progressBarEnabled', 'progressBarColor', 'progressBarOpacity',
+    'gradientSettings', 'currentScheduleName', 'indyScheduleOverride_v1',
+    'indyOnboardingComplete_v2', 'indyAnalyticsConsent_v1',
+    'indyReleaseNotice_v1_3_3', 'sawUpdateNotice', 'periodRenames',
+    'globalPeriodNames'
+]);
+
+function stableSettingsValue(value) {
+    if (Array.isArray(value)) return value.map(stableSettingsValue);
+    if (value && typeof value === 'object') {
+        return Object.keys(value).sort().reduce((result, key) => {
+            result[key] = stableSettingsValue(value[key]);
+            return result;
+        }, {});
+    }
+    return value;
+}
+
+function settingsValuesEqual(first, second) {
+    return JSON.stringify(stableSettingsValue(first)) === JSON.stringify(stableSettingsValue(second));
+}
+
+function sanitizeNameMap(value) {
+    if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
+    const entries = Object.entries(value).slice(0, 100);
+    return entries.reduce((result, [key, name]) => {
+        if (typeof key === 'string' && key.length <= 80 && typeof name === 'string' && name.length <= 100) {
+            result[key] = name;
+        }
+        return result;
+    }, {});
+}
+
+function sanitizeBooleanSetting(value) {
+    if (value === true || value === 'true' || value === '1') return 'true';
+    if (value === false || value === 'false' || value === '0') return 'false';
+    return null;
+}
+
+function sanitizeSettingValue(key, value) {
+    if (value === null && key === 'indyScheduleOverride_v1') return null;
+    if (value === null || typeof value === 'undefined') return undefined;
+
+    if (['toastIconEnabled', 'showPeriodTimes', 'progressBarEnabled',
+        'indyOnboardingComplete_v2', 'indyReleaseNotice_v1_3_3', 'sawUpdateNotice'].includes(key)) {
+        return sanitizeBooleanSetting(value) ?? undefined;
+    }
+    if (key === 'fontFamily') return typeof value === 'string' && value.length <= 80 ? value : undefined;
+    if (key === 'theme') return typeof value === 'string' && value.length <= 24 ? value : undefined;
+    if (key === 'lunchWave') return ['A', 'B', 'C'].includes(String(value).toUpperCase()) ? String(value).toUpperCase() : undefined;
+    if (key === 'progressBarColor') return typeof value === 'string' && /^#[0-9a-f]{6}$/i.test(value) ? value.toUpperCase() : undefined;
+    if (key === 'progressBarOpacity') {
+        const opacity = Number(value);
+        return Number.isFinite(opacity) && opacity >= 0 && opacity <= 100 ? String(opacity) : undefined;
+    }
+    if (key === 'currentScheduleName') {
+        return ['normal', 'normalNoSoar', 'lateStart', 'halfDay'].includes(value) ? value : undefined;
+    }
+    if (key === 'indyAnalyticsConsent_v1') return ['granted', 'denied'].includes(value) ? value : undefined;
+    if (key === 'periodRenames' || key === 'globalPeriodNames') return sanitizeNameMap(value) ?? undefined;
+    if (key === 'indyScheduleOverride_v1') {
+        if (!value || typeof value !== 'object' || Array.isArray(value)) return undefined;
+        const date = typeof value.date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value.date) ? value.date : null;
+        const schedule = ['normal', 'normalNoSoar', 'lateStart', 'halfDay'].includes(value.schedule) ? value.schedule : null;
+        return date && schedule ? { date, schedule } : undefined;
+    }
+    if (key === 'gradientSettings') {
+        try {
+            const parsed = typeof value === 'string' ? JSON.parse(value) : value;
+            if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return undefined;
+            const serialized = JSON.stringify(parsed);
+            return serialized.length <= 6000 ? serialized : undefined;
+        } catch (error) {
+            return undefined;
+        }
+    }
+    return undefined;
+}
+
+function sanitizeUserSettings(settings = {}) {
+    if (!settings || typeof settings !== 'object' || Array.isArray(settings)) return {};
+    return SETTINGS_KEYS.reduce((result, key) => {
+        if (!Object.prototype.hasOwnProperty.call(settings, key)) return result;
+        const sanitized = sanitizeSettingValue(key, settings[key]);
+        if (typeof sanitized !== 'undefined') result[key] = sanitized;
+        return result;
+    }, {});
+}
+
+function collectLocalUserSettings() {
+    const settings = {
+        toastIconEnabled: localStorage.getItem(TOAST_ICON_KEY),
+        fontFamily: localStorage.getItem('fontFamily'),
+        theme: localStorage.getItem('theme'),
+        showPeriodTimes: localStorage.getItem('showPeriodTimes'),
+        lunchWave: localStorage.getItem('lunchWave'),
+        progressBarEnabled: localStorage.getItem('progressBarEnabled'),
+        progressBarColor: localStorage.getItem('progressBarColor'),
+        progressBarOpacity: localStorage.getItem('progressBarOpacity'),
+        gradientSettings: localStorage.getItem('gradientSettings'),
+        currentScheduleName: localStorage.getItem('currentScheduleName'),
+        indyScheduleOverride_v1: null,
+        indyOnboardingComplete_v2: localStorage.getItem('indyOnboardingComplete_v2'),
+        indyAnalyticsConsent_v1: localStorage.getItem(ANALYTICS_CONSENT_KEY),
+        indyReleaseNotice_v1_3_3: localStorage.getItem('indyReleaseNotice_v1_3_3'),
+        sawUpdateNotice: localStorage.getItem('sawUpdateNotice')
+    };
+
+    try {
+        const scheduleOverride = localStorage.getItem('indyScheduleOverride_v1');
+        if (scheduleOverride) settings.indyScheduleOverride_v1 = JSON.parse(scheduleOverride);
+    } catch (error) {
+        console.warn('Could not parse the saved schedule override.', error);
+    }
+    ['periodRenames', 'globalPeriodNames'].forEach((key) => {
+        try {
+            const value = localStorage.getItem(key);
+            if (value && value !== '[object Object]') settings[key] = JSON.parse(value);
+        } catch (error) {
+            console.warn(`Could not parse ${key}.`, error);
+        }
+    });
+    return sanitizeUserSettings(settings);
+}
+
+function getSettingsClientId() {
+    const existing = localStorage.getItem(SETTINGS_CLIENT_ID_KEY);
+    if (existing && /^[a-z0-9-]{8,128}$/i.test(existing)) return existing;
+    const generated = typeof crypto?.randomUUID === 'function'
+        ? crypto.randomUUID()
+        : `client-${Date.now()}-${Math.random().toString(36).slice(2, 12)}`;
+    localStorage.setItem(SETTINGS_CLIENT_ID_KEY, generated);
+    return generated;
+}
 
 function updateSettingsSyncStatus(state = 'local') {
     const status = document.getElementById('settings-sync-status');
@@ -376,6 +514,9 @@ class AuthManager {
         this._settingsSaveTimer = null;
         this._settingsSaveResolvers = [];
         this._settingsSaveChain = Promise.resolve(true);
+        this._lastSyncedSettings = null;
+        this._lastSyncedRevision = 0;
+        this._settingsClientId = getSettingsClientId();
         
         // Make auth manager globally available immediately
         window.authManager = this;
@@ -495,79 +636,77 @@ class AuthManager {
         try {
             const db = firebase.firestore();
             const userDocRef = db.collection("users").doc(userId);
-            
-            // Collect all settings
-            const settings = {
-                toastIconEnabled: localStorage.getItem(TOAST_ICON_KEY),
-                fontFamily: localStorage.getItem("fontFamily"),
-                theme: localStorage.getItem("theme"),
-                showPeriodTimes: localStorage.getItem("showPeriodTimes"),
-                lunchWave: localStorage.getItem("lunchWave"),
-                progressBarEnabled: localStorage.getItem("progressBarEnabled"),
-                progressBarColor: localStorage.getItem("progressBarColor"),
-                progressBarOpacity: localStorage.getItem("progressBarOpacity"),
-                gradientSettings: localStorage.getItem("gradientSettings"),
-                currentScheduleName: localStorage.getItem("currentScheduleName"),
-                // Keep the date with a manual choice so it can be restored on
-                // another signed-in device without becoming a permanent mode.
-                indyScheduleOverride_v1: null,
-                indyOnboardingComplete_v2: localStorage.getItem("indyOnboardingComplete_v2"),
-                indyAnalyticsConsent_v1: localStorage.getItem(ANALYTICS_CONSENT_KEY),
-                indyReleaseNotice_v1_3_2: localStorage.getItem("indyReleaseNotice_v1_3_2"),
-                sawUpdateNotice: localStorage.getItem("sawUpdateNotice")
-            };
+            const localSettings = collectLocalUserSettings();
+            const baseline = this._lastSyncedSettings;
+            const localChangedKeys = new Set(SETTINGS_KEYS.filter((key) => (
+                Object.prototype.hasOwnProperty.call(localSettings, key)
+                && (!baseline || !settingsValuesEqual(localSettings[key], baseline[key]))
+            )));
+            const serverTimestamp = firebase.firestore.FieldValue?.serverTimestamp?.();
+            let committedSettings = localSettings;
+            let committedRevision = 0;
 
-            try {
-                const scheduleOverride = localStorage.getItem('indyScheduleOverride_v1');
-                if (scheduleOverride) settings.indyScheduleOverride_v1 = JSON.parse(scheduleOverride);
-            } catch (error) {
-                console.warn('Could not parse the saved schedule override.', error);
-            }
+            await db.runTransaction(async (transaction) => {
+                const snapshot = await transaction.get(userDocRef);
+                const remoteDocument = snapshot.exists ? (snapshot.data() || {}) : {};
+                const remoteSchemaVersion = Number(remoteDocument.schemaVersion || 1);
+                if (remoteSchemaVersion > SETTINGS_SCHEMA_VERSION) {
+                    throw new Error(`Settings schema ${remoteSchemaVersion} is newer than this app supports.`);
+                }
 
-            // Include period renames and global period names (as JSON)
-            try {
-                const renames = localStorage.getItem('periodRenames');
-                if (renames) settings.periodRenames = JSON.parse(renames);
-            } catch (e) {
-                // if parsing fails, store raw string
-                settings.periodRenames = localStorage.getItem('periodRenames');
-            }
-            try {
-                let globalNames = localStorage.getItem('globalPeriodNames');
-                if (globalNames) {
-                    if (globalNames === '[object Object]') {
-                        settings.globalPeriodNames = {};
-                    } else {
-                        try {
-                            settings.globalPeriodNames = JSON.parse(globalNames);
-                        } catch (e) {
-                            // keep raw string if parsing fails
-                            settings.globalPeriodNames = globalNames;
-                        }
+                const remoteSettings = sanitizeUserSettings(remoteDocument.settings || {});
+                const mergedSettings = { ...remoteSettings };
+                const changedKeys = baseline ? localChangedKeys : new Set(Object.keys(localSettings));
+                changedKeys.forEach((key) => {
+                    if (Object.prototype.hasOwnProperty.call(localSettings, key)) mergedSettings[key] = localSettings[key];
+                });
+
+                // If no field changed locally, retain the newest remote copy.
+                // This prevents an idle device from overwriting another device.
+                const now = Date.now();
+                const settingsUpdatedAt = { ...(remoteDocument.settingsUpdatedAt || {}) };
+                Object.keys(mergedSettings).forEach((key) => {
+                    if (changedKeys.has(key) || !Object.prototype.hasOwnProperty.call(settingsUpdatedAt, key)) {
+                        settingsUpdatedAt[key] = now;
                     }
-                }
-            } catch (e) {
-                settings.globalPeriodNames = localStorage.getItem('globalPeriodNames');
-            }
+                });
+                Object.keys(settingsUpdatedAt).forEach((key) => {
+                    if (!Object.prototype.hasOwnProperty.call(mergedSettings, key)) delete settingsUpdatedAt[key];
+                });
 
-            // Remove any null or undefined values
-            Object.keys(settings).forEach(key => {
-                // A null override intentionally tells other signed-in devices
-                // that the user returned today's schedule to Automatic.
-                if (key !== 'indyScheduleOverride_v1'
-                    && (settings[key] === null || typeof settings[key] === 'undefined')) {
-                    delete settings[key];
-                }
+                const remoteRevision = Number.isInteger(remoteDocument.revision) ? remoteDocument.revision : 0;
+                committedRevision = remoteRevision + 1;
+                committedSettings = mergedSettings;
+                transaction.set(userDocRef, {
+                    schemaVersion: SETTINGS_SCHEMA_VERSION,
+                    revision: committedRevision,
+                    updatedAt: serverTimestamp || new Date(),
+                    updatedBy: this._settingsClientId,
+                    settingsUpdatedAt,
+                    settings: mergedSettings
+                }, {
+                    // Replace the validated maps as whole fields so retired
+                    // legacy keys cannot survive a schema migration. Other
+                    // unrelated top-level account data remains untouched.
+                    mergeFields: [
+                        'schemaVersion', 'revision', 'updatedAt', 'updatedBy',
+                        'settingsUpdatedAt', 'settings'
+                    ]
+                });
             });
 
-            // Save to Firestore
-            await userDocRef.set({ settings }, { merge: true });
-            console.info("✅ All settings saved to Firestore");
+            // Adopt remote-only changes locally so a later save from this
+            // device does not mistake stale local data for a new edit.
+            applyUserSettingsToLocalStorage(committedSettings);
+            this._lastSyncedSettings = stableSettingsValue(committedSettings);
+            this._lastSyncedRevision = committedRevision;
+            console.info("✓ All settings saved to Firestore");
             updateSettingsSyncStatus('saved');
             
             return true;
         } catch (error) {
             console.error("❌ Error saving settings:", error);
+            window.reportAppError?.('account_sync', error, 'save_failed');
             updateSettingsSyncStatus('error');
             return false;
         }
@@ -578,6 +717,10 @@ class AuthManager {
         if (!this.currentUser) return null;
         if (this._settingsLoadPromise && this._settingsLoadUserId === this.currentUser.uid) {
             return this._settingsLoadPromise;
+        }
+        if (this._settingsLoadUserId !== this.currentUser.uid) {
+            this._lastSyncedSettings = null;
+            this._lastSyncedRevision = 0;
         }
         this._settingsLoadUserId = this.currentUser.uid;
         this._settingsLoadPromise = this._loadUserSettingsOnce(this.currentUser.uid);
@@ -592,7 +735,14 @@ class AuthManager {
             
             if (doc.exists) {
                 console.info("User settings found in Firestore, loading them.");
-                const settings = doc.data()?.settings || {};
+                const remoteDocument = doc.data() || {};
+                const remoteSchemaVersion = Number(remoteDocument.schemaVersion || 1);
+                if (remoteSchemaVersion > SETTINGS_SCHEMA_VERSION) {
+                    throw new Error(`Settings schema ${remoteSchemaVersion} is newer than this app supports.`);
+                }
+                const settings = sanitizeUserSettings(remoteDocument.settings || {});
+                this._lastSyncedSettings = stableSettingsValue(settings);
+                this._lastSyncedRevision = Number.isInteger(remoteDocument.revision) ? remoteDocument.revision : 0;
                 applyUserSettingsToLocalStorage(settings);
                 if (settings) {
                     // Apply visual settings without overwriting other local preferences
@@ -622,7 +772,7 @@ class AuthManager {
 
                     updateToastIcon();
                     updateSettingsSyncStatus('saved');
-                    console.info("✅ Settings applied successfully");
+                    console.info("✓ Settings applied successfully");
                     return settings;
                 }
             } else {
@@ -1016,33 +1166,6 @@ class AuthManager {
             this.showLoginModal();
         }
     }
-}
-
-// Add helper functions for saving and fetching user settings
-function saveUserSettings(userId, settings) {
-    const db = firebase.firestore();
-    db.collection("users").doc(userId).set(settings, { merge: true })
-    .then(() => {
-    console.info("✅ User settings saved successfully!");
-    })
-    .catch((error) => {
-        console.error("❌ Error saving settings: ", error);
-    });
-}
-
-function getUserSettings(userId) {
-    const db = firebase.firestore();
-    db.collection("users").doc(userId).get()
-    .then((doc) => {
-        if (doc.exists) {
-            console.info("✅ Retrieved settings:", doc.data());
-        } else {
-            console.info("⚠️ No settings found for this user.");
-        }
-    })
-    .catch((error) => {
-        console.error("❌ Error fetching settings:", error);
-    });
 }
 
 // Add window message handler for popup communication

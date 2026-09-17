@@ -273,8 +273,8 @@ function initializationScript(scenario) {
             localStorage.setItem('showPeriodTimes', 'true');
             localStorage.setItem('progressBarEnabled', 'true');
             ${scenario.action === 'release-notice'
-                ? "localStorage.removeItem('indyReleaseNotice_v1_3_2');"
-                : "localStorage.setItem('indyReleaseNotice_v1_3_2', 'true');"}
+                ? "localStorage.removeItem('indyReleaseNotice_v1_3_3');"
+                : "localStorage.setItem('indyReleaseNotice_v1_3_3', 'true');"}
             ${scenario.onboarding
                 ? "localStorage.removeItem('lunchWave'); localStorage.removeItem('indyAnalyticsConsent_v1'); localStorage.removeItem('indyOnboardingComplete_v2');"
                 : "localStorage.setItem('lunchWave', 'A'); localStorage.setItem('indyAnalyticsConsent_v1', 'denied'); localStorage.setItem('indyOnboardingComplete_v2', 'true');"}
@@ -393,23 +393,52 @@ async function prepareScenario(page, scenario) {
                 window.__firestoreReads = 0;
                 window.authManager.currentUser = { uid: 'sync-user' };
                 window.authManager.isAuthenticated = true;
-                firebase.firestore = () => ({
-                    collection: () => ({
-                        doc: () => ({
-                            get: async () => {
-                                window.__firestoreReads += 1;
-                                return { exists: true, data: () => ({ settings: { lunchWave: 'A' } }) };
-                            },
-                            set: async (payload) => { window.__firestoreWrites.push(JSON.parse(JSON.stringify(payload))); }
+                window.__remoteSettingsDocument = {
+                    schemaVersion: 2,
+                    revision: 3,
+                    updatedAt: new Date().toISOString(),
+                    updatedBy: 'other-device',
+                    settingsUpdatedAt: { lunchWave: 1, fontFamily: 1, progressBarOpacity: 1 },
+                    settings: { lunchWave: 'A', fontFamily: 'Arial', progressBarOpacity: '999', adminFlag: 'not-allowed' }
+                };
+                firebase.firestore = () => {
+                    const documentReference = {
+                        get: async () => {
+                            window.__firestoreReads += 1;
+                            return { exists: true, data: () => JSON.parse(JSON.stringify(window.__remoteSettingsDocument)) };
+                        }
+                    };
+                    return {
+                        collection: () => ({ doc: () => documentReference }),
+                        runTransaction: async (callback) => callback({
+                            get: async () => ({
+                                exists: true,
+                                data: () => JSON.parse(JSON.stringify(window.__remoteSettingsDocument))
+                            }),
+                            set: (reference, payload) => {
+                                const savedPayload = JSON.parse(JSON.stringify(payload));
+                                window.__firestoreWrites.push(savedPayload);
+                                window.__remoteSettingsDocument = {
+                                    ...window.__remoteSettingsDocument,
+                                    ...savedPayload,
+                                    settings: { ...savedPayload.settings },
+                                    settingsUpdatedAt: { ...savedPayload.settingsUpdatedAt }
+                                };
+                            }
                         })
-                    })
-                });
+                    };
+                };
                 window.authManager._settingsLoadPromise = null;
                 window.authManager._settingsLoadUserId = null;
                 await Promise.all([
                     window.authManager._maybeLoadUserSettings(),
                     window.authManager._maybeLoadUserSettings()
                 ]);
+                // Simulate another signed-in device changing a different field
+                // after this page loaded but before its local schedule edit.
+                window.__remoteSettingsDocument.revision = 4;
+                window.__remoteSettingsDocument.settings.fontFamily = 'Roboto';
+                window.__remoteSettingsDocument.settingsUpdatedAt.fontFamily = Date.now();
                 const dropdown = document.getElementById('schedule-dropdown');
                 dropdown.value = 'normalNoSoar';
                 dropdown.dispatchEvent(new Event('change', { bubbles: true }));
@@ -600,6 +629,7 @@ async function inspectScenario(page, scenario) {
                 countdownInitialized: Boolean(document.getElementById('countdown-heading')?.textContent?.trim()),
                 firestoreWrites: window.__firestoreWrites || [],
                 firestoreReads: window.__firestoreReads || 0,
+                storedConflictFont: localStorage.getItem('fontFamily') || '',
                 settingsFocusContained: Boolean(sidebar?.contains(document.activeElement)),
                 dashboardInertWhileSettingsOpen: Boolean(document.querySelector('.container')?.inert),
                 visiblePaletteCount: [...document.querySelectorAll('.palette-option')].filter(visible).length,
@@ -734,7 +764,7 @@ function validateScenario(scenario, result) {
         check(result.releaseNoticeOpen, 'release notice did not open');
         check(result.releaseNoticeContained, 'release notice is clipped outside the viewport');
         check(result.releaseNoticeFocusContained && result.backgroundInert, 'release notice did not contain focus and inert the dashboard');
-        check(result.releaseNoticeTitle === 'Your schedule, ready anywhere.', `unexpected release-notice title: ${result.releaseNoticeTitle}`);
+        check(result.releaseNoticeTitle === 'Syncing stays reliable.', `unexpected release-notice title: ${result.releaseNoticeTitle}`);
         check(result.releaseNoticeSummaryCount === 1, `expected one release summary, received ${result.releaseNoticeSummaryCount}`);
     }
     if (scenario.action === 'account') {
@@ -757,7 +787,12 @@ function validateScenario(scenario, result) {
         check(result.firestoreWrites.length === 2, `expected two debounced Firestore writes, received ${result.firestoreWrites.length}`);
         check(result.firestoreWrites[0]?.settings?.indyScheduleOverride_v1?.schedule === 'normalNoSoar', 'manual override was not written to Firestore');
         check(result.firestoreWrites[1]?.settings?.indyScheduleOverride_v1 === null, 'Automatic mode did not clear the Firestore override');
-        check(result.firestoreWrites.every((write) => write?.settings?.indyReleaseNotice_v1_3_2 === 'true'), 'release-notice dismissal was not included in Firestore settings');
+        check(result.firestoreWrites.every((write) => write?.settings?.indyReleaseNotice_v1_3_3 === 'true'), 'release-notice dismissal was not included in Firestore settings');
+        check(result.firestoreWrites.every((write) => write?.schemaVersion === 2), 'settings writes did not use schema version 2');
+        check(result.firestoreWrites[0]?.revision === 5 && result.firestoreWrites[1]?.revision === 6, 'transaction revisions did not advance from the remote document');
+        check(result.firestoreWrites.every((write) => write?.settings?.fontFamily === 'Roboto'), 'concurrent remote font change was overwritten by the local schedule edit');
+        check(result.storedConflictFont === 'Roboto', 'merged remote setting was not adopted locally');
+        check(result.firestoreWrites.every((write) => !('adminFlag' in write.settings) && write.settings.progressBarOpacity !== '999'), 'invalid or unknown remote settings survived validation');
     }
     if (scenario.action === 'settings-a11y') {
         check(result.settingsFocusContained, 'keyboard focus did not enter the Settings dialog');

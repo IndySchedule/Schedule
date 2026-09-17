@@ -1,0 +1,79 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isOwner(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+
+    function allowedSettingsKeys() {
+      return [
+        'toastIconEnabled', 'fontFamily', 'theme', 'showPeriodTimes',
+        'lunchWave', 'progressBarEnabled', 'progressBarColor',
+        'progressBarOpacity', 'gradientSettings', 'currentScheduleName',
+        'indyScheduleOverride_v1', 'indyOnboardingComplete_v2',
+        'indyAnalyticsConsent_v1', 'indyReleaseNotice_v1_3_3',
+        'sawUpdateNotice', 'periodRenames', 'globalPeriodNames'
+      ];
+    }
+
+    function validSettings(settings) {
+      return settings is map
+        && settings.keys().hasOnly(allowedSettingsKeys());
+    }
+
+    function validSettingsDocument(userId) {
+      return isOwner(userId)
+        && request.resource.data.keys().hasOnly([
+          'schemaVersion', 'revision', 'updatedAt', 'updatedBy',
+          'settingsUpdatedAt', 'settings', 'unrelatedAccountData'
+        ])
+        && request.resource.data.schemaVersion == 2
+        && request.resource.data.revision is int
+        && request.resource.data.revision > 0
+        && request.resource.data.updatedAt is timestamp
+        && request.resource.data.updatedBy is string
+        && request.resource.data.updatedBy.size() <= 128
+        && request.resource.data.settingsUpdatedAt is map
+        && request.resource.data.settingsUpdatedAt.keys().hasOnly(allowedSettingsKeys())
+        && validSettings(request.resource.data.settings);
+    }
+
+    // Temporary compatibility for older account docs and partial writes from
+    // older clients. Owner isolation still applies and the next v2 save repairs
+    // the document in a single transaction.
+    function validLegacySettingsDocument(userId) {
+      return isOwner(userId)
+        && !('schemaVersion' in request.resource.data)
+        && request.resource.data.keys().hasOnly(['settings'])
+        && validSettings(request.resource.data.settings);
+    }
+
+    function validRevisionTransition(userId) {
+      return ((!exists(/databases/$(database)/documents/users/$(userId))
+          || !('schemaVersion' in resource.data)
+          || resource.data.schemaVersion != 2
+          || !('revision' in resource.data)
+          || !(resource.data.revision is int)
+          || resource.data.revision < 1)
+        && request.resource.data.revision == 1)
+        || (resource.data.schemaVersion == 2
+          && resource.data.revision is int
+          && request.resource.data.revision == resource.data.revision + 1);
+    }
+
+    match /users/{userId} {
+      allow read, delete: if isOwner(userId);
+      allow write: if validLegacySettingsDocument(userId)
+        || (validSettingsDocument(userId) && validRevisionTransition(userId));
+
+      match /{nestedDocument=**} {
+        allow read, write: if false;
+      }
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

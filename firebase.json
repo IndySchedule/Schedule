@@ -1,9 +1,13 @@
 {
+  "firestore": {
+    "rules": "firestore.rules"
+  },
   "hosting": {
     "target": "production",
     "public": ".",
     "ignore": [
       "firebase.json",
+      "firestore.rules",
       ".firebaserc",
       ".firebase/**",
       ".git/**",
@@ -19,7 +23,8 @@
       "README.md",
       "LICENSE",
       "tests/**",
-      "tools/**"
+      "tools/**",
+      "docs/**"
     ],
     "headers": [
       {

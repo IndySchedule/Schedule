@@ -4,6 +4,11 @@ const root = new URL('../', import.meta.url);
 const errors = [];
 const datePattern = /^\d{4}-\d{2}-\d{2}$/;
 const validDate = (value) => typeof value === 'string' && !Number.isNaN(new Date(value).getTime());
+const previousMonth = (month) => {
+  const [year, value] = month.split('-').map(Number);
+  const date = new Date(Date.UTC(year, value - 2, 1));
+  return `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, '0')}`;
+};
 const report = (condition, message) => {
   if (!condition) errors.push(message);
 };
@@ -40,6 +45,8 @@ const lunch = globalThis.IndyLunchMenu;
 const schoolCalendar = globalThis.IndyCalendar;
 report(lunch?.schemaVersion === 1 && lunch?.ready === true, 'Lunch data is not ready or uses an unsupported schema.');
 report(lunch?.OFFICIAL_MENU_URL === 'https://www.wcs.edu/about-us/menus-nutrition', 'Lunch source must be the official WCS menu page.');
+report(/^https:\/\/docs\.wcs\.edu\/.*High-School-Lunch-Menu\.pdf$/i.test(lunch?.SOURCE_DOCUMENT_URL || ''), 'Lunch PDF must come from the official WCS document host.');
+report(/^[a-f0-9]{64}$/.test(lunch?.SOURCE_HASH || ''), 'Lunch source hash is invalid.');
 report(/^\d{4}-\d{2}$/.test(lunch?.MENU_MONTH || ''), 'Lunch menu month is invalid.');
 report(validDate(lunch?.UPDATED_AT), 'Lunch updated time is invalid.');
 report(datePattern.test(lunch?.COVERAGE_START || '') && datePattern.test(lunch?.COVERAGE_END || ''), 'Lunch coverage dates are invalid.');
@@ -47,9 +54,12 @@ report(lunch?.COVERAGE_START <= lunch?.COVERAGE_END, 'Lunch coverage range is re
 
 const menuEntries = Object.entries(lunch?.MENUS || {});
 report(menuEntries.length > 0, 'Lunch menu has no dated entries.');
+const retainedMenuMonths = new Set(menuEntries.map(([dateKey]) => dateKey.slice(0, 7)));
+report(retainedMenuMonths.has(lunch?.MENU_MONTH) && retainedMenuMonths.size <= 2, 'Lunch data must retain only the source month and optional prior month.');
+report([...retainedMenuMonths].every((month) => month === lunch?.MENU_MONTH || month === previousMonth(lunch?.MENU_MONTH || '0000-01')), 'Retained lunch data must be from adjacent months.');
 menuEntries.forEach(([dateKey, items]) => {
   report(datePattern.test(dateKey), `Lunch date ${dateKey} is invalid.`);
-  report(dateKey.startsWith(lunch.MENU_MONTH), `Lunch date ${dateKey} is outside ${lunch.MENU_MONTH}.`);
+  report(retainedMenuMonths.has(dateKey.slice(0, 7)), `Lunch date ${dateKey} is outside the retained menu months.`);
   report(dateKey >= lunch.COVERAGE_START && dateKey <= lunch.COVERAGE_END, `Lunch date ${dateKey} is outside its coverage range.`);
   report(Array.isArray(items) && items.length >= 2 && items.every((item) => typeof item === 'string' && item.trim()), `Lunch date ${dateKey} needs at least two valid items.`);
   report(schoolCalendar?.getDayType(dateKey) === 'regular' || schoolCalendar?.getDayType(dateKey) === 'lateStart', `Lunch date ${dateKey} is not a full instructional day.`);
