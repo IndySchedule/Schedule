@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-09-17T11:44:54.558Z",
-  "lastCheckedAt": "2026-09-17T11:44:54.558Z",
-  "contentUpdatedAt": "2026-09-17T11:44:54.558Z",
+  "generatedAt": "2026-09-18T04:46:36.611Z",
+  "lastCheckedAt": "2026-09-18T04:46:36.611Z",
+  "contentUpdatedAt": "2026-09-18T04:46:36.611Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -12,28 +12,6 @@
   "rangeStart": "2026-09-15",
   "rangeEnd": "2027-01-15",
   "events": [
-    {
-      "id": "4nmiui3qihab333imk2lm02tbr@google.com-2026-09-15T21:30:00.000Z",
-      "title": "IHS JV/V Girls Soccer @ Franklin HS",
-      "start": "2026-09-15T21:30:00.000Z",
-      "end": "2026-09-16T01:30:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-09-15"
-      ],
-      "location": "Franklin High School, 810 Hillsboro Rd, Franklin, TN 37064, USA"
-    },
-    {
-      "id": "7ulnvtgtoia8u317o8ofvns9h3@google.com-2026-09-15T21:30:00.000Z",
-      "title": "IHS JV/V Volleyball vs Centennial HS",
-      "start": "2026-09-15T21:30:00.000Z",
-      "end": "2026-09-16T00:30:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-09-15"
-      ],
-      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
-    },
     {
       "id": "7mim20tqf1k8fuisue2suts8f0@google.com-2026-09-16T21:30:00.000Z",
       "title": "IHS JV/V Volleyball vs Blackman HS",
@@ -1477,6 +1455,28 @@
         "2027-01-14"
       ],
       "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "1qdui34ql7nlenlfjrqg0s3sao@google.com-2027-01-16T00:00:00.000Z",
+      "title": "IHS V Wrestling @ Christian Brothers HS",
+      "start": "2027-01-16T00:00:00.000Z",
+      "end": "2027-01-17T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2027-01-16"
+      ],
+      "location": "Christian Brothers High School"
+    },
+    {
+      "id": "77gja55peq50ur71d0ejqfn63g@google.com-2027-01-16T00:00:00.000Z",
+      "title": "IHS FR/JV/G Wrestling @ Wilson Central HS",
+      "start": "2027-01-16T00:00:00.000Z",
+      "end": "2027-01-17T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2027-01-16"
+      ],
+      "location": "Wilson Central High School, 419 Wildcat Way, Lebanon, TN 37090, USA"
     }
   ]
 }
