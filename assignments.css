@@ -1,0 +1,55 @@
+/* Schoology assignments — uses the dashboard's palette roles and component rhythm. */
+.dashboard-view-switch { display:flex; align-items:center; gap:8px; }
+.assignments-toggle { position:relative; }
+.assignment-count-badge { min-width:20px; height:20px; padding:0 6px; border-radius:999px; display:inline-flex; align-items:center; justify-content:center; background:var(--theme-accent); color:var(--theme-on-accent); font-size:11px; font-weight:800; }
+.assignments-view { grid-column:1 / -1; min-height:min(680px, calc(100vh - 190px)); padding:clamp(18px, 3vw, 34px); overflow:auto; background:var(--theme-panel); border:1px solid rgba(var(--theme-on-panel-rgb), .12); border-radius:22px; color:var(--theme-on-panel); }
+.assignments-view[hidden], .dashboard-main-view[hidden] { display:none !important; }
+.dashboard-main-view { display:contents; }
+.assignments-header { display:flex; align-items:flex-start; justify-content:space-between; gap:20px; padding-bottom:20px; border-bottom:1px solid rgba(var(--theme-on-panel-rgb), .12); }
+.assignments-eyebrow { display:block; color:var(--theme-panel-accent); font-size:11px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; }
+.assignments-header h1 { margin:4px 0 5px; font-size:clamp(26px, 4vw, 38px); }
+.assignments-header p { margin:0; color:rgba(var(--theme-on-panel-rgb), .7); }
+.assignments-actions { display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end; }
+.assignments-action, .assignment-complete-button { min-height:42px; padding:0 14px; border:1px solid rgba(var(--theme-on-panel-rgb), .16); border-radius:11px; background:rgba(var(--theme-on-panel-rgb), .06); color:inherit; font:inherit; font-weight:700; cursor:pointer; transition:transform .15s ease, background .15s ease, border-color .15s ease; }
+.assignments-action:hover, .assignment-complete-button:hover { transform:translateY(-1px); border-color:var(--theme-panel-accent); }
+.assignments-toolbar { display:flex; align-items:center; justify-content:space-between; gap:16px; min-height:54px; }
+.assignments-status { color:rgba(var(--theme-on-panel-rgb), .7); font-size:13px; }
+.assignments-status[data-state="error"] { color:#fca5a5; }
+.assignments-filter { display:flex; align-items:center; gap:8px; white-space:nowrap; font-size:13px; font-weight:700; }
+.assignments-list { display:grid; gap:24px; }
+.assignment-group h2 { margin:0 0 10px; font-size:14px; letter-spacing:.08em; text-transform:uppercase; color:rgba(var(--theme-on-panel-rgb), .68); }
+.assignment-group { display:grid; gap:9px; }
+.assignment-card { display:flex; align-items:center; justify-content:space-between; gap:18px; padding:16px 18px; border:1px solid rgba(var(--theme-on-panel-rgb), .11); border-radius:14px; background:rgba(var(--theme-on-panel-rgb), .045); }
+.assignment-card-copy { min-width:0; }
+.assignment-card h3 { margin:0 0 5px; overflow-wrap:anywhere; font-size:16px; }
+.assignment-card p { margin:0; }
+.assignment-course { color:rgba(var(--theme-on-panel-rgb), .72); font-size:13px; }
+.assignment-due { margin-top:7px !important; color:var(--theme-panel-accent); font-size:12px; font-weight:700; }
+.assignment-card.is-complete { opacity:.58; }
+.assignment-card.is-complete h3 { text-decoration:line-through; }
+.assignments-empty { min-height:270px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:8px; color:rgba(var(--theme-on-panel-rgb), .7); }
+.assignments-empty i { color:var(--theme-panel-accent); font-size:30px; }
+.assignments-empty strong { color:var(--theme-on-panel); font-size:20px; }
+.schoology-settings-card .settings-section-heading { margin-bottom:16px; }
+.schoology-state[hidden] { display:none !important; }
+.schoology-url-row { display:flex; align-items:flex-end; gap:10px; }
+.schoology-url-row .settings-field { flex:1; }
+.schoology-privacy-note { margin:14px 0 0; padding:12px 14px; border-radius:10px; background:var(--theme-settings-inset); color:rgba(var(--theme-on-settings-inset-rgb), .72); font-size:13px; line-height:1.5; }
+.schoology-connected-summary { display:flex; align-items:center; gap:11px; margin-bottom:14px; }
+.schoology-connected-summary > i { color:#22c55e; font-size:22px; }
+.schoology-connected-summary strong, .schoology-connected-summary span { display:block; }
+.schoology-connected-summary span { color:rgba(var(--theme-on-settings-card-rgb), .68); font-size:13px; margin-top:3px; }
+.schoology-button-row { display:flex; flex-wrap:wrap; gap:9px; }
+.schoology-settings-message { margin:12px 0 0; font-size:13px; font-weight:700; }
+.schoology-settings-message[data-state="error"] { color:#b91c1c; }
+@media (max-width:700px) {
+  .today-toggle-wide { display:none; }
+  .assignments-toggle-label { display:none; }
+  .assignments-view { border-radius:16px; padding:16px; min-height:calc(100vh - 150px); }
+  .assignments-header { flex-direction:column; }
+  .assignments-actions { justify-content:flex-start; }
+  .assignment-card { align-items:flex-start; flex-direction:column; }
+  .assignment-complete-button { width:100%; }
+  .schoology-url-row { flex-direction:column; align-items:stretch; }
+}
+@media (prefers-reduced-motion: reduce) { .assignments-action, .assignment-complete-button { transition:none; } }

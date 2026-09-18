@@ -9,13 +9,14 @@
     "test:browser": "node tools/visual-qa.mjs",
     "test:visual": "node tools/visual-qa.mjs",
     "check:performance": "node tools/check-performance-budget.mjs",
-    "qa": "npm test && npm run validate-live-data && npm run check:performance && npm run test:visual",
+    "qa": "npm test && npm run test:worker && npm run validate-live-data && npm run check:performance && npm run test:visual",
     "release:check": "npm run qa && npm run test:firestore-rules",
     "update-calendar": "node tools/update-calendar-events.mjs",
     "update-lunch": "node tools/update-lunch-menu.mjs",
     "validate-live-data": "node tools/validate-live-data.mjs",
     "refresh-live-data": "npm run update-calendar && npm run update-lunch && npm run validate-live-data",
-    "test:feedback": "node --test tests/feedback-form-test.mjs"
+    "test:feedback": "node --test tests/feedback-form-test.mjs",
+    "test:worker": "node --test worker/test/*.test.js"
   },
   "dependencies": {
     "node-ical": "0.27.1"

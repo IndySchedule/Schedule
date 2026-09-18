@@ -1,5 +1,6 @@
 .DS_Store
 node_modules/
+.wrangler/
 .firebase/
 .artifacts/
 assets/special-editions/*-master.png

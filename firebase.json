@@ -26,7 +26,8 @@
       "LICENSE",
       "tests/**",
       "tools/**",
-      "docs/**"
+      "docs/**",
+      "worker/**"
     ],
     "headers": [
       {

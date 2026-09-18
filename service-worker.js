@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'indy-schedule-v1.4.0-r1';
+const CACHE_VERSION = 'indy-schedule-v1.4.0-r2';
 const APP_SHELL = [
     './',
     './index.html',
@@ -6,6 +6,7 @@ const APP_SHELL = [
     './design-tokens.css',
     './styles.css',
     './styles2.css',
+    './assignments.css',
     './dialog-manager.js',
     './diagnostics.js',
     './auth.js',
@@ -16,6 +17,7 @@ const APP_SHELL = [
     './script2.js',
     './school-calendar.js',
     './lunch-menu.js',
+    './assignments.js',
     './script.js',
     './data/ihs-calendar-events.json',
     './indy_schedule_logo_sizes/indy-schedule-logo-192x192.png',

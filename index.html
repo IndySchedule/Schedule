@@ -42,6 +42,7 @@
     <link rel="stylesheet" type="text/css" href="./design-tokens.css">
     <link rel="stylesheet" type="text/css" href="./styles.css">
     <link rel="stylesheet" type="text/css" href="./styles2.css">
+    <link rel="stylesheet" type="text/css" href="./assignments.css">
     <link rel="icon" type="image/png" sizes="16x16" href="indy_schedule_logo_sizes/indy-schedule-logo-16x16-optimized.png">
     <link rel="icon" type="image/png" sizes="32x32" href="indy_schedule_logo_sizes/indy-schedule-logo-32x32.png">
     <link rel="apple-touch-icon" sizes="128x128" href="indy_schedule_logo_sizes/indy-schedule-logo-128x128.png">
@@ -57,6 +58,7 @@
     <script defer src="./script2.js"></script>
     <script defer src="./school-calendar.js"></script>
     <script defer src="./lunch-menu.js"></script>
+    <script defer src="./assignments.js"></script>
     <script defer src="./script.js"></script>
     <script>
         // Add message handler before other scripts
@@ -147,6 +149,11 @@
                         <span class="today-toggle-label"><span class="today-toggle-wide">Today at Indy</span><span class="today-toggle-short">Today</span></span>
                         <span class="today-event-badge" id="today-event-badge" aria-label="0 events today" hidden>0</span>
                     </button>
+                    <button type="button" class="today-toggle assignments-toggle" id="assignments-toggle" aria-controls="assignments-view" aria-pressed="false" aria-label="Open Assignments">
+                        <i class="fas fa-list-check" aria-hidden="true"></i>
+                        <span class="assignments-toggle-label">Assignments</span>
+                        <span class="assignment-count-badge" id="assignments-badge" aria-label="0 incomplete assignments due today" hidden>0</span>
+                    </button>
                     <button id="settings-button" class="settings-button dashboard-icon-button" aria-label="Open Settings">
                         <i class="fas fa-cog"></i>
                     </button>
@@ -209,6 +216,7 @@
                     <span class="today-data-status" id="today-data-status">Live information is checked separately from built-in bell schedules.</span>
                 </footer>
             </div>
+            <div class="dashboard-main-view">
             <div class="current-period">
                 <img class="edition-countdown-emblem edition-countdown-emblem-music" data-edition-src="assets/special-editions/music-city-guitar-emblem.png" width="256" height="256" alt="" aria-hidden="true">
                 <span class="schedule-context" id="schedule-context">Regular Schedule</span>
@@ -229,6 +237,25 @@
                 </div>
                 <div id="schedule"></div>
             </div>
+            </div>
+            <section class="assignments-view" id="assignments-view" aria-labelledby="assignments-heading" hidden>
+                <header class="assignments-header">
+                    <div>
+                        <span class="assignments-eyebrow">Schoology calendar</span>
+                        <h1 id="assignments-heading" tabindex="-1">Assignments</h1>
+                        <p>Upcoming calendar items. Marking one done here does not submit it to Schoology.</p>
+                    </div>
+                    <div class="assignments-actions">
+                        <button type="button" class="assignments-action" id="assignments-refresh"><i class="fas fa-rotate" aria-hidden="true"></i> Refresh</button>
+                        <button type="button" class="assignments-action" id="assignments-close"><i class="fas fa-xmark" aria-hidden="true"></i> Schedule</button>
+                    </div>
+                </header>
+                <div class="assignments-toolbar">
+                    <p class="assignments-status" id="assignments-status" role="status" aria-live="polite">Loading assignments…</p>
+                    <label class="assignments-filter"><input type="checkbox" id="assignments-show-completed"> Show completed</label>
+                </div>
+                <div class="assignments-list" id="assignments-list"></div>
+            </section>
         </div>
         </div>
     </div>
@@ -259,6 +286,9 @@
                 <span class="settings-nav-group">Essentials</span>
                 <button class="nav-item active" data-target="schedule">
                     <i class="fas fa-calendar"></i> Schedule
+                </button>
+                <button class="nav-item" data-target="schoology">
+                    <i class="fas fa-list-check"></i> Schoology Calendar
                 </button>
                 <span class="settings-nav-group">Design</span>
                 <button class="nav-item" data-target="appearance">
@@ -593,6 +623,44 @@
                                 </label>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                <div class="settings-panel" id="schoology-panel">
+                    <div class="settings-page-header">
+                        <div class="settings-page-icon"><i class="fas fa-list-check" aria-hidden="true"></i></div>
+                        <div><span>Assignments</span><h1>Schoology Calendar</h1><p>Connect your personal calendar feed to see upcoming work in Indy Schedule.</p></div>
+                    </div>
+                    <div class="settings-group schoology-settings-card">
+                        <div class="settings-section-heading compact">
+                            <div class="settings-section-icon"><i class="fas fa-link" aria-hidden="true"></i></div>
+                            <div><h3>Calendar connection</h3><p>Your calendar is available only while you are signed in.</p></div>
+                        </div>
+                        <div class="schoology-state" id="schoology-signed-out">
+                            <p>Sign in to connect a Schoology calendar and sync your Indy Schedule completion status across devices.</p>
+                        </div>
+                        <div class="schoology-state" id="schoology-disconnected" hidden>
+                            <form id="schoology-connect-form">
+                                <div class="schoology-url-row">
+                                    <div class="settings-field">
+                                        <label class="settings-field-label" for="schoology-calendar-url">Full Schoology calendar URL</label>
+                                        <input id="schoology-calendar-url" name="calendarUrl" type="url" inputmode="url" autocomplete="off" spellcheck="false" placeholder="webcal://…schoology.com/…" required>
+                                    </div>
+                                    <button type="submit" class="replay-onboarding-btn" id="schoology-connect-button"><i class="fas fa-link" aria-hidden="true"></i> Connect</button>
+                                </div>
+                            </form>
+                            <p class="schoology-privacy-note"><strong>Read-only access:</strong> Indy Schedule fetches calendar events but cannot submit assignments or modify Schoology. Your private link is encrypted on the server and is never saved in this browser or Firestore.</p>
+                        </div>
+                        <div class="schoology-state" id="schoology-connected" hidden>
+                            <div class="schoology-connected-summary"><i class="fas fa-circle-check" aria-hidden="true"></i><div><strong>Schoology calendar connected</strong><span id="schoology-last-refresh">The calendar will refresh when you open Assignments.</span></div></div>
+                            <div class="schoology-button-row">
+                                <button type="button" class="replay-onboarding-btn" id="schoology-refresh-button"><i class="fas fa-rotate" aria-hidden="true"></i> Refresh calendar</button>
+                                <button type="button" class="replay-onboarding-btn" id="schoology-replace-button"><i class="fas fa-link" aria-hidden="true"></i> Replace calendar</button>
+                                <button type="button" class="replay-onboarding-btn" id="schoology-disconnect-button"><i class="fas fa-unlink" aria-hidden="true"></i> Disconnect</button>
+                            </div>
+                            <p class="schoology-privacy-note">The original calendar URL is intentionally hidden. Completion marks affect only Indy Schedule and can be restored from the Assignments view.</p>
+                        </div>
+                        <p class="schoology-settings-message" id="schoology-settings-message" role="status" aria-live="polite" hidden></p>
                     </div>
                 </div>
 

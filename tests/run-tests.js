@@ -216,6 +216,17 @@ assert(!indexSource.includes('src="favicon.svg"'), 'Legacy shield artwork is no 
 assert(indexSource.includes('id="today-at-indy"'), 'Today at Indy card is available');
 assert(indexSource.includes('id="today-toggle"'), 'Today at Indy has a popup trigger');
 assert(indexSource.includes('id="today-card-close"'), 'Today at Indy popup has a close control');
+const assignmentsSource = readFile('assignments.js');
+const assignmentsStyles = readFile('assignments.css');
+assert(indexSource.includes('id="assignments-toggle"') && indexSource.includes('id="assignments-view"'), 'Dashboard provides a top-level Assignments view beside Today at Indy');
+assert(indexSource.includes('id="schoology-panel"') && indexSource.includes('id="schoology-calendar-url"'), 'Settings provides a Schoology calendar connection flow');
+assert(indexSource.includes('does not submit it to Schoology') && indexSource.includes('Read-only access:'), 'Assignments UI clearly separates Indy completion from Schoology submission');
+assert(assignmentsSource.includes("user.getIdToken()") && assignmentsSource.includes('Authorization: `Bearer ${token}`'), 'Schoology API calls use the current Firebase ID token');
+assert(!/localStorage|indexedDB/i.test(assignmentsSource), 'Schoology connection and assignment completion do not use persistent browser storage');
+assert(assignmentsSource.includes("['Due Today', 'Due Tomorrow', 'This Week', 'Later']"), 'Assignments are grouped into the requested due-date sections');
+assert(assignmentsSource.includes('textContent = item.title') && !assignmentsSource.includes('innerHTML = item.'), 'Schoology event text is rendered without unsafe HTML');
+assert(assignmentsStyles.includes('@media (max-width:700px)') && assignmentsStyles.includes('prefers-reduced-motion'), 'Assignments UI includes mobile and reduced-motion support');
+assert(privacySource.includes('Optional Schoology calendar') && privacySource.includes('encrypted'), 'Privacy policy explains optional encrypted Schoology calendar storage');
 assert(indexSource.includes('unofficial page for Independence High School'), 'Today card includes the unofficial-page warning');
 assert(indexSource.includes('id="today-lunch-menu"'), 'Today card includes the daily lunch menu');
 assert(indexSource.includes('id="today-calendar-events"'), 'Today card includes official IHS calendar events');

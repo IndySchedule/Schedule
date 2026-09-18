@@ -1,0 +1,18 @@
+name = "schoology-fetcher"
+main = "src/index.js"
+compatibility_date = "2026-09-18"
+preview_urls = false
+
+[[d1_databases]]
+binding = "DB"
+database_name = "schoology-data"
+database_id = "6450740f-6414-4a76-895b-215d28910002"
+
+[vars]
+FIREBASE_PROJECT_ID = "indyschedule-1"
+
+[observability]
+enabled = true
+
+[observability.logs]
+enabled = true

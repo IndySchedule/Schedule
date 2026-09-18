@@ -708,6 +708,7 @@ function setTodayPopupOpen(open) {
         toggle.focus();
     }
 }
+window.setTodayPopupOpen = setTodayPopupOpen;
 
 function initializeTodayPopup() {
     const toggle = document.getElementById('today-toggle');

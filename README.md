@@ -14,6 +14,7 @@ Indy Schedule is an unofficial schedule countdown website for Independence High 
 - Official Tuesday–Thursday SOAR and Monday/Friday no-SOAR bells
 - One-day schedule overrides that automatically expire and sync with an optional account
 - **Today at Indy** summary with separate built-in bells, validated live IHS events, sourced lunch information, and tomorrow's schedule
+- **Optional Schoology assignments** view with encrypted server-side calendar connections and account-synced Indy Schedule completion marks
 - Preset light and dark color palettes, custom-color contrast help, palette Undo, and optional device appearance matching
 - Music City special edition with a matching built-in palette; Friday Night Lights and Historic Franklin remain implemented but are temporarily hidden from Appearance
 - Custom period names, selectable interface fonts, and optional times beside schedule entries
