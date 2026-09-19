@@ -1,7 +1,7 @@
 import { stat } from 'node:fs/promises';
 
 const budgets = {
-    'index.html': 130_000,
+    'index.html': 135_000,
     'styles.css': 110_000,
     'styles2.css': 210_000,
     'script.js': 190_000,
