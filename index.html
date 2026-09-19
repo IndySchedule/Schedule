@@ -707,6 +707,13 @@
                         </div>
                         <div class="schoology-state" id="schoology-connected" hidden>
                             <div class="schoology-connected-summary"><i class="fas fa-circle-check" aria-hidden="true"></i><div><strong>Schoology calendar connected</strong><span id="schoology-last-refresh">Your assignments will refresh automatically when you open Assignments.</span></div></div>
+                            <div class="switch-container schoology-dashboard-switch">
+                                <div class="settings-control-copy"><label class="switch-label" for="show-due-today-assignments">Show assignments beside Today’s Schedule</label><p>Display incomplete assignments due today on the main dashboard.</p></div>
+                                <label class="switch">
+                                    <input type="checkbox" id="show-due-today-assignments">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
                             <div class="schoology-button-row">
                                 <button type="button" class="replay-onboarding-btn" id="schoology-refresh-button"><i class="fas fa-rotate" aria-hidden="true"></i> Refresh calendar</button>
                                 <button type="button" class="replay-onboarding-btn" id="schoology-replace-button"><i class="fas fa-link" aria-hidden="true"></i> Replace calendar</button>
@@ -726,7 +733,7 @@
                     <div class="settings-group about-overview-card">
                         <div class="about-content about-dashboard">
                             <div class="about-intro">
-                                <div><span class="about-version">Version 1.4.0</span><h2>Built for the Indy school day.</h2><p>Indy Schedule is a fast, lightweight countdown and daily schedule dashboard for Independence High School.</p></div>
+                                <div><span class="about-version">Version 1.5.0</span><h2>Built for the Indy school day.</h2><p>Indy Schedule is a fast, lightweight countdown and daily schedule dashboard for Independence High School.</p></div>
                                 <div class="about-intro-mark"><i class="fas fa-clock" aria-hidden="true"></i></div>
                             </div>
 
@@ -794,7 +801,7 @@
                         <div id="whatsnew-website" class="whatsnew-log" role="tabpanel">
                             <div class="wn-entry current-release">
                                 <div class="wn-entry-header">
-                                    <span class="wn-version">v1.4.0</span>
+                                    <span class="wn-version">v1.5.0</span>
                                     <span class="wn-date">Sep 18, 2026</span>
                                     <span class="wn-tag">Schoology Assignments</span>
                                 </div>
@@ -802,7 +809,18 @@
                                     <li>Connect your private Schoology calendar to see upcoming assignments in Indy Schedule.</li>
                                     <li>See incomplete work due today beside your daily schedule, then open Assignments for the full list.</li>
                                     <li>Mark work done in Indy Schedule, with completion securely tied to your account.</li>
+                                </ul>
+                            </div>
+
+                            <div class="wn-entry">
+                                <div class="wn-entry-header">
+                                    <span class="wn-version">v1.4.0</span>
+                                    <span class="wn-date">Sep 8, 2026</span>
+                                    <span class="wn-tag">Send Feedback</span>
+                                </div>
+                                <ul>
                                     <li>Send schedule corrections, bug reports, and ideas directly from Settings → Send Feedback.</li>
+                                    <li>Feedback is saved privately, with optional contact details if you’d like a response.</li>
                                 </ul>
                             </div>
 
@@ -1182,7 +1200,7 @@
             <p class="managed-device-note"><i class="fas fa-circle-info" aria-hidden="true"></i> If Chrome clears site data, sign in again to restore your saved settings.</p>
         </div>
     </div>
-    <!-- One-time notice for returning users after the 1.4.0 release. -->
+    <!-- One-time notice for returning users after the 1.5.0 release. -->
     <div id="release-notice-backdrop" class="release-notice-backdrop" aria-hidden="true" hidden>
         <section class="release-notice-dialog" role="dialog" aria-modal="true" aria-labelledby="release-notice-title" aria-describedby="release-notice-description">
             <header class="release-notice-header">
@@ -1193,8 +1211,8 @@
                 <button type="button" id="release-notice-close" class="release-notice-close" aria-label="Close update notice"><i class="fas fa-times" aria-hidden="true"></i></button>
             </header>
             <div class="release-notice-content">
-                <span class="release-notice-version">Version 1.4.0</span>
-                <h1 id="release-notice-title">What’s new in 1.4.0</h1>
+                <span class="release-notice-version">Version 1.5.0</span>
+                <h1 id="release-notice-title">What’s new in 1.5.0</h1>
                 <p id="release-notice-description">Schoology assignments can now join your schedule in one simple daily view.</p>
                 <div class="release-notice-summary">
                     <article>
@@ -1521,7 +1539,7 @@
                     localStorage.removeItem('indyOnboardingReplayRequested_v1');
                     // First-time users already saw the full walkthrough, so do
                     // not immediately stack the release-summary dialog after it.
-                    localStorage.setItem('indyReleaseNotice_v1_4_0', 'true');
+                    localStorage.setItem('indyReleaseNotice_v1_5_0', 'true');
                     const currentUser = window.authManager?.currentUser;
                     nextButton.disabled = true;
                     nextButton.innerHTML = currentUser
@@ -1666,7 +1684,7 @@
         })();
 
         (function initializeReleaseNotice() {
-            const storageKey = 'indyReleaseNotice_v1_4_0';
+            const storageKey = 'indyReleaseNotice_v1_5_0';
 
             document.addEventListener('DOMContentLoaded', () => {
                 const backdrop = document.getElementById('release-notice-backdrop');

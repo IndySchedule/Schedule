@@ -110,6 +110,7 @@
 .schoology-connected-summary > i { color:#22c55e; font-size:22px; }
 .schoology-connected-summary strong, .schoology-connected-summary span { display:block; }
 .schoology-connected-summary span { color:rgba(var(--theme-on-settings-card-rgb), .68); font-size:13px; margin-top:3px; }
+.schoology-dashboard-switch { margin:0 0 14px; }
 .schoology-button-row { display:flex; flex-wrap:wrap; gap:9px; }
 .schoology-settings-message { margin:12px 0 0; font-size:13px; font-weight:700; }
 .schoology-settings-message[data-state="error"] { color:#b91c1c; }

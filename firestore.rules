@@ -8,11 +8,11 @@ service cloud.firestore {
 
     function allowedSettingsKeys() {
       return [
-        'toastIconEnabled', 'fontFamily', 'theme', 'showPeriodTimes',
+        'toastIconEnabled', 'fontFamily', 'theme', 'showPeriodTimes', 'showDueTodayAssignments',
         'lunchWave', 'progressBarEnabled', 'progressBarColor',
         'progressBarOpacity', 'gradientSettings', 'currentScheduleName',
         'indyScheduleOverride_v1', 'indyOnboardingComplete_v2',
-        'indyAnalyticsConsent_v1', 'indyReleaseNotice_v1_3_3', 'indyReleaseNotice_v1_3_4', 'indyReleaseNotice_v1_3_5', 'indyReleaseNotice_v1_4_0',
+        'indyAnalyticsConsent_v1', 'indyReleaseNotice_v1_3_3', 'indyReleaseNotice_v1_3_4', 'indyReleaseNotice_v1_3_5', 'indyReleaseNotice_v1_4_0', 'indyReleaseNotice_v1_5_0',
         'sawUpdateNotice', 'indySchoologyPromptSeen_v1', 'periodRenames', 'globalPeriodNames'
       ];
     }
@@ -24,6 +24,7 @@ service cloud.firestore {
         && settings.get('fontFamily', '') is string && settings.get('fontFamily', '').size() <= 80
         && settings.get('theme', '') is string && settings.get('theme', '').size() <= 24
         && settings.get('showPeriodTimes', 'true') in ['true', 'false']
+        && settings.get('showDueTodayAssignments', 'true') in ['true', 'false']
         && settings.get('lunchWave', 'A') in ['A', 'B', 'C']
         && settings.get('progressBarEnabled', 'true') in ['true', 'false']
         && settings.get('progressBarColor', '#000000') is string
@@ -44,6 +45,7 @@ service cloud.firestore {
         && settings.get('indyReleaseNotice_v1_3_4', 'false') in ['true', 'false']
         && settings.get('indyReleaseNotice_v1_3_5', 'false') in ['true', 'false']
         && settings.get('indyReleaseNotice_v1_4_0', 'false') in ['true', 'false']
+        && settings.get('indyReleaseNotice_v1_5_0', 'false') in ['true', 'false']
         && settings.get('sawUpdateNotice', 'false') in ['true', 'false']
         && settings.get('indySchoologyPromptSeen_v1', 'false') in ['true', 'false']
         && settings.get('periodRenames', {}) is map && settings.get('periodRenames', {}).keys().size() <= 100

@@ -26,6 +26,7 @@ const validSettings = {
     fontFamily: 'Roboto',
     theme: 'light',
     showPeriodTimes: 'true',
+    showDueTodayAssignments: 'true',
     lunchWave: 'A',
     progressBarEnabled: 'true',
     progressBarColor: '#000000',
@@ -40,6 +41,7 @@ const validSettings = {
     indyOnboardingComplete_v2: 'true',
     indyAnalyticsConsent_v1: 'granted',
     indyReleaseNotice_v1_4_0: 'true',
+    indyReleaseNotice_v1_5_0: 'true',
     indySchoologyPromptSeen_v1: 'true',
     periodRenames: { 1: 'Example Class A', 2: 'Example Class B' },
     globalPeriodNames: { 1: 'Example Class A', 2: 'Example Class B' }
@@ -122,7 +124,7 @@ try {
     await assertFails(setDoc(doc(ownerDb, `${statsSummaryPath}/private/not-allowed`), { value: true }));
 
     const feedback = () => ({ category: 'schedule', message: 'Wrong bell time', name: '', email: '',
-        uid: '', createdAt: serverTimestamp(), status: 'new', pageUrl: 'https://indyschedule.com/', appVersion: '1.4.0' });
+        uid: '', createdAt: serverTimestamp(), status: 'new', pageUrl: 'https://indyschedule.com/', appVersion: '1.5.0' });
     await assertSucceeds(setDoc(doc(guestDb, 'feedback/guest'), feedback()));
     await assertSucceeds(setDoc(doc(ownerDb, 'feedback/owner'), { ...feedback(), uid: ownerId }));
     for (const db of [guestDb, ownerDb, otherDb]) {

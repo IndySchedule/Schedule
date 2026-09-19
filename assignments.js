@@ -11,6 +11,11 @@
         catch { return false; }
     }
 
+    function dashboardDueTodayEnabled() {
+        try { return localStorage.getItem('showDueTodayAssignments') !== 'false'; }
+        catch { return true; }
+    }
+
     const state = { assignments: [], connected: false, connectionChecked: false, connectionPromptSeen: savedConnectionPromptSeen(), loadedAt: 0, lastLoadAttemptAt: 0, loading: false, showingCompleted: false };
 
     const $ = (id) => document.getElementById(id);
@@ -98,7 +103,7 @@
         const list = $('dashboard-due-list');
         if (!section || !list) return;
 
-        const canShow = !!authUser() && state.connectionChecked && state.connected;
+        const canShow = dashboardDueTodayEnabled() && !!authUser() && state.connectionChecked && state.connected;
         section.hidden = !canShow;
         list.replaceChildren();
         if (!canShow) return;
@@ -392,6 +397,15 @@
     }
 
     function initialize() {
+        const dashboardToggle = $('show-due-today-assignments');
+        if (dashboardToggle) {
+            dashboardToggle.checked = dashboardDueTodayEnabled();
+            dashboardToggle.addEventListener('change', () => {
+                try { localStorage.setItem('showDueTodayAssignments', dashboardToggle.checked ? 'true' : 'false'); } catch { /* browser storage unavailable */ }
+                renderDashboardDueToday();
+                window.authManager?.scheduleUserSettingsSave(0).catch(() => {});
+            });
+        }
         $('assignments-toggle')?.addEventListener('click', () => setAssignmentsOpen($('assignments-view')?.hidden !== false));
         $('assignments-close')?.addEventListener('click', () => setAssignmentsOpen(false));
         $('assignments-refresh')?.addEventListener('click', () => refreshAssignments(true));

@@ -115,7 +115,7 @@ Validate publishable live data separately with:
 npm run validate-live-data
 ```
 
-Run the complete v1.4.0 release check with:
+Run the complete v1.5.0 release check with:
 
 ```sh
 npm run qa

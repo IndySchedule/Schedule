@@ -13,11 +13,11 @@ const ANALYTICS_CONSENT_KEY = 'indyAnalyticsConsent_v1';
 const SETTINGS_SCHEMA_VERSION = 2;
 const SETTINGS_CLIENT_ID_KEY = 'indySettingsClientId_v1';
 const SETTINGS_KEYS = Object.freeze([
-    'toastIconEnabled', 'fontFamily', 'theme', 'showPeriodTimes', 'lunchWave',
+    'toastIconEnabled', 'fontFamily', 'theme', 'showPeriodTimes', 'showDueTodayAssignments', 'lunchWave',
     'progressBarEnabled', 'progressBarColor', 'progressBarOpacity',
     'gradientSettings', 'currentScheduleName', 'indyScheduleOverride_v1',
     'indyOnboardingComplete_v2', 'indyAnalyticsConsent_v1',
-    'indyReleaseNotice_v1_4_0', 'sawUpdateNotice', 'indySchoologyPromptSeen_v1', 'periodRenames',
+    'indyReleaseNotice_v1_4_0', 'indyReleaseNotice_v1_5_0', 'sawUpdateNotice', 'indySchoologyPromptSeen_v1', 'periodRenames',
     'globalPeriodNames'
 ]);
 
@@ -57,8 +57,8 @@ function sanitizeSettingValue(key, value) {
     if (value === null && key === 'indyScheduleOverride_v1') return null;
     if (value === null || typeof value === 'undefined') return undefined;
 
-    if (['toastIconEnabled', 'showPeriodTimes', 'progressBarEnabled',
-        'indyOnboardingComplete_v2', 'indyReleaseNotice_v1_4_0', 'sawUpdateNotice', 'indySchoologyPromptSeen_v1'].includes(key)) {
+    if (['toastIconEnabled', 'showPeriodTimes', 'showDueTodayAssignments', 'progressBarEnabled',
+        'indyOnboardingComplete_v2', 'indyReleaseNotice_v1_4_0', 'indyReleaseNotice_v1_5_0', 'sawUpdateNotice', 'indySchoologyPromptSeen_v1'].includes(key)) {
         return sanitizeBooleanSetting(value) ?? undefined;
     }
     if (key === 'fontFamily') return typeof value === 'string' && value.length <= 80 ? value : undefined;
@@ -109,6 +109,7 @@ function collectLocalUserSettings() {
         fontFamily: localStorage.getItem('fontFamily'),
         theme: localStorage.getItem('theme'),
         showPeriodTimes: localStorage.getItem('showPeriodTimes'),
+        showDueTodayAssignments: localStorage.getItem('showDueTodayAssignments'),
         lunchWave: localStorage.getItem('lunchWave'),
         progressBarEnabled: localStorage.getItem('progressBarEnabled'),
         progressBarColor: localStorage.getItem('progressBarColor'),
@@ -119,6 +120,7 @@ function collectLocalUserSettings() {
         indyOnboardingComplete_v2: localStorage.getItem('indyOnboardingComplete_v2'),
         indyAnalyticsConsent_v1: localStorage.getItem(ANALYTICS_CONSENT_KEY),
         indyReleaseNotice_v1_4_0: localStorage.getItem('indyReleaseNotice_v1_4_0'),
+        indyReleaseNotice_v1_5_0: localStorage.getItem('indyReleaseNotice_v1_5_0'),
         sawUpdateNotice: localStorage.getItem('sawUpdateNotice'),
         indySchoologyPromptSeen_v1: localStorage.getItem('indySchoologyPromptSeen_v1')
     };
@@ -1229,10 +1231,43 @@ async function loadUserSettings() {
     return window.authManager?._maybeLoadUserSettings() || null;
 }
 
-function initializeFirebaseAuthManager() {
+let localEmulatorHealthCheck = null;
+
+function checkLocalFirebaseEmulators() {
+    if (!['localhost', '127.0.0.1'].includes(location.hostname)) return Promise.resolve(true);
+    if (localEmulatorHealthCheck) return localEmulatorHealthCheck;
+
+    const endpoints = [
+        'http://127.0.0.1:9099/',
+        'http://127.0.0.1:8080/'
+    ];
+    localEmulatorHealthCheck = Promise.all(endpoints.map(async (url) => {
+        const controller = new AbortController();
+        const timeout = window.setTimeout(() => controller.abort(), 1500);
+        try {
+            await fetch(url, { mode: 'no-cors', cache: 'no-store', signal: controller.signal });
+            return true;
+        } catch (error) {
+            return false;
+        } finally {
+            window.clearTimeout(timeout);
+        }
+    })).then((results) => results.every(Boolean));
+    return localEmulatorHealthCheck;
+}
+
+async function initializeFirebaseAuthManager() {
     if (window.authManager) return window.authManager;
     try {
         if (typeof window.firebase === 'undefined' || typeof window.firebase.auth !== 'function' || typeof window.firebase.firestore !== 'function') {
+            return null;
+        }
+        if (!(await checkLocalFirebaseEmulators())) {
+            updateSettingsSyncStatus('local');
+            if (!window.__indyEmulatorOfflineReported) {
+                window.__indyEmulatorOfflineReported = true;
+                console.warn('Local Firebase emulators are not running. Start Auth on port 9099 and Firestore on port 8080; Indy Schedule is using local settings for now.');
+            }
             return null;
         }
         window.authManager = new AuthManager();
