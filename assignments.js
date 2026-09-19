@@ -2,9 +2,10 @@
     'use strict';
 
     const IS_LOCAL_DEV = ['localhost', '127.0.0.1'].includes(location.hostname);
+    const SCHOOLOGY_API_BASE = 'https://schoology-fetcher.netlify.app';
     const API_BASE = IS_LOCAL_DEV
         ? 'http://127.0.0.1:8787'
-        : 'https://schoology-fetcher.bradyblackwell2009.workers.dev';
+        : SCHOOLOGY_API_BASE;
     const CACHE_MAX_AGE = 15 * 60 * 1000;
     function savedConnectionPromptSeen() {
         try { return localStorage.getItem('indySchoologyPromptSeen_v1') === 'true'; }
