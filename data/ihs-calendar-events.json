@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-09-18T11:18:39.799Z",
-  "lastCheckedAt": "2026-09-18T11:18:39.799Z",
-  "contentUpdatedAt": "2026-09-18T11:18:39.799Z",
+  "generatedAt": "2026-09-19T03:13:49.154Z",
+  "lastCheckedAt": "2026-09-19T03:13:49.154Z",
+  "contentUpdatedAt": "2026-09-19T03:13:49.154Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -12,17 +12,6 @@
   "rangeStart": "2026-09-16",
   "rangeEnd": "2027-01-16",
   "events": [
-    {
-      "id": "7mim20tqf1k8fuisue2suts8f0@google.com-2026-09-16T21:30:00.000Z",
-      "title": "IHS JV/V Volleyball vs Blackman HS",
-      "start": "2026-09-16T21:30:00.000Z",
-      "end": "2026-09-17T00:30:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-09-16"
-      ],
-      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
-    },
     {
       "id": "6illaatuaj49mdfrj058doe71j@google.com-2026-09-17T21:30:00.000Z",
       "title": "IHS JV/V Girls Soccer vs Ravenwood HS",
