@@ -13,23 +13,24 @@ service cloud.firestore {
         'progressBarOpacity', 'gradientSettings', 'currentScheduleName',
         'indyScheduleOverride_v1', 'indyOnboardingComplete_v2',
         'indyAnalyticsConsent_v1', 'indyReleaseNotice_v1_3_3', 'indyReleaseNotice_v1_3_4', 'indyReleaseNotice_v1_3_5', 'indyReleaseNotice_v1_4_0',
-        'sawUpdateNotice', 'periodRenames', 'globalPeriodNames'
+        'sawUpdateNotice', 'indySchoologyPromptSeen_v1', 'periodRenames', 'globalPeriodNames'
       ];
     }
 
     function validSettings(settings) {
       return settings is map
         && settings.keys().hasOnly(allowedSettingsKeys())
-        && (!('toastIconEnabled' in settings) || settings.toastIconEnabled is string)
-        && (!('fontFamily' in settings) || (settings.fontFamily is string && settings.fontFamily.size() <= 80))
-        && (!('theme' in settings) || (settings.theme is string && settings.theme.size() <= 24))
-        && (!('showPeriodTimes' in settings) || settings.showPeriodTimes is string)
-        && (!('lunchWave' in settings) || (settings.lunchWave is string && settings.lunchWave in ['A', 'B', 'C']))
-        && (!('progressBarEnabled' in settings) || settings.progressBarEnabled is string)
-        && (!('progressBarColor' in settings) || (settings.progressBarColor is string && settings.progressBarColor.matches('^#[0-9A-Fa-f]{6}$')))
-        && (!('progressBarOpacity' in settings) || (settings.progressBarOpacity is string && settings.progressBarOpacity.size() <= 5))
-        && (!('gradientSettings' in settings) || (settings.gradientSettings is string && settings.gradientSettings.size() <= 6000))
-        && (!('currentScheduleName' in settings) || (settings.currentScheduleName is string && settings.currentScheduleName in ['normal', 'normalNoSoar', 'lateStart', 'halfDay']))
+        && settings.get('toastIconEnabled', 'false') in ['true', 'false']
+        && settings.get('fontFamily', '') is string && settings.get('fontFamily', '').size() <= 80
+        && settings.get('theme', '') is string && settings.get('theme', '').size() <= 24
+        && settings.get('showPeriodTimes', 'true') in ['true', 'false']
+        && settings.get('lunchWave', 'A') in ['A', 'B', 'C']
+        && settings.get('progressBarEnabled', 'true') in ['true', 'false']
+        && settings.get('progressBarColor', '#000000') is string
+        && settings.get('progressBarColor', '#000000').matches('^#[0-9A-Fa-f]{6}$')
+        && settings.get('progressBarOpacity', '0') is string && settings.get('progressBarOpacity', '0').size() <= 5
+        && settings.get('gradientSettings', '') is string && settings.get('gradientSettings', '').size() <= 6000
+        && settings.get('currentScheduleName', 'normal') in ['normal', 'normalNoSoar', 'lateStart', 'halfDay']
         && (!('indyScheduleOverride_v1' in settings) || settings.indyScheduleOverride_v1 == null
           || (settings.indyScheduleOverride_v1 is map
             && settings.indyScheduleOverride_v1.keys().hasOnly(['date', 'schedule'])
@@ -37,15 +38,16 @@ service cloud.firestore {
             && settings.indyScheduleOverride_v1.date.matches('^\\d{4}-\\d{2}-\\d{2}$')
             && settings.indyScheduleOverride_v1.schedule is string
             && settings.indyScheduleOverride_v1.schedule in ['normal', 'normalNoSoar', 'lateStart', 'halfDay']))
-        && (!('indyOnboardingComplete_v2' in settings) || settings.indyOnboardingComplete_v2 is string)
-        && (!('indyAnalyticsConsent_v1' in settings) || (settings.indyAnalyticsConsent_v1 is string && settings.indyAnalyticsConsent_v1 in ['granted', 'denied']))
-        && (!('indyReleaseNotice_v1_3_3' in settings) || settings.indyReleaseNotice_v1_3_3 is string)
-        && (!('indyReleaseNotice_v1_3_4' in settings) || settings.indyReleaseNotice_v1_3_4 is string)
-        && (!('indyReleaseNotice_v1_3_5' in settings) || settings.indyReleaseNotice_v1_3_5 is string)
-        && (!('indyReleaseNotice_v1_4_0' in settings) || settings.indyReleaseNotice_v1_4_0 is string)
-        && (!('sawUpdateNotice' in settings) || settings.sawUpdateNotice is string)
-        && (!('periodRenames' in settings) || (settings.periodRenames is map && settings.periodRenames.keys().size() <= 100))
-        && (!('globalPeriodNames' in settings) || (settings.globalPeriodNames is map && settings.globalPeriodNames.keys().size() <= 100));
+        && settings.get('indyOnboardingComplete_v2', 'false') in ['true', 'false']
+        && settings.get('indyAnalyticsConsent_v1', 'denied') in ['granted', 'denied']
+        && settings.get('indyReleaseNotice_v1_3_3', 'false') in ['true', 'false']
+        && settings.get('indyReleaseNotice_v1_3_4', 'false') in ['true', 'false']
+        && settings.get('indyReleaseNotice_v1_3_5', 'false') in ['true', 'false']
+        && settings.get('indyReleaseNotice_v1_4_0', 'false') in ['true', 'false']
+        && settings.get('sawUpdateNotice', 'false') in ['true', 'false']
+        && settings.get('indySchoologyPromptSeen_v1', 'false') in ['true', 'false']
+        && settings.get('periodRenames', {}) is map && settings.get('periodRenames', {}).keys().size() <= 100
+        && settings.get('globalPeriodNames', {}) is map && settings.get('globalPeriodNames', {}).keys().size() <= 100;
     }
 
     function validSettingsDocument(userId) {
@@ -61,7 +63,7 @@ service cloud.firestore {
         && request.resource.data.updatedBy is string
         && request.resource.data.updatedBy.size() <= 128
         && request.resource.data.settingsUpdatedAt is map
-        && request.resource.data.settingsUpdatedAt.keys().hasOnly(allowedSettingsKeys())
+        && request.resource.data.settingsUpdatedAt.keys().hasOnly(request.resource.data.settings.keys())
         && validSettings(request.resource.data.settings);
     }
 

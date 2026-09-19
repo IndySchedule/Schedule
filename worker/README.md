@@ -40,3 +40,21 @@ npx firebase-tools deploy --only hosting --project indyschedule-1 --non-interact
 ```
 
 For any additional production domain, set a comma-separated `ALLOWED_ORIGINS` Worker variable. Localhost is accepted only when `ENVIRONMENT` is not `production`.
+
+## Local Firebase emulator development
+
+Use two terminals. Start Firebase from the repository root:
+
+```sh
+npx firebase-tools emulators:start --only auth,firestore,hosting --project demo-indy-feedback
+```
+
+In the second terminal, prepare and start the local Worker:
+
+```sh
+cd worker
+npx wrangler d1 migrations apply DB --local
+npx wrangler dev --var ENVIRONMENT:development --var FIREBASE_PROJECT_ID:demo-indy-feedback --var CALENDAR_ENCRYPTION_KEY:local-development-only-key
+```
+
+Open the Hosting emulator at `http://127.0.0.1:5001`. The frontend automatically uses `http://127.0.0.1:8787` on `localhost` and `127.0.0.1`. Emulator JWT payloads are accepted only by a Worker explicitly started with `ENVIRONMENT=development` and only for requests whose browser origin is localhost. The deployed Worker remains on `ENVIRONMENT=production` and always requires a cryptographically verified Firebase token.

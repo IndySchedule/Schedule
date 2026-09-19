@@ -47,6 +47,21 @@ test('malformed Firebase bearer token is rejected', async () => {
     assert.equal((await response.json()).code, 'invalid-token');
 });
 
+test('Firebase Auth emulator tokens work only in explicit localhost development mode', async () => {
+    const encode = (value) => Buffer.from(JSON.stringify(value)).toString('base64url');
+    const token = `${encode({ alg: 'none', typ: 'JWT' })}.${encode({ sub: 'local-user', aud: 'demo-indy-feedback', iss: 'https://securetoken.google.com/demo-indy-feedback', exp: Math.floor(Date.now() / 1000) + 3600 })}.`;
+    const response = await handleRequest(new Request('http://worker.test/api/schoology/status', {
+        headers: { origin: 'http://127.0.0.1:5000', authorization: `Bearer ${token}` }
+    }), { DB: new FakeDb(), ENVIRONMENT: 'development', FIREBASE_PROJECT_ID: 'demo-indy-feedback' });
+    assert.equal(response.status, 200);
+    assert.equal((await response.json()).connected, false);
+
+    const blocked = await handleRequest(new Request('http://worker.test/api/schoology/status', {
+        headers: { origin: 'https://evil.example', authorization: `Bearer ${token}` }
+    }), { DB: new FakeDb(), ENVIRONMENT: 'development', FIREBASE_PROJECT_ID: 'demo-indy-feedback' });
+    assert.equal(blocked.status, 403);
+});
+
 test('CORS allows configured production origin and rejects arbitrary sites', () => {
     assert.equal(corsOrigin(new Request('https://worker.test', { headers: { origin: 'https://indy-schedule.web.app' } }), {}), 'https://indy-schedule.web.app');
     assert.equal(corsOrigin(new Request('https://worker.test', { headers: { origin: 'https://evil.example' } }), {}), '');

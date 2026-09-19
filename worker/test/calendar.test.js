@@ -31,6 +31,13 @@ test('rejects non-calendar responses', async () => {
     await assert.rejects(() => parseAssignments('<html>login</html>'), /valid calendar/);
 });
 
+test('extracts course names from ICS categories when Schoology provides them', async () => {
+    const ics = ['BEGIN:VCALENDAR', 'BEGIN:VEVENT', 'UID:categorized', 'DTSTART:20260920T153000Z',
+        'SUMMARY:Problem set', 'CATEGORIES:AP Calculus', 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
+    const [assignment] = await parseAssignments(ics, new Date('2026-09-18T12:00:00Z'));
+    assert.equal(assignment.course, 'AP Calculus');
+});
+
 test('encrypted calendar URLs roundtrip and use unique nonces', async () => {
     const secret = 'unit-test-encryption-secret';
     const url = 'https://app.schoology.com/calendar/feed/private-token';

@@ -144,15 +144,15 @@
                     <div id="sign-in-button" class="dashboard-account is-signed-out">
                         <button type="button" class="account-trigger" aria-label="Sign in"><span class="account-label">Sign In</span></button>
                     </div>
-                    <button type="button" class="today-toggle" id="today-toggle" aria-controls="today-at-indy" aria-expanded="false" aria-label="Open Today at Indy">
-                        <i class="fas fa-calendar-day" aria-hidden="true"></i>
-                        <span class="today-toggle-label"><span class="today-toggle-wide">Today at Indy</span><span class="today-toggle-short">Today</span></span>
-                        <span class="today-event-badge" id="today-event-badge" aria-label="0 events today" hidden>0</span>
-                    </button>
                     <button type="button" class="today-toggle assignments-toggle" id="assignments-toggle" aria-controls="assignments-view" aria-pressed="false" aria-label="Open Assignments">
                         <i class="fas fa-list-check" aria-hidden="true"></i>
                         <span class="assignments-toggle-label">Assignments</span>
                         <span class="assignment-count-badge" id="assignments-badge" aria-label="0 incomplete assignments due today" hidden>0</span>
+                    </button>
+                    <button type="button" class="today-toggle" id="today-toggle" aria-controls="today-at-indy" aria-expanded="false" aria-label="Open Today at Indy">
+                        <i class="fas fa-calendar-day" aria-hidden="true"></i>
+                        <span class="today-toggle-label"><span class="today-toggle-wide">Today at Indy</span><span class="today-toggle-short">Today</span></span>
+                        <span class="today-event-badge" id="today-event-badge" aria-label="0 events today" hidden>0</span>
                     </button>
                     <button id="settings-button" class="settings-button dashboard-icon-button" aria-label="Open Settings">
                         <i class="fas fa-cog"></i>
@@ -236,6 +236,13 @@
                     <small id="schedule-day-summary">Automatic Indy bells</small>
                 </div>
                 <div id="schedule"></div>
+                <section class="dashboard-due-today" id="dashboard-due-today" aria-labelledby="dashboard-due-today-title" hidden>
+                    <div class="dashboard-due-heading">
+                        <div><span>ASSIGNMENTS</span><h2 id="dashboard-due-today-title">Due Today</h2></div>
+                        <button type="button" data-open-assignments aria-label="View all assignments">View all</button>
+                    </div>
+                    <div class="dashboard-due-list" id="dashboard-due-list" aria-live="polite"></div>
+                </section>
             </div>
             </div>
             <section class="assignments-view" id="assignments-view" aria-labelledby="assignments-heading" hidden>
@@ -247,12 +254,19 @@
                     </div>
                     <div class="assignments-actions">
                         <button type="button" class="assignments-action" id="assignments-refresh"><i class="fas fa-rotate" aria-hidden="true"></i> Refresh</button>
-                        <button type="button" class="assignments-action" id="assignments-close"><i class="fas fa-xmark" aria-hidden="true"></i> Schedule</button>
+                        <button type="button" class="assignments-action" id="assignments-close"><i class="fas fa-xmark" aria-hidden="true"></i> Close</button>
                     </div>
                 </header>
                 <div class="assignments-toolbar">
-                    <p class="assignments-status" id="assignments-status" role="status" aria-live="polite">Loading assignments…</p>
-                    <label class="assignments-filter"><input type="checkbox" id="assignments-show-completed"> Show completed</label>
+                    <div class="assignments-status-area">
+                        <p class="assignments-status" id="assignments-status" role="status" aria-live="polite">Loading assignments…</p>
+                        <button type="button" class="assignments-connect-link" id="assignments-connect-link" hidden><i class="fas fa-link" aria-hidden="true"></i> Connect Schoology iCalendar</button>
+                    </div>
+                    <label class="assignments-filter">
+                        <input type="checkbox" id="assignments-show-completed">
+                        <span class="assignments-checkbox" aria-hidden="true"><i class="fas fa-check"></i></span>
+                        <span>Show completed</span>
+                    </label>
                 </div>
                 <div class="assignments-list" id="assignments-list"></div>
             </section>
@@ -640,19 +654,59 @@
                             <p>Sign in to connect a Schoology calendar and sync your Indy Schedule completion status across devices.</p>
                         </div>
                         <div class="schoology-state" id="schoology-disconnected" hidden>
-                            <form id="schoology-connect-form">
-                                <div class="schoology-url-row">
-                                    <div class="settings-field">
-                                        <label class="settings-field-label" for="schoology-calendar-url">Full Schoology calendar URL</label>
-                                        <input id="schoology-calendar-url" name="calendarUrl" type="url" inputmode="url" autocomplete="off" spellcheck="false" placeholder="webcal://…schoology.com/…" required>
+                            <div class="schoology-setup-intro">
+                                <h3>Connect Schoology Calendar</h3>
+                                <p>Connect your Schoology calendar to see upcoming assignments directly in Indy Schedule.</p>
+                            </div>
+                            <ol class="schoology-setup-steps">
+                                <li class="schoology-setup-step">
+                                    <span class="schoology-step-number" aria-hidden="true">1</span>
+                                    <div class="schoology-step-content">
+                                        <h4>Open Schoology Calendar Settings</h4>
+                                        <p>We’ll take you to your Schoology Account Settings. Scroll to or look for <strong>Share Your Schoology Calendar</strong>.</p>
+                                        <a class="schoology-open-settings" href="https://wcschools.schoology.com/settings/account#:~:text=Share%20Your%20Schoology%20Calendar" target="_blank" rel="noopener noreferrer" aria-label="Open Schoology Calendar Settings in a new tab">
+                                            <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i> Open Schoology Calendar Settings
+                                        </a>
                                     </div>
-                                    <button type="submit" class="replay-onboarding-btn" id="schoology-connect-button"><i class="fas fa-link" aria-hidden="true"></i> Connect</button>
-                                </div>
-                            </form>
-                            <p class="schoology-privacy-note"><strong>Read-only access:</strong> Indy Schedule fetches calendar events but cannot submit assignments or modify Schoology. Your private link is encrypted on the server and is never saved in this browser or Firestore.</p>
+                                </li>
+                                <li class="schoology-setup-step">
+                                    <span class="schoology-step-number" aria-hidden="true">2</span>
+                                    <div class="schoology-step-content">
+                                        <h4>Copy your iCal link</h4>
+                                        <p>Under <strong>Share Your Schoology Calendar</strong>, copy the link shown next to <strong>Use this iCal link</strong>.</p>
+                                        <p class="schoology-step-helper"><i class="fas fa-circle-info" aria-hidden="true"></i> It usually starts with <code>webcal://</code>. Do not click “Disable”—you only need to copy the link.</p>
+                                    </div>
+                                </li>
+                                <li class="schoology-setup-step">
+                                    <span class="schoology-step-number" aria-hidden="true">3</span>
+                                    <div class="schoology-step-content">
+                                        <h4>Paste it here</h4>
+                                        <form id="schoology-connect-form">
+                                            <div class="schoology-url-row">
+                                                <div class="settings-field">
+                                                    <label class="settings-field-label" for="schoology-calendar-url">Schoology iCal link</label>
+                                                    <input id="schoology-calendar-url" name="calendarUrl" type="url" inputmode="url" autocomplete="off" spellcheck="false" placeholder="webcal://wcschools.schoology.com/..." aria-describedby="schoology-url-help" required>
+                                                </div>
+                                                <button type="submit" class="replay-onboarding-btn" id="schoology-connect-button"><i class="fas fa-link" aria-hidden="true"></i> Connect</button>
+                                            </div>
+                                            <p class="schoology-url-help" id="schoology-url-help"><i class="fas fa-lock" aria-hidden="true"></i> Your calendar link is private and encrypted before it is stored.</p>
+                                        </form>
+                                    </div>
+                                </li>
+                            </ol>
+                            <details class="schoology-setup-help">
+                                <summary>Still can’t find it?</summary>
+                                <ol>
+                                    <li>Use Schoology in a browser, not only the mobile app.</li>
+                                    <li>Open your account settings.</li>
+                                    <li>Scroll to <strong>Share Your Schoology Calendar</strong>.</li>
+                                    <li>Copy the full link under <strong>Use this iCal link</strong>.</li>
+                                </ol>
+                            </details>
+                            <p class="schoology-privacy-note"><strong>Read-only access:</strong> Indy Schedule can display calendar events but cannot submit assignments or modify Schoology. Your private link is never saved in this browser or Firestore.</p>
                         </div>
                         <div class="schoology-state" id="schoology-connected" hidden>
-                            <div class="schoology-connected-summary"><i class="fas fa-circle-check" aria-hidden="true"></i><div><strong>Schoology calendar connected</strong><span id="schoology-last-refresh">The calendar will refresh when you open Assignments.</span></div></div>
+                            <div class="schoology-connected-summary"><i class="fas fa-circle-check" aria-hidden="true"></i><div><strong>Schoology calendar connected</strong><span id="schoology-last-refresh">Your assignments will refresh automatically when you open Assignments.</span></div></div>
                             <div class="schoology-button-row">
                                 <button type="button" class="replay-onboarding-btn" id="schoology-refresh-button"><i class="fas fa-rotate" aria-hidden="true"></i> Refresh calendar</button>
                                 <button type="button" class="replay-onboarding-btn" id="schoology-replace-button"><i class="fas fa-link" aria-hidden="true"></i> Replace calendar</button>
@@ -741,13 +795,14 @@
                             <div class="wn-entry current-release">
                                 <div class="wn-entry-header">
                                     <span class="wn-version">v1.4.0</span>
-                                    <span class="wn-date">Sep 8, 2026</span>
-                                    <span class="wn-tag">Send Feedback</span>
+                                    <span class="wn-date">Sep 18, 2026</span>
+                                    <span class="wn-tag">Schoology Assignments</span>
                                 </div>
                                 <ul>
-                                    <li>Send schedule corrections, bug reports, and ideas directly from Settings → Send Feedback, without opening an email app.</li>
-                                    <li>Feedback is saved privately, with optional contact details if you’d like a response.</li>
-                                    <li>We’re sorry we didn’t receive earlier contact attempts. School administrator restrictions blocked communication outside the organization. If you previously tried to reach us, please resend your message using Send Feedback.</li>
+                                    <li>Connect your private Schoology calendar to see upcoming assignments in Indy Schedule.</li>
+                                    <li>See incomplete work due today beside your daily schedule, then open Assignments for the full list.</li>
+                                    <li>Mark work done in Indy Schedule, with completion securely tied to your account.</li>
+                                    <li>Send schedule corrections, bug reports, and ideas directly from Settings → Send Feedback.</li>
                                 </ul>
                             </div>
 
@@ -1140,15 +1195,19 @@
             <div class="release-notice-content">
                 <span class="release-notice-version">Version 1.4.0</span>
                 <h1 id="release-notice-title">What’s new in 1.4.0</h1>
-                <p id="release-notice-description">You can now send feedback directly from Indy Schedule, without opening an email app.</p>
+                <p id="release-notice-description">Schoology assignments can now join your schedule in one simple daily view.</p>
                 <div class="release-notice-summary">
                     <article>
                         <span>New</span>
-                        <div><strong>Send Feedback from Settings</strong><p>Report schedule issues, share ideas, or get help. Your feedback is saved privately, and you can leave an email if you’d like a response.</p></div>
+                        <div><strong>Schoology Assignments</strong><p>Connect your private Schoology calendar to see upcoming work and mark assignments done from Indy Schedule.</p></div>
                     </article>
                     <article>
-                        <span>Sorry</span>
-                        <div><strong>We’re sorry we missed your messages</strong><p>School administrator restrictions blocked communication outside the organization, so we didn’t receive earlier contact attempts. Please resend your message using Settings → Send Feedback.</p></div>
+                        <span>Today</span>
+                        <div><strong>Due today at a glance</strong><p>Your incomplete assignments due today now appear beneath Today’s Schedule. Select one to open the full Assignments view.</p></div>
+                    </article>
+                    <article>
+                        <span>More</span>
+                        <div><strong>Feedback is easier too</strong><p>Send schedule corrections, bug reports, and ideas directly from Settings → Send Feedback.</p></div>
                     </article>
                 </div>
             </div>

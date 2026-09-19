@@ -10,6 +10,7 @@ database_id = "6450740f-6414-4a76-895b-215d28910002"
 
 [vars]
 FIREBASE_PROJECT_ID = "indyschedule-1"
+ENVIRONMENT = "production"
 
 [observability]
 enabled = true

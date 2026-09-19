@@ -40,6 +40,7 @@ const validSettings = {
     indyOnboardingComplete_v2: 'true',
     indyAnalyticsConsent_v1: 'granted',
     indyReleaseNotice_v1_4_0: 'true',
+    indySchoologyPromptSeen_v1: 'true',
     periodRenames: { 1: 'Example Class A', 2: 'Example Class B' },
     globalPeriodNames: { 1: 'Example Class A', 2: 'Example Class B' }
 };

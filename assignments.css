@@ -1,21 +1,66 @@
 /* Schoology assignments — uses the dashboard's palette roles and component rhythm. */
 .dashboard-view-switch { display:flex; align-items:center; gap:8px; }
+.dashboard-actions #assignments-toggle,
+.dashboard-actions #today-toggle { min-height:36px; padding:0 10px; }
 .assignments-toggle { position:relative; }
 .assignment-count-badge { min-width:20px; height:20px; padding:0 6px; border-radius:999px; display:inline-flex; align-items:center; justify-content:center; background:var(--theme-accent); color:var(--theme-on-accent); font-size:11px; font-weight:800; }
+.assignment-count-badge[hidden] { display:none !important; }
 .assignments-view { grid-column:1 / -1; min-height:min(680px, calc(100vh - 190px)); padding:clamp(18px, 3vw, 34px); overflow:auto; background:var(--theme-panel); border:1px solid rgba(var(--theme-on-panel-rgb), .12); border-radius:22px; color:var(--theme-on-panel); }
+.assignments-view:not([hidden]) { animation:assignments-view-enter 190ms cubic-bezier(.2, .75, .3, 1) both; transform-origin:top center; }
+@keyframes assignments-view-enter {
+  from { opacity:0; transform:translateY(8px) scale(.995); }
+  to { opacity:1; transform:translateY(0) scale(1); }
+}
+.assignments-view { scrollbar-width:thin; scrollbar-color:rgba(var(--theme-on-panel-rgb), .22) transparent; }
+.assignments-view::-webkit-scrollbar { width:7px; }
+.assignments-view::-webkit-scrollbar-track { background:transparent; }
+.assignments-view::-webkit-scrollbar-thumb { background:rgba(var(--theme-on-panel-rgb), .2); border-radius:999px; }
+.assignments-view::-webkit-scrollbar-thumb:hover { background:rgba(var(--theme-on-panel-rgb), .34); }
 .assignments-view[hidden], .dashboard-main-view[hidden] { display:none !important; }
 .dashboard-main-view { display:contents; }
+.dashboard-due-today { margin-top:14px; padding-top:13px; border-top:1px solid rgba(var(--theme-on-panel-rgb), .13); }
+.dashboard-due-today[hidden] { display:none !important; }
+.dashboard-due-heading { display:flex; align-items:flex-end; justify-content:space-between; gap:12px; margin-bottom:8px; }
+.dashboard-due-heading span { display:block; margin-bottom:2px; color:var(--theme-panel-accent); font-size:9px; font-weight:850; letter-spacing:.12em; }
+.dashboard-due-heading h2 { margin:0; color:var(--theme-on-panel); font-size:15px; line-height:1.1; }
+.dashboard-due-heading button,
+.dashboard-due-more { border:0; background:transparent; color:var(--theme-panel-accent); font:inherit; font-size:11px; font-weight:800; cursor:pointer; }
+.dashboard-due-heading button { padding:4px 2px; }
+.dashboard-due-list { display:grid; gap:5px; }
+.dashboard-due-row { width:100%; min-width:0; display:grid; grid-template-columns:minmax(0, 1fr) auto; align-items:center; gap:8px; padding:8px 10px; border:1px solid transparent; border-radius:9px; background:rgba(var(--theme-on-panel-rgb), .055); color:var(--theme-on-panel); font:inherit; text-align:left; cursor:pointer; transition:background .15s ease, border-color .15s ease, transform .15s ease; }
+.dashboard-due-row strong { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:12px; }
+.dashboard-due-row span { overflow:hidden; color:rgba(var(--theme-on-panel-rgb), .68); font-size:10px; text-overflow:ellipsis; white-space:nowrap; }
+.dashboard-due-row:hover { border-color:rgba(var(--theme-panel-accent-rgb), .38); background:rgba(var(--theme-panel-accent-rgb), .1); transform:translateY(-1px); }
+.dashboard-due-heading button:hover,
+.dashboard-due-more:hover { text-decoration:underline; text-underline-offset:3px; }
+.dashboard-due-row:focus-visible,
+.dashboard-due-heading button:focus-visible,
+.dashboard-due-more:focus-visible { outline:3px solid rgba(var(--theme-panel-accent-rgb), .38); outline-offset:2px; }
+.dashboard-due-more { width:100%; padding:5px 8px 2px; text-align:left; }
+.dashboard-due-empty { margin:0; padding:8px 2px 2px; color:rgba(var(--theme-on-panel-rgb), .64); font-size:11px; }
 .assignments-header { display:flex; align-items:flex-start; justify-content:space-between; gap:20px; padding-bottom:20px; border-bottom:1px solid rgba(var(--theme-on-panel-rgb), .12); }
 .assignments-eyebrow { display:block; color:var(--theme-panel-accent); font-size:11px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; }
 .assignments-header h1 { margin:4px 0 5px; font-size:clamp(26px, 4vw, 38px); }
 .assignments-header p { margin:0; color:rgba(var(--theme-on-panel-rgb), .7); }
 .assignments-actions { display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end; }
 .assignments-action, .assignment-complete-button { min-height:42px; padding:0 14px; border:1px solid rgba(var(--theme-on-panel-rgb), .16); border-radius:11px; background:rgba(var(--theme-on-panel-rgb), .06); color:inherit; font:inherit; font-weight:700; cursor:pointer; transition:transform .15s ease, background .15s ease, border-color .15s ease; }
+.assignments-action, .assignment-complete-button { display:inline-flex; align-items:center; justify-content:center; gap:9px; }
 .assignments-action:hover, .assignment-complete-button:hover { transform:translateY(-1px); border-color:var(--theme-panel-accent); }
 .assignments-toolbar { display:flex; align-items:center; justify-content:space-between; gap:16px; min-height:54px; }
+.assignments-status-area { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
 .assignments-status { color:rgba(var(--theme-on-panel-rgb), .7); font-size:13px; }
 .assignments-status[data-state="error"] { color:#fca5a5; }
-.assignments-filter { display:flex; align-items:center; gap:8px; white-space:nowrap; font-size:13px; font-weight:700; }
+.assignments-connect-link { min-height:34px; display:inline-flex; align-items:center; gap:7px; padding:0 11px; border:1px solid rgba(var(--theme-panel-accent-rgb), .4); border-radius:9px; background:rgba(var(--theme-panel-accent-rgb), .12); color:var(--theme-panel-accent); font:inherit; font-size:12px; font-weight:800; cursor:pointer; }
+.assignments-connect-link[hidden] { display:none; }
+.assignments-connect-link:hover { background:rgba(var(--theme-panel-accent-rgb), .2); border-color:var(--theme-panel-accent); }
+.assignments-filter { position:relative; display:flex; align-items:center; gap:9px; min-height:36px; padding:0 11px 0 9px; border:1px solid rgba(var(--theme-on-panel-rgb), .13); border-radius:10px; background:rgba(var(--theme-on-panel-rgb), .045); white-space:nowrap; font-size:13px; font-weight:700; cursor:pointer; }
+.assignments-filter:hover { border-color:rgba(var(--theme-panel-accent-rgb), .5); background:rgba(var(--theme-panel-accent-rgb), .08); }
+.assignments-filter input { position:absolute; width:1px; height:1px; opacity:0; pointer-events:none; }
+.assignments-checkbox { width:18px; height:18px; display:inline-grid; place-items:center; flex:0 0 18px; border:1px solid rgba(var(--theme-on-panel-rgb), .35); border-radius:5px; background:rgba(var(--theme-on-panel-rgb), .06); color:var(--theme-on-accent); transition:background .15s ease, border-color .15s ease, transform .15s ease; }
+.assignments-checkbox i { font-size:10px; opacity:0; transform:scale(.65); transition:opacity .15s ease, transform .15s ease; }
+.assignments-filter input:checked + .assignments-checkbox { border-color:var(--theme-panel-accent); background:var(--theme-panel-accent); }
+.assignments-filter input:checked + .assignments-checkbox i { opacity:1; transform:scale(1); }
+.assignments-filter input:focus-visible + .assignments-checkbox { outline:3px solid rgba(var(--theme-panel-accent-rgb), .38); outline-offset:2px; }
 .assignments-list { display:grid; gap:24px; }
 .assignment-group h2 { margin:0 0 10px; font-size:14px; letter-spacing:.08em; text-transform:uppercase; color:rgba(var(--theme-on-panel-rgb), .68); }
 .assignment-group { display:grid; gap:9px; }
@@ -32,7 +77,33 @@
 .assignments-empty strong { color:var(--theme-on-panel); font-size:20px; }
 .schoology-settings-card .settings-section-heading { margin-bottom:16px; }
 .schoology-state[hidden] { display:none !important; }
-.schoology-url-row { display:flex; align-items:flex-end; gap:10px; }
+.schoology-setup-intro { margin-bottom:16px; }
+.schoology-setup-intro h3 { margin:0 0 5px; color:var(--theme-on-settings-card); font-size:19px; }
+.schoology-setup-intro p { margin:0; color:rgba(var(--theme-on-settings-card-rgb), .68); line-height:1.5; }
+.schoology-setup-steps { display:grid; gap:10px; margin:0; padding:0; list-style:none; counter-reset:none; }
+.schoology-setup-step { display:grid; grid-template-columns:34px minmax(0, 1fr); gap:12px; padding:15px; border:1px solid rgba(var(--theme-on-settings-card-rgb), .11); border-radius:13px; background:var(--theme-settings-inset); color:var(--theme-on-settings-inset); }
+.schoology-step-number { width:30px; height:30px; display:grid; place-items:center; border-radius:50%; background:var(--theme-settings-action); color:var(--theme-on-settings-action); font-size:13px; font-weight:850; }
+.schoology-step-content { min-width:0; }
+.schoology-step-content h4 { margin:2px 0 5px; font-size:15px; color:var(--theme-on-settings-inset); }
+.schoology-step-content > p { margin:0; color:rgba(var(--theme-on-settings-inset-rgb), .72); font-size:13px; line-height:1.5; }
+.schoology-step-helper { display:flex; align-items:flex-start; gap:7px; margin-top:9px !important; padding:9px 10px; border-radius:8px; background:rgba(var(--theme-settings-card-rgb), .62); }
+.schoology-step-helper i { margin-top:3px; color:var(--theme-ui-accent); }
+.schoology-step-helper code { padding:1px 4px; border-radius:4px; background:rgba(var(--theme-on-settings-inset-rgb), .08); color:inherit; }
+.schoology-open-settings { width:fit-content; min-height:40px; display:inline-flex; align-items:center; gap:8px; margin-top:11px; padding:0 13px; border:1px solid transparent; border-radius:10px; background:var(--theme-settings-action); color:var(--theme-on-settings-action) !important; font-size:13px; font-weight:800; text-decoration:none; transition:transform .15s ease, filter .15s ease; }
+.schoology-open-settings:hover { transform:translateY(-1px); filter:brightness(1.08); }
+.schoology-open-settings:focus-visible { outline:3px solid rgba(var(--theme-ui-accent-rgb), .35); outline-offset:3px; }
+.schoology-setup-step .schoology-url-row { margin-top:9px; }
+#settings-sidebar #schoology-panel .schoology-setup-step .settings-field { min-width:0; margin:0 !important; padding:0 !important; border:0 !important; border-radius:0 !important; background:transparent !important; box-shadow:none !important; }
+.schoology-setup-step .settings-field-label { color:var(--theme-on-settings-inset); }
+.schoology-setup-step input { box-sizing:border-box !important; width:100%; min-width:0; min-height:44px; margin:0; padding:0 13px; border:1px solid rgba(var(--theme-on-settings-inset-rgb), .18); border-radius:9px; background:var(--theme-settings-card); color:var(--theme-on-settings-card); box-shadow:inset 0 1px 2px rgba(0,0,0,.04); }
+.schoology-setup-step input:focus { border-color:var(--theme-ui-accent); outline:3px solid rgba(var(--theme-ui-accent-rgb), .18); outline-offset:1px; }
+.schoology-setup-step #schoology-connect-button { min-width:126px; min-height:44px; align-self:end; margin:0 !important; padding-inline:16px; border-radius:9px !important; box-shadow:none !important; white-space:nowrap; }
+.schoology-url-help { display:flex; align-items:center; gap:7px; margin:9px 0 0; color:rgba(var(--theme-on-settings-inset-rgb), .67); font-size:12px; line-height:1.45; }
+.schoology-url-help i { color:var(--theme-ui-accent); }
+.schoology-setup-help { margin-top:12px; padding:11px 13px; border:1px solid rgba(var(--theme-on-settings-card-rgb), .11); border-radius:10px; background:rgba(var(--theme-settings-inset-rgb), .62); color:var(--theme-on-settings-card); }
+.schoology-setup-help summary { cursor:pointer; font-size:13px; font-weight:800; }
+.schoology-setup-help ol { margin:10px 0 0; padding-left:22px; color:rgba(var(--theme-on-settings-card-rgb), .72); font-size:13px; line-height:1.55; }
+.schoology-url-row { width:100%; display:grid; grid-template-columns:minmax(0, 1fr) auto; align-items:end; gap:8px; }
 .schoology-url-row .settings-field { flex:1; }
 .schoology-privacy-note { margin:14px 0 0; padding:12px 14px; border-radius:10px; background:var(--theme-settings-inset); color:rgba(var(--theme-on-settings-inset-rgb), .72); font-size:13px; line-height:1.5; }
 .schoology-connected-summary { display:flex; align-items:center; gap:11px; margin-bottom:14px; }
@@ -43,13 +114,28 @@
 .schoology-settings-message { margin:12px 0 0; font-size:13px; font-weight:700; }
 .schoology-settings-message[data-state="error"] { color:#b91c1c; }
 @media (max-width:700px) {
+  .dashboard-actions #assignments-toggle,
+  .dashboard-actions #today-toggle { min-height:40px; padding:0 12px; }
   .today-toggle-wide { display:none; }
   .assignments-toggle-label { display:none; }
   .assignments-view { border-radius:16px; padding:16px; min-height:calc(100vh - 150px); }
   .assignments-header { flex-direction:column; }
+  .assignments-toolbar { align-items:flex-start; flex-direction:column; padding-block:10px; }
   .assignments-actions { justify-content:flex-start; }
   .assignment-card { align-items:flex-start; flex-direction:column; }
   .assignment-complete-button { width:100%; }
-  .schoology-url-row { flex-direction:column; align-items:stretch; }
+  .schoology-url-row { grid-template-columns:1fr; align-items:stretch; }
+  .schoology-setup-step #schoology-connect-button { width:100%; }
+  .schoology-setup-step { grid-template-columns:30px minmax(0, 1fr); padding:13px; }
+  .schoology-open-settings { width:100%; justify-content:center; text-align:center; }
+  .dashboard-due-row { padding-block:9px; }
 }
-@media (prefers-reduced-motion: reduce) { .assignments-action, .assignment-complete-button { transition:none; } }
+@media (max-width:460px) {
+  .dashboard-actions #assignments-toggle,
+  .dashboard-actions #today-toggle { padding:0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .assignments-view:not([hidden]) { animation:none; }
+  .assignments-action, .assignment-complete-button { transition:none; }
+  .dashboard-due-row { transition:none; }
+}

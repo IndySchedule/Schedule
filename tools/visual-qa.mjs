@@ -765,7 +765,7 @@ function validateScenario(scenario, result) {
         check(result.releaseNoticeContained, 'release notice is clipped outside the viewport');
         check(result.releaseNoticeFocusContained && result.backgroundInert, 'release notice did not contain focus and inert the dashboard');
         check(result.releaseNoticeTitle === 'What’s new in 1.4.0', `unexpected release-notice title: ${result.releaseNoticeTitle}`);
-        check(result.releaseNoticeSummaryCount === 2, `expected two release summaries, received ${result.releaseNoticeSummaryCount}`);
+        check(result.releaseNoticeSummaryCount === 3, `expected three release summaries, received ${result.releaseNoticeSummaryCount}`);
     }
     if (scenario.action === 'account') {
         check(result.accountDialogOpen, 'account dialog did not open');

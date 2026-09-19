@@ -1,9 +1,17 @@
 (function () {
     'use strict';
 
-    const API_BASE = 'https://schoology-fetcher.bradyblackwell2009.workers.dev';
+    const IS_LOCAL_DEV = ['localhost', '127.0.0.1'].includes(location.hostname);
+    const API_BASE = IS_LOCAL_DEV
+        ? 'http://127.0.0.1:8787'
+        : 'https://schoology-fetcher.bradyblackwell2009.workers.dev';
     const CACHE_MAX_AGE = 15 * 60 * 1000;
-    const state = { assignments: [], connected: false, loadedAt: 0, loading: false, showingCompleted: false };
+    function savedConnectionPromptSeen() {
+        try { return localStorage.getItem('indySchoologyPromptSeen_v1') === 'true'; }
+        catch { return false; }
+    }
+
+    const state = { assignments: [], connected: false, connectionChecked: false, connectionPromptSeen: savedConnectionPromptSeen(), loadedAt: 0, lastLoadAttemptAt: 0, loading: false, showingCompleted: false };
 
     const $ = (id) => document.getElementById(id);
     const authUser = () => window.authManager?.auth?.currentUser || null;
@@ -50,6 +58,13 @@
         return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
     }
 
+    function formatDueTime(item) {
+        if (item.allDay) return '';
+        const date = new Date(item.dueAt);
+        if (Number.isNaN(date.getTime())) return '';
+        return new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit' }).format(date);
+    }
+
     function groupFor(value) {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
@@ -65,11 +80,75 @@
     function updateBadge() {
         const badge = $('assignments-badge');
         if (!badge) return;
+        if (authUser() && state.connectionChecked && !state.connected && !state.connectionPromptSeen) {
+            badge.textContent = '1';
+            badge.hidden = false;
+            badge.setAttribute('aria-label', 'Connect your Schoology iCalendar');
+            return;
+        }
         const todayKey = localDateKey(new Date());
         const count = state.assignments.filter((item) => !item.completed && localDateKey(item.dueAt) === todayKey).length;
         badge.textContent = String(count);
         badge.hidden = count === 0;
         badge.setAttribute('aria-label', `${count} incomplete assignment${count === 1 ? '' : 's'} due today`);
+    }
+
+    function renderDashboardDueToday() {
+        const section = $('dashboard-due-today');
+        const list = $('dashboard-due-list');
+        if (!section || !list) return;
+
+        const canShow = !!authUser() && state.connectionChecked && state.connected;
+        section.hidden = !canShow;
+        list.replaceChildren();
+        if (!canShow) return;
+
+        if (state.loading && !state.loadedAt) {
+            const loading = document.createElement('p');
+            loading.className = 'dashboard-due-empty';
+            loading.textContent = 'Loading today’s assignments…';
+            list.appendChild(loading);
+            return;
+        }
+
+        const todayKey = localDateKey(new Date());
+        const today = state.assignments.filter((item) => !item.completed && localDateKey(item.dueAt) === todayKey);
+        if (!today.length) {
+            const empty = document.createElement('p');
+            empty.className = 'dashboard-due-empty';
+            empty.textContent = 'Nothing due today';
+            list.appendChild(empty);
+            return;
+        }
+
+        const visible = today.slice(0, 3);
+        visible.forEach((item) => {
+            const row = document.createElement('button');
+            row.type = 'button';
+            row.className = 'dashboard-due-row';
+            row.dataset.openAssignments = '';
+            row.setAttribute('aria-label', `Open Assignments: ${item.title || 'Untitled Schoology event'}`);
+
+            const title = document.createElement('strong');
+            title.textContent = item.title || 'Untitled Schoology event';
+            const details = [item.course, formatDueTime(item)].filter(Boolean);
+            row.appendChild(title);
+            if (details.length) {
+                const meta = document.createElement('span');
+                meta.textContent = details.join(' · ');
+                row.appendChild(meta);
+            }
+            list.appendChild(row);
+        });
+
+        if (today.length > visible.length) {
+            const more = document.createElement('button');
+            more.type = 'button';
+            more.className = 'dashboard-due-more';
+            more.dataset.openAssignments = '';
+            more.textContent = `View ${today.length - visible.length} more`;
+            list.appendChild(more);
+        }
     }
 
     function renderAssignments() {
@@ -81,15 +160,30 @@
             const empty = document.createElement('div');
             empty.className = 'assignments-empty';
             const icon = document.createElement('i');
-            icon.className = 'fas fa-circle-check';
+            const signedIn = !!authUser();
+            const needsConnection = signedIn && state.connectionChecked && !state.connected;
+            icon.className = `fas fa-${!signedIn ? 'user-lock' : needsConnection ? 'link' : 'circle-check'}`;
             icon.setAttribute('aria-hidden', 'true');
             const heading = document.createElement('strong');
-            heading.textContent = state.assignments.length ? 'Everything here is marked done' : 'No upcoming assignments';
+            heading.textContent = !signedIn
+                ? 'Sign in to view assignments'
+                : needsConnection
+                    ? 'Connect your Schoology iCalendar'
+                    : state.assignments.length
+                        ? 'Everything here is marked done'
+                        : 'No upcoming assignments';
             const copy = document.createElement('span');
-            copy.textContent = state.assignments.length ? 'Turn on “Show completed” to review or restore one.' : 'Schoology has no upcoming calendar events to show.';
+            copy.textContent = !signedIn
+                ? 'Assignments require an Indy Schedule account so your private calendar stays protected.'
+                : needsConnection
+                    ? 'Open Schoology Calendar settings to securely connect your private calendar feed.'
+                    : state.assignments.length
+                        ? 'Turn on “Show completed” to review or restore one.'
+                        : 'Schoology has no upcoming calendar events to show.';
             empty.append(icon, heading, copy);
             list.appendChild(empty);
             updateBadge();
+            renderDashboardDueToday();
             return;
         }
         ['Due Today', 'Due Tomorrow', 'This Week', 'Later'].forEach((groupName) => {
@@ -109,7 +203,7 @@
                 title.textContent = item.title || 'Untitled Schoology event';
                 const course = document.createElement('p');
                 course.className = 'assignment-course';
-                course.textContent = item.course || 'Schoology calendar';
+                course.textContent = item.course || 'Schoology';
                 const due = document.createElement('p');
                 due.className = 'assignment-due';
                 due.textContent = `${formatDue(item.dueAt, item.allDay)} · ${relativeDue(item.dueAt)}`;
@@ -126,31 +220,38 @@
             list.appendChild(section);
         });
         updateBadge();
+        renderDashboardDueToday();
     }
 
     function showAssignmentStatus(message, kind = '') {
         const status = $('assignments-status');
+        const connectLink = $('assignments-connect-link');
         if (!status) return;
         status.textContent = message;
         status.dataset.state = kind;
         status.hidden = !message;
+        if (connectLink) connectLink.hidden = kind !== 'not-connected';
     }
 
     async function refreshAssignments(force = false) {
         if (state.loading) return;
         if (!force && state.loadedAt && Date.now() - state.loadedAt < CACHE_MAX_AGE) return;
         if (!authUser()) {
+            state.connectionChecked = false;
             state.assignments = [];
             renderAssignments();
             showAssignmentStatus('Sign in to connect and view your Schoology calendar.', 'signed-out');
             return;
         }
         state.loading = true;
+        state.lastLoadAttemptAt = Date.now();
+        renderDashboardDueToday();
         $('assignments-refresh')?.setAttribute('aria-busy', 'true');
         showAssignmentStatus(state.assignments.length ? 'Refreshing assignments…' : 'Loading assignments…', 'loading');
         try {
             const result = await request('/api/assignments');
             state.connected = true;
+            state.connectionChecked = true;
             state.assignments = Array.isArray(result.assignments) ? result.assignments : [];
             state.loadedAt = Date.now();
             renderAssignments();
@@ -158,9 +259,11 @@
         } catch (error) {
             if (error.code === 'not-connected') {
                 state.connected = false;
+                state.connectionChecked = true;
                 state.assignments = [];
                 renderAssignments();
-                showAssignmentStatus('Connect your Schoology calendar in Settings to see assignments.', 'not-connected');
+                showAssignmentStatus('Connect your Schoology iCalendar to see upcoming assignments.', 'not-connected');
+                updateBadge();
             } else {
                 showAssignmentStatus(state.assignments.length ? 'Refresh failed. Showing the last assignments loaded this session.' : error.message, 'error');
             }
@@ -181,6 +284,12 @@
         button.classList.toggle('is-open', open);
         button.setAttribute('aria-pressed', open ? 'true' : 'false');
         if (open) {
+            if (!state.connectionPromptSeen) {
+                state.connectionPromptSeen = true;
+                try { localStorage.setItem('indySchoologyPromptSeen_v1', 'true'); } catch { /* browser storage unavailable */ }
+                window.authManager?.scheduleUserSettingsSave(0).catch(() => {});
+            }
+            updateBadge();
             window.setTodayPopupOpen?.(false);
             refreshAssignments(false);
             $('assignments-heading')?.focus();
@@ -209,19 +318,28 @@
         const connected = $('schoology-connected');
         if (signedOut) signedOut.hidden = signedIn;
         if (!signedIn) {
+            state.connectionChecked = false;
             if (disconnected) disconnected.hidden = true;
             if (connected) connected.hidden = true;
+            updateBadge();
+            renderDashboardDueToday();
             return;
         }
         try {
             const result = await request('/api/schoology/status');
             state.connected = !!result.connected;
+            state.connectionChecked = true;
             if (disconnected) disconnected.hidden = state.connected;
             if (connected) connected.hidden = !state.connected;
             const refreshed = $('schoology-last-refresh');
             if (refreshed) refreshed.textContent = result.lastSuccessfulRefresh
                 ? `Last refreshed ${new Intl.DateTimeFormat('en-US', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(result.lastSuccessfulRefresh))}`
-                : 'The calendar will refresh when you open Assignments.';
+                : 'Your assignments will refresh automatically when you open Assignments.';
+            updateBadge();
+            renderDashboardDueToday();
+            if (state.connected && !state.loading && (!state.lastLoadAttemptAt || Date.now() - state.lastLoadAttemptAt >= CACHE_MAX_AGE)) {
+                refreshAssignments(false);
+            }
         } catch (error) {
             showSchoologyMessage(error.message, 'error');
         }
@@ -247,6 +365,7 @@
             await request('/api/schoology/connect', { method: 'POST', body: JSON.stringify({ calendarUrl }) });
             input.value = '';
             state.loadedAt = 0;
+            state.lastLoadAttemptAt = 0;
             showSchoologyMessage('Schoology calendar connected.', 'success');
             await updateConnectionUI();
             if (!$('assignments-view')?.hidden) await refreshAssignments(true);
@@ -260,10 +379,14 @@
         try {
             await request('/api/schoology/disconnect', { method: 'DELETE' });
             state.assignments = [];
+            state.connected = false;
+            state.connectionChecked = true;
             state.loadedAt = 0;
+            state.lastLoadAttemptAt = 0;
             renderAssignments();
             showSchoologyMessage('Schoology calendar disconnected.', 'success');
-            showAssignmentStatus('Connect your Schoology calendar in Settings to see assignments.', 'not-connected');
+            showAssignmentStatus('Connect your Schoology iCalendar to see upcoming assignments.', 'not-connected');
+            updateBadge();
             await updateConnectionUI();
         } catch (error) { showSchoologyMessage(error.message, 'error'); }
     }
@@ -273,9 +396,17 @@
         $('assignments-close')?.addEventListener('click', () => setAssignmentsOpen(false));
         $('assignments-refresh')?.addEventListener('click', () => refreshAssignments(true));
         $('assignments-show-completed')?.addEventListener('change', (event) => { state.showingCompleted = event.target.checked; renderAssignments(); });
+        $('assignments-connect-link')?.addEventListener('click', () => {
+            setAssignmentsOpen(false);
+            $('settings-button')?.click();
+            window.setTimeout(() => document.querySelector('.nav-item[data-target="schoology"]')?.click(), 60);
+        });
         $('assignments-list')?.addEventListener('click', (event) => {
             const button = event.target.closest('.assignment-complete-button');
             if (button) toggleComplete(button.dataset.assignmentId);
+        });
+        $('dashboard-due-today')?.addEventListener('click', (event) => {
+            if (event.target.closest('[data-open-assignments]')) setAssignmentsOpen(true);
         });
         $('schoology-connect-form')?.addEventListener('submit', connectCalendar);
         $('schoology-replace-button')?.addEventListener('click', () => {
@@ -285,7 +416,30 @@
         });
         $('schoology-disconnect-button')?.addEventListener('click', disconnectCalendar);
         $('schoology-refresh-button')?.addEventListener('click', () => refreshAssignments(true));
-        window.addEventListener('indy-account-authenticated', updateConnectionUI);
+        window.addEventListener('indy-account-authenticated', () => {
+            state.connectionPromptSeen = savedConnectionPromptSeen();
+            updateConnectionUI();
+        });
+        const bindAuthObserver = () => {
+            const auth = window.authManager?.auth;
+            if (!auth || auth._indyAssignmentsObserverBound) return;
+            auth._indyAssignmentsObserverBound = true;
+            auth.onAuthStateChanged((user) => {
+                state.loadedAt = 0;
+                state.lastLoadAttemptAt = 0;
+                if (!user) {
+                    state.connected = false;
+                    state.connectionChecked = false;
+                    state.assignments = [];
+                    renderAssignments();
+                    showAssignmentStatus('Sign in to connect and view your Schoology calendar.', 'signed-out');
+                }
+                updateConnectionUI();
+                if (user && !$('assignments-view')?.hidden) refreshAssignments(true);
+            });
+        };
+        window.addEventListener('indy-firebase-ready', () => window.setTimeout(bindAuthObserver, 0));
+        bindAuthObserver();
         window.addEventListener('online', () => { if (!$('assignments-view')?.hidden) refreshAssignments(false); });
         updateConnectionUI();
     }

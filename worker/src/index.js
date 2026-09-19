@@ -20,7 +20,7 @@ function corsOrigin(request, env) {
     const origin = request.headers.get('origin');
     if (!origin) return null;
     if (allowedOrigins(env).has(origin)) return origin;
-    if (env.ENVIRONMENT !== 'production' && /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(origin)) return origin;
+    if (env.ENVIRONMENT === 'development' && /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(origin)) return origin;
     return '';
 }
 
@@ -32,6 +32,32 @@ function json(request, env, body, status = 200) {
 }
 
 async function authenticatedUser(request, env) {
+    if (env.ENVIRONMENT === 'development') {
+        const origin = request.headers.get('origin') || '';
+        if (!/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(origin)) {
+            throw Object.assign(new Error('Development authentication is limited to localhost.'), { status: 401, code: 'invalid-token' });
+        }
+        const token = bearerToken(request);
+        const parts = token.split('.');
+        if (parts.length === 3) {
+            try {
+                const headerPart = parts[0].replace(/-/g, '+').replace(/_/g, '/').padEnd(Math.ceil(parts[0].length / 4) * 4, '=');
+                const normalized = parts[1].replace(/-/g, '+').replace(/_/g, '/').padEnd(Math.ceil(parts[1].length / 4) * 4, '=');
+                const header = JSON.parse(atob(headerPart));
+                const payload = JSON.parse(atob(normalized));
+                const uid = typeof payload.sub === 'string' && payload.sub.length <= 128 ? payload.sub : '';
+                const now = Math.floor(Date.now() / 1000);
+                const emulatorAudience = typeof payload.aud === 'string' && /^[a-z0-9-]{3,100}$/i.test(payload.aud)
+                    ? payload.aud
+                    : '';
+                const emulatorIssuer = `https://securetoken.google.com/${emulatorAudience}`;
+                if (header.alg === 'none' && uid && emulatorAudience && payload.iss === emulatorIssuer && Number(payload.exp) > now) {
+                    return { uid, email: payload.email || null };
+                }
+            } catch { /* handled below */ }
+        }
+        throw Object.assign(new Error('Sign in through the local Firebase Auth emulator first.'), { status: 401, code: 'invalid-token' });
+    }
     return verifyFirebaseToken(bearerToken(request), { projectId: env.FIREBASE_PROJECT_ID || 'indyschedule-1' });
 }
 

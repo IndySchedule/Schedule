@@ -89,8 +89,10 @@ export async function parseAssignments(ics, now = new Date()) {
         const title = unescapeText(event.SUMMARY?.value) || 'Untitled Schoology event';
         const description = unescapeText(event.DESCRIPTION?.value);
         const location = unescapeText(event.LOCATION?.value);
-        const courseMatch = description.match(/(?:Course|Section|Class):\s*([^\n]+)/i);
-        const course = location || courseMatch?.[1]?.trim() || '';
+        const courseMatch = description.match(/(?:Course|Section|Class)(?: Name)?:\s*([^\n|<]+)/i);
+        const category = unescapeText(event.CATEGORIES?.value).split(',')[0]?.trim() || '';
+        const titleCourse = title.match(/^\[([^\]]{2,80})\]\s*/)?.[1]?.trim() || '';
+        const course = location || courseMatch?.[1]?.trim() || category || titleCourse;
         const stableSource = event.UID?.value ? `uid:${unescapeText(event.UID.value)}` : `event:${title}|${parsedDate.iso}|${course}`;
         results.push({ id: await sha256(stableSource), title, course, dueAt: parsedDate.iso, allDay: parsedDate.allDay });
     }

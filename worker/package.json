@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "test": "node --test test/*.test.js",
-    "dev": "wrangler dev",
+    "dev": "wrangler dev --var ENVIRONMENT:development --var FIREBASE_PROJECT_ID:demo-indy-feedback --var CALENDAR_ENCRYPTION_KEY:local-development-only-key",
+    "db:local": "wrangler d1 migrations apply DB --local",
     "deploy": "wrangler deploy"
   },
   "devDependencies": {
