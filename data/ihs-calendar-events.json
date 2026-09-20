@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-09-20T11:27:34.061Z",
-  "lastCheckedAt": "2026-09-20T11:27:34.061Z",
-  "contentUpdatedAt": "2026-09-20T11:27:34.061Z",
+  "generatedAt": "2026-09-20T20:51:26.558Z",
+  "lastCheckedAt": "2026-09-20T20:51:26.558Z",
+  "contentUpdatedAt": "2026-09-20T20:51:26.558Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -1455,6 +1455,17 @@
         "2027-01-18"
       ],
       "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "2oenfqc016pu3mj13m5qn22lde@google.com-2027-01-18T18:00:00.000Z",
+      "title": "IHS JV Wrestling @ Franklin HS",
+      "start": "2027-01-18T18:00:00.000Z",
+      "end": "2027-01-18T21:00:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-01-18"
+      ],
+      "location": "Franklin High School, 810 Hillsboro Rd, Franklin, TN 37064, USA"
     }
   ]
 }
