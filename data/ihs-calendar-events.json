@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-09-20T20:51:26.558Z",
-  "lastCheckedAt": "2026-09-20T20:51:26.558Z",
-  "contentUpdatedAt": "2026-09-20T20:51:26.558Z",
+  "generatedAt": "2026-09-21T04:59:00.172Z",
+  "lastCheckedAt": "2026-09-21T04:59:00.172Z",
+  "contentUpdatedAt": "2026-09-21T04:59:00.172Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -12,17 +12,6 @@
   "rangeStart": "2026-09-18",
   "rangeEnd": "2027-01-18",
   "events": [
-    {
-      "id": "62sbukec2odlaq7rtn5direnhr@google.com-2026-09-19T00:00:00.000Z",
-      "title": "IHS Varsity Football @ Coffee County",
-      "start": "2026-09-19T00:00:00.000Z",
-      "end": "2026-09-19T02:00:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-09-18"
-      ],
-      "location": "Coffee County Central High School, 100 Red Raider Dr, Manchester, TN 37355, USA"
-    },
     {
       "id": "4ir1b8g5a14srlg17cfhrrcgp4@google.com-2026-09-21T00:00:00.000Z",
       "title": "IHS Late Start",
@@ -1466,6 +1455,17 @@
         "2027-01-18"
       ],
       "location": "Franklin High School, 810 Hillsboro Rd, Franklin, TN 37064, USA"
+    },
+    {
+      "id": "IHS Late Start-2027-01-19T00:00:00.000Z",
+      "title": "IHS Late Start",
+      "start": "2027-01-19T00:00:00.000Z",
+      "end": "2027-01-20T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2027-01-19"
+      ],
+      "location": ""
     }
   ]
 }
