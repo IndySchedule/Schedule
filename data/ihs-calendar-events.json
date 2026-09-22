@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-09-21T12:52:05.677Z",
-  "lastCheckedAt": "2026-09-21T12:52:05.677Z",
-  "contentUpdatedAt": "2026-09-21T12:52:05.677Z",
+  "generatedAt": "2026-09-22T00:08:50.245Z",
+  "lastCheckedAt": "2026-09-22T00:08:50.245Z",
+  "contentUpdatedAt": "2026-09-22T00:08:50.245Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -1466,6 +1466,50 @@
         "2027-01-19"
       ],
       "location": ""
+    },
+    {
+      "id": "31esamdtdf983u7lthdab1uvqs@google.com-2027-01-19T22:30:00.000Z",
+      "title": "IHS JV Boys Basketball vs Franklin HS",
+      "start": "2027-01-19T22:30:00.000Z",
+      "end": "2027-01-20T00:00:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-01-19"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "5ieceuiafrna44murs8rslim2d@google.com-2027-01-19T23:30:00.000Z",
+      "title": "IHS Freshman Boys Basketball vs Franklin HS",
+      "start": "2027-01-19T23:30:00.000Z",
+      "end": "2027-01-20T01:00:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-01-19"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "4tg8t03vmsohrn12idrg16n7q4@google.com-2027-01-20T00:00:00.000Z",
+      "title": "IHS G Wrestling Girls Region Duals",
+      "start": "2027-01-20T00:00:00.000Z",
+      "end": "2027-01-21T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2027-01-20"
+      ],
+      "location": "TBD"
+    },
+    {
+      "id": "5chvjej1c6gpgk43roak32elcl@google.com-2027-01-20T00:00:00.000Z",
+      "title": "IHS Girls Basketball vs Franklin HS",
+      "start": "2027-01-20T00:00:00.000Z",
+      "end": "2027-01-20T01:30:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-01-19"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     }
   ]
 }
