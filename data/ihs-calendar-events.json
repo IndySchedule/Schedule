@@ -2,14 +2,14 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-09-22T00:08:50.245Z",
-  "lastCheckedAt": "2026-09-22T00:08:50.245Z",
-  "contentUpdatedAt": "2026-09-22T00:08:50.245Z",
+  "generatedAt": "2026-09-22T05:00:15.987Z",
+  "lastCheckedAt": "2026-09-22T05:00:15.987Z",
+  "contentUpdatedAt": "2026-09-22T05:00:15.987Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
   "timeZone": "America/Chicago",
-  "rangeStart": "2026-09-19",
+  "rangeStart": "2026-09-20",
   "rangeEnd": "2027-01-19",
   "events": [
     {
@@ -1505,6 +1505,28 @@
       "title": "IHS Girls Basketball vs Franklin HS",
       "start": "2027-01-20T00:00:00.000Z",
       "end": "2027-01-20T01:30:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-01-19"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "68luon6gsqlpthdlpflpm3ipoj@google.com-2027-01-20T00:30:00.000Z",
+      "title": "IHS JV/V Wrestling @ Page HS",
+      "start": "2027-01-20T00:30:00.000Z",
+      "end": "2027-01-20T03:00:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-01-19"
+      ],
+      "location": "Page High School, 6281 Arno Rd, Franklin, TN 37064, USA"
+    },
+    {
+      "id": "76nr8i67pv7i2ke9p0q3fvb8bs@google.com-2027-01-20T01:30:00.000Z",
+      "title": "IHS V Boys Basketball vs Franklin HS",
+      "start": "2027-01-20T01:30:00.000Z",
+      "end": "2027-01-20T03:30:00.000Z",
       "allDay": false,
       "days": [
         "2027-01-19"
