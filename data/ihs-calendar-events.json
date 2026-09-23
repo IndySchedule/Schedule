@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-09-22T11:42:00.135Z",
-  "lastCheckedAt": "2026-09-22T11:42:00.135Z",
-  "contentUpdatedAt": "2026-09-22T11:42:00.135Z",
+  "generatedAt": "2026-09-23T04:47:53.091Z",
+  "lastCheckedAt": "2026-09-23T04:47:53.091Z",
+  "contentUpdatedAt": "2026-09-23T04:47:53.091Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -1532,6 +1532,17 @@
         "2027-01-19"
       ],
       "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "2mjl6nikj0fjgoupakgrlepgra@google.com-2027-01-21T00:00:00.000Z",
+      "title": "IHS V Wrestling Boys Region Duals",
+      "start": "2027-01-21T00:00:00.000Z",
+      "end": "2027-01-22T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2027-01-21"
+      ],
+      "location": "TBD"
     }
   ]
 }
