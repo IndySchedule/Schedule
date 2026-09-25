@@ -2,38 +2,16 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-09-24T11:49:20.981Z",
-  "lastCheckedAt": "2026-09-24T11:49:20.981Z",
-  "contentUpdatedAt": "2026-09-24T11:49:20.981Z",
+  "generatedAt": "2026-09-25T05:00:30.389Z",
+  "lastCheckedAt": "2026-09-25T05:00:30.389Z",
+  "contentUpdatedAt": "2026-09-25T05:00:30.389Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
   "timeZone": "America/Chicago",
-  "rangeStart": "2026-09-22",
+  "rangeStart": "2026-09-23",
   "rangeEnd": "2027-01-22",
   "events": [
-    {
-      "id": "18jqoc473b9920eedo4ko51gfb@google.com-2026-09-22T21:30:00.000Z",
-      "title": "IHS JV/V Girls Soccer @ Brentwood HS",
-      "start": "2026-09-22T21:30:00.000Z",
-      "end": "2026-09-23T01:30:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-09-22"
-      ],
-      "location": "Brentwood High School, 5304 Murray Ln, Brentwood, TN 37027, USA"
-    },
-    {
-      "id": "18us3ecqnmamvvladt3ip7i8d8@google.com-2026-09-22T21:30:00.000Z",
-      "title": "IHS JV/V Volleyball @ Brentwood HS",
-      "start": "2026-09-22T21:30:00.000Z",
-      "end": "2026-09-23T00:30:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-09-22"
-      ],
-      "location": "Brentwood High School, 5304 Murray Ln, Brentwood, TN 37027, USA"
-    },
     {
       "id": "1ad2ll377kbmj2n6pmr2j554hh@google.com-2026-09-23T00:00:00.000Z",
       "title": "IHS 9th-11th Picture Day",
@@ -1532,6 +1510,39 @@
         "2027-01-21"
       ],
       "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "2p72d0p5tnr4h04f15ru8oc7ea@google.com-2027-01-23T00:00:00.000Z",
+      "title": "IHS JV/G Wrestling @ Spring Hill HS",
+      "start": "2027-01-23T00:00:00.000Z",
+      "end": "2027-01-24T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2027-01-23"
+      ],
+      "location": "Spring Hill High School, 1 Raider Ln, Columbia, TN 38401, USA"
+    },
+    {
+      "id": "7ritc4jhsbr20efh5ukk4fcmcr@google.com-2027-01-23T00:00:00.000Z",
+      "title": "IHS Girls Basketball @ Upperman HS",
+      "start": "2027-01-23T00:00:00.000Z",
+      "end": "2027-01-23T01:30:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-01-22"
+      ],
+      "location": "Upperman High School, 6950 Nashville Hwy, Baxter, TN 38544, USA"
+    },
+    {
+      "id": "29otl4jj9a5k6e4klkn48d2iv4@google.com-2027-01-23T01:30:00.000Z",
+      "title": "IHS V Boys Basketball @ Upperman HS",
+      "start": "2027-01-23T01:30:00.000Z",
+      "end": "2027-01-23T03:30:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-01-22"
+      ],
+      "location": "Upperman High School, 6950 Nashville Hwy, Baxter, TN 38544, USA"
     }
   ]
 }
