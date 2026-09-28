@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-09-28T13:59:35.695Z",
-  "lastCheckedAt": "2026-09-28T13:59:35.695Z",
-  "contentUpdatedAt": "2026-09-28T13:59:35.695Z",
+  "generatedAt": "2026-09-28T21:15:18.644Z",
+  "lastCheckedAt": "2026-09-28T21:15:18.644Z",
+  "contentUpdatedAt": "2026-09-28T21:15:18.644Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -562,6 +562,17 @@
         "2026-11-28"
       ],
       "location": "Kirkwood High School, 2702 Rossview Rd, Clarksville, TN 37043, USA"
+    },
+    {
+      "id": "1a7k1fjqglpl5bc26gog9et89n@google.com-2026-11-28T15:00:00.000Z",
+      "title": "IHS Holiday Market",
+      "start": "2026-11-28T15:00:00.000Z",
+      "end": "2026-11-28T19:00:00.000Z",
+      "allDay": false,
+      "days": [
+        "2026-11-28"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     },
     {
       "id": "IHS Late Start-2026-11-30T00:00:00.000Z",
