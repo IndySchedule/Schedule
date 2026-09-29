@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
 const source = readFileSync(new URL('../feedback.js', import.meta.url), 'utf8');
 const deferred = () => { let resolve, reject; const promise = new Promise((a, b) => { resolve = a; reject = b; }); return {promise, resolve, reject}; };
-function setup({ configured = true, save, send, user = null, valid = true } = {}) {
+function setup({ configured = true, save, send, user = null, valid = true, delayAuth = false } = {}) {
     const fields = Object.fromEntries(['category', 'message', 'name', 'email'].map(key => [key, {
         value: key === 'category' ? 'bug' : key === 'message' ? 'Test message' : '',
         addEventListener() {}, setCustomValidity(value) { this.validation = value; }
@@ -17,6 +17,7 @@ function setup({ configured = true, save, send, user = null, valid = true } = {}
         setAttribute() {}, before() {}, addEventListener: (_, fn) => { submit = fn; }
     };
     const writes = [], requests = [], warnings = [], timers = new Map();
+    let authListener = null;
     const firestore = () => ({ collection: name => {
         assert.equal(name, 'feedback');
         return { add: async data => { writes.push(data); return save ? save(data) : {id:'saved-id'}; } };
@@ -26,14 +27,15 @@ function setup({ configured = true, save, send, user = null, valid = true } = {}
         document: {getElementById: id => elements[id], createElement: () => ({})},
         location: {hostname:'example.com'},
         window: { location:{href:'https://example.com/?private=value#token'}, addEventListener() {},
-            authManager: {auth: {currentUser:user, onAuthStateChanged: fn => fn(user)}} },
+            authManager: {auth: {currentUser:user, onAuthStateChanged: fn => delayAuth ? (authListener = fn) : fn(user)}} },
         navigator:{onLine:true}, firebase:{firestore}, URL, AbortController,
         console:{warn: (...args) => warnings.push(args)},
         fetch: async (url, options) => { requests.push({url, options}); return send ? send(url, options) : {ok:true}; },
         setTimeout: (fn, delay) => { const id = {}; timers.set(id,{fn,delay}); return id; },
         clearTimeout: id => timers.delete(id)
     });
-    return {fields, elements, writes, requests, warnings, timers, submit: () => submit({preventDefault(){}})};
+    return {fields, elements, writes, requests, warnings, timers,
+        authenticate: () => authListener?.(user), submit: () => submit({preventDefault(){}})};
 }
 test('saves first, sends captured JSON and Auth UID, then clears the form', async () => {
     const saved = deferred();
@@ -105,4 +107,15 @@ test('placeholder endpoint skips notification while saving Firestore', async () 
 test('invalid form never writes or sends', async () => {
     const h = setup({valid:false}); await h.submit();
     assert.equal(h.writes.length,0); assert.equal(h.requests.length,0);
+});
+test('an early submission waits for Firebase Auth initialization', async () => {
+    const h = setup({delayAuth:true});
+    const pending = h.submit();
+    await Promise.resolve();
+    assert.equal(h.writes.length,0);
+    assert.match(h.elements['feedback-status'].textContent,/Connecting securely/);
+    h.authenticate();
+    await pending;
+    assert.equal(h.writes.length,1);
+    assert.match(h.elements['feedback-status'].textContent,/Thanks!/);
 });

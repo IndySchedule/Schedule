@@ -55,6 +55,7 @@ async function notifyFeedbackWithFormspree(feedback, feedbackId) {
     let lastSent = 0;
     let authReady = false;
     let subscribed = false;
+    const readinessWaiters = new Set();
     const touched = new Set();
     ['name', 'email'].forEach((key) => field(key).addEventListener('input', () => touched.add(key)));
     const updateCount = () => {
@@ -67,9 +68,31 @@ async function notifyFeedbackWithFormspree(feedback, feedbackId) {
         subscribed = true;
         window.authManager.auth.onAuthStateChanged((user) => {
             authReady = true;
+            readinessWaiters.forEach(({ resolve, timeout }) => {
+                clearTimeout(timeout);
+                resolve();
+            });
+            readinessWaiters.clear();
             for (const [key, value] of [['name', user?.displayName], ['email', user?.email]]) {
                 if (!touched.has(key)) field(key).value = (value || '').slice(0, key === 'name' ? 100 : 254);
             }
+        });
+    }
+    function waitForFirebaseReady() {
+        watchAuth();
+        if (authReady && window.authManager?.auth && typeof firebase?.firestore === 'function') return Promise.resolve();
+        if (localPreview && window.__indyLocalEmulatorsUnavailable) {
+            return Promise.reject(Object.assign(new Error(), { code: 'local-emulators-offline' }));
+        }
+        return new Promise((resolve, reject) => {
+            const waiter = { resolve, reject, timeout: null };
+            waiter.timeout = setTimeout(() => {
+                readinessWaiters.delete(waiter);
+                reject(Object.assign(new Error(), { code: 'firebase-not-ready' }));
+            }, 8000);
+            readinessWaiters.add(waiter);
+            // Covers Firebase becoming available between the checks above and waiter registration.
+            watchAuth();
         });
     }
     window.addEventListener('indy-firebase-ready', watchAuth);
@@ -100,7 +123,10 @@ async function notifyFeedbackWithFormspree(feedback, feedbackId) {
         const originalMessage = message.value;
         try {
             if (!navigator.onLine) throw Object.assign(new Error(), { code: 'offline' });
-            if (!authReady) throw Object.assign(new Error(), { code: localPreview && window.__indyLocalEmulatorsUnavailable ? 'local-emulators-offline' : 'firebase-not-ready' });
+            if (!authReady) {
+                status.textContent = 'Connecting securely…';
+                await waitForFirebaseReady();
+            }
             const user = window.authManager.auth.currentUser;
             const page = new URL(window.location.href);
             // Query strings and fragments can contain personal data or sign-in tokens.
