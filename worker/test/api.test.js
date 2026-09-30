@@ -92,7 +92,8 @@ test('connect validates the feed, stores only ciphertext, and assignments remain
     const db = new FakeDb();
     const env = { DB: db, CALENDAR_ENCRYPTION_KEY: 'test-secret' };
     const originalFetch = globalThis.fetch;
-    globalThis.fetch = async () => new Response('BEGIN:VCALENDAR\r\nBEGIN:VEVENT\r\nUID:one\r\nDTSTART:20260920T120000Z\r\nSUMMARY:Essay\r\nEND:VEVENT\r\nEND:VCALENDAR', { status: 200, headers: { 'content-type': 'text/calendar' } });
+    const dueAt = new Date(Date.now() + 86400000).toISOString().replace(/[-:]/g, '').replace(/\.\d{3}Z$/, 'Z');
+    globalThis.fetch = async () => new Response(`BEGIN:VCALENDAR\r\nBEGIN:VEVENT\r\nUID:one\r\nDTSTART:${dueAt}\r\nSUMMARY:Essay\r\nEND:VEVENT\r\nEND:VCALENDAR`, { status: 200, headers: { 'content-type': 'text/calendar' } });
     try {
         const result = await connect(new Request('https://worker.test/api/schoology/connect', { method: 'POST', body: JSON.stringify({ calendarUrl: 'webcal://app.schoology.com/calendar/feed/private-token' }) }), env, 'user-one');
         assert.equal(result.connected, true);

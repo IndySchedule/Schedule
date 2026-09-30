@@ -1,5 +1,6 @@
 {
   "name": "indy-schedule-schoology-worker",
+  "version": "1.5.1",
   "private": true,
   "type": "module",
   "scripts": {

@@ -15,9 +15,9 @@ Firebase keeps prior Hosting releases. In Firebase Console, open **Hosting → R
 
 If Firestore rules caused the problem, restore the previous `firestore.rules` from Git and deploy only that file with `npx firebase-tools deploy --only firestore:rules --project indyschedule-1`. Then open a corrective pull request so the repository matches production.
 
-## Version 1.5.0
+## Version 1.5.1
 
-The new one-time update notice uses `indyReleaseNotice_v1_5_0`. Deploy the updated Firestore rules with this release so dismissal can sync to accounts; older release keys remain allowed for older clients. Hosting-only deployment does not update these rules.
+The new one-time update notice uses `indyReleaseNotice_v1_5_1`. Deploy the updated Firestore rules with this release so dismissal can sync to accounts; older release keys remain allowed for older clients. Hosting-only deployment does not update these rules. Deploy the updated Schoology Worker as well because 1.5.1 corrects exact assignment-time parsing and overdue grouping.
 
 ```sh
 npx firebase deploy --only firestore:rules,hosting --project indyschedule-1

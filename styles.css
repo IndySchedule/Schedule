@@ -505,6 +505,13 @@ body.onboarding-open {
 }
 
 .onboarding-backdrop {
+    /* Keep the welcome experience visually consistent when it is replayed from
+       a customized dashboard. These local tokens intentionally do not inherit
+       the user's active palette. */
+    --onboarding-primary: #000035;
+    --onboarding-secondary: #1b2455;
+    --onboarding-accent: #c4ad62;
+    --onboarding-accent-rgb: 196, 173, 98;
     background: #050824;
     isolation: isolate;
 }
@@ -518,7 +525,7 @@ body.onboarding-open {
     background:
         radial-gradient(circle at 18% 18%, rgba(196,173,98,0.16), transparent 30%),
         radial-gradient(circle at 82% 78%, rgba(27,36,85,0.95), transparent 36%),
-        linear-gradient(135deg, #050824 0%, #090d2d 55%, var(--theme-primary) 100%);
+        linear-gradient(135deg, #050824 0%, #090d2d 55%, var(--onboarding-primary) 100%);
 }
 
 .onboarding-backdrop .onboarding-dialog {
@@ -550,8 +557,8 @@ body.onboarding-open {
     position: absolute;
     inset: 0;
     border-radius: 50%;
-    border: 2px solid var(--theme-dashboard-accent, var(--theme-accent));
-    box-shadow: 0 0 30px rgba(var(--theme-dashboard-accent-rgb, 196, 173, 98), 0.34);
+    border: 2px solid var(--onboarding-accent);
+    box-shadow: 0 0 30px rgba(var(--onboarding-accent-rgb), 0.34);
     opacity: 0;
 }
 
@@ -563,11 +570,11 @@ body.onboarding-open {
     width: 76px;
     height: 76px;
     overflow: hidden;
-    border: 1px solid rgba(var(--theme-dashboard-accent-rgb, 196, 173, 98), 0.65);
+    border: 1px solid rgba(var(--onboarding-accent-rgb), 0.65);
     border-radius: 50%;
-    background: radial-gradient(circle at 38% 32%, var(--theme-secondary), var(--theme-primary) 72%);
+    background: radial-gradient(circle at 38% 32%, var(--onboarding-secondary), var(--onboarding-primary) 72%);
     box-shadow:
-        0 0 0 8px rgba(var(--theme-dashboard-accent-rgb, 196, 173, 98), 0.1),
+        0 0 0 8px rgba(var(--onboarding-accent-rgb), 0.1),
         0 18px 55px rgba(var(--color-overlay-rgb), 0.5);
 }
 
@@ -718,7 +725,7 @@ body.dashboard-revealing .period-progress-track {
     height: 82px;
     flex: 0 0 82px;
     padding: 0 var(--space-7);
-    background: linear-gradient(90deg, var(--theme-primary) 0%, var(--theme-secondary) 45%, var(--theme-accent) 100%);
+    background: linear-gradient(90deg, var(--onboarding-primary) 0%, var(--onboarding-secondary) 45%, var(--onboarding-accent) 100%);
 }
 
 .onboarding-dialog .update-title-icon {
@@ -784,7 +791,7 @@ body.dashboard-revealing .period-progress-track {
     width: 25%;
     height: 100%;
     border-radius: 0 999px 999px 0;
-    background: linear-gradient(90deg, var(--theme-accent), #f0db8b);
+    background: linear-gradient(90deg, var(--onboarding-accent), #f0db8b);
     box-shadow: 0 0 16px rgba(196,173,98,0.65);
     transition: width 300ms ease;
 }
@@ -818,7 +825,7 @@ body.dashboard-revealing .period-progress-track {
 }
 
 .onboarding-eyebrow {
-    color: var(--theme-accent) !important;
+    color: var(--onboarding-accent) !important;
     font-size: 11px !important;
     font-weight: 850;
     letter-spacing: 0.16em;
@@ -871,7 +878,7 @@ body.dashboard-revealing .period-progress-track {
     min-width: 0;
 }
 
-.onboarding-feature i { color: var(--theme-accent); font-size: 17px; margin-bottom: 5px; }
+.onboarding-feature i { color: var(--onboarding-accent); font-size: 17px; margin-bottom: 5px; }
 .onboarding-feature strong { color: var(--color-white); font-size: 14px; }
 .onboarding-feature span { color: rgba(232,238,255,0.62); font-size: 12px; line-height: 1.4; }
 
@@ -1115,7 +1122,7 @@ body.dashboard-revealing .period-progress-track {
 .onboarding-ready-card strong { color: var(--color-white); font-size: 14px; }
 .onboarding-schedule-list small,
 .onboarding-ready-card small { grid-column: 2; color: rgba(232,238,255,0.62); font-size: 12px; }
-.onboarding-ready-card i { grid-row: 1 / 3; color: var(--theme-accent); text-align: center; }
+.onboarding-ready-card i { grid-row: 1 / 3; color: var(--onboarding-accent); text-align: center; }
 .onboarding-ready-card span { display: grid; gap: 4px; min-width: 0; }
 .onboarding-ready-card strong,
 .onboarding-ready-card small { display: block; }
@@ -1139,7 +1146,7 @@ body.dashboard-revealing .period-progress-track {
     box-shadow: 0 0 0 4px rgba(var(--color-white-rgb), 0.04);
 }
 .schedule-dot.regular { background: #78a5ff; }
-.schedule-dot.late { background: var(--theme-accent); }
+.schedule-dot.late { background: var(--onboarding-accent); }
 .schedule-dot.half { background: #7fd6a4; }
 .schedule-dot.closed { background: #8a91a8; }
 
@@ -1175,7 +1182,7 @@ body.dashboard-revealing .period-progress-track {
 }
 
 .lunch-choice:has(input:checked) {
-    border-color: var(--theme-accent);
+    border-color: var(--onboarding-accent);
     background: linear-gradient(145deg, rgba(196,173,98,0.17), rgba(27,36,85,0.55));
     box-shadow: 0 0 0 1px rgba(196,173,98,0.16) inset, 0 12px 28px rgba(var(--color-black-rgb), 0.18);
 }
@@ -1194,13 +1201,13 @@ body.dashboard-revealing .period-progress-track {
     height: 44px;
     border-radius: 13px;
     background: var(--color-white);
-    color: var(--theme-primary);
+    color: var(--onboarding-primary);
     font-size: 20px;
     font-weight: 900;
 }
 .lunch-choice strong { display: block; color: var(--color-white); font-size: 14px; }
 .lunch-choice small { display: block; margin-top: 4px; color: rgba(232,238,255,0.6); font-size: 10px; line-height: 1.35; }
-.lunch-choice > i { position: absolute; top: 10px; right: 10px; color: var(--theme-accent); opacity: 0; }
+.lunch-choice > i { position: absolute; top: 10px; right: 10px; color: var(--onboarding-accent); opacity: 0; }
 .lunch-choice:has(input:checked) > i { opacity: 1; }
 
 .onboarding-hint {
@@ -1208,7 +1215,7 @@ body.dashboard-revealing .period-progress-track {
     color: rgba(232,238,255,0.58) !important;
     font-size: 12px !important;
 }
-.onboarding-hint i { margin-right: 5px; color: var(--theme-accent); }
+.onboarding-hint i { margin-right: 5px; color: var(--onboarding-accent); }
 
 .onboarding-privacy-hint a {
     color: #e4d080;
@@ -1224,7 +1231,7 @@ body.dashboard-revealing .period-progress-track {
     width: 68px;
     height: 68px;
     border-radius: 50%;
-    background: linear-gradient(145deg, var(--theme-accent), #8f7a36);
+    background: linear-gradient(145deg, var(--onboarding-accent), #8f7a36);
     color: var(--color-white);
     font-size: 28px;
     box-shadow: 0 16px 34px rgba(196,173,98,0.22);
@@ -1250,7 +1257,7 @@ body.dashboard-revealing .period-progress-track {
 }
 
 .onboarding-actions .btn-primary {
-    background: linear-gradient(135deg, var(--theme-accent), #9e873e);
+    background: linear-gradient(135deg, var(--onboarding-accent), #9e873e);
     color: #090d25;
     border-color: rgba(var(--color-white-rgb), 0.22);
     font-weight: 800;
@@ -1483,7 +1490,7 @@ body.dashboard-revealing .period-progress-track {
 }
 .update-notice-actions .btn { background: transparent; border: 1px solid rgba(244,237,226,0.08); color: #E8EEF7; }
 .update-notice-actions.onboarding-actions .btn-primary {
-    background: linear-gradient(135deg, var(--theme-accent), #9e873e);
+    background: linear-gradient(135deg, var(--onboarding-accent), #9e873e);
     color: #090d25;
     border-color: rgba(var(--color-white-rgb), 0.22);
 }

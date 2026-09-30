@@ -17,7 +17,7 @@ const SETTINGS_KEYS = Object.freeze([
     'progressBarEnabled', 'progressBarColor', 'progressBarOpacity',
     'gradientSettings', 'currentScheduleName', 'indyScheduleOverride_v1',
     'indyOnboardingComplete_v2', 'indyAnalyticsConsent_v1',
-    'indyReleaseNotice_v1_4_0', 'indyReleaseNotice_v1_5_0', 'sawUpdateNotice', 'indySchoologyPromptSeen_v1', 'periodRenames',
+    'indyReleaseNotice_v1_4_0', 'indyReleaseNotice_v1_5_0', 'indyReleaseNotice_v1_5_1', 'sawUpdateNotice', 'indySchoologyPromptSeen_v1', 'periodRenames',
     'globalPeriodNames'
 ]);
 
@@ -58,7 +58,7 @@ function sanitizeSettingValue(key, value) {
     if (value === null || typeof value === 'undefined') return undefined;
 
     if (['toastIconEnabled', 'showPeriodTimes', 'showDueTodayAssignments', 'progressBarEnabled',
-        'indyOnboardingComplete_v2', 'indyReleaseNotice_v1_4_0', 'indyReleaseNotice_v1_5_0', 'sawUpdateNotice', 'indySchoologyPromptSeen_v1'].includes(key)) {
+        'indyOnboardingComplete_v2', 'indyReleaseNotice_v1_4_0', 'indyReleaseNotice_v1_5_0', 'indyReleaseNotice_v1_5_1', 'sawUpdateNotice', 'indySchoologyPromptSeen_v1'].includes(key)) {
         return sanitizeBooleanSetting(value) ?? undefined;
     }
     if (key === 'fontFamily') return typeof value === 'string' && value.length <= 80 ? value : undefined;
@@ -121,6 +121,7 @@ function collectLocalUserSettings() {
         indyAnalyticsConsent_v1: localStorage.getItem(ANALYTICS_CONSENT_KEY),
         indyReleaseNotice_v1_4_0: localStorage.getItem('indyReleaseNotice_v1_4_0'),
         indyReleaseNotice_v1_5_0: localStorage.getItem('indyReleaseNotice_v1_5_0'),
+        indyReleaseNotice_v1_5_1: localStorage.getItem('indyReleaseNotice_v1_5_1'),
         sawUpdateNotice: localStorage.getItem('sawUpdateNotice'),
         indySchoologyPromptSeen_v1: localStorage.getItem('indySchoologyPromptSeen_v1')
     };
@@ -1264,13 +1265,17 @@ async function initializeFirebaseAuthManager() {
         }
         if (!(await checkLocalFirebaseEmulators())) {
             updateSettingsSyncStatus('local');
+            window.__indyLocalEmulatorsUnavailable = true;
             if (!window.__indyEmulatorOfflineReported) {
                 window.__indyEmulatorOfflineReported = true;
                 console.warn('Local Firebase emulators are not running. Start Auth on port 9099 and Firestore on port 8080; Indy Schedule is using local settings for now.');
             }
+            window.dispatchEvent(new CustomEvent('indy-local-emulators-unavailable'));
             return null;
         }
+        window.__indyLocalEmulatorsUnavailable = false;
         window.authManager = new AuthManager();
+        window.dispatchEvent(new CustomEvent('indy-auth-manager-ready'));
         return window.authManager;
     } catch (error) {
         window.authManager = null;

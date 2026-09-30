@@ -4,6 +4,7 @@
     const TIME_ZONE = 'America/Chicago';
     const SCHOOL_YEAR_START = '2026-08-10';
     const SCHOOL_YEAR_END = '2027-05-27';
+    const SOAR_TRANSITION_SECONDS = 3 * 60;
 
     const SCHEDULES = Object.freeze({
         normal: Object.freeze([
@@ -240,6 +241,7 @@
         TIME_ZONE,
         SCHOOL_YEAR_START,
         SCHOOL_YEAR_END,
+        SOAR_TRANSITION_SECONDS,
         LATE_START_DATES: Object.freeze(Array.from(LATE_START_DAYS)),
         SCHEDULES,
         LUNCHES,

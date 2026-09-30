@@ -2464,8 +2464,8 @@ body {
     box-sizing: border-box;
     border: 1px solid rgba(var(--color-white-rgb), 0.14);
     border-radius: var(--radius-lg);
-    color: var(--color-white);
-    background: #0d123b;
+    color: var(--theme-on-panel);
+    background: var(--theme-panel);
     box-shadow: 0 20px 45px rgba(0, 0, 25, 0.42);
 }
 
@@ -2487,7 +2487,7 @@ body {
 
 .dashboard-account-menu span {
     margin: 3px 0 var(--space-2-5);
-    color: rgba(var(--color-white-rgb), 0.58);
+    color: rgba(var(--theme-on-panel-rgb), 0.64);
     font-size: 10px;
 }
 
@@ -2497,13 +2497,13 @@ body {
     margin-top: var(--space-1-5);
     border: 1px solid rgba(var(--color-white-rgb), 0.11);
     border-radius: 9px;
-    color: var(--color-white);
-    background: rgba(var(--color-white-rgb), 0.07);
+    color: var(--theme-on-panel);
+    background: rgba(var(--theme-on-panel-rgb), 0.07);
     cursor: pointer;
 }
 
 .dashboard-account-menu button:hover {
-    background: rgba(var(--color-white-rgb), 0.13);
+    background: rgba(var(--theme-on-panel-rgb), 0.13);
 }
 
 .today-toggle {
@@ -3279,7 +3279,7 @@ body {
     color: inherit !important;
 }
 
-#settings-sidebar .settings-group button:not(.whatsnew-tab):not(.palette-option):not(.edition-option),
+#settings-sidebar .settings-group button:not(.whatsnew-tab):not(.palette-option):not(.edition-option):not(.schoology-action-button),
 #settings-sidebar .settings-group .contact-btn,
 #settings-sidebar .settings-group .legal-btn,
 #settings-sidebar .settings-group .replay-onboarding-btn {
@@ -3289,7 +3289,7 @@ body {
     box-shadow: 0 8px 20px rgba(var(--theme-settings-action-rgb), 0.22) !important;
 }
 
-#settings-sidebar .settings-group button:not(.whatsnew-tab):not(.palette-option):not(.edition-option):hover,
+#settings-sidebar .settings-group button:not(.whatsnew-tab):not(.palette-option):not(.edition-option):not(.schoology-action-button):hover,
 #settings-sidebar .settings-group .contact-btn:hover,
 #settings-sidebar .settings-group .legal-btn:hover,
 #settings-sidebar .settings-group .replay-onboarding-btn:hover {

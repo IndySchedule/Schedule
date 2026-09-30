@@ -38,7 +38,7 @@ function zonedIso(parts, timeZone) {
 
 function parseIcsDate(value, parameters = '') {
     if (!value) return null;
-    const allDay = /VALUE=DATE/i.test(parameters) || /^\d{8}$/.test(value);
+    const allDay = /(?:^|;)VALUE=DATE(?:;|$)/i.test(parameters) || /^\d{8}$/.test(value);
     if (allDay) {
         const match = value.match(/^(\d{4})(\d{2})(\d{2})/);
         return match ? { iso: `${match[1]}-${match[2]}-${match[3]}T23:59:59Z`, allDay: true } : null;
@@ -82,7 +82,16 @@ export async function parseAssignments(ics, now = new Date()) {
     const horizon = new Date(now.getTime() + 180 * 24 * 60 * 60 * 1000).getTime();
     const results = [];
     for (const event of events) {
-        const parsedDate = parseIcsDate(event.DTSTART?.value, event.DTSTART?.params);
+        const startDate = parseIcsDate(event.DTSTART?.value, event.DTSTART?.params);
+        const explicitDueDate = parseIcsDate(event.DUE?.value, event.DUE?.params);
+        const endDate = parseIcsDate(event.DTEND?.value, event.DTEND?.params);
+        // DUE is the authoritative assignment deadline. Some Schoology feeds
+        // instead pair a date-only DTSTART with a timed DTEND, so preserve that
+        // time too. An all-day DTEND is exclusive in iCalendar and must not be
+        // treated as the assignment's due date.
+        const parsedDate = explicitDueDate
+            || (startDate?.allDay && endDate && !endDate.allDay ? endDate : null)
+            || startDate;
         if (!parsedDate) continue;
         const dueTime = new Date(parsedDate.iso).getTime();
         if (!Number.isFinite(dueTime) || dueTime < cutoff || dueTime > horizon) continue;

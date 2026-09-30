@@ -1,11 +1,12 @@
 {
   "name": "indy-schedule-calendar-sync",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "private": true,
   "type": "module",
   "scripts": {
     "test": "node tools/run-regression.mjs",
-    "test:firestore-rules": "firebase emulators:exec --only firestore --project indy-schedule-rules-test \"node tests/firestore-rules-test.mjs\"",
+    "dev:firebase": "firebase emulators:start --only auth,firestore --project demo-indy-feedback",
+    "test:firestore-rules": "firebase emulators:exec --config firebase.rules-test.json --only firestore --project indy-schedule-rules-test \"node tests/firestore-rules-test.mjs\"",
     "test:browser": "node tools/visual-qa.mjs",
     "test:visual": "node tools/visual-qa.mjs",
     "check:performance": "node tools/check-performance-budget.mjs",

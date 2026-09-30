@@ -45,6 +45,7 @@ async function notifyFeedbackWithFormspree(feedback, feedbackId) {
     const localPreview = ['localhost', '127.0.0.1'].includes(location.hostname);
     if (localPreview) {
         const notice = document.createElement('p');
+        notice.id = 'feedback-local-notice';
         notice.className = 'contact-action-note';
         notice.textContent = 'Local test mode: feedback is saved to the Firebase emulator. A configured Formspree endpoint will still send a real notification.';
         form.before(notice);
@@ -72,6 +73,11 @@ async function notifyFeedbackWithFormspree(feedback, feedbackId) {
         });
     }
     window.addEventListener('indy-firebase-ready', watchAuth);
+    window.addEventListener('indy-auth-manager-ready', watchAuth);
+    window.addEventListener('indy-local-emulators-unavailable', () => {
+        const notice = document.getElementById('feedback-local-notice');
+        if (notice) notice.textContent = 'Local feedback is unavailable because the Firebase emulators are not running. Start Auth on port 9099 and Firestore on port 8080, then reload this page.';
+    });
     watchAuth();
     form.addEventListener('submit', async (event) => {
         event.preventDefault();
@@ -94,7 +100,7 @@ async function notifyFeedbackWithFormspree(feedback, feedbackId) {
         const originalMessage = message.value;
         try {
             if (!navigator.onLine) throw Object.assign(new Error(), { code: 'offline' });
-            if (!authReady) throw Object.assign(new Error(), { code: 'firebase-not-ready' });
+            if (!authReady) throw Object.assign(new Error(), { code: localPreview && window.__indyLocalEmulatorsUnavailable ? 'local-emulators-offline' : 'firebase-not-ready' });
             const user = window.authManager.auth.currentUser;
             const page = new URL(window.location.href);
             // Query strings and fragments can contain personal data or sign-in tokens.
@@ -109,7 +115,7 @@ async function notifyFeedbackWithFormspree(feedback, feedbackId) {
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                 status: 'new',
                 pageUrl: page.href.slice(0, 2048),
-                appVersion: '1.5.0'
+                appVersion: '1.5.1'
             };
             const savedFeedback = await firebase.firestore().collection('feedback').add(feedback);
             clearTimeout(pendingNotice);
@@ -120,7 +126,7 @@ async function notifyFeedbackWithFormspree(feedback, feedbackId) {
             updateCount();
             status.textContent = localPreview ? 'Thanks! Your test feedback was saved in the Firestore emulator.' : 'Thanks! Your feedback has been sent.';
         } catch (error) {
-            const code = ['permission-denied', 'offline', 'firebase-not-ready', 'unavailable', 'unauthenticated'].includes(error?.code)
+            const code = ['permission-denied', 'offline', 'firebase-not-ready', 'local-emulators-offline', 'unavailable', 'unauthenticated'].includes(error?.code)
                 ? error.code : 'unknown';
             // Log only a fixed code, never the payload, credentials, or provider message.
             console.warn('Feedback submission failed:', code);
@@ -130,6 +136,8 @@ async function notifyFeedbackWithFormspree(feedback, feedbackId) {
                 status.textContent = "You're offline. Reconnect and try again; your message is still here.";
             } else if (code === 'firebase-not-ready') {
                 status.textContent = "Feedback is still connecting. Please wait a moment and try again.";
+            } else if (code === 'local-emulators-offline') {
+                status.textContent = 'Local feedback needs the Firebase emulators. Start Auth on port 9099 and Firestore on port 8080, reload, and try again.';
             } else {
                 status.textContent = "We couldn't send your feedback. Please try again.";
             }

@@ -195,6 +195,11 @@ function getTimelineSchedule(scheduleName = currentScheduleName, fallback = curr
     return calendar.getScheduleWithLunch(scheduleName, getLunchWave()) || fallback;
 }
 
+function getSoarTransitionEnd(period, scheduleName = currentScheduleName) {
+    if (scheduleName !== 'normal' || period?.name !== 'SOAR') return null;
+    return getTimeInSeconds(period.start) + (window.IndyCalendar?.SOAR_TRANSITION_SECONDS || 180);
+}
+
 function setLunchWave(value) {
     const wave = (value || '').toUpperCase();
     if (['A', 'B', 'C'].includes(wave)) {
@@ -540,7 +545,9 @@ function updateTodayAtIndy(now = new Date()) {
     const lastEnd = schedule.length ? getTimeInSeconds(schedule[schedule.length - 1].end) : null;
 
     let currentLabel = getTimelinePeriodLabel(currentPeriod);
-    if (dayType === 'noSchool') currentLabel = 'No school';
+    const soarTransitionEnd = getSoarTransitionEnd(currentPeriod, scheduleKey);
+    if (soarTransitionEnd && currentSeconds < soarTransitionEnd) currentLabel = 'Transition to SOAR';
+    else if (dayType === 'noSchool') currentLabel = 'No school';
     else if (!currentPeriod && firstStart != null && currentSeconds < firstStart) currentLabel = 'Before school';
     else if (!currentPeriod && lastEnd != null && currentSeconds >= lastEnd) currentLabel = 'School finished';
     else if (!currentPeriod) currentLabel = 'Between classes';
@@ -1339,14 +1346,22 @@ window.populateRenamePeriods = populateRenamePeriods;
             background: #080808 !important;
             font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace !important;
         }
-        #devtools-debug-content { gap: 1px 1px !important; padding: 1px !important; }
-        .devtools-table-header {
+        #devtools-debug-content { display: block !important; padding: 0 !important; }
+        .devtools-storage-row {
+            display: grid;
+            grid-template-columns: minmax(190px, 0.8fr) minmax(0, 1.2fr);
+            align-items: stretch;
+        }
+        .devtools-storage-row + .devtools-storage-row { border-top: 1px solid #202020; }
+        .devtools-storage-header-row {
             position: sticky;
             top: 0;
-            z-index: 1;
+            z-index: 2;
+            background: #151515;
+        }
+        .devtools-table-header {
             padding: 9px 10px !important;
             border: 0 !important;
-            border-bottom: 1px solid #333 !important;
             border-radius: 0 !important;
             background: #151515 !important;
             color: #aaa !important;
@@ -1356,12 +1371,36 @@ window.populateRenamePeriods = populateRenamePeriods;
             min-height: 34px;
             padding: 8px 10px !important;
             border: 0 !important;
-            border-bottom: 1px solid #202020 !important;
             border-radius: 0 !important;
             background: #0d0d0d !important;
         }
-        .devtools-key-cell { color: #bdbdbd; }
-        .devtools-value-cell { color: #ededed; }
+        .devtools-key-cell { border-right: 1px solid #292929 !important; color: #bdbdbd; }
+        .devtools-value-cell { min-width: 0; overflow: visible; color: #ededed; }
+        .devtools-value-text { display: block; min-width: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+        .devtools-cell-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+        .devtools-cell-actions button {
+            min-height: 28px !important;
+            padding: 4px 9px !important;
+            border: 1px solid #353535 !important;
+            border-radius: 4px !important;
+            background: #181818 !important;
+            color: #cfcfcf !important;
+            box-shadow: none !important;
+            cursor: pointer;
+        }
+        .devtools-cell-actions button:hover { border-color: #5a5a5a !important; background: #242424 !important; color: #fff !important; }
+        .devtools-value-editor {
+            width: 100%;
+            min-height: 96px;
+            box-sizing: border-box;
+            margin-top: 8px;
+            padding: 9px;
+            resize: vertical;
+            border: 1px solid #444;
+            border-radius: 4px;
+            background: #080808;
+            color: #f0f0f0;
+        }
         #devtools-sources-content {
             flex: 1 1 auto;
             min-height: 0;
@@ -1580,10 +1619,9 @@ window.populateRenamePeriods = populateRenamePeriods;
                 padding-inline: 6px !important;
             }
             #devtools-debug-content {
-                grid-template-columns: minmax(105px, 0.8fr) minmax(0, 1.5fr) !important;
-                padding: 8px !important;
                 font-size: 11px !important;
             }
+            .devtools-storage-row { grid-template-columns: minmax(110px, 0.75fr) minmax(0, 1.4fr); }
             .devtools-console-controls {
                 max-height: 92px;
                 overflow: auto;
@@ -2788,8 +2826,11 @@ musicPlayerBtn.addEventListener('click', (ev) => {
         hdrVal.style.borderRadius = '10px';
         hdrVal.style.background = 'rgba(255,255,255,0.08)';
         hdrVal.style.border = '1px solid rgba(255,255,255,0.12)';
-        content.appendChild(hdrKey);
-        content.appendChild(hdrVal);
+        const headerRow = document.createElement('div');
+        headerRow.className = 'devtools-storage-row devtools-storage-header-row';
+        headerRow.appendChild(hdrKey);
+        headerRow.appendChild(hdrVal);
+        content.appendChild(headerRow);
 
         if (!keys.length) {
             const empty = document.createElement('div');
@@ -2828,44 +2869,25 @@ musicPlayerBtn.addEventListener('click', (ev) => {
             const fullText = (typeof parsed === 'object' && parsed !== null)
                 ? JSON.stringify(parsed, null, 2)
                 : String(parsed);
-            const shouldCollapse = fullText.length > 1000;
-            const collapsedText = shouldCollapse ? `${fullText.slice(0, 1000)} …` : fullText;
+            const isStructured = typeof parsed === 'object' && parsed !== null;
+            const shouldCollapse = isStructured || fullText.length > 240;
+            const compactText = isStructured ? JSON.stringify(parsed) : fullText;
+            const collapsedText = shouldCollapse ? `${compactText.slice(0, 220)}${compactText.length > 220 ? ' …' : ''}` : fullText;
             const valText = document.createElement('span');
             valText.textContent = collapsedText;
+            valText.className = 'devtools-value-text';
             valText.dataset.full = fullText;
             valText.dataset.collapsed = collapsedText;
             valText.style.display = 'block';
             valCell.appendChild(valText);
 
             const controls = document.createElement('div');
-            controls.style.display = 'flex';
-            controls.style.gap = '6px';
-            controls.style.flexWrap = 'wrap';
-            controls.style.marginTop = '6px';
+            controls.className = 'devtools-cell-actions';
 
             const editBtn = document.createElement('button');
-            editBtn.innerHTML = '✎';
+            editBtn.textContent = 'Edit';
             editBtn.title = 'Edit value';
             editBtn.setAttribute('aria-label', `Edit ${k}`);
-            editBtn.style.position = 'absolute';
-            editBtn.style.top = '6px';
-            editBtn.style.left = '6px';
-            editBtn.style.padding = '4px 6px';
-            editBtn.style.borderRadius = '8px';
-            editBtn.style.border = '1px solid rgba(255,255,255,0.14)';
-            editBtn.style.background = 'rgba(255,255,255,0.14)';
-            editBtn.style.color = '#f8f8ff';
-            editBtn.style.cursor = 'pointer';
-            editBtn.style.opacity = '0';
-            editBtn.style.transition = 'opacity 120ms ease';
-            const iconSpan = document.createElement('span');
-            iconSpan.textContent = '✎';
-            iconSpan.style.display = 'inline-block';
-            iconSpan.style.transform = 'rotate(-25deg)';
-            editBtn.innerHTML = '';
-            editBtn.appendChild(iconSpan);
-            valCell.addEventListener('mouseenter', () => { editBtn.style.opacity = '1'; });
-            valCell.addEventListener('mouseleave', () => { editBtn.style.opacity = '0'; });
             editBtn.addEventListener('click', (ev) => {
                 ev.stopPropagation();
                 if (valCell.querySelector('textarea')) {
@@ -2875,14 +2897,7 @@ musicPlayerBtn.addEventListener('click', (ev) => {
                 }
                 const editor = document.createElement('textarea');
                 editor.value = valText.dataset.full;
-                editor.style.width = '100%';
-                editor.style.boxSizing = 'border-box';
-                editor.style.marginTop = '28px';
-                editor.style.padding = '8px';
-                editor.style.borderRadius = '8px';
-                editor.style.border = '1px solid rgba(255,255,255,0.18)';
-                editor.style.background = 'rgba(0,0,53,0.55)';
-                editor.style.color = '#f0f4ff';
+                editor.className = 'devtools-value-editor';
                 editor.rows = Math.min(10, Math.max(4, Math.ceil(valText.dataset.full.length / 80)));
 
                 const saveBtn = document.createElement('button');
@@ -2937,13 +2952,17 @@ musicPlayerBtn.addEventListener('click', (ev) => {
                     e2.stopPropagation();
                     editor.remove();
                     actionRow.remove();
+                    valText.hidden = false;
+                    controls.hidden = false;
                 });
 
                 valCell.appendChild(editor);
                 valCell.appendChild(actionRow);
+                valText.hidden = true;
+                controls.hidden = true;
                 editor.focus();
             });
-            valCell.appendChild(editBtn);
+            controls.appendChild(editBtn);
 
             if (shouldCollapse) {
                 const toggle = document.createElement('button');
@@ -2970,8 +2989,11 @@ musicPlayerBtn.addEventListener('click', (ev) => {
 
             valCell.appendChild(controls);
 
-            content.appendChild(keyCell);
-            content.appendChild(valCell);
+            const row = document.createElement('div');
+            row.className = 'devtools-storage-row';
+            row.appendChild(keyCell);
+            row.appendChild(valCell);
+            content.appendChild(row);
         });
     }
 
@@ -3454,6 +3476,22 @@ function updateCountdowns() {
 
     if (currentPeriod) {
         const periodName = displayPeriodName(currentPeriod);
+        const soarTransitionEnd = getSoarTransitionEnd(currentPeriod, effectiveScheduleName);
+        if (soarTransitionEnd && currentTimeInSeconds < soarTransitionEnd) {
+            const transitionEndTime = `${String(Math.floor(soarTransitionEnd / 3600)).padStart(2, '0')}:${String(Math.floor((soarTransitionEnd % 3600) / 60)).padStart(2, '0')}`;
+            const timeText = formatDuration(soarTransitionEnd - currentTimeInSeconds);
+            setHeroText({
+                context: headerName,
+                heading: 'Transition to SOAR',
+                caption: 'until SOAR class time',
+                periodWindow: `${formatTime12(currentPeriod.start)}–${formatTime12(transitionEndTime)}`,
+                nextSummary: `SOAR class time begins at ${formatTime12(transitionEndTime)}`,
+                state: 'between-classes'
+            });
+            setTimerText(timeText);
+            updateTabTitle('Transition to SOAR', timeText);
+            return;
+        }
         const timeText = formatDuration(getTimeInSeconds(currentPeriod.end) - currentTimeInSeconds);
         const nextText = upcomingPeriod
             ? `Next: ${displayPeriodName(upcomingPeriod)} at ${formatTime12(upcomingPeriod.start)}`

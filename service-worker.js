@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'indy-schedule-v1.5.0-r4';
+const CACHE_VERSION = 'indy-schedule-v1.5.1-r2';
 const APP_SHELL = [
     './',
     './index.html',
@@ -72,6 +72,13 @@ self.addEventListener('fetch', (event) => {
     }
 
     if (url.pathname.includes('/data/')) {
+        event.respondWith(networkFirst(request));
+        return;
+    }
+
+    // Code and styles must not mix across releases. Network-first still keeps
+    // the cached copy available when the installed app is offline.
+    if (request.destination === 'style' || request.destination === 'script') {
         event.respondWith(networkFirst(request));
         return;
     }

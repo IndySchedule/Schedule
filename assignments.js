@@ -46,7 +46,18 @@
         return `${dateText} · ${new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit' }).format(date)}`;
     }
 
-    function relativeDue(dateValue) {
+    function relativeDue(dateValue, allDay = false) {
+        if (allDay) {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const dueDay = new Date(dateValue);
+            dueDay.setHours(0, 0, 0, 0);
+            const days = Math.round((dueDay - today) / 86400000);
+            if (days < 0) return `Due ${Math.abs(days)} day${Math.abs(days) === 1 ? '' : 's'} ago`;
+            if (days === 0) return 'Due today';
+            if (days === 1) return 'Due tomorrow';
+            return `Due in ${days} days`;
+        }
         const milliseconds = new Date(dateValue).getTime() - Date.now();
         const absolute = Math.abs(milliseconds);
         if (milliseconds < 0) {
@@ -59,11 +70,6 @@
         return hours < 24 ? `Due in ${hours} hour${hours === 1 ? '' : 's'}` : `Due in ${Math.round(hours / 24)} days`;
     }
 
-    function localDateKey(value) {
-        const date = new Date(value);
-        return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-    }
-
     function formatDueTime(item) {
         if (item.allDay) return '';
         const date = new Date(item.dueAt);
@@ -71,13 +77,17 @@
         return new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit' }).format(date);
     }
 
-    function groupFor(value) {
-        const today = new Date();
+    function groupFor(value, allDay = false, now = new Date()) {
+        const dueMoment = new Date(value);
+        if (Number.isNaN(dueMoment.getTime())) return 'Later';
+        const today = new Date(now);
         today.setHours(0, 0, 0, 0);
-        const due = new Date(value);
+        const due = new Date(dueMoment);
         due.setHours(0, 0, 0, 0);
         const days = Math.round((due - today) / 86400000);
-        if (days <= 0) return 'Due Today';
+        if (days < 0) return 'Overdue';
+        if (days === 0 && !allDay && dueMoment.getTime() <= new Date(now).getTime()) return 'Overdue';
+        if (days === 0) return 'Due Today';
         if (days === 1) return 'Due Tomorrow';
         if (days <= 7) return 'This Week';
         return 'Later';
@@ -92,8 +102,7 @@
             badge.setAttribute('aria-label', 'Connect your Schoology iCalendar');
             return;
         }
-        const todayKey = localDateKey(new Date());
-        const count = state.assignments.filter((item) => !item.completed && localDateKey(item.dueAt) === todayKey).length;
+        const count = state.assignments.filter((item) => !item.completed && groupFor(item.dueAt, item.allDay) === 'Due Today').length;
         badge.textContent = String(count);
         badge.hidden = count === 0;
         badge.setAttribute('aria-label', `${count} incomplete assignment${count === 1 ? '' : 's'} due today`);
@@ -117,8 +126,7 @@
             return;
         }
 
-        const todayKey = localDateKey(new Date());
-        const today = state.assignments.filter((item) => !item.completed && localDateKey(item.dueAt) === todayKey);
+        const today = state.assignments.filter((item) => !item.completed && groupFor(item.dueAt, item.allDay) === 'Due Today');
         if (!today.length) {
             const empty = document.createElement('p');
             empty.className = 'dashboard-due-empty';
@@ -192,8 +200,8 @@
             renderDashboardDueToday();
             return;
         }
-        ['Due Today', 'Due Tomorrow', 'This Week', 'Later'].forEach((groupName) => {
-            const items = visible.filter((item) => groupFor(item.dueAt) === groupName);
+        ['Overdue', 'Due Today', 'Due Tomorrow', 'This Week', 'Later'].forEach((groupName) => {
+            const items = visible.filter((item) => groupFor(item.dueAt, item.allDay) === groupName);
             if (!items.length) return;
             const section = document.createElement('section');
             section.className = 'assignment-group';
@@ -212,7 +220,7 @@
                 course.textContent = item.course || 'Schoology';
                 const due = document.createElement('p');
                 due.className = 'assignment-due';
-                due.textContent = `${formatDue(item.dueAt, item.allDay)} · ${relativeDue(item.dueAt)}`;
+                due.textContent = `${formatDue(item.dueAt, item.allDay)} · ${relativeDue(item.dueAt, item.allDay)}`;
                 content.append(title, course, due);
                 const button = document.createElement('button');
                 button.type = 'button';
@@ -454,6 +462,7 @@
             });
         };
         window.addEventListener('indy-firebase-ready', () => window.setTimeout(bindAuthObserver, 0));
+        window.addEventListener('indy-auth-manager-ready', bindAuthObserver);
         bindAuthObserver();
         window.addEventListener('online', () => { if (!$('assignments-view')?.hidden) refreshAssignments(false); });
         updateConnectionUI();

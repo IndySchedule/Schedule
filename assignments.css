@@ -5,7 +5,7 @@
 .assignments-toggle { position:relative; }
 .assignment-count-badge { min-width:20px; height:20px; padding:0 6px; border-radius:999px; display:inline-flex; align-items:center; justify-content:center; background:var(--theme-accent); color:var(--theme-on-accent); font-size:11px; font-weight:800; }
 .assignment-count-badge[hidden] { display:none !important; }
-.assignments-view { grid-column:1 / -1; min-height:min(680px, calc(100vh - 190px)); padding:clamp(18px, 3vw, 34px); overflow:auto; background:var(--theme-panel); border:1px solid rgba(var(--theme-on-panel-rgb), .12); border-radius:22px; color:var(--theme-on-panel); }
+.assignments-view { grid-column:1 / -1; width:100%; height:100%; min-height:0; max-height:100%; padding:clamp(18px, 3vw, 34px); padding-bottom:max(clamp(18px, 3vw, 34px), env(safe-area-inset-bottom)); box-sizing:border-box; overflow:auto; overscroll-behavior:contain; background:var(--theme-panel); border:1px solid rgba(var(--theme-on-panel-rgb), .12); border-radius:22px; color:var(--theme-on-panel); }
 .assignments-view:not([hidden]) { animation:assignments-view-enter 190ms cubic-bezier(.2, .75, .3, 1) both; transform-origin:top center; }
 @keyframes assignments-view-enter {
   from { opacity:0; transform:translateY(8px) scale(.995); }
@@ -111,7 +111,10 @@
 .schoology-connected-summary strong, .schoology-connected-summary span { display:block; }
 .schoology-connected-summary span { color:rgba(var(--theme-on-settings-card-rgb), .68); font-size:13px; margin-top:3px; }
 .schoology-dashboard-switch { margin:0 0 14px; }
-.schoology-button-row { display:flex; flex-wrap:wrap; gap:9px; }
+.schoology-button-row { display:flex; flex-wrap:wrap; align-items:center; gap:6px; padding-top:2px; }
+#settings-sidebar #schoology-panel .schoology-action-button { width:auto !important; min-width:0 !important; height:34px !important; min-height:34px !important; display:inline-flex; align-items:center; justify-content:center; gap:7px; margin:0 !important; padding:0 12px !important; border:1px solid rgba(var(--theme-on-settings-action-rgb), .20) !important; border-radius:8px !important; background:var(--theme-settings-action) !important; color:var(--theme-on-settings-action) !important; box-shadow:0 3px 8px rgba(var(--theme-settings-action-rgb), .16) !important; font:inherit; font-size:12px !important; line-height:1 !important; font-weight:700; cursor:pointer; transition:filter .15s ease, transform .15s ease, box-shadow .15s ease; }
+.schoology-action-button:hover { filter:brightness(1.08); transform:translateY(-1px); box-shadow:0 5px 11px rgba(var(--theme-settings-action-rgb), .20); }
+.schoology-action-button:focus-visible { outline:3px solid rgba(var(--theme-ui-accent-rgb), .28); outline-offset:2px; }
 .schoology-settings-message { margin:12px 0 0; font-size:13px; font-weight:700; }
 .schoology-settings-message[data-state="error"] { color:#b91c1c; }
 @media (max-width:700px) {
@@ -119,17 +122,23 @@
   .dashboard-actions #today-toggle { min-height:40px; padding:0 12px; }
   .today-toggle-wide { display:none; }
   .assignments-toggle-label { display:none; }
-  .assignments-view { border-radius:16px; padding:16px; min-height:calc(100vh - 150px); }
+  .assignments-view { height:auto; max-height:none; border-radius:16px; padding:16px; padding-bottom:max(24px, env(safe-area-inset-bottom)); }
   .assignments-header { flex-direction:column; }
   .assignments-toolbar { align-items:flex-start; flex-direction:column; padding-block:10px; }
   .assignments-actions { justify-content:flex-start; }
   .assignment-card { align-items:flex-start; flex-direction:column; }
-  .assignment-complete-button { width:100%; }
+  .assignment-complete-button { width:auto; min-height:38px; align-self:flex-end; }
   .schoology-url-row { grid-template-columns:1fr; align-items:stretch; }
   .schoology-setup-step #schoology-connect-button { width:100%; }
   .schoology-setup-step { grid-template-columns:30px minmax(0, 1fr); padding:13px; }
   .schoology-open-settings { width:100%; justify-content:center; text-align:center; }
   .dashboard-due-row { padding-block:9px; }
+}
+@media (min-width:821px) and (max-height:760px) {
+  .dashboard-due-today { margin-top:9px; padding-top:8px; }
+  .dashboard-due-heading { margin-bottom:5px; }
+  .dashboard-due-row { padding:5px 7px; }
+  .dashboard-due-list { gap:3px; }
 }
 @media (max-width:460px) {
   .dashboard-actions #assignments-toggle,
