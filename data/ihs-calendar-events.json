@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-09-30T20:03:38.138Z",
-  "lastCheckedAt": "2026-09-30T20:03:38.138Z",
-  "contentUpdatedAt": "2026-09-30T12:37:53.424Z",
+  "generatedAt": "2026-10-01T00:35:11.205Z",
+  "lastCheckedAt": "2026-10-01T00:35:11.205Z",
+  "contentUpdatedAt": "2026-10-01T00:35:11.205Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -12,39 +12,6 @@
   "rangeStart": "2026-09-28",
   "rangeEnd": "2027-01-28",
   "events": [
-    {
-      "id": "0vf6bl04ilo3h1do5fnpkbpqgq@google.com-2026-09-28T00:00:00.000Z",
-      "title": "IHS Late Start",
-      "start": "2026-09-28T00:00:00.000Z",
-      "end": "2026-09-29T00:00:00.000Z",
-      "allDay": true,
-      "days": [
-        "2026-09-28"
-      ],
-      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
-    },
-    {
-      "id": "3d6bnogofdc3ftrsjbup5em4co@google.com-2026-09-28T22:30:00.000Z",
-      "title": "IHS Freshman Football vs Nolensville HS",
-      "start": "2026-09-28T22:30:00.000Z",
-      "end": "2026-09-29T00:30:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-09-28"
-      ],
-      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
-    },
-    {
-      "id": "530uh4e71q3krvf0jiiooj5i29@google.com-2026-09-28T22:30:00.000Z",
-      "title": "IHS JV Football @ Nolensville HS",
-      "start": "2026-09-28T22:30:00.000Z",
-      "end": "2026-09-29T00:30:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-09-28"
-      ],
-      "location": "Nolensville High School, 1600 Summerlyn Dr, Nolensville, TN 37135, USA"
-    },
     {
       "id": "2m7ehe3i9jsahdlh056riv9kch@google.com-2026-09-29T21:30:00.000Z",
       "title": "IHS JV/V Volleyball vs Ravenwood HS",
