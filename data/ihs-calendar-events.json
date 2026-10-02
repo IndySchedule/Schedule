@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-10-01T10:12:14.775Z",
-  "lastCheckedAt": "2026-10-01T10:12:14.775Z",
-  "contentUpdatedAt": "2026-10-01T10:12:14.775Z",
+  "generatedAt": "2026-10-02T00:49:12.644Z",
+  "lastCheckedAt": "2026-10-02T00:49:12.644Z",
+  "contentUpdatedAt": "2026-10-02T00:49:12.644Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -12,28 +12,6 @@
   "rangeStart": "2026-09-29",
   "rangeEnd": "2027-01-29",
   "events": [
-    {
-      "id": "2m7ehe3i9jsahdlh056riv9kch@google.com-2026-09-29T21:30:00.000Z",
-      "title": "IHS JV/V Volleyball vs Ravenwood HS",
-      "start": "2026-09-29T21:30:00.000Z",
-      "end": "2026-09-30T00:30:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-09-29"
-      ],
-      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
-    },
-    {
-      "id": "2mukn75m9rqjcghag61i1d7uhk@google.com-2026-09-29T23:00:00.000Z",
-      "title": "IHS V Girls Soccer vs Battle Creek HS",
-      "start": "2026-09-29T23:00:00.000Z",
-      "end": "2026-09-30T00:30:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-09-29"
-      ],
-      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
-    },
     {
       "id": "1q1pfi2unttnd00qi4cakh06up@google.com-2026-10-01T21:00:00.000Z",
       "title": "IHS JV/V Volleyball @ Page HS",
@@ -1532,6 +1510,50 @@
         "2027-01-26"
       ],
       "location": "Centennial High School, 5050 Mallory Ln, Franklin, TN 37067, USA"
+    },
+    {
+      "id": "2d8m44b87doue68lfhjcvbt452@google.com-2027-01-29T22:30:00.000Z",
+      "title": "IHS JV Boys Basketball @ Nolensville HS",
+      "start": "2027-01-29T22:30:00.000Z",
+      "end": "2027-01-30T00:00:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-01-29"
+      ],
+      "location": "Nolensville High School, 1600 Summerlyn Dr, Nolensville, TN 37135, USA"
+    },
+    {
+      "id": "2982isnt3r7l4srvb4e2hnk2j4@google.com-2027-01-30T00:00:00.000Z",
+      "title": "IHS Freshman Boys Basketball @ Nolensville HS",
+      "start": "2027-01-30T00:00:00.000Z",
+      "end": "2027-01-30T01:30:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-01-29"
+      ],
+      "location": "Nolensville High School, 1600 Summerlyn Dr, Nolensville, TN 37135, USA"
+    },
+    {
+      "id": "3jsq8e954flbk20vnk34lbhpdp@google.com-2027-01-30T00:00:00.000Z",
+      "title": "IHS V/G Wrestling State Duals",
+      "start": "2027-01-30T00:00:00.000Z",
+      "end": "2027-01-31T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2027-01-30"
+      ],
+      "location": "Williamson County AG Expo Park, 4215 Long Ln, Franklin, TN 37064, USA"
+    },
+    {
+      "id": "5oenebh0771eoksvb178usqedv@google.com-2027-01-30T00:00:00.000Z",
+      "title": "IHS Girls Basketball @ Nolensville HS",
+      "start": "2027-01-30T00:00:00.000Z",
+      "end": "2027-01-30T01:30:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-01-29"
+      ],
+      "location": "Nolensville High School, 1600 Summerlyn Dr, Nolensville, TN 37135, USA"
     }
   ]
 }
