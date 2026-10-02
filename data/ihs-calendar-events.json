@@ -2,15 +2,15 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-10-02T00:49:12.644Z",
-  "lastCheckedAt": "2026-10-02T00:49:12.644Z",
-  "contentUpdatedAt": "2026-10-02T00:49:12.644Z",
+  "generatedAt": "2026-10-02T09:49:24.657Z",
+  "lastCheckedAt": "2026-10-02T09:49:24.657Z",
+  "contentUpdatedAt": "2026-10-02T09:49:24.657Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
   "timeZone": "America/Chicago",
-  "rangeStart": "2026-09-29",
-  "rangeEnd": "2027-01-29",
+  "rangeStart": "2026-09-30",
+  "rangeEnd": "2027-01-30",
   "events": [
     {
       "id": "1q1pfi2unttnd00qi4cakh06up@google.com-2026-10-01T21:00:00.000Z",
@@ -1549,6 +1549,17 @@
       "title": "IHS Girls Basketball @ Nolensville HS",
       "start": "2027-01-30T00:00:00.000Z",
       "end": "2027-01-30T01:30:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-01-29"
+      ],
+      "location": "Nolensville High School, 1600 Summerlyn Dr, Nolensville, TN 37135, USA"
+    },
+    {
+      "id": "3e61dccri8de19mr8fegt9cc2q@google.com-2027-01-30T01:30:00.000Z",
+      "title": "IHS V Boys Basketball @ Nolensville HS",
+      "start": "2027-01-30T01:30:00.000Z",
+      "end": "2027-01-30T03:30:00.000Z",
       "allDay": false,
       "days": [
         "2027-01-29"
