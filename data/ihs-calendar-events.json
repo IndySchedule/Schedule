@@ -2,27 +2,16 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-10-03T11:42:52.172Z",
-  "lastCheckedAt": "2026-10-03T11:42:52.172Z",
-  "contentUpdatedAt": "2026-10-03T11:42:52.172Z",
+  "generatedAt": "2026-10-04T05:57:17.714Z",
+  "lastCheckedAt": "2026-10-04T05:57:17.714Z",
+  "contentUpdatedAt": "2026-10-04T05:57:17.714Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
   "timeZone": "America/Chicago",
-  "rangeStart": "2026-10-01",
+  "rangeStart": "2026-10-02",
   "rangeEnd": "2027-01-31",
   "events": [
-    {
-      "id": "1q1pfi2unttnd00qi4cakh06up@google.com-2026-10-01T21:00:00.000Z",
-      "title": "IHS JV/V Volleyball @ Page HS",
-      "start": "2026-10-01T21:00:00.000Z",
-      "end": "2026-10-02T00:30:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-10-01"
-      ],
-      "location": "Page High School, 6281 Arno Rd, Franklin, TN 37064, USA"
-    },
     {
       "id": "10hkn3s8gdvi63g1e01vf8t3gu@google.com-2026-10-03T00:00:00.000Z",
       "title": "IHS Varsity Football vs Ravenwood HS",
@@ -1565,6 +1554,17 @@
         "2027-01-29"
       ],
       "location": "Nolensville High School, 1600 Summerlyn Dr, Nolensville, TN 37135, USA"
+    },
+    {
+      "id": "IHS Late Start-2027-02-01T00:00:00.000Z",
+      "title": "IHS Late Start",
+      "start": "2027-02-01T00:00:00.000Z",
+      "end": "2027-02-02T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2027-02-01"
+      ],
+      "location": ""
     }
   ]
 }
