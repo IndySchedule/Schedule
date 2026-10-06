@@ -2,27 +2,16 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-10-05T14:44:41.904Z",
-  "lastCheckedAt": "2026-10-05T14:44:41.904Z",
-  "contentUpdatedAt": "2026-10-05T14:44:41.904Z",
+  "generatedAt": "2026-10-06T06:24:36.769Z",
+  "lastCheckedAt": "2026-10-06T06:24:36.769Z",
+  "contentUpdatedAt": "2026-10-06T06:24:36.769Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
   "timeZone": "America/Chicago",
-  "rangeStart": "2026-10-03",
-  "rangeEnd": "2027-02-02",
+  "rangeStart": "2026-10-04",
+  "rangeEnd": "2027-02-03",
   "events": [
-    {
-      "id": "3cdq34mecfps7tig271gfctm8t@google.com-2026-10-03T00:00:00.000Z",
-      "title": "IHS JV Volleyball District Tournament",
-      "start": "2026-10-03T00:00:00.000Z",
-      "end": "2026-10-04T00:00:00.000Z",
-      "allDay": true,
-      "days": [
-        "2026-10-03"
-      ],
-      "location": "TBD"
-    },
     {
       "id": "0pd18lpd3ke1f6ipcf5jc487kk@google.com-2026-10-05T00:00:00.000Z",
       "title": "IHS V Volleyball District Playoffs",
@@ -1565,6 +1554,50 @@
         "2027-02-02"
       ],
       "location": "Spring Hill High School, 1 Raider Ln, Columbia, TN 38401, USA"
+    },
+    {
+      "id": "21ugncqongicceuldkcvd33co6@google.com-2027-02-02T22:30:00.000Z",
+      "title": "IHS JV Boys Basketball @ Page HS",
+      "start": "2027-02-02T22:30:00.000Z",
+      "end": "2027-02-03T00:00:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-02-02"
+      ],
+      "location": "Page High School, 6281 Arno Rd, Franklin, TN 37064, USA"
+    },
+    {
+      "id": "2nk3dn9blhk2ngd201tukg0t7h@google.com-2027-02-02T23:30:00.000Z",
+      "title": "IHS Freshman Boys Basketball @ Page HS",
+      "start": "2027-02-02T23:30:00.000Z",
+      "end": "2027-02-03T01:00:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-02-02"
+      ],
+      "location": "Page High School Band, 6281 Arno Rd, Franklin, TN 37064, USA"
+    },
+    {
+      "id": "2ppmsmde36meadtc8mu51jivcp@google.com-2027-02-03T00:00:00.000Z",
+      "title": "IHS Girls Basketball @ Page HS",
+      "start": "2027-02-03T00:00:00.000Z",
+      "end": "2027-02-03T01:30:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-02-02"
+      ],
+      "location": "Page High School, 6281 Arno Rd, Franklin, TN 37064, USA"
+    },
+    {
+      "id": "5lp66o2i7jnuqke98l0dd0mcvp@google.com-2027-02-03T01:30:00.000Z",
+      "title": "IHS V Boys Basketball @ Page HS",
+      "start": "2027-02-03T01:30:00.000Z",
+      "end": "2027-02-03T03:30:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-02-02"
+      ],
+      "location": "Page High School, 6281 Arno Rd, Franklin, TN 37064, USA"
     }
   ]
 }
