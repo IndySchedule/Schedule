@@ -2,15 +2,15 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-10-06T06:24:36.769Z",
-  "lastCheckedAt": "2026-10-06T06:24:36.769Z",
-  "contentUpdatedAt": "2026-10-06T06:24:36.769Z",
+  "generatedAt": "2026-10-07T06:03:58.307Z",
+  "lastCheckedAt": "2026-10-07T06:03:58.307Z",
+  "contentUpdatedAt": "2026-10-07T06:03:58.307Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
   "timeZone": "America/Chicago",
-  "rangeStart": "2026-10-04",
-  "rangeEnd": "2027-02-03",
+  "rangeStart": "2026-10-05",
+  "rangeEnd": "2027-02-04",
   "events": [
     {
       "id": "0pd18lpd3ke1f6ipcf5jc487kk@google.com-2026-10-05T00:00:00.000Z",
@@ -1598,6 +1598,17 @@
         "2027-02-02"
       ],
       "location": "Page High School, 6281 Arno Rd, Franklin, TN 37064, USA"
+    },
+    {
+      "id": "3jm063to9ngv0paalojkb30ald@google.com-2027-02-04T00:00:00.000Z",
+      "title": "IHS Freshman Boys Basketball vs Columbia Central HS",
+      "start": "2027-02-04T00:00:00.000Z",
+      "end": "2027-02-04T01:30:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-02-03"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     }
   ]
 }
