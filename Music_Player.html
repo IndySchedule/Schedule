@@ -804,6 +804,21 @@
       line-height:1.4!important;
     }
 
+    .cancel-scan {
+      align-self:flex-start;
+      margin:0 9px;
+      padding:5px 10px;
+      border:1px solid rgba(255,255,255,.1);
+      border-radius:8px;
+      color:#9caaaf;
+      background:rgba(255,255,255,.035);
+      font-size:10px;
+      font-weight:700;
+    }
+
+    .cancel-scan:hover { color:#fff;background:rgba(255,255,255,.075); }
+    .cancel-scan[hidden] { display:none; }
+
     .player-topline {
       display:flex;
       align-items:center;
@@ -1796,11 +1811,17 @@
     .playlist.playing .playlist-meta::after { content:'  •  Playing';color:var(--accent); }
     .playlist-menu-button { width:28px;height:28px;opacity:0; }
     .playlist:hover .playlist-menu-button,.playlist:focus-within .playlist-menu-button { opacity:1; }
-    .stats-nav { flex:none;width:100%;min-height:42px;display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:8px;color:#9eabb0;background:transparent;font-size:12px;font-weight:720;text-align:left; }
+    .stats-nav { flex:none;width:100%;min-height:48px;display:flex;align-items:center;gap:10px;padding:8px 11px;border-radius:8px;color:#9eabb0;background:transparent;text-align:left; }
     .stats-nav:hover,.stats-nav.active { color:#fff;background:rgba(255,255,255,.07); }
     .stats-nav.active { color:var(--accent); }
     .stats-nav svg { width:18px;height:18px; }
-    .sidebar-privacy { display:flex;align-items:center;gap:7px;padding:0 9px;color:#607077;font-size:10px; }
+    .stats-nav .stats-nav-back { display:none; }
+    .stats-nav.active .stats-nav-chart { display:none; }
+    .stats-nav.active .stats-nav-back { display:block; }
+    .stats-nav-copy { min-width:0;display:grid;gap:2px; }
+    .stats-nav-copy strong { color:inherit;font-size:12px;font-weight:720; }
+    .stats-nav-copy small { color:#64747a;font-size:9px;font-weight:550;line-height:1.25; }
+    .sidebar-privacy { align-self:flex-start;display:flex;align-items:center;gap:7px;margin:2px 7px 0;padding:6px 9px;border:1px solid rgba(98,225,212,.1);border-radius:999px;color:#71878a;background:rgba(98,225,212,.045);font-size:9.5px;font-weight:650; }
     .sidebar-privacy svg { width:14px;height:14px; }
     @media (min-width:701px) {
       .sidebar { overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#34444a transparent; }
@@ -1810,9 +1831,16 @@
     .main { grid-column:2;grid-row:1;display:block;height:auto;padding:0;overflow-y:auto;overflow-x:hidden;background:linear-gradient(180deg,#132029 0,#090f13 46%,#070b0e 100%);scrollbar-color:#34444a transparent; }
     .main::before,.main-bg,.main-overlay { display:none; }
     .main:not(.has-library) { display:grid;place-items:center;background:radial-gradient(circle at 55% 35%,rgba(26,94,105,.24),transparent 33%),radial-gradient(circle at 73% 55%,rgba(40,47,110,.16),transparent 38%),#070c11; }
-    .empty-hero { position:relative;width:min(490px,calc(100% - 40px));padding:45px 34px 40px;border-radius:22px;transform:translateY(12px);background:linear-gradient(155deg,rgba(18,32,39,.93),rgba(9,16,22,.9));border-color:rgba(98,225,212,.15); }
-    .empty-hero-icon { width:102px;height:102px;border-radius:50%;color:#dcfffb;background:radial-gradient(circle at 30% 22%,rgba(255,255,255,.26),transparent 34%),linear-gradient(145deg,#2bd7c7,#2367a0 60%,#45338a);border-color:rgba(255,255,255,.2);box-shadow:0 20px 52px rgba(18,156,159,.25); }
+    .empty-hero { position:relative;width:min(490px,calc(100% - 40px));padding:45px 34px 35px;border-radius:22px;transform:translateY(12px);background:linear-gradient(155deg,rgba(18,32,39,.93),rgba(9,16,22,.9));border-color:rgba(98,225,212,.15);overflow:hidden; }
+    .empty-hero::before { content:'';position:absolute;inset:auto -8% -44% 22%;height:72%;pointer-events:none;background:repeating-radial-gradient(ellipse at center,transparent 0 12px,rgba(47,218,204,.055) 13px 14px,transparent 15px 25px);transform:rotate(-7deg);mask-image:linear-gradient(90deg,transparent,#000 28%,transparent);animation:emptyWaveDrift 9s ease-in-out infinite alternate; }
+    .empty-hero > * { position:relative;z-index:1; }
+    .empty-hero-icon { width:102px;height:102px;border-radius:50%;color:#dcfffb;background:radial-gradient(circle at 30% 22%,rgba(255,255,255,.26),transparent 34%),linear-gradient(145deg,#2bd7c7,#2367a0 60%,#45338a);border-color:rgba(255,255,255,.2);box-shadow:0 20px 52px rgba(18,156,159,.25);animation:emptyIconGlow 4.5s ease-in-out infinite; }
     .empty-hero .primary { color:#04110f;background:linear-gradient(180deg,#2be0cd,#1ac2b5);border-radius:999px;box-shadow:0 12px 28px rgba(17,184,173,.2); }
+    .empty-formats { margin:13px 0 0;color:#708087;font-size:9px;font-weight:750;letter-spacing:.11em;text-transform:uppercase; }
+    .empty-drop-hint { display:flex;align-items:center;justify-content:center;gap:6px;margin:10px auto 0;color:#829298;font-size:9.5px;font-weight:600; }
+    .empty-drop-hint svg { width:13px;height:13px; }
+    @keyframes emptyIconGlow { 0%,100% { transform:translateY(0);box-shadow:0 20px 52px rgba(18,156,159,.22); } 50% { transform:translateY(-3px);box-shadow:0 24px 60px rgba(18,156,159,.34); } }
+    @keyframes emptyWaveDrift { from { transform:translateX(-2%) rotate(-7deg); } to { transform:translateX(3%) rotate(-4deg); } }
     .playlist-view { --playlist-inline-gutter:clamp(20px,2.05vw,28px);width:100%;min-height:100%;padding-bottom:34px; }
     .main:not(.has-library) .playlist-view { display:none; }
     .playlist-hero { position:relative;min-height:292px;display:flex;align-items:flex-end;gap:26px;padding:32px var(--playlist-inline-gutter) 28px;overflow:hidden;background:linear-gradient(180deg,#254451,#16272e); }
@@ -1885,6 +1913,9 @@
 
     .player { grid-column:1/3;grid-row:2;position:relative;z-index:40;width:auto;max-height:none;display:grid;grid-template-columns:minmax(210px,1fr) minmax(400px,1.5fr) minmax(210px,1fr);align-items:center;gap:18px;padding:9px 18px;border:0;border-top:1px solid rgba(255,255,255,.075);border-radius:0;background:#090f13;box-shadow:0 -8px 24px rgba(0,0,0,.22);transform:none;overflow:visible;backdrop-filter:none; }
     .main:not(.has-library) .player { position:relative;opacity:1;visibility:visible;pointer-events:auto;transform:none; }
+    .main:not(.has-library) + .player .player-center,
+    .main:not(.has-library) + .player .player-right { opacity:.42; }
+    .main:not(.has-library) + .player button { cursor:default; }
     .now-playing { min-width:0;display:flex;align-items:center;gap:12px; }
     .now-art { position:relative;width:58px;height:58px;flex:0 0 58px;overflow:hidden;border-radius:5px;background:#182329; }
     .now-art img { width:100%;height:100%;display:none;object-fit:cover; }
@@ -2022,10 +2053,12 @@
     </div>
 
     <button id="statsNavBtn" class="stats-nav" type="button" aria-label="Listening Stats" aria-pressed="false">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M5 19V11M12 19V5M19 19V8"/></svg>
-      <span>Listening Stats</span>
+      <svg class="stats-nav-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M5 19V11M12 19V5M19 19V8"/></svg>
+      <svg class="stats-nav-back" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/><path d="M9 12h10"/></svg>
+      <span class="stats-nav-copy"><strong id="statsNavTitle">Listening Stats</strong><small id="statsNavHint">Builds as you listen</small></span>
     </button>
-    <div class="sidebar-privacy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M7 10V8a5 5 0 0 1 10 0v2"/><rect x="5" y="10" width="14" height="10" rx="3"/></svg><span>Files stay on this device</span></div>
+    <div class="sidebar-privacy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M7 10V8a5 5 0 0 1 10 0v2"/><rect x="5" y="10" width="14" height="10" rx="3"/></svg><span>Local only · Nothing uploaded</span></div>
+    <button id="cancelScanBtn" class="cancel-scan" type="button" hidden>Cancel scan</button>
   </aside>
 
   <main id="mainArea" class="main">
@@ -2036,10 +2069,12 @@
     </div>
     <section class="empty-hero" aria-labelledby="emptyHeroTitle">
       <div class="empty-hero-icon" aria-hidden="true">♫</div>
-      <h1 id="emptyHeroTitle">Your music, locally.</h1>
-      <p class="empty-hero-copy">Find every <strong>!MUSIC</strong> playlist in Downloads with one folder selection. Nothing is uploaded or leaves your device.</p>
-      <button id="findMusicBtn" class="primary" type="button">Find My Music</button>
-      <button id="chooseOneFolderBtn" class="empty-folder-secondary" type="button">Choose One Folder</button>
+      <h1 id="emptyHeroTitle">Your music. Your device.</h1>
+      <p class="empty-hero-copy">Choose your Downloads folder once. Music Player automatically finds every <strong>!MUSIC</strong> playlist inside it.</p>
+      <button id="findMusicBtn" class="primary" type="button">Choose Music Folder</button>
+      <button id="chooseOneFolderBtn" class="empty-folder-secondary" type="button">Add one playlist folder</button>
+      <p class="empty-formats">MP3 · M4A · WAV · FLAC · OGG</p>
+      <div class="empty-drop-hint" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 16V4m0 0L7 9m5-5 5 5"/><path d="M5 14v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/></svg><span>or drop audio files here</span></div>
       <p id="emptyDiscoveryStatus" class="empty-discovery-status" role="status" aria-live="polite"></p>
     </section>
     <section id="playlistView" class="playlist-view" aria-label="Selected playlist">
@@ -2269,6 +2304,7 @@
   const findMusicBtn = document.getElementById('findMusicBtn');
   const chooseOneFolderBtn = document.getElementById('chooseOneFolderBtn');
   const emptyDiscoveryStatus = document.getElementById('emptyDiscoveryStatus');
+  const cancelScanBtn = document.getElementById('cancelScanBtn');
   const playlistList = document.getElementById('playlistList');
   const playlistCount = document.getElementById('playlistCount');
   const searchInput = document.getElementById('searchInput');
@@ -2327,6 +2363,8 @@
   const queueScrim = document.getElementById('queueScrim');
   const queueList = document.getElementById('queueList');
   const statsNavBtn = document.getElementById('statsNavBtn');
+  const statsNavTitle = document.getElementById('statsNavTitle');
+  const statsNavHint = document.getElementById('statsNavHint');
   const statsView = document.getElementById('statsView');
   const statsSyncNote = document.getElementById('statsSyncNote');
   const statsTotal = document.getElementById('statsTotal');
@@ -2342,6 +2380,7 @@
 
   const STATS_SESSION_KEY = 'localMusic_statsBatches_v1';
   const STATS_SYNC_DELAY = 120000;
+  const METADATA_CACHE_KEY = 'localMusic_metadataCache_v1';
 
   let playlists = [];
   let activePlaylistIndex = -1;
@@ -2368,6 +2407,10 @@
   let miniPlayerCleanup = null;
   let metadataQueue = [];
   let activeMetadataLoads = 0;
+  let artworkQueue = [];
+  let activeArtworkLoads = 0;
+  let durationQueue = [];
+  let activeDurationLoads = 0;
   let libraryRenderFrame = 0;
   let metadataVisibilityFrame = 0;
   let nextTrackId = 0;
@@ -2383,12 +2426,45 @@
   let statsSyncTimer = 0;
   let statsPersistTimer = 0;
   let statsRenderTimer = 0;
+  let activeDiscovery = null;
+  let metadataCacheSaveTimer = 0;
+  const metadataCache = loadMetadataCache();
   const sessionArtworkBySong = new Map();
   const pendingTrackUpdates = new Set();
 
   const METADATA_CONCURRENCY = 2;
   const MAX_ID3_BYTES = 2 * 1024 * 1024;
   const MAX_ARTWORK_BYTES = 1536 * 1024;
+
+  function loadMetadataCache() {
+    try {
+      const value = JSON.parse(localStorage.getItem(METADATA_CACHE_KEY) || '{}');
+      return value && typeof value === 'object' && !Array.isArray(value) ? value : {};
+    } catch {
+      return {};
+    }
+  }
+
+  function metadataCacheKey(file) {
+    return `${file.name}|${file.size}|${file.lastModified}`;
+  }
+
+  function saveTrackMetadataCache(track) {
+    if (!track?.file) return;
+    metadataCache[metadataCacheKey(track.file)] = {
+      title: track.title,
+      artist: track.artist,
+      duration: Number(track.duration) || 0,
+      cachedAt: Date.now()
+    };
+    clearTimeout(metadataCacheSaveTimer);
+    metadataCacheSaveTimer = setTimeout(() => {
+      const entries = Object.entries(metadataCache)
+        .sort((a, b) => Number(b[1]?.cachedAt || 0) - Number(a[1]?.cachedAt || 0))
+        .slice(0, 1200);
+      try { localStorage.setItem(METADATA_CACHE_KEY, JSON.stringify(Object.fromEntries(entries))); } catch {}
+    }, 350);
+  }
 
   let isShuffle = localStorage.getItem('localMusic_shuffle') === 'true';
   let repeatMode = Number(localStorage.getItem('localMusic_repeat') || 0);
@@ -2785,7 +2861,7 @@
         return;
       }
       if (recentKeys.has(statsSongKey(track)) || recentTitles.has(normalizeStatsValue(track.title))) {
-        queueTrackMetadata(track, true);
+        queueTrackArtwork(track, true);
       }
     }));
   }
@@ -2817,6 +2893,9 @@
     statsView.hidden = false;
     statsNavBtn.classList.add('active');
     statsNavBtn.setAttribute('aria-pressed', 'true');
+    statsNavBtn.setAttribute('aria-label', 'Back to Music Player');
+    statsNavTitle.textContent = 'Back to Player';
+    statsNavHint.textContent = 'Return to your library';
     renderStats();
     mainArea.scrollTop = 0;
   }
@@ -2826,6 +2905,10 @@
     statsView.hidden = true;
     statsNavBtn.classList.remove('active');
     statsNavBtn.setAttribute('aria-pressed', 'false');
+    statsNavBtn.setAttribute('aria-label', 'Listening Stats');
+    statsNavTitle.textContent = 'Listening Stats';
+    statsNavHint.textContent = 'Builds as you listen';
+    mainArea.scrollTop = 0;
   }
 
   function scheduleStatsSync() {
@@ -3176,7 +3259,9 @@
       playlist.artworkKind = 'custom';
     }
     playlist.tracks = files.map(file => makeTrack(file, playlist));
-    playlist.tracks.slice(0, 4).forEach(track => queueTrackMetadata(track));
+    playlist.tracks.slice(0, 4).reverse().forEach(track => queueTrackArtwork(track, true));
+    playlist.tracks.slice(4).forEach(track => queueTrackArtwork(track));
+    playlist.tracks.forEach(track => queueTrackDuration(track));
     return playlist;
   }
 
@@ -3244,9 +3329,11 @@
   }
 
   function schedulePlaylistArtwork(playlist) {
-    if (!playlist || playlist.disposed || playlist.artworkKind === 'custom') return;
+    if (!playlist || playlist.disposed || playlist.artworkKind !== 'fallback') return;
+    const seedTracks = playlist.tracks.slice(0, 4);
+    if (seedTracks.some(track => track.artworkState !== 'loaded')) return;
     clearTimeout(playlist.artworkTimer);
-    playlist.artworkTimer = setTimeout(() => generatePlaylistArtwork(playlist), 280);
+    playlist.artworkTimer = setTimeout(() => generatePlaylistArtwork(playlist), 0);
   }
 
 
@@ -3293,7 +3380,7 @@
     }
   }
 
-  async function extractMp3Metadata(file) {
+  async function extractMp3Metadata(file, includeArtwork = false) {
     const metadata = { artworkUrl: null, title: '', artist: '' };
     if (!/\.mp3$/i.test(file.name)) return metadata;
 
@@ -3309,7 +3396,8 @@
       ) return metadata;
 
       const tagSize = synchsafeToInt(header.slice(6, 10));
-      const buffer = await file.slice(0, Math.min(file.size, 10 + tagSize, MAX_ID3_BYTES)).arrayBuffer();
+      const metadataReadLimit = includeArtwork ? MAX_ID3_BYTES : 128 * 1024;
+      const buffer = await file.slice(0, Math.min(file.size, 10 + tagSize, metadataReadLimit)).arrayBuffer();
       const bytes = new Uint8Array(buffer);
 
       const version = bytes[3];
@@ -3338,7 +3426,7 @@
           metadata.title = decodeId3Text(frame);
         } else if (id === 'TPE1') {
           metadata.artist = decodeId3Text(frame);
-        } else if (id === 'APIC' && !metadata.artworkUrl) {
+        } else if (includeArtwork && id === 'APIC' && !metadata.artworkUrl) {
           const encoding = frame[0];
           let pos = 1;
 
@@ -3395,25 +3483,13 @@
   }
 
   async function loadMetadata(track) {
-    const previousSongKey = statsSongKey(track);
-    const metadata = await extractMp3Metadata(track.file);
+    const metadata = await extractMp3Metadata(track.file, false);
 
-    if (track.disposed) {
-      if (metadata.artworkUrl) {
-        try { URL.revokeObjectURL(metadata.artworkUrl); } catch {}
-      }
-      return;
-    }
+    if (track.disposed) return;
 
-    track.artworkUrl = metadata.artworkUrl;
     if (metadata.title) track.title = metadata.title;
     if (metadata.artist) track.artist = metadata.artist;
-    if (track.artworkUrl) {
-      sessionArtworkBySong.set(previousSongKey, track.artworkUrl);
-      sessionArtworkBySong.set(statsSongKey(track), track.artworkUrl);
-      if (!statsView.hidden) renderStats();
-    }
-    schedulePlaylistArtwork(track.playlist);
+    saveTrackMetadataCache(track);
     scheduleLibraryRender(track);
 
     if (currentIndex >= 0 && tracks[currentIndex] === track) {
@@ -3423,6 +3499,107 @@
       updateMainArtwork(track);
       updateMediaSession();
     }
+  }
+
+  async function loadTrackArtwork(track) {
+    const previousSongKey = statsSongKey(track);
+    const metadata = await extractMp3Metadata(track.file, true);
+    if (track.disposed) {
+      if (metadata.artworkUrl) try { URL.revokeObjectURL(metadata.artworkUrl); } catch {}
+      return;
+    }
+    if (metadata.title) track.title = metadata.title;
+    if (metadata.artist) track.artist = metadata.artist;
+    if (metadata.artworkUrl) {
+      track.artworkUrl = metadata.artworkUrl;
+      sessionArtworkBySong.set(previousSongKey, track.artworkUrl);
+      sessionArtworkBySong.set(statsSongKey(track), track.artworkUrl);
+      if (!statsView.hidden) renderStats();
+    }
+    saveTrackMetadataCache(track);
+    scheduleLibraryRender(track);
+    if (currentIndex >= 0 && tracks[currentIndex] === track) {
+      updateMainArtwork(track);
+      updateMediaSession();
+    }
+  }
+
+  function pumpArtworkQueue() {
+    if (activeArtworkLoads || !artworkQueue.length) return;
+    const track = artworkQueue.shift();
+    if (!track || track.disposed || track.artworkState !== 'queued') {
+      setTimeout(pumpArtworkQueue, 0);
+      return;
+    }
+    activeArtworkLoads = 1;
+    track.artworkState = 'loading';
+    loadTrackArtwork(track)
+      .catch(error => console.warn('Music Player: artwork could not be read.', error))
+      .finally(() => {
+        track.artworkState = track.disposed ? 'disposed' : 'loaded';
+        if (!track.disposed) schedulePlaylistArtwork(track.playlist);
+        activeArtworkLoads = 0;
+        setTimeout(pumpArtworkQueue, 90);
+      });
+  }
+
+  function queueTrackArtwork(track, prioritize = false) {
+    if (!track || track.disposed || track.artworkState === 'loading' || track.artworkState === 'loaded') return;
+    const existingPosition = artworkQueue.indexOf(track);
+    if (existingPosition >= 0) artworkQueue.splice(existingPosition, 1);
+    track.artworkState = 'queued';
+    if (prioritize) artworkQueue.unshift(track);
+    else artworkQueue.push(track);
+    pumpArtworkQueue();
+  }
+
+  function loadTrackDuration(track) {
+    return new Promise(resolve => {
+      const probe = document.createElement('audio');
+      let settled = false;
+      const finish = duration => {
+        if (settled) return;
+        settled = true;
+        clearTimeout(timeout);
+        probe.removeAttribute('src');
+        probe.load();
+        if (!track.disposed && Number.isFinite(duration) && duration > 0) {
+          track.duration = duration;
+          saveTrackMetadataCache(track);
+          scheduleLibraryRender(track);
+        }
+        resolve();
+      };
+      const timeout = setTimeout(() => finish(0), 8000);
+      probe.preload = 'metadata';
+      probe.addEventListener('loadedmetadata', () => finish(probe.duration), { once: true });
+      probe.addEventListener('error', () => finish(0), { once: true });
+      probe.src = track.url;
+    });
+  }
+
+  function pumpDurationQueue() {
+    while (activeDurationLoads < 2 && durationQueue.length) {
+      const track = durationQueue.shift();
+      if (!track || track.disposed || track.durationState !== 'queued') continue;
+      activeDurationLoads++;
+      track.durationState = 'loading';
+      loadTrackDuration(track).finally(() => {
+        track.durationState = track.disposed ? 'disposed' : 'loaded';
+        activeDurationLoads--;
+        setTimeout(pumpDurationQueue, 45);
+      });
+    }
+  }
+
+  function queueTrackDuration(track, prioritize = false) {
+    if (!track || track.disposed || track.duration > 0 || track.durationState === 'loading' || track.durationState === 'loaded') return;
+    const existingPosition = durationQueue.indexOf(track);
+    if (existingPosition >= 0) durationQueue.splice(existingPosition, 1);
+    track.durationState = 'queued';
+    if (prioritize) durationQueue.unshift(track);
+    else durationQueue.push(track);
+    pumpDurationQueue();
   }
 
   function pumpMetadataQueue() {
@@ -3561,16 +3738,19 @@
 
   function makeTrack(file, playlist = null) {
     const parsed = parseTrackName(file.name);
+    const cached = metadataCache[metadataCacheKey(file)] || {};
 
     const track = {
       id: ++nextTrackId,
       file,
       url: URL.createObjectURL(file),
-      title: parsed.title,
-      artist: parsed.artist,
+      title: cached.title || parsed.title,
+      artist: cached.artist || parsed.artist,
       artworkUrl: null,
-      duration: 0,
+      duration: Number(cached.duration) || 0,
       metadataState: 'idle',
+      artworkState: 'idle',
+      durationState: Number(cached.duration) > 0 ? 'loaded' : 'idle',
       disposed: false,
       playlist
     };
@@ -3587,8 +3767,12 @@
     playlist.tracks.forEach(track => {
       track.disposed = true;
       track.metadataState = 'disposed';
-      const queuedIndex = metadataQueue.indexOf(track);
-      if (queuedIndex >= 0) metadataQueue.splice(queuedIndex, 1);
+      track.artworkState = 'disposed';
+      track.durationState = 'disposed';
+      [metadataQueue, artworkQueue, durationQueue].forEach(queue => {
+        const queuedIndex = queue.indexOf(track);
+        if (queuedIndex >= 0) queue.splice(queuedIndex, 1);
+      });
       try { URL.revokeObjectURL(track.url); } catch {}
       if (track.artworkUrl) {
         try { URL.revokeObjectURL(track.artworkUrl); } catch {}
@@ -4152,13 +4336,14 @@
   }
 
   // Discovery deliberately reads only files directly inside each !MUSIC folder.
-  async function readImmediateAudioFiles(directoryHandle) {
+  async function readImmediateAudioFiles(directoryHandle, discovery = null) {
     const files = [];
     let coverFile = null;
     let skippedFiles = 0;
 
     try {
       for await (const entry of directoryHandle.values()) {
+        if (discovery?.cancelled) break;
         if (entry.kind !== 'file') continue;
 
         try {
@@ -4177,15 +4362,11 @@
       console.warn('Music Player: could not finish reading a playlist folder.', error);
     }
 
-    if (skippedFiles) {
-      showToast(`${skippedFiles} unreadable ${skippedFiles === 1 ? 'file was' : 'files were'} skipped.`, 'error');
-    }
-
     files.sort((a, b) => a.name.localeCompare(b.name, undefined, {
       numeric: true,
       sensitivity: 'base'
     }));
-    return { files, coverFile };
+    return { files, coverFile, skippedFiles };
   }
 
   async function findDiscoveredPlaylistIndex(directoryHandle) {
@@ -4306,6 +4487,10 @@
       rescanMusicBtn.disabled = true;
       findMusicBtn.textContent = 'Looking for music…';
       setDiscoveryStatus('Looking for !MUSIC folders…');
+      const discovery = { cancelled: false };
+      activeDiscovery = discovery;
+      cancelScanBtn.disabled = false;
+      cancelScanBtn.hidden = false;
 
       const matchingFolders = [];
       try {
@@ -4333,25 +4518,60 @@
       let firstUpdatedIndex = -1;
       let playablePlaylistCount = 0;
       let totalSongCount = 0;
+      let skippedFileCount = 0;
+      let processedFolderCount = 0;
+      let nextFolderIndex = 0;
 
-      for (let index = 0; index < matchingFolders.length; index++) {
-        const directoryHandle = matchingFolders[index];
-        setDiscoveryStatus(`Scanning playlist ${index + 1} of ${matchingFolders.length}…`);
-        const result = await readImmediateAudioFiles(directoryHandle);
-        if (!result.files.length) continue;
+      const updateScanProgress = () => {
+        const found = totalSongCount
+          ? ` · ${totalSongCount} ${totalSongCount === 1 ? 'song' : 'songs'} found`
+          : '';
+        setDiscoveryStatus(`Scanning playlist ${Math.min(processedFolderCount + 1, matchingFolders.length)} of ${matchingFolders.length}${found}…`);
+      };
+      updateScanProgress();
 
-        try {
-          const updatedIndex = await upsertDiscoveredPlaylist(
-            directoryHandle,
-            directoryHandle.name,
-            result
-          );
-          if (firstUpdatedIndex < 0) firstUpdatedIndex = updatedIndex;
-          playablePlaylistCount++;
-          totalSongCount += result.files.length;
-        } catch (error) {
-          console.warn('Music Player: skipped a playlist that could not be loaded.', error);
+      const scanNextFolder = async () => {
+        while (!discovery.cancelled) {
+          const index = nextFolderIndex++;
+          if (index >= matchingFolders.length) return;
+          const directoryHandle = matchingFolders[index];
+          const result = await readImmediateAudioFiles(directoryHandle, discovery);
+          processedFolderCount++;
+          skippedFileCount += result.skippedFiles || 0;
+          if (discovery.cancelled) return;
+
+          if (result.files.length) {
+            try {
+              const updatedIndex = await upsertDiscoveredPlaylist(
+                directoryHandle,
+                directoryHandle.name,
+                result
+              );
+              if (firstUpdatedIndex < 0) firstUpdatedIndex = updatedIndex;
+              playablePlaylistCount++;
+              totalSongCount += result.files.length;
+              renderPlaylists();
+              if (originalActiveIndex < 0 && activePlaylistIndex < 0) selectPlaylist(updatedIndex);
+            } catch (error) {
+              console.warn('Music Player: skipped a playlist that could not be loaded.', error);
+            }
+          }
+          updateScanProgress();
         }
+      };
+
+      await Promise.all(Array.from(
+        { length: Math.min(3, matchingFolders.length) },
+        () => scanNextFolder()
+      ));
+
+      if (discovery.cancelled) {
+        const cancelledMessage = playablePlaylistCount
+          ? `Scan cancelled · ${playablePlaylistCount} ${playablePlaylistCount === 1 ? 'playlist' : 'playlists'} ready`
+          : 'Scan cancelled. Your existing library is unchanged.';
+        setDiscoveryStatus(cancelledMessage);
+        showToast(cancelledMessage);
+        return;
       }
 
       if (!playablePlaylistCount) {
@@ -4367,7 +4587,8 @@
       selectPlaylist(playlistToSelect);
       const discoveryMessage =
         `Found ${playablePlaylistCount} ${playablePlaylistCount === 1 ? 'playlist' : 'playlists'} · ` +
-        `${totalSongCount} ${totalSongCount === 1 ? 'song' : 'songs'}`;
+        `${totalSongCount} ${totalSongCount === 1 ? 'song' : 'songs'} ready` +
+        (skippedFileCount ? ` · ${skippedFileCount} skipped` : '');
       await rememberLibraryRoot(rootHandle);
       setDiscoveryStatus(discoveryMessage);
       showToast(discoveryMessage, 'success');
@@ -4384,11 +4605,14 @@
         showToast('Could not scan that folder.', 'error');
       }
     } finally {
+      activeDiscovery = null;
+      cancelScanBtn.disabled = false;
+      cancelScanBtn.hidden = true;
       findMusicBtn.disabled = false;
       chooseOneFolderBtn.disabled = false;
       addFolderBtn.disabled = false;
       rescanMusicBtn.disabled = false;
-      findMusicBtn.textContent = 'Find My Music';
+      findMusicBtn.textContent = 'Choose Music Folder';
     }
   }
 
@@ -4527,6 +4751,8 @@
     removedIndexes.delete(index);
     playHistory = playHistory.filter(historyIndex => historyIndex !== index);
     queueTrackMetadata(tracks[index], true);
+    queueTrackArtwork(tracks[index], true);
+    queueTrackDuration(tracks[index], true);
 
     if (!preserveOrder) {
       buildPlayOrder(true);
@@ -4674,6 +4900,12 @@
 
   findMusicBtn.addEventListener('click', findMyMusic);
   rescanMusicBtn.addEventListener('click', findMyMusic);
+  cancelScanBtn.addEventListener('click', () => {
+    if (!activeDiscovery) return;
+    activeDiscovery.cancelled = true;
+    cancelScanBtn.disabled = true;
+    setDiscoveryStatus('Stopping scan…');
+  });
   chooseOneFolderBtn.addEventListener('click', () => {
     pendingRefreshIndex = -1;
     folderInput.click();
@@ -4700,7 +4932,10 @@
   });
 
   searchInput.addEventListener('input', renderTracks);
-  statsNavBtn.addEventListener('click', showStatsView);
+  statsNavBtn.addEventListener('click', () => {
+    if (mainArea.classList.contains('stats-active')) hideStatsView();
+    else showStatsView();
+  });
 
   heroPlayBtn.addEventListener('click', () => {
     if (activePlaylistIndex < 0) return;
@@ -4889,6 +5124,7 @@
     }
     if (currentIndex >= 0 && Number.isFinite(audio.duration)) {
       tracks[currentIndex].duration = audio.duration;
+      saveTrackMetadataCache(tracks[currentIndex]);
       scheduleLibraryRender(tracks[currentIndex]);
     }
     syncMiniPlayer();

@@ -204,7 +204,12 @@ assert(legalStyles.includes('.legal-layout') && legalStyles.includes('.table-of-
 const musicPlayerSource = readFile('Music_Player.html');
 assert(/const METADATA_CONCURRENCY = [23]/.test(musicPlayerSource), 'Music Player bounds concurrent metadata work for large libraries');
 assert(musicPlayerSource.includes('function queueVisibleTrackMetadata') && musicPlayerSource.includes('scheduleVisibleMetadata()'), 'Music Player loads metadata only for visible songs instead of scanning the entire library at once');
-assert(musicPlayerSource.includes("playlist.tracks.slice(0, 4).forEach(track => queueTrackMetadata(track))"), 'Music Player preloads artwork metadata for the first four songs in every playlist');
+assert(musicPlayerSource.includes("playlist.tracks.slice(0, 4).reverse().forEach(track => queueTrackArtwork(track, true))"), 'Music Player prioritizes artwork for the first four songs in every playlist');
+assert(musicPlayerSource.indexOf("playlist.tracks.slice(0, 4).reverse().forEach(track => queueTrackArtwork(track, true))") < musicPlayerSource.indexOf("playlist.tracks.slice(4).forEach(track => queueTrackArtwork(track))"), 'Playlist-cover artwork enters the queue before remaining song artwork');
+assert(musicPlayerSource.includes("track.artworkState = track.disposed ? 'disposed' : 'loaded';\n        if (!track.disposed) schedulePlaylistArtwork(track.playlist);") && musicPlayerSource.includes("setTimeout(() => generatePlaylistArtwork(playlist), 0)"), 'Playlist collage generation starts immediately after its priority artwork finishes');
+assert(musicPlayerSource.includes("const metadataReadLimit = includeArtwork ? MAX_ID3_BYTES : 128 * 1024") && musicPlayerSource.includes("queueTrackArtwork(tracks[index], true)"), 'Music Player separates lightweight text metadata reads from full artwork extraction');
+assert(musicPlayerSource.includes('function pumpDurationQueue()') && musicPlayerSource.includes('playlist.tracks.forEach(track => queueTrackDuration(track))'), 'Music Player progressively loads durations for every discovered song');
+assert(musicPlayerSource.includes('function pumpArtworkQueue()') && musicPlayerSource.includes('activeArtworkLoads = 1'), 'Music Player progressively loads all artwork through a single background worker');
 assert(!musicPlayerSource.includes('function readTrackDuration'), 'Music Player avoids unstable hidden audio elements during background metadata loading');
 assert(musicPlayerSource.includes("art.loading = 'lazy'") && musicPlayerSource.includes("art.decoding = 'async'"), 'Music Player lazily decodes sidebar artwork');
 assert(musicPlayerSource.includes('data-track-action="next"') && musicPlayerSource.includes('data-track-action="remove"'), 'Music Player exposes Play Next and queue removal actions');
@@ -217,6 +222,11 @@ assert(musicPlayerSource.includes('id="shortcutDialog"') && musicPlayerSource.in
 assert(musicPlayerSource.includes("storedVolumeValue === null ? 1") && musicPlayerSource.includes('id="volumeBar"') && musicPlayerSource.includes('value="1" aria-label="Volume"'), 'Music Player defaults new sessions to full volume while preserving saved preferences');
 assert(!/firebase\.storage|uploadBytes|logEvent|analytics\(/i.test(musicPlayerSource), 'Music Player never uploads music files or artwork and does not send listening stats to Analytics');
 assert(musicPlayerSource.includes('id="statsNavBtn"') && musicPlayerSource.includes('id="statsView"'), 'Music Player includes a separate Listening Stats view');
+assert(musicPlayerSource.includes("mainArea.classList.contains('stats-active')") && musicPlayerSource.includes("statsNavTitle.textContent = 'Back to Player'"), 'Listening Stats navigation toggles back to the player and library');
+assert(musicPlayerSource.includes('Music Player automatically finds every') && !musicPlayerSource.includes('Indy Music'), 'Music Player welcome copy uses the correct product name');
+assert(musicPlayerSource.includes('id="cancelScanBtn"') && musicPlayerSource.includes('activeDiscovery.cancelled = true'), 'Music library scans can be cancelled');
+assert(musicPlayerSource.includes("length: Math.min(3, matchingFolders.length)") && musicPlayerSource.includes('renderPlaylists();'), 'Music Player scans a limited number of folders concurrently and renders discoveries progressively');
+assert(musicPlayerSource.includes("localMusic_metadataCache_v1") && musicPlayerSource.includes('metadataCacheKey(file)'), 'Music Player caches stable local track metadata for faster repeat loads');
 assert(musicPlayerSource.includes('@media (min-width:701px)') && musicPlayerSource.includes('.sidebar { overflow-y:auto;'), 'Music Player sidebar can scroll to Listening Stats on shorter screens');
 assert(musicPlayerSource.includes('queueRecentArtworkMetadata(recent)') && musicPlayerSource.includes('sessionArtworkBySong.set(previousSongKey, track.artworkUrl)'), 'Recently played artwork loads even when track metadata finishes after playback starts');
 assert(musicPlayerSource.includes('Math.min(30, duration * .5)') && musicPlayerSource.includes('statsTrackSession.qualified'), 'Music Player counts one qualified play after 30 seconds or half the song');
