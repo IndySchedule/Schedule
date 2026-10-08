@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-10-07T06:03:58.307Z",
-  "lastCheckedAt": "2026-10-07T06:03:58.307Z",
-  "contentUpdatedAt": "2026-10-07T06:03:58.307Z",
+  "generatedAt": "2026-10-08T01:02:27.017Z",
+  "lastCheckedAt": "2026-10-08T01:02:27.017Z",
+  "contentUpdatedAt": "2026-10-08T01:02:27.017Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -23,39 +23,6 @@
         "2026-10-06"
       ],
       "location": "SUMMIT HIGH SCHOOL, 2830 Austins Wy, Thompson's Station, TN 37179, USA"
-    },
-    {
-      "id": "37b9cnbj994k9p0tbc1qjtn7sn@google.com-2026-10-05T00:00:00.000Z",
-      "title": "IHS Late Start",
-      "start": "2026-10-05T00:00:00.000Z",
-      "end": "2026-10-06T00:00:00.000Z",
-      "allDay": true,
-      "days": [
-        "2026-10-05"
-      ],
-      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
-    },
-    {
-      "id": "10rd3la2kvu7igpiiql3la7j44@google.com-2026-10-05T22:30:00.000Z",
-      "title": "IHS Freshman Football @ Page HS",
-      "start": "2026-10-05T22:30:00.000Z",
-      "end": "2026-10-06T00:30:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-10-05"
-      ],
-      "location": "Page High School, 6281 Arno Rd, Franklin, TN 37064, USA"
-    },
-    {
-      "id": "4efp1ju0v4k9qvcant1ggh415i@google.com-2026-10-05T22:30:00.000Z",
-      "title": "IHS JV Football vs Page HS",
-      "start": "2026-10-05T22:30:00.000Z",
-      "end": "2026-10-06T00:30:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-10-05"
-      ],
-      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     },
     {
       "id": "18gk8f665vuvn6v51qgf012rur@google.com-2026-10-07T21:00:00.000Z",
