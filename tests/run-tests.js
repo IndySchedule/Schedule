@@ -57,7 +57,7 @@ assertEqual(calendar.LATE_START_DATES.join(','), officialLateStarts.join(','), '
 assert(officialLateStarts.every((date) => calendar.getScheduleKey(date) === 'lateStart'), 'Every official date selects the late-start schedule');
 assertEqual(calendar.getDayType('2026-08-17'), 'regular', 'Monday exception before first late start');
 assertEqual(calendar.getScheduleKey('2026-08-17'), 'normalNoSoar', 'Regular Monday uses no-SOAR schedule');
-assertEqual(calendar.getScheduleKey('2026-08-21'), 'normalNoSoar', 'Regular Friday uses no-SOAR schedule');
+assertEqual(calendar.getScheduleKey('2026-08-21'), 'normal', 'Regular Friday uses SOAR schedule');
 assertEqual(calendar.getScheduleKey('2026-08-12'), 'normal', 'Regular Wednesday uses SOAR schedule');
 
 const regular = calendar.SCHEDULES.normal;
@@ -147,7 +147,7 @@ assertEqual(
 const appSource = readFile('script.js');
 assert(appSource.includes("localStorage.getItem('showPeriodTimes') !== 'false'"), 'Period times are enabled by default');
 assert(appSource.includes("heading: 'Between Classes'"), 'Countdown identifies actual between-class passing time');
-assert(appSource.includes("heading: 'Transition to SOAR'") && appSource.includes('SOAR class time begins at'), 'The countdown identifies the first three minutes of SOAR as transition time');
+assert(appSource.includes("heading: 'Transition to SOAR'") && appSource.includes('SOAR begins at') && !appSource.includes('SOAR class time'), 'The countdown identifies the first three minutes as transition before SOAR');
 assert(appSource.includes("currentLabel = 'Transition to SOAR'"), 'Today at Indy labels the opening SOAR transition consistently');
 assert(appSource.includes("heading: 'School Starts Soon'"), 'Before-school countdown has clear morning wording');
 assert(appSource.includes('First bell at ${formatTime12(upcomingPeriod.start)}'), 'Before-school timing identifies the first bell');
@@ -173,9 +173,14 @@ assert(appSource.includes("overlay.setAttribute('role', 'dialog')") && appSource
 assert(appSource.includes("storageSearch.placeholder = 'Search saved settings…'") && appSource.includes('No saved settings match your search.'), 'Developer tools can search saved settings and explains empty results');
 assert(appSource.includes("debugContent.style.display = 'grid'") && appSource.includes("tabs.addEventListener('keydown'"), 'Developer tools preserves its storage grid and supports arrow-key tab navigation');
 assert(appSource.includes('innerWidth - width - 16') && appSource.includes('devtools-resize-handle'), 'Saved developer-tools placement is kept within the viewport');
+assert(appSource.includes("maximizeBtn.title = 'Maximize developer tools'") && appSource.includes('function resetOverlayPlacement()') && appSource.includes("header.addEventListener('dblclick'"), 'Developer tools supports maximize, restore, and position reset controls');
+assert(appSource.includes("header.addEventListener('pointerdown'") && appSource.includes('requestAnimationFrame(draw)') && appSource.includes('const snapDistance = 18'), 'Developer tools drag movement is pointer-friendly, animation-frame driven, and edge-snapped');
+assert(appSource.includes("header.addEventListener('keydown'") && appSource.includes("window.addEventListener('resize'") && appSource.includes('applyOverlayRect(currentOverlayRect())'), 'Developer tools supports keyboard movement and viewport correction');
 assert(appSource.includes('Sharp grayscale developer-board theme') && appSource.includes("title.textContent = 'Developer Tools'"), 'Developer tools uses the grayscale dashboard treatment');
 assert(appSource.includes("debugTab.textContent = 'Saved Settings'") && appSource.includes("internalToggleBtn.textContent = window.__devShowInternal"), 'Developer tools labels saved settings clearly and hides internal keys by default');
 assert(appSource.includes("row.className = 'devtools-storage-row'") && appSource.includes("headerRow.className = 'devtools-storage-row devtools-storage-header-row'"), 'Developer saved settings use aligned rows that grow with multiline values');
+assert(!appSource.includes('#devtools-debug-content { display: block !important;'), 'Developer Console can fully hide the Saved Settings panel');
+assert(appSource.includes("view.panel.style.display = active ? 'block' : 'none';"), 'Developer tabs show one full-width panel at a time');
 assert(appSource.includes("editBtn.textContent = 'Edit'") && appSource.includes("const shouldCollapse = isStructured || fullText.length > 240") && appSource.includes("toggle.textContent = 'Expand'"), 'Developer saved settings expose visible editing and expandable structured values');
 assert(appSource.includes("sourcesTab.textContent = 'Sources'") && appSource.includes('async function loadSourceFile(path)'), 'Developer tools includes a read-only source-file browser');
 assert(appSource.includes("sourceSearch.placeholder = 'Find in file…'") && appSource.includes("copySourceBtn.textContent = 'Copy File'"), 'Source browser supports in-file search and copying');
@@ -212,6 +217,8 @@ assert(musicPlayerSource.includes('id="shortcutDialog"') && musicPlayerSource.in
 assert(musicPlayerSource.includes("storedVolumeValue === null ? 1") && musicPlayerSource.includes('id="volumeBar"') && musicPlayerSource.includes('value="1" aria-label="Volume"'), 'Music Player defaults new sessions to full volume while preserving saved preferences');
 assert(!/firebase\.storage|uploadBytes|logEvent|analytics\(/i.test(musicPlayerSource), 'Music Player never uploads music files or artwork and does not send listening stats to Analytics');
 assert(musicPlayerSource.includes('id="statsNavBtn"') && musicPlayerSource.includes('id="statsView"'), 'Music Player includes a separate Listening Stats view');
+assert(musicPlayerSource.includes('@media (min-width:701px)') && musicPlayerSource.includes('.sidebar { overflow-y:auto;'), 'Music Player sidebar can scroll to Listening Stats on shorter screens');
+assert(musicPlayerSource.includes('queueRecentArtworkMetadata(recent)') && musicPlayerSource.includes('sessionArtworkBySong.set(previousSongKey, track.artworkUrl)'), 'Recently played artwork loads even when track metadata finishes after playback starts');
 assert(musicPlayerSource.includes('Math.min(30, duration * .5)') && musicPlayerSource.includes('statsTrackSession.qualified'), 'Music Player counts one qualified play after 30 seconds or half the song');
 assert(musicPlayerSource.includes('function flushListeningStats') && musicPlayerSource.includes('mediaDelta + .25'), 'Music Player measures actual playback progress without trusting a drifting interval');
 assert(musicPlayerSource.includes("collection('musicStats').doc('summary')") && musicPlayerSource.includes("collection('syncBatches')"), 'Music Player syncs normalized, idempotent listening-stat batches to the signed-in account');
@@ -344,7 +351,7 @@ assert(authSource.includes('createUserWithEmailAndPassword') && authSource.inclu
 assert(authSource.includes('sendPasswordResetEmail'), 'Firebase password-reset email is wired');
 assert(authSource.includes('firebase.auth.Auth.Persistence.LOCAL'), 'Authentication requests persistent Firebase sessions when browser policy permits');
 assert(authSource.includes('indyAnalyticsConsent_v1: localStorage.getItem'), 'Analytics consent is included in account preference sync');
-assert(authSource.includes('indyReleaseNotice_v1_5_1: localStorage.getItem'), 'The 1.5.1 release-notice dismissal is included in account preference sync');
+assert(authSource.includes('indyReleaseNotice_v1_5_2: localStorage.getItem'), 'The 1.5.2 release-notice dismissal is included in account preference sync');
 assert(authSource.includes("indyScheduleOverride_v1: null") && authSource.includes("localStorage.getItem('indyScheduleOverride_v1')"), 'Dated schedule overrides are included in Firestore account sync');
 assert(authSource.includes("key === 'indyScheduleOverride_v1' && val === null") && authSource.includes('localStorage.removeItem(key)'), 'Automatic schedule mode clears a synced override on other devices');
 assert(appSource.includes("if (typeof saveSettings === 'function') saveSettings();"), 'Changing today’s schedule immediately requests an account settings sync');
@@ -424,17 +431,17 @@ assert(secondaryStyles.includes('overflow-x: auto;\n        overflow-y: hidden;'
 assert(indexSource.includes('class="settings-group legal-overview-card"'), 'Privacy and Terms uses the unified full-width card');
 assert(indexSource.includes('id="delete-local-data"') && indexSource.includes('id="delete-local-data-confirmation"'), 'Privacy controls provide a guarded local-data deletion action');
 assert(authSource.includes('localStorage.clear()') && authSource.includes('initializeLocalDataControls'), 'Local-data deletion clears browser storage through its initialized privacy control');
-assert(indexSource.includes('Version 1.5.1') && indexSource.includes('v1.5.1'), 'About and release notes identify the current 1.5.1 version');
+assert(indexSource.includes('Version 1.5.2') && indexSource.includes('v1.5.2'), 'About and release notes identify the current 1.5.2 version');
 assert(indexSource.includes('v1.3.1') && indexSource.includes('v1.3.0') && indexSource.includes('v1.2.0') && indexSource.includes('v1.1.0'), 'Previous releases remain in the update history');
 assert(indexSource.includes('change just today’s schedule') && indexSource.includes('font menu') && indexSource.includes('account syncing more reliable'), 'The 1.3.0 notes explain its major schedule and preference changes in plain language');
 assert(indexSource.includes('twenty choices grouped into Essentials') && indexSource.includes('built-in code file viewer') && indexSource.includes('entire window follows your selected palette'), 'The 1.3.1 notes explain its palette, Developer Tools, and Today at Indy improvements');
 assert(indexSource.includes('clearer names for color controls') && indexSource.includes('sync-details view'), 'The historical 1.3.5 notes retain the accessibility and sync improvements');
-assert(indexSource.includes('id="release-notice-backdrop"') && indexSource.includes('Version 1.5.1'), 'Returning users receive the 1.5.1 release notice');
-assert(indexSource.includes("const storageKey = 'indyReleaseNotice_v1_5_1'") && indexSource.includes("localStorage.setItem('indyReleaseNotice_v1_5_1', 'true')"), 'The 1.5.1 release notice uses a new one-time dismissal key');
+assert(indexSource.includes('id="release-notice-backdrop"') && indexSource.includes('Version 1.5.2'), 'Returning users receive the 1.5.2 release notice');
+assert(indexSource.includes("const storageKey = 'indyReleaseNotice_v1_5_2'") && indexSource.includes("localStorage.setItem('indyReleaseNotice_v1_5_2', 'true')"), 'The 1.5.2 release notice uses a new one-time dismissal key');
 const releaseNoticeScript = indexSource.slice(indexSource.indexOf('(function initializeReleaseNotice()'));
 assert(releaseNoticeScript.indexOf('IndyDialogManager?.close(backdrop, { restoreFocus })') < releaseNoticeScript.indexOf("backdrop.setAttribute('aria-hidden', 'true')") && releaseNoticeScript.includes('backdrop.inert = true') && releaseNoticeScript.includes('backdrop.inert = false'), 'Release notice moves focus and updates inert state before hiding itself from assistive technology');
 assert(indexSource.includes('window.authManager?.scheduleUserSettingsSave(0)') && indexSource.includes("window.addEventListener('indy-account-authenticated'"), 'Dismissing the release notice saves immediately and respects restored account state');
-assert(indexSource.includes('What’s new in 1.5.1') && indexSource.includes('Accurate assignment deadlines') && indexSource.includes('A smoother Assignments view') && indexSource.includes('Better details across the site'), 'The 1.5.1 release notice explains timing fixes, assignment polish, and site-wide improvements');
+assert(indexSource.includes('What’s new in 1.5.2') && indexSource.includes('More useful overdue history') && indexSource.includes('SOAR on regular Fridays') && indexSource.includes('Smoother tools and feedback'), 'The 1.5.2 release notice explains assignment history, Friday SOAR, and reliability improvements');
 assert(!indexSource.includes('updateNoticeShown_v4_0_0'), 'The obsolete release-notice storage key is removed');
 assert(secondaryStyles.includes('.release-notice-dialog') && secondaryStyles.includes('var(--theme-panel)'), 'The release notice follows the active palette');
 assert(secondaryStyles.includes('.release-notice-dialog::before') && secondaryStyles.includes('.release-notice-summary article:first-child'), 'The release notice uses a palette accent line and emphasizes the newest update');
@@ -442,10 +449,10 @@ assert(secondaryStyles.includes('inset: 0 0 auto') && secondaryStyles.includes('
 assert(secondaryStyles.includes('.release-notice-primary:hover') && secondaryStyles.includes('transform: translateX(3px)') && secondaryStyles.includes('.release-notice-primary:active'), 'Release-notice buttons provide hover, arrow, and pressed feedback');
 assert(secondaryStyles.includes('.release-notice-dialog button:focus-visible') && secondaryStyles.includes('outline-offset: 3px'), 'Release-notice buttons provide a visible keyboard focus state');
 assert(!indexSource.includes('Music Player') && !indexSource.includes('music player'), 'Public update notes do not reveal the hidden music player');
-assertEqual(JSON.parse(readFile('package.json')).version, '1.5.1', 'Package metadata identifies version 1.5.1');
-assertEqual(JSON.parse(readFile('worker/package.json')).version, '1.5.1', 'Schoology Worker metadata identifies version 1.5.1');
-assert([privacySource, termsSource].every((source) => source.includes('Version 1.5.1')), 'Privacy and Terms identify the current 1.5.1 version');
-assertEqual((indexSource.match(/<div class="wn-entry(?: current-release)?">/g) || []).length, 16, 'What’s New includes the initial release and fifteen focused updates');
+assertEqual(JSON.parse(readFile('package.json')).version, '1.5.2', 'Package metadata identifies version 1.5.2');
+assertEqual(JSON.parse(readFile('worker/package.json')).version, '1.5.2', 'Schoology Worker metadata identifies version 1.5.2');
+assert([privacySource, termsSource].every((source) => source.includes('Version 1.5.2')), 'Privacy and Terms identify the current 1.5.2 version');
+assertEqual((indexSource.match(/<div class="wn-entry(?: current-release)?">/g) || []).length, 17, 'What’s New includes the initial release and sixteen focused updates');
 assertEqual((indexSource.match(/<div class="wn-entry current-release">/g) || []).length, 1, 'Exactly one update is marked as the current release');
 assert(!indexSource.includes('id="bg-image"'), 'Retired background-image upload is removed from Appearance settings');
 assert(!indexSource.includes('id="bg-image-drop-area"'), 'Retired background-image drop area is removed');
@@ -772,6 +779,7 @@ assertEqual(manifest.display, 'standalone', 'Web app installs in a standalone wi
 assert(manifest.icons.some((icon) => icon.sizes === '192x192'), 'Web app manifest provides the standard install icon');
 assert(manifest.icons.some((icon) => icon.sizes === '512x512'), 'Web app manifest provides a large install icon');
 assert(serviceWorkerSource.includes("request.mode === 'navigate'") && serviceWorkerSource.includes("url.pathname.includes('/data/')"), 'Offline worker caches the app shell while keeping calendar data network-first');
+assert(serviceWorkerSource.includes("indy-schedule-v1.5.2-r1"), 'Service-worker cache is refreshed for the 1.5.2 release');
 assert(readFile('script2.js').includes("navigator.serviceWorker.register('./service-worker.js')") && indexSource.includes('id="install-app-button"'), 'Dashboard registers offline support and exposes an install action when supported');
 
 print(`Passed ${passed} checks.`);

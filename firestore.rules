@@ -12,7 +12,7 @@ service cloud.firestore {
         'lunchWave', 'progressBarEnabled', 'progressBarColor',
         'progressBarOpacity', 'gradientSettings', 'currentScheduleName',
         'indyScheduleOverride_v1', 'indyOnboardingComplete_v2',
-        'indyAnalyticsConsent_v1', 'indyReleaseNotice_v1_3_3', 'indyReleaseNotice_v1_3_4', 'indyReleaseNotice_v1_3_5', 'indyReleaseNotice_v1_4_0', 'indyReleaseNotice_v1_5_0', 'indyReleaseNotice_v1_5_1',
+        'indyAnalyticsConsent_v1', 'indyReleaseNotice_v1_3_3', 'indyReleaseNotice_v1_3_4', 'indyReleaseNotice_v1_3_5', 'indyReleaseNotice_v1_4_0', 'indyReleaseNotice_v1_5_0', 'indyReleaseNotice_v1_5_1', 'indyReleaseNotice_v1_5_2',
         'sawUpdateNotice', 'indySchoologyPromptSeen_v1', 'periodRenames', 'globalPeriodNames'
       ];
     }
@@ -47,6 +47,7 @@ service cloud.firestore {
         && settings.get('indyReleaseNotice_v1_4_0', 'false') in ['true', 'false']
         && settings.get('indyReleaseNotice_v1_5_0', 'false') in ['true', 'false']
         && settings.get('indyReleaseNotice_v1_5_1', 'false') in ['true', 'false']
+        && settings.get('indyReleaseNotice_v1_5_2', 'false') in ['true', 'false']
         && settings.get('sawUpdateNotice', 'false') in ['true', 'false']
         && settings.get('indySchoologyPromptSeen_v1', 'false') in ['true', 'false']
         && settings.get('periodRenames', {}) is map && settings.get('periodRenames', {}).keys().size() <= 100

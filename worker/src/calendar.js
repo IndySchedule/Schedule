@@ -78,7 +78,7 @@ export async function parseAssignments(ics, now = new Date()) {
         const item = property(line);
         if (item && !Object.prototype.hasOwnProperty.call(current, item.name)) current[item.name] = item;
     }
-    const cutoff = new Date(now.getTime() - 24 * 60 * 60 * 1000).getTime();
+    const cutoff = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000).getTime();
     const horizon = new Date(now.getTime() + 180 * 24 * 60 * 60 * 1000).getTime();
     const results = [];
     for (const event of events) {

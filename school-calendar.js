@@ -149,7 +149,7 @@
         if (dayType === 'halfDay') return 'halfDay';
         if (dayType === 'lateStart') return 'lateStart';
         const day = weekday(key);
-        if (day === 1 || day === 5) return 'normalNoSoar';
+        if (day === 1) return 'normalNoSoar';
         return 'normal';
     }
 

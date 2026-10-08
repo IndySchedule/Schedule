@@ -733,7 +733,7 @@
                     <div class="settings-group about-overview-card">
                         <div class="about-content about-dashboard">
                             <div class="about-intro">
-                                <div><span class="about-version">Version 1.5.1</span><h2>Built for the Indy school day.</h2><p>Indy Schedule is a fast, lightweight countdown and daily schedule dashboard for Independence High School.</p></div>
+                                <div><span class="about-version">Version 1.5.2</span><h2>Built for the Indy school day.</h2><p>Indy Schedule is a fast, lightweight countdown and daily schedule dashboard for Independence High School.</p></div>
                                 <div class="about-intro-mark"><i class="fas fa-clock" aria-hidden="true"></i></div>
                             </div>
 
@@ -800,6 +800,19 @@
 
                         <div id="whatsnew-website" class="whatsnew-log" role="tabpanel">
                             <div class="wn-entry current-release">
+                                <div class="wn-entry-header">
+                                    <span class="wn-version">v1.5.2</span>
+                                    <span class="wn-date">Oct 8, 2026</span>
+                                    <span class="wn-tag">Schedule &amp; reliability fixes</span>
+                                </div>
+                                <ul>
+                                    <li>Overdue assignments can remain visible for up to two weeks without importing old work when you first connect Schoology.</li>
+                                    <li>Regular Fridays now use the SOAR schedule, with clearer wording during the three-minute transition.</li>
+                                    <li>Improved feedback startup reliability and made Developer Tools easier to inspect, move, resize, and restore.</li>
+                                </ul>
+                            </div>
+
+                            <div class="wn-entry">
                                 <div class="wn-entry-header">
                                     <span class="wn-version">v1.5.1</span>
                                     <span class="wn-date">Sep 29, 2026</span>
@@ -1213,7 +1226,7 @@
             <p class="managed-device-note"><i class="fas fa-circle-info" aria-hidden="true"></i> If Chrome clears site data, sign in again to restore your saved settings.</p>
         </div>
     </div>
-    <!-- One-time notice for returning users after the 1.5.1 release. -->
+    <!-- One-time notice for returning users after the 1.5.2 release. -->
     <div id="release-notice-backdrop" class="release-notice-backdrop" aria-hidden="true" hidden>
         <section class="release-notice-dialog" role="dialog" aria-modal="true" aria-labelledby="release-notice-title" aria-describedby="release-notice-description">
             <header class="release-notice-header">
@@ -1224,21 +1237,21 @@
                 <button type="button" id="release-notice-close" class="release-notice-close" aria-label="Close update notice"><i class="fas fa-times" aria-hidden="true"></i></button>
             </header>
             <div class="release-notice-content">
-                <span class="release-notice-version">Version 1.5.1</span>
-                <h1 id="release-notice-title">What’s new in 1.5.1</h1>
-                <p id="release-notice-description">Assignments are more accurate, and everyday parts of Indy Schedule feel cleaner and more reliable.</p>
+                <span class="release-notice-version">Version 1.5.2</span>
+                <h1 id="release-notice-title">What’s new in 1.5.2</h1>
+                <p id="release-notice-description">Assignments, Friday schedules, feedback, and Developer Tools are more dependable.</p>
                 <div class="release-notice-summary">
                     <article>
-                        <span>Fixed</span>
-                        <div><strong>Accurate assignment deadlines</strong><p>Schoology’s exact due times now display correctly, and work moves to Overdue as soon as its deadline passes.</p></div>
+                        <span>Assignments</span>
+                        <div><strong>More useful overdue history</strong><p>See up to two weeks of overdue work without pulling in assignments from before you first connected Schoology.</p></div>
                     </article>
                     <article>
-                        <span>Cleaner</span>
-                        <div><strong>A smoother Assignments view</strong><p>Improved button sizing, scrolling, overdue groups, Chromebook layouts, and the Due Today summary.</p></div>
+                        <span>Schedule</span>
+                        <div><strong>SOAR on regular Fridays</strong><p>Friday now follows the SOAR schedule, and the opening three-minute transition uses clearer wording.</p></div>
                     </article>
                     <article>
-                        <span>Polished</span>
-                        <div><strong>Better details across the site</strong><p>The welcome tour, Developer Tools, feedback, account colors, and transition into SOAR all received fixes.</p></div>
+                        <span>Reliability</span>
+                        <div><strong>Smoother tools and feedback</strong><p>Feedback waits for its secure connection, while Developer Tools has cleaner panels and improved window controls.</p></div>
                     </article>
                 </div>
             </div>
@@ -1552,7 +1565,7 @@
                     localStorage.removeItem('indyOnboardingReplayRequested_v1');
                     // First-time users already saw the full walkthrough, so do
                     // not immediately stack the release-summary dialog after it.
-                    localStorage.setItem('indyReleaseNotice_v1_5_1', 'true');
+                    localStorage.setItem('indyReleaseNotice_v1_5_2', 'true');
                     const currentUser = window.authManager?.currentUser;
                     nextButton.disabled = true;
                     nextButton.innerHTML = currentUser
@@ -1697,7 +1710,7 @@
         })();
 
         (function initializeReleaseNotice() {
-            const storageKey = 'indyReleaseNotice_v1_5_1';
+            const storageKey = 'indyReleaseNotice_v1_5_2';
 
             document.addEventListener('DOMContentLoaded', () => {
                 const backdrop = document.getElementById('release-notice-backdrop');

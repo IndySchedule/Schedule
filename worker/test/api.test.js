@@ -105,3 +105,20 @@ test('connect validates the feed, stores only ciphertext, and assignments remain
         await assert.rejects(() => assignments(env, 'user-two'), (error) => error.code === 'not-connected');
     } finally { globalThis.fetch = originalFetch; }
 });
+
+test('a newly connected calendar does not backfill past assignments', async () => {
+    const db = new FakeDb();
+    const env = { DB: db, CALENDAR_ENCRYPTION_KEY: 'test-secret' };
+    const originalFetch = globalThis.fetch;
+    const past = new Date(Date.now() - 86400000).toISOString().replace(/[-:]/g, '').replace(/\.\d{3}Z$/, 'Z');
+    const future = new Date(Date.now() + 86400000).toISOString().replace(/[-:]/g, '').replace(/\.\d{3}Z$/, 'Z');
+    globalThis.fetch = async () => new Response(['BEGIN:VCALENDAR',
+        'BEGIN:VEVENT', 'UID:past', `DTSTART:${past}`, 'SUMMARY:Past assignment', 'END:VEVENT',
+        'BEGIN:VEVENT', 'UID:future', `DTSTART:${future}`, 'SUMMARY:Future assignment', 'END:VEVENT',
+        'END:VCALENDAR'].join('\r\n'), { status: 200, headers: { 'content-type': 'text/calendar' } });
+    try {
+        await connect(new Request('https://worker.test/api/schoology/connect', { method: 'POST', body: JSON.stringify({ calendarUrl: 'webcal://app.schoology.com/calendar/feed/private-token' }) }), env, 'new-user');
+        const result = await assignments(env, 'new-user');
+        assert.deepEqual(result.assignments.map((item) => item.title), ['Future assignment']);
+    } finally { globalThis.fetch = originalFetch; }
+});

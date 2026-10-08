@@ -43,6 +43,7 @@ const validSettings = {
     indyReleaseNotice_v1_4_0: 'true',
     indyReleaseNotice_v1_5_0: 'true',
     indyReleaseNotice_v1_5_1: 'true',
+    indyReleaseNotice_v1_5_2: 'true',
     indySchoologyPromptSeen_v1: 'true',
     periodRenames: { 1: 'Example Class A', 2: 'Example Class B' },
     globalPeriodNames: { 1: 'Example Class A', 2: 'Example Class B' }
@@ -125,7 +126,7 @@ try {
     await assertFails(setDoc(doc(ownerDb, `${statsSummaryPath}/private/not-allowed`), { value: true }));
 
     const feedback = () => ({ category: 'schedule', message: 'Wrong bell time', name: '', email: '',
-        uid: '', createdAt: serverTimestamp(), status: 'new', pageUrl: 'https://indyschedule.com/', appVersion: '1.5.1' });
+        uid: '', createdAt: serverTimestamp(), status: 'new', pageUrl: 'https://indyschedule.com/', appVersion: '1.5.2' });
     await assertSucceeds(setDoc(doc(guestDb, 'feedback/guest'), feedback()));
     await assertSucceeds(setDoc(doc(ownerDb, 'feedback/owner'), { ...feedback(), uid: ownerId }));
     for (const db of [guestDb, ownerDb, otherDb]) {

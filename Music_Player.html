@@ -1802,6 +1802,10 @@
     .stats-nav svg { width:18px;height:18px; }
     .sidebar-privacy { display:flex;align-items:center;gap:7px;padding:0 9px;color:#607077;font-size:10px; }
     .sidebar-privacy svg { width:14px;height:14px; }
+    @media (min-width:701px) {
+      .sidebar { overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#34444a transparent; }
+      .playlist-list { flex:0 0 auto;overflow:visible; }
+    }
 
     .main { grid-column:2;grid-row:1;display:block;height:auto;padding:0;overflow-y:auto;overflow-x:hidden;background:linear-gradient(180deg,#132029 0,#090f13 46%,#070b0e 100%);scrollbar-color:#34444a transparent; }
     .main::before,.main-bg,.main-overlay { display:none; }
@@ -2771,6 +2775,21 @@
     });
   }
 
+  function queueRecentArtworkMetadata(recentItems) {
+    if (!recentItems.length) return;
+    const recentKeys = new Set(recentItems.map(item => item.songKey));
+    const recentTitles = new Set(recentItems.map(item => normalizeStatsValue(item.title)).filter(Boolean));
+    playlists.forEach(playlist => playlist.tracks.forEach(track => {
+      if (track.artworkUrl) {
+        sessionArtworkBySong.set(statsSongKey(track), track.artworkUrl);
+        return;
+      }
+      if (recentKeys.has(statsSongKey(track)) || recentTitles.has(normalizeStatsValue(track.title))) {
+        queueTrackMetadata(track, true);
+      }
+    }));
+  }
+
   function renderStats() {
     const stats = combinedStats();
     const today = localDateKey();
@@ -2788,7 +2807,9 @@
     statsPlaylist.textContent = topPlaylist?.name || '—';
     renderStatsRows(statsTopSongs, topSongs, 'song');
     renderStatsRows(statsTopArtists, topArtists, 'artist');
-    renderStatsRows(statsRecent, (stats.recent || []).map((item, index) => [String(index), item]), 'recent');
+    const recent = stats.recent || [];
+    queueRecentArtworkMetadata(recent);
+    renderStatsRows(statsRecent, recent.map((item, index) => [String(index), item]), 'recent');
   }
 
   function showStatsView() {
@@ -3374,6 +3395,7 @@
   }
 
   async function loadMetadata(track) {
+    const previousSongKey = statsSongKey(track);
     const metadata = await extractMp3Metadata(track.file);
 
     if (track.disposed) {
@@ -3386,6 +3408,11 @@
     track.artworkUrl = metadata.artworkUrl;
     if (metadata.title) track.title = metadata.title;
     if (metadata.artist) track.artist = metadata.artist;
+    if (track.artworkUrl) {
+      sessionArtworkBySong.set(previousSongKey, track.artworkUrl);
+      sessionArtworkBySong.set(statsSongKey(track), track.artworkUrl);
+      if (!statsView.hidden) renderStats();
+    }
     schedulePlaylistArtwork(track.playlist);
     scheduleLibraryRender(track);
 

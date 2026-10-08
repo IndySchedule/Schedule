@@ -1208,6 +1208,16 @@ window.populateRenamePeriods = populateRenamePeriods;
             border-bottom-color: #292929;
             cursor: default !important;
         }
+        .devtools-header[data-draggable="true"] { cursor: grab !important; }
+        .devtools-header[data-dragging="true"] { cursor: grabbing !important; }
+        #devtools-debug-overlay.is-maximized .devtools-resize-handle { display: none; }
+        .devtools-window-action {
+            width: 34px;
+            min-width: 34px !important;
+            min-height: 34px !important;
+            padding: 0 !important;
+            font-size: 17px !important;
+        }
         .devtools-heading-group { grid-column: 1; }
         .devtools-title {
             color: #fafafa;
@@ -1346,7 +1356,7 @@ window.populateRenamePeriods = populateRenamePeriods;
             background: #080808 !important;
             font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace !important;
         }
-        #devtools-debug-content { display: block !important; padding: 0 !important; }
+        #devtools-debug-content { padding: 0 !important; }
         .devtools-storage-row {
             display: grid;
             grid-template-columns: minmax(190px, 0.8fr) minmax(0, 1.2fr);
@@ -1686,6 +1696,7 @@ window.populateRenamePeriods = populateRenamePeriods;
     function closeDebugOverlay(options = {}) {
         const layer = document.getElementById('devtools-layer');
         const overlay = document.getElementById('devtools-debug-overlay');
+        overlay?._interactionCleanup?.();
         if (layer) window.IndyDialogManager?.close(layer, options);
         else if (overlay) window.IndyDialogManager?.close(overlay, options);
         layer?.remove();
@@ -2147,6 +2158,20 @@ musicPlayerBtn.addEventListener('click', (ev) => {
         closeBtn.style.background = 'rgba(255,255,255,0.08)';
         closeBtn.style.color = '#E8ECF7';
         closeBtn.addEventListener('click', (ev) => { ev.stopPropagation(); closeDebugOverlay(); });
+
+        const maximizeBtn = document.createElement('button');
+        maximizeBtn.className = 'devtools-window-action';
+        maximizeBtn.type = 'button';
+        maximizeBtn.textContent = '□';
+        maximizeBtn.title = 'Maximize developer tools';
+        maximizeBtn.setAttribute('aria-label', maximizeBtn.title);
+
+        const resetPlacementBtn = document.createElement('button');
+        resetPlacementBtn.className = 'devtools-window-action';
+        resetPlacementBtn.type = 'button';
+        resetPlacementBtn.textContent = '↺';
+        resetPlacementBtn.title = 'Reset developer tools position and size';
+        resetPlacementBtn.setAttribute('aria-label', resetPlacementBtn.title);
         
         // Add Clear localStorage button (with snapshot so Undo can restore)
         const clearBtn = document.createElement('button');
@@ -2180,6 +2205,8 @@ musicPlayerBtn.addEventListener('click', (ev) => {
         btnGroup.appendChild(hudBtn);
         btnGroup.appendChild(musicPlayerBtn);
         btnGroup.appendChild(clearBtn);
+        btnGroup.appendChild(resetPlacementBtn);
+        btnGroup.appendChild(maximizeBtn);
         btnGroup.appendChild(closeBtn);
 
         header.appendChild(leftGroup);
@@ -2188,49 +2215,146 @@ musicPlayerBtn.addEventListener('click', (ev) => {
         header.appendChild(tabs);
         overlay.appendChild(header);
 
-        // Draggable overlay (header as drag handle)
+        const placementKey = 'devtoolsOverlayPlacement';
+        const compactLayout = () => innerWidth <= 720;
+        const interactionController = new AbortController();
+        const interactionSignal = interactionController.signal;
+        let restoreRect = null;
+        let maximized = false;
+        overlay._interactionCleanup = () => {
+            interactionController.abort();
+            document.body.style.userSelect = '';
+        };
+
+        function currentOverlayRect() {
+            const rect = overlay.getBoundingClientRect();
+            return { top: rect.top, left: rect.left, width: rect.width, height: rect.height };
+        }
+
+        function saveOverlayPlacement() {
+            if (compactLayout()) return;
+            try { localStorage.setItem(placementKey, JSON.stringify({ ...currentOverlayRect(), maximized })); } catch (e) {}
+        }
+
+        function applyOverlayRect(rect) {
+            const availableWidth = Math.max(280, innerWidth - 16);
+            const availableHeight = Math.max(260, innerHeight - 16);
+            const width = Math.min(Math.max(Math.min(560, availableWidth), rect.width), availableWidth);
+            const height = Math.min(Math.max(Math.min(380, availableHeight), rect.height), availableHeight);
+            const maxLeft = Math.max(8, innerWidth - width - 8);
+            const maxTop = Math.max(8, innerHeight - height - 8);
+            overlay.style.transform = 'none';
+            overlay.style.width = `${width}px`;
+            overlay.style.height = `${height}px`;
+            overlay.style.left = `${Math.min(Math.max(8, rect.left), maxLeft)}px`;
+            overlay.style.top = `${Math.min(Math.max(8, rect.top), maxTop)}px`;
+            overlay.style.right = '';
+            overlay.style.bottom = '';
+        }
+
+        function syncWindowButtons() {
+            maximizeBtn.textContent = maximized ? '❐' : '□';
+            maximizeBtn.title = maximized ? 'Restore developer tools' : 'Maximize developer tools';
+            maximizeBtn.setAttribute('aria-label', maximizeBtn.title);
+            overlay.classList.toggle('is-maximized', maximized);
+        }
+
+        function setMaximized(next) {
+            if (compactLayout()) return;
+            if (next && !maximized) restoreRect = currentOverlayRect();
+            maximized = next;
+            if (maximized) applyOverlayRect({ left: 8, top: 8, width: innerWidth - 16, height: innerHeight - 16 });
+            else if (restoreRect) applyOverlayRect(restoreRect);
+            syncWindowButtons();
+            saveOverlayPlacement();
+        }
+
+        function resetOverlayPlacement() {
+            maximized = false;
+            restoreRect = null;
+            const width = Math.min(920, innerWidth - 32);
+            const height = Math.min(720, innerHeight - 32);
+            applyOverlayRect({ left: (innerWidth - width) / 2, top: (innerHeight - height) / 2, width, height });
+            syncWindowButtons();
+            try { localStorage.removeItem(placementKey); } catch (e) {}
+        }
+
+        maximizeBtn.addEventListener('click', (event) => {
+            event.stopPropagation();
+            setMaximized(!maximized);
+        });
+        resetPlacementBtn.addEventListener('click', (event) => {
+            event.stopPropagation();
+            resetOverlayPlacement();
+        });
+        header.addEventListener('dblclick', (event) => {
+            if (event.target.closest('button, input, select, textarea, a') || compactLayout()) return;
+            setMaximized(!maximized);
+        });
+
+        // Pointer events keep dragging smooth for mouse, pen, and touch.
         (function enableDrag() {
-            let dragging = false;
+            let dragging = false, frame = 0, pendingLeft = 0, pendingTop = 0;
             let startX = 0, startY = 0, startLeft = 0, startTop = 0, dragWidth = 0, dragHeight = 0;
-            header.style.cursor = 'move';
-            header.addEventListener('mousedown', (e) => {
-                if (e.target.closest('button, input, select, textarea, a') || innerWidth <= 720) return;
+            header.dataset.draggable = 'true';
+            header.tabIndex = 0;
+            header.setAttribute('aria-label', 'Developer tools window. Drag to move; use arrow keys to adjust its position.');
+            const draw = () => {
+                frame = 0;
+                overlay.style.left = `${pendingLeft}px`;
+                overlay.style.top = `${pendingTop}px`;
+            };
+            header.addEventListener('pointerdown', (event) => {
+                if (event.target.closest('button, input, select, textarea, a') || compactLayout() || maximized || event.button !== 0) return;
                 dragging = true;
-                startX = e.clientX; startY = e.clientY;
+                startX = event.clientX;
+                startY = event.clientY;
                 const rect = overlay.getBoundingClientRect();
-                startLeft = rect.left; startTop = rect.top;
-                dragWidth = rect.width; dragHeight = rect.height;
+                startLeft = rect.left;
+                startTop = rect.top;
+                dragWidth = rect.width;
+                dragHeight = rect.height;
                 overlay.style.left = `${rect.left}px`;
                 overlay.style.top = `${rect.top}px`;
                 overlay.style.transform = 'none';
+                header.dataset.dragging = 'true';
                 document.body.style.userSelect = 'none';
-            });
-            window.addEventListener('mousemove', (e) => {
+                header.setPointerCapture?.(event.pointerId);
+            }, { signal: interactionSignal });
+            window.addEventListener('pointermove', (event) => {
                 if (!dragging) return;
-                const dx = e.clientX - startX;
-                const dy = e.clientY - startY;
-                overlay.style.left = `${Math.min(Math.max(8, startLeft + dx), innerWidth - dragWidth - 8)}px`;
-                overlay.style.top = `${Math.min(Math.max(8, startTop + dy), innerHeight - dragHeight - 8)}px`;
-                overlay.style.right = '';
-                overlay.style.bottom = '';
-            });
-            window.addEventListener('mouseup', () => {
+                pendingLeft = Math.min(Math.max(8, startLeft + event.clientX - startX), Math.max(8, innerWidth - dragWidth - 8));
+                pendingTop = Math.min(Math.max(8, startTop + event.clientY - startY), Math.max(8, innerHeight - dragHeight - 8));
+                if (!frame) frame = requestAnimationFrame(draw);
+            }, { signal: interactionSignal });
+            window.addEventListener('pointerup', () => {
                 if (!dragging) return;
                 dragging = false;
+                if (frame) { cancelAnimationFrame(frame); draw(); }
+                const rect = overlay.getBoundingClientRect();
+                const snapDistance = 18;
+                if (rect.left <= snapDistance) overlay.style.left = '8px';
+                if (innerWidth - rect.right <= snapDistance) overlay.style.left = `${Math.max(8, innerWidth - rect.width - 8)}px`;
+                if (rect.top <= snapDistance) overlay.style.top = '8px';
+                if (innerHeight - rect.bottom <= snapDistance) overlay.style.top = `${Math.max(8, innerHeight - rect.height - 8)}px`;
+                delete header.dataset.dragging;
                 document.body.style.userSelect = '';
-                try {
-                    const rect = overlay.getBoundingClientRect();
-                    localStorage.setItem('devtoolsOverlayPlacement', JSON.stringify({
-                        top: rect.top,
-                        left: rect.left,
-                        width: rect.width,
-                        height: rect.height
-                    }));
-                } catch (e) {}
-            });
+                saveOverlayPlacement();
+            }, { signal: interactionSignal });
+            header.addEventListener('keydown', (event) => {
+                if (event.target !== header || compactLayout() || maximized || !['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) return;
+                event.preventDefault();
+                const amount = event.shiftKey ? 24 : 8;
+                const rect = currentOverlayRect();
+                if (event.key === 'ArrowUp') rect.top -= amount;
+                if (event.key === 'ArrowDown') rect.top += amount;
+                if (event.key === 'ArrowLeft') rect.left -= amount;
+                if (event.key === 'ArrowRight') rect.left += amount;
+                applyOverlayRect(rect);
+                saveOverlayPlacement();
+            }, { signal: interactionSignal });
         })();
 
-        // Resize handle
         const resizeHandle = document.createElement('div');
         resizeHandle.className = 'devtools-resize-handle';
         resizeHandle.style.position = 'absolute';
@@ -2245,39 +2369,40 @@ musicPlayerBtn.addEventListener('click', (ev) => {
         (function enableResize() {
             let resizing = false;
             let startX = 0, startY = 0, startW = 0, startH = 0;
-            resizeHandle.addEventListener('mousedown', (e) => {
-                e.stopPropagation();
+            resizeHandle.addEventListener('pointerdown', (event) => {
+                event.stopPropagation();
+                if (compactLayout() || maximized || event.button !== 0) return;
                 resizing = true;
                 const rect = overlay.getBoundingClientRect();
                 overlay.style.left = `${rect.left}px`;
                 overlay.style.top = `${rect.top}px`;
                 overlay.style.transform = 'none';
-                startX = e.clientX; startY = e.clientY;
-                startW = rect.width; startH = rect.height;
+                startX = event.clientX;
+                startY = event.clientY;
+                startW = rect.width;
+                startH = rect.height;
                 document.body.style.userSelect = 'none';
-            });
-            window.addEventListener('mousemove', (e) => {
+                resizeHandle.setPointerCapture?.(event.pointerId);
+            }, { signal: interactionSignal });
+            window.addEventListener('pointermove', (event) => {
                 if (!resizing) return;
-                const dx = e.clientX - startX;
-                const dy = e.clientY - startY;
-                overlay.style.width = `${Math.min(innerWidth - 32, Math.max(560, startW + dx))}px`;
-                overlay.style.height = `${Math.min(innerHeight - 32, Math.max(380, startH + dy))}px`;
-            });
-            window.addEventListener('mouseup', () => {
+                overlay.style.width = `${Math.min(innerWidth - 16, Math.max(560, startW + event.clientX - startX))}px`;
+                overlay.style.height = `${Math.min(innerHeight - 16, Math.max(380, startH + event.clientY - startY))}px`;
+            }, { signal: interactionSignal });
+            window.addEventListener('pointerup', () => {
                 if (!resizing) return;
                 resizing = false;
                 document.body.style.userSelect = '';
-                try {
-                    const rect = overlay.getBoundingClientRect();
-                    localStorage.setItem('devtoolsOverlayPlacement', JSON.stringify({
-                        top: rect.top,
-                        left: rect.left,
-                        width: rect.width,
-                        height: rect.height
-                    }));
-                } catch (e) {}
-            });
+                applyOverlayRect(currentOverlayRect());
+                saveOverlayPlacement();
+            }, { signal: interactionSignal });
         })();
+
+        window.addEventListener('resize', () => {
+            if (compactLayout()) return;
+            if (maximized) applyOverlayRect({ left: 8, top: 8, width: innerWidth - 16, height: innerHeight - 16 });
+            else applyOverlayRect(currentOverlayRect());
+        }, { signal: interactionSignal });
 
     const status = document.createElement('div');
     status.id = 'devtools-clean-status';
@@ -2755,7 +2880,7 @@ musicPlayerBtn.addEventListener('click', (ev) => {
                 view.tab.tabIndex = active ? 0 : -1;
                 view.tab.style.background = active ? 'rgba(255,255,255,0.08)' : 'transparent';
                 view.tab.style.border = active ? '1px solid rgba(255,255,255,0.2)' : '1px solid rgba(255,255,255,0.08)';
-                view.panel.style.display = active ? (name === 'debug' ? 'grid' : name === 'sources' ? 'block' : 'block') : 'none';
+                view.panel.style.display = active ? 'block' : 'none';
             });
             storageToolbar.style.display = tabName === 'debug' ? 'flex' : 'none';
             consoleControls.style.display = tabName === 'console' ? 'flex' : 'none';
@@ -3483,9 +3608,9 @@ function updateCountdowns() {
             setHeroText({
                 context: headerName,
                 heading: 'Transition to SOAR',
-                caption: 'until SOAR class time',
+                caption: 'until SOAR',
                 periodWindow: `${formatTime12(currentPeriod.start)}–${formatTime12(transitionEndTime)}`,
-                nextSummary: `SOAR class time begins at ${formatTime12(transitionEndTime)}`,
+                nextSummary: `SOAR begins at ${formatTime12(transitionEndTime)}`,
                 state: 'between-classes'
             });
             setTimerText(timeText);

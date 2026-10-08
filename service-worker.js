@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'indy-schedule-v1.5.1-r3';
+const CACHE_VERSION = 'indy-schedule-v1.5.2-r1';
 const APP_SHELL = [
     './',
     './index.html',

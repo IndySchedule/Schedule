@@ -66,6 +66,15 @@ test('does not mistake Schoology VALUE=DATE-TIME events for all-day dates', asyn
     assert.equal(assignment.allDay, false);
 });
 
+test('keeps up to two weeks of overdue assignments', async () => {
+    const ics = ['BEGIN:VCALENDAR',
+        'BEGIN:VEVENT', 'UID:recent-overdue', 'DTSTART:20260918T120000Z', 'SUMMARY:Recent overdue work', 'END:VEVENT',
+        'BEGIN:VEVENT', 'UID:old-overdue', 'DTSTART:20260916T120000Z', 'SUMMARY:Old overdue work', 'END:VEVENT',
+        'END:VCALENDAR'].join('\r\n');
+    const assignments = await parseAssignments(ics, new Date('2026-10-01T12:00:00Z'));
+    assert.deepEqual(assignments.map((item) => item.title), ['Recent overdue work']);
+});
+
 test('encrypted calendar URLs roundtrip and use unique nonces', async () => {
     const secret = 'unit-test-encryption-secret';
     const url = 'https://app.schoology.com/calendar/feed/private-token';

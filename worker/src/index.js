@@ -109,13 +109,20 @@ async function disconnect(env, uid) {
 }
 
 async function assignments(env, uid) {
-    const connection = await env.DB.prepare('SELECT encrypted_calendar_url FROM schoology_connections WHERE firebase_uid = ?').bind(uid).first();
+    const connection = await env.DB.prepare('SELECT encrypted_calendar_url, connected_at FROM schoology_connections WHERE firebase_uid = ?').bind(uid).first();
     if (!connection) throw Object.assign(new Error('Connect your Schoology calendar first.'), { status: 404, code: 'not-connected' });
     const calendarUrl = await decryptCalendarUrl(connection.encrypted_calendar_url, env.CALENDAR_ENCRYPTION_KEY);
     const parsed = await parseAssignments(await fetchCalendar(calendarUrl));
+    const twoWeeksAgo = Date.now() - 14 * 24 * 60 * 60 * 1000;
+    const connectedAt = new Date(connection.connected_at).getTime();
+    // A new connection starts with current and future work only. As time passes,
+    // assignments may remain visible as overdue for up to two weeks, but work
+    // from before the calendar was first connected is never backfilled.
+    const earliestVisible = Math.max(twoWeeksAgo, Number.isFinite(connectedAt) ? connectedAt : twoWeeksAgo);
+    const visibleAssignments = parsed.filter((item) => new Date(item.dueAt).getTime() >= earliestVisible);
     const completed = await env.DB.prepare('SELECT assignment_id FROM completed_assignments WHERE firebase_uid = ?').bind(uid).all();
     const completedIds = new Set((completed.results || []).map((row) => row.assignment_id));
-    return { assignments: parsed.map((item) => ({ ...item, completed: completedIds.has(item.id) })), fetchedAt: new Date().toISOString() };
+    return { assignments: visibleAssignments.map((item) => ({ ...item, completed: completedIds.has(item.id) })), fetchedAt: new Date().toISOString() };
 }
 
 async function setComplete(env, uid, assignmentId, complete) {
