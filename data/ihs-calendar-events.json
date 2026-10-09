@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-10-08T10:38:27.297Z",
-  "lastCheckedAt": "2026-10-08T10:38:27.297Z",
-  "contentUpdatedAt": "2026-10-08T10:38:27.297Z",
+  "generatedAt": "2026-10-09T01:14:55.553Z",
+  "lastCheckedAt": "2026-10-09T01:14:55.553Z",
+  "contentUpdatedAt": "2026-10-09T01:14:55.553Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -12,18 +12,6 @@
   "rangeStart": "2026-10-06",
   "rangeEnd": "2027-02-05",
   "events": [
-    {
-      "id": "0pd18lpd3ke1f6ipcf5jc487kk@google.com-2026-10-05T00:00:00.000Z",
-      "title": "IHS V Volleyball District Playoffs",
-      "start": "2026-10-05T00:00:00.000Z",
-      "end": "2026-10-07T00:00:00.000Z",
-      "allDay": true,
-      "days": [
-        "2026-10-05",
-        "2026-10-06"
-      ],
-      "location": "SUMMIT HIGH SCHOOL, 2830 Austins Wy, Thompson's Station, TN 37179, USA"
-    },
     {
       "id": "18gk8f665vuvn6v51qgf012rur@google.com-2026-10-07T21:00:00.000Z",
       "title": "IHS V Volleyball District Semi Finals",
@@ -1576,6 +1564,51 @@
         "2027-02-03"
       ],
       "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "4e3c1i19ddmd4lei531dq3i8v3@google.com-2027-02-05T22:30:00.000Z",
+      "title": "IHS JV Boys Basketball vs Summit HS",
+      "start": "2027-02-05T22:30:00.000Z",
+      "end": "2027-02-06T00:00:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-02-05"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "5drsmkmnk923us2dgsvmkn9j1m@google.com-2027-02-05T23:30:00.000Z",
+      "title": "IHS Freshman Boys Basketball vs Summit HS",
+      "start": "2027-02-05T23:30:00.000Z",
+      "end": "2027-02-06T01:00:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-02-05"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "3v0ihh6c27prnegcurrm0s399k@google.com-2027-02-06T00:00:00.000Z",
+      "title": "IHS Girls Basketball vs Summit HS",
+      "start": "2027-02-06T00:00:00.000Z",
+      "end": "2027-02-06T01:30:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-02-05"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "7vkefjbj24lslstb1g5bo18rmb@google.com-2027-02-06T00:00:00.000Z",
+      "title": "IHS Freshman Boys Basketball Tournament @ Franklin HS",
+      "start": "2027-02-06T00:00:00.000Z",
+      "end": "2027-02-08T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2027-02-06",
+        "2027-02-07"
+      ],
+      "location": "Franklin High School, 810 Hillsboro Rd, Franklin, TN 37064, USA"
     }
   ]
 }
