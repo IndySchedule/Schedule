@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-10-09T10:37:18.823Z",
-  "lastCheckedAt": "2026-10-09T10:37:18.823Z",
-  "contentUpdatedAt": "2026-10-09T10:37:18.823Z",
+  "generatedAt": "2026-10-09T18:23:17.110Z",
+  "lastCheckedAt": "2026-10-09T18:23:17.110Z",
+  "contentUpdatedAt": "2026-10-09T18:23:17.110Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -1620,6 +1620,17 @@
         "2027-02-05"
       ],
       "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "0asef4a16gnbsq0p47uf8l15gr@google.com-2027-02-06T16:30:00.000Z",
+      "title": "IHS V Wrestling Boys Regional Tournament",
+      "start": "2027-02-06T16:30:00.000Z",
+      "end": "2027-02-06T19:30:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-02-06"
+      ],
+      "location": "Page High School, 6281 Arno Rd, Franklin, TN 37064, USA"
     }
   ]
 }
