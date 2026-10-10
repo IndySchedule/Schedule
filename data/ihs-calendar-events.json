@@ -2,27 +2,16 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-10-09T18:23:17.110Z",
-  "lastCheckedAt": "2026-10-09T18:23:17.110Z",
-  "contentUpdatedAt": "2026-10-09T18:23:17.110Z",
+  "generatedAt": "2026-10-10T09:53:57.219Z",
+  "lastCheckedAt": "2026-10-10T09:53:57.219Z",
+  "contentUpdatedAt": "2026-10-10T09:53:57.219Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
   "timeZone": "America/Chicago",
-  "rangeStart": "2026-10-07",
-  "rangeEnd": "2027-02-06",
+  "rangeStart": "2026-10-08",
+  "rangeEnd": "2027-02-07",
   "events": [
-    {
-      "id": "18gk8f665vuvn6v51qgf012rur@google.com-2026-10-07T21:00:00.000Z",
-      "title": "IHS V Volleyball District Semi Finals",
-      "start": "2026-10-07T21:00:00.000Z",
-      "end": "2026-10-08T01:00:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-10-07"
-      ],
-      "location": "SUMMIT HIGH SCHOOL, 2830 Austins Wy, Thompson's Station, TN 37179, USA"
-    },
     {
       "id": "7nf1k4un3ci0qu8vigaqqdqt8a@google.com-2026-10-08T23:00:00.000Z",
       "title": "IHS V Volleyball District Championship",
