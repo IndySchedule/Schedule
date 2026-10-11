@@ -2,38 +2,16 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-10-10T09:53:57.219Z",
-  "lastCheckedAt": "2026-10-10T09:53:57.219Z",
-  "contentUpdatedAt": "2026-10-10T09:53:57.219Z",
+  "generatedAt": "2026-10-11T05:50:44.312Z",
+  "lastCheckedAt": "2026-10-11T05:50:44.312Z",
+  "contentUpdatedAt": "2026-10-11T05:50:44.312Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
   "timeZone": "America/Chicago",
-  "rangeStart": "2026-10-08",
+  "rangeStart": "2026-10-09",
   "rangeEnd": "2027-02-07",
   "events": [
-    {
-      "id": "7nf1k4un3ci0qu8vigaqqdqt8a@google.com-2026-10-08T23:00:00.000Z",
-      "title": "IHS V Volleyball District Championship",
-      "start": "2026-10-08T23:00:00.000Z",
-      "end": "2026-10-09T02:00:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-10-08"
-      ],
-      "location": "SUMMIT HIGH SCHOOL, 2830 Austins Wy, Thompson's Station, TN 37179, USA"
-    },
-    {
-      "id": "0htjfqscfor8cj4ottf7oshhji@google.com-2026-10-09T00:00:00.000Z",
-      "title": "IHS Varsity Football vs Page HS *Homecoming",
-      "start": "2026-10-09T00:00:00.000Z",
-      "end": "2026-10-09T02:00:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-10-08"
-      ],
-      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
-    },
     {
       "id": "4kpu10n6bpp52ncc18hdgerkod@google.com-2026-10-12T00:00:00.000Z",
       "title": "IHS Fall Break",
@@ -1620,6 +1598,17 @@
         "2027-02-06"
       ],
       "location": "Page High School, 6281 Arno Rd, Franklin, TN 37064, USA"
+    },
+    {
+      "id": "IHS Late Start-2027-02-08T00:00:00.000Z",
+      "title": "IHS Late Start",
+      "start": "2027-02-08T00:00:00.000Z",
+      "end": "2027-02-09T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2027-02-08"
+      ],
+      "location": ""
     }
   ]
 }
