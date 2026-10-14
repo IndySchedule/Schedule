@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-10-14T08:46:17.259Z",
-  "lastCheckedAt": "2026-10-14T08:46:17.259Z",
-  "contentUpdatedAt": "2026-10-14T08:46:17.259Z",
+  "generatedAt": "2026-10-14T23:56:58.850Z",
+  "lastCheckedAt": "2026-10-14T23:56:58.850Z",
+  "contentUpdatedAt": "2026-10-14T23:56:58.850Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -1651,6 +1651,17 @@
       "allDay": false,
       "days": [
         "2027-02-09"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "2bk64ofek40vvvacirc1tko30f@google.com-2027-02-11T22:30:00.000Z",
+      "title": "IHS JV Boys Basketball vs Page HS",
+      "start": "2027-02-11T22:30:00.000Z",
+      "end": "2027-02-12T00:00:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-02-11"
       ],
       "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     }
