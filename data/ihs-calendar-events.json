@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-10-14T23:56:58.850Z",
-  "lastCheckedAt": "2026-10-14T23:56:58.850Z",
-  "contentUpdatedAt": "2026-10-14T23:56:58.850Z",
+  "generatedAt": "2026-10-15T04:43:37.391Z",
+  "lastCheckedAt": "2026-10-15T04:43:37.391Z",
+  "contentUpdatedAt": "2026-10-15T04:43:37.391Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -24,28 +24,6 @@
         "2026-10-14",
         "2026-10-15",
         "2026-10-16"
-      ],
-      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
-    },
-    {
-      "id": "10259sad5bdmm0darq7plvtchh@google.com-2026-10-12T22:30:00.000Z",
-      "title": "IHS JV Football @ Brentwood HS",
-      "start": "2026-10-12T22:30:00.000Z",
-      "end": "2026-10-13T00:30:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-10-12"
-      ],
-      "location": "Brentwood High School, 5304 Murray Ln, Brentwood, TN 37027, USA"
-    },
-    {
-      "id": "257nfdm2iu9efukq6udcsan4q0@google.com-2026-10-12T22:30:00.000Z",
-      "title": "IHS Freshman Football vs Brentwood HS",
-      "start": "2026-10-12T22:30:00.000Z",
-      "end": "2026-10-13T00:30:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-10-12"
       ],
       "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     },
@@ -1659,6 +1637,50 @@
       "title": "IHS JV Boys Basketball vs Page HS",
       "start": "2027-02-11T22:30:00.000Z",
       "end": "2027-02-12T00:00:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-02-11"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "01lcmhkalqkj02c1lvd75dum5s@google.com-2027-02-12T00:00:00.000Z",
+      "title": "IHS Girls Basketball vs Page HS",
+      "start": "2027-02-12T00:00:00.000Z",
+      "end": "2027-02-12T01:30:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-02-11"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "140jt09utkk5v7l9pfotdgcegv@google.com-2027-02-12T00:00:00.000Z",
+      "title": "IHS G Wrestling Sectional @ Shelbyville HS",
+      "start": "2027-02-12T00:00:00.000Z",
+      "end": "2027-02-13T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2027-02-12"
+      ],
+      "location": "Shelbyville High School, 2003 S Miller St, Shelbyville, IN 46176, USA"
+    },
+    {
+      "id": "7va8trrsn3doauper8l7k2agfb@google.com-2027-02-12T00:00:00.000Z",
+      "title": "IHS District PD - No Students",
+      "start": "2027-02-12T00:00:00.000Z",
+      "end": "2027-02-13T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2027-02-12"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "20kdetegv88fc9thomanuhuq4g@google.com-2027-02-12T01:30:00.000Z",
+      "title": "IHS V Boys Basketball vs Page HS",
+      "start": "2027-02-12T01:30:00.000Z",
+      "end": "2027-02-12T03:30:00.000Z",
       "allDay": false,
       "days": [
         "2027-02-11"
