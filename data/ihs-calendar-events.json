@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-10-15T11:33:20.158Z",
-  "lastCheckedAt": "2026-10-15T11:33:20.158Z",
-  "contentUpdatedAt": "2026-10-15T11:33:20.158Z",
+  "generatedAt": "2026-10-16T04:35:28.060Z",
+  "lastCheckedAt": "2026-10-16T04:35:28.060Z",
+  "contentUpdatedAt": "2026-10-16T04:35:28.060Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -26,17 +26,6 @@
         "2026-10-16"
       ],
       "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
-    },
-    {
-      "id": "30baiqig9smtjm2kfgsqk6ar0v@google.com-2026-10-13T23:00:00.000Z",
-      "title": "IHS Checkpoint Driving",
-      "start": "2026-10-13T23:00:00.000Z",
-      "end": "2026-10-14T01:00:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-10-13"
-      ],
-      "location": "Zoom"
     },
     {
       "id": "0217bb58o6mfdvnc1u6o375t82@google.com-2026-10-19T00:00:00.000Z",
@@ -1686,6 +1675,17 @@
         "2027-02-11"
       ],
       "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "5d45qdls1bmp26e49vntllpr0c@google.com-2027-02-13T00:00:00.000Z",
+      "title": "IHS V Wrestling Boys Sectionals @ Wilson Central HS",
+      "start": "2027-02-13T00:00:00.000Z",
+      "end": "2027-02-14T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2027-02-13"
+      ],
+      "location": "Wilson Central High School, 419 Wildcat Way, Lebanon, TN 37090, USA"
     }
   ]
 }
