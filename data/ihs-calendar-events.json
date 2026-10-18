@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-10-17T10:47:59.623Z",
-  "lastCheckedAt": "2026-10-17T10:47:59.623Z",
-  "contentUpdatedAt": "2026-10-17T10:47:59.623Z",
+  "generatedAt": "2026-10-18T04:37:53.198Z",
+  "lastCheckedAt": "2026-10-18T04:37:53.198Z",
+  "contentUpdatedAt": "2026-10-18T04:37:53.198Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -1686,6 +1686,17 @@
         "2027-02-13"
       ],
       "location": "Wilson Central High School, 419 Wildcat Way, Lebanon, TN 37090, USA"
+    },
+    {
+      "id": "56pai0mab6namkp671m4pfb9l2@google.com-2027-02-15T00:00:00.000Z",
+      "title": "IHS Mid-Winter Break - No School",
+      "start": "2027-02-15T00:00:00.000Z",
+      "end": "2027-02-16T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2027-02-15"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     }
   ]
 }
