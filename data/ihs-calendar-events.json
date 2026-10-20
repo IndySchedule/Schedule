@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-10-19T13:21:38.084Z",
-  "lastCheckedAt": "2026-10-19T13:21:38.084Z",
-  "contentUpdatedAt": "2026-10-19T13:21:38.084Z",
+  "generatedAt": "2026-10-20T00:22:56.432Z",
+  "lastCheckedAt": "2026-10-20T00:22:56.432Z",
+  "contentUpdatedAt": "2026-10-20T00:22:56.432Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -1682,6 +1682,28 @@
         "2027-02-15"
       ],
       "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "0g40knplaa6fhnivv5hvscqblb@google.com-2027-02-16T22:30:00.000Z",
+      "title": "IHS JV Boys Basketball @ Summit HS",
+      "start": "2027-02-16T22:30:00.000Z",
+      "end": "2027-02-17T00:00:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-02-16"
+      ],
+      "location": "SUMMIT HIGH SCHOOL, 2830 Austins Wy, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "0f453994qfhjbpiuldooae5kpb@google.com-2027-02-17T00:00:00.000Z",
+      "title": "IHS Girls Basketball @ Summit HS",
+      "start": "2027-02-17T00:00:00.000Z",
+      "end": "2027-02-17T01:30:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-02-16"
+      ],
+      "location": "SUMMIT HIGH SCHOOL, 2830 Austins Wy, Thompson's Station, TN 37179, USA"
     }
   ]
 }
