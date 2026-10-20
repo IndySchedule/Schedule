@@ -2,15 +2,15 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-10-20T00:22:56.432Z",
-  "lastCheckedAt": "2026-10-20T00:22:56.432Z",
-  "contentUpdatedAt": "2026-10-20T00:22:56.432Z",
+  "generatedAt": "2026-10-20T08:35:50.534Z",
+  "lastCheckedAt": "2026-10-20T08:35:50.534Z",
+  "contentUpdatedAt": "2026-10-20T08:35:50.534Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
   "timeZone": "America/Chicago",
-  "rangeStart": "2026-10-17",
-  "rangeEnd": "2027-02-16",
+  "rangeStart": "2026-10-18",
+  "rangeEnd": "2027-02-17",
   "events": [
     {
       "id": "0217bb58o6mfdvnc1u6o375t82@google.com-2026-10-19T00:00:00.000Z",
@@ -1699,6 +1699,17 @@
       "title": "IHS Girls Basketball @ Summit HS",
       "start": "2027-02-17T00:00:00.000Z",
       "end": "2027-02-17T01:30:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-02-16"
+      ],
+      "location": "SUMMIT HIGH SCHOOL, 2830 Austins Wy, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "1fg8gfvicgsdlc9jgn6qshh3v4@google.com-2027-02-17T01:30:00.000Z",
+      "title": "IHS V Boys Basketball @ Summit HS",
+      "start": "2027-02-17T01:30:00.000Z",
+      "end": "2027-02-17T03:30:00.000Z",
       "allDay": false,
       "days": [
         "2027-02-16"
