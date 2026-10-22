@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-10-21T11:53:07.912Z",
-  "lastCheckedAt": "2026-10-21T11:53:07.912Z",
-  "contentUpdatedAt": "2026-10-21T11:53:07.912Z",
+  "generatedAt": "2026-10-22T04:51:58.143Z",
+  "lastCheckedAt": "2026-10-22T04:51:58.143Z",
+  "contentUpdatedAt": "2026-10-22T04:51:58.143Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -12,17 +12,6 @@
   "rangeStart": "2026-10-19",
   "rangeEnd": "2027-02-18",
   "events": [
-    {
-      "id": "0217bb58o6mfdvnc1u6o375t82@google.com-2026-10-19T00:00:00.000Z",
-      "title": "IHS Late Start",
-      "start": "2026-10-19T00:00:00.000Z",
-      "end": "2026-10-20T00:00:00.000Z",
-      "allDay": true,
-      "days": [
-        "2026-10-19"
-      ],
-      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
-    },
     {
       "id": "1cl09k2kl22crlp68t63p0oa92@google.com-2026-10-21T00:00:00.000Z",
       "title": "IHS PSAT and Senior ACT",
@@ -1715,6 +1704,18 @@
         "2027-02-16"
       ],
       "location": "SUMMIT HIGH SCHOOL, 2830 Austins Wy, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "5m5em6qd4cofku3r2uo5gg1p0o@google.com-2027-02-19T00:00:00.000Z",
+      "title": "IHS V/G Wrestling State Tournament",
+      "start": "2027-02-19T00:00:00.000Z",
+      "end": "2027-02-21T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2027-02-19",
+        "2027-02-20"
+      ],
+      "location": "Williamson County AG Expo Park, 4215 Long Ln, Franklin, TN 37064, USA"
     }
   ]
 }
