@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-10-22T11:56:50.978Z",
-  "lastCheckedAt": "2026-10-22T11:56:50.978Z",
-  "contentUpdatedAt": "2026-10-22T11:56:50.978Z",
+  "generatedAt": "2026-10-23T04:54:01.006Z",
+  "lastCheckedAt": "2026-10-23T04:54:01.006Z",
+  "contentUpdatedAt": "2026-10-23T04:54:01.006Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -1716,6 +1716,51 @@
         "2027-02-20"
       ],
       "location": "Williamson County AG Expo Park, 4215 Long Ln, Franklin, TN 37064, USA"
+    },
+    {
+      "id": "2emvdognbc0da11olfio8lltti@google.com-2027-02-19T22:30:00.000Z",
+      "title": "IHS JV Boys Basketball @ Columbia Central HS",
+      "start": "2027-02-19T22:30:00.000Z",
+      "end": "2027-02-20T00:00:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-02-19"
+      ],
+      "location": "Columbia Central High School, 921 Lion Parkway, Columbia, TN 38401"
+    },
+    {
+      "id": "3o1tvt3ggtjbpancs2j1lkno0u@google.com-2027-02-20T00:00:00.000Z",
+      "title": "IHS JV Boys Basketball Tournament @ Columbia Central HS",
+      "start": "2027-02-20T00:00:00.000Z",
+      "end": "2027-02-22T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2027-02-20",
+        "2027-02-21"
+      ],
+      "location": "Columbia Central High School, 921 Lion Parkway, Columbia , TN 38401"
+    },
+    {
+      "id": "5pb6hvs70u5ljoctkbie7c41rg@google.com-2027-02-20T00:00:00.000Z",
+      "title": "IHS Girls Basketball @ Columbia Central HS",
+      "start": "2027-02-20T00:00:00.000Z",
+      "end": "2027-02-20T01:30:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-02-19"
+      ],
+      "location": "Columbia Central High School, Columbia, TN 38401"
+    },
+    {
+      "id": "60fhide9k5f2dlpsm4u8krrevs@google.com-2027-02-20T01:30:00.000Z",
+      "title": "IHS V Boys Basketball @ Columbia Central HS",
+      "start": "2027-02-20T01:30:00.000Z",
+      "end": "2027-02-20T03:30:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-02-19"
+      ],
+      "location": "Columbia Central HS, Columbia, TN 38401"
     }
   ]
 }
