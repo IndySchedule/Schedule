@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-10-24T11:05:40.771Z",
-  "lastCheckedAt": "2026-10-24T11:05:40.771Z",
-  "contentUpdatedAt": "2026-10-24T11:05:40.771Z",
+  "generatedAt": "2026-10-25T04:45:02.935Z",
+  "lastCheckedAt": "2026-10-25T04:45:02.935Z",
+  "contentUpdatedAt": "2026-10-25T04:45:02.935Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -1750,6 +1750,17 @@
         "2027-02-19"
       ],
       "location": "Columbia Central HS, Columbia, TN 38401"
+    },
+    {
+      "id": "IHS Late Start-2027-02-22T00:00:00.000Z",
+      "title": "IHS Late Start",
+      "start": "2027-02-22T00:00:00.000Z",
+      "end": "2027-02-23T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2027-02-22"
+      ],
+      "location": ""
     }
   ]
 }
