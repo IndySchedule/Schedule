@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-10-25T11:34:45.185Z",
-  "lastCheckedAt": "2026-10-25T11:34:45.185Z",
-  "contentUpdatedAt": "2026-10-25T11:34:45.185Z",
+  "generatedAt": "2026-10-26T04:50:48.313Z",
+  "lastCheckedAt": "2026-10-26T04:50:48.313Z",
+  "contentUpdatedAt": "2026-10-26T04:50:48.313Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -12,17 +12,6 @@
   "rangeStart": "2026-10-23",
   "rangeEnd": "2027-02-22",
   "events": [
-    {
-      "id": "0fdl12fu5gvolnesbqo2hd2t79@google.com-2026-10-24T00:00:00.000Z",
-      "title": "IHS Varsity Football @ Brentwood HS",
-      "start": "2026-10-24T00:00:00.000Z",
-      "end": "2026-10-24T02:00:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-10-23"
-      ],
-      "location": "Brentwood High School, 5304 Murray Ln, Brentwood, TN 37027, USA"
-    },
     {
       "id": "3nrpjdanp09181rlbd2r9m0von@google.com-2026-10-26T00:00:00.000Z",
       "title": "IHS Late Start",
