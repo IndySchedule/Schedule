@@ -3769,7 +3769,7 @@ body {
     position: relative;
     min-height: 84px;
     height: 84px;
-    overflow: hidden;
+    overflow: visible;
 }
 
 :root[data-edition="music-city"] .edition-header-art-music {

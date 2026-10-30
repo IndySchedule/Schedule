@@ -479,6 +479,7 @@ assert(['friday-night-lights', 'historic-franklin', 'music-city'].every((id) => 
 assert(/data-edition="friday-night-lights"[^>]*hidden/.test(indexSource), 'Friday Night Lights is temporarily hidden from Appearance');
 assert(/data-edition="historic-franklin"[^>]*hidden/.test(indexSource), 'Historic Franklin is temporarily hidden from Appearance');
 assert(!/data-edition="music-city"[^>]*hidden/.test(indexSource), 'Music City remains available in Appearance');
+assert(/:root\[data-edition="music-city"\] \.dashboard-header \{[\s\S]*?overflow: visible;[\s\S]*?\}/.test(secondaryStyles), 'Music City header does not clip the signed-in account menu');
 assert(['indy', 'daylight', 'monochrome', 'slate', 'dark-mode'].every((id) => indexSource.includes(`data-palette="${id}"`)), 'Essentials provides five everyday palette choices');
 assert(['midnight', 'graphite', 'deep-ocean', 'plum-night', 'forest-night'].every((id) => indexSource.includes(`data-palette="${id}"`)), 'The Dark category provides five distinct palette choices');
 assert(['coastal-sky', 'lavender-mist', 'soft-sage', 'blush', 'lemonade'].every((id) => indexSource.includes(`data-palette="${id}"`)), 'The collection offers a varied group of genuinely light palettes');
