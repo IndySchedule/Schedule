@@ -2,164 +2,16 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-10-08T10:38:27.297Z",
-  "lastCheckedAt": "2026-10-08T10:38:27.297Z",
-  "contentUpdatedAt": "2026-10-08T10:38:27.297Z",
+  "generatedAt": "2026-10-30T01:02:42.948Z",
+  "lastCheckedAt": "2026-10-30T01:02:42.948Z",
+  "contentUpdatedAt": "2026-10-30T01:02:42.948Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
   "timeZone": "America/Chicago",
-  "rangeStart": "2026-10-06",
-  "rangeEnd": "2027-02-05",
+  "rangeStart": "2026-10-27",
+  "rangeEnd": "2027-02-26",
   "events": [
-    {
-      "id": "0pd18lpd3ke1f6ipcf5jc487kk@google.com-2026-10-05T00:00:00.000Z",
-      "title": "IHS V Volleyball District Playoffs",
-      "start": "2026-10-05T00:00:00.000Z",
-      "end": "2026-10-07T00:00:00.000Z",
-      "allDay": true,
-      "days": [
-        "2026-10-05",
-        "2026-10-06"
-      ],
-      "location": "SUMMIT HIGH SCHOOL, 2830 Austins Wy, Thompson's Station, TN 37179, USA"
-    },
-    {
-      "id": "18gk8f665vuvn6v51qgf012rur@google.com-2026-10-07T21:00:00.000Z",
-      "title": "IHS V Volleyball District Semi Finals",
-      "start": "2026-10-07T21:00:00.000Z",
-      "end": "2026-10-08T01:00:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-10-07"
-      ],
-      "location": "SUMMIT HIGH SCHOOL, 2830 Austins Wy, Thompson's Station, TN 37179, USA"
-    },
-    {
-      "id": "7nf1k4un3ci0qu8vigaqqdqt8a@google.com-2026-10-08T23:00:00.000Z",
-      "title": "IHS V Volleyball District Championship",
-      "start": "2026-10-08T23:00:00.000Z",
-      "end": "2026-10-09T02:00:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-10-08"
-      ],
-      "location": "SUMMIT HIGH SCHOOL, 2830 Austins Wy, Thompson's Station, TN 37179, USA"
-    },
-    {
-      "id": "0htjfqscfor8cj4ottf7oshhji@google.com-2026-10-09T00:00:00.000Z",
-      "title": "IHS Varsity Football vs Page HS *Homecoming",
-      "start": "2026-10-09T00:00:00.000Z",
-      "end": "2026-10-09T02:00:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-10-08"
-      ],
-      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
-    },
-    {
-      "id": "4kpu10n6bpp52ncc18hdgerkod@google.com-2026-10-12T00:00:00.000Z",
-      "title": "IHS Fall Break",
-      "start": "2026-10-12T00:00:00.000Z",
-      "end": "2026-10-17T00:00:00.000Z",
-      "allDay": true,
-      "days": [
-        "2026-10-12",
-        "2026-10-13",
-        "2026-10-14",
-        "2026-10-15",
-        "2026-10-16"
-      ],
-      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
-    },
-    {
-      "id": "10259sad5bdmm0darq7plvtchh@google.com-2026-10-12T22:30:00.000Z",
-      "title": "IHS JV Football @ Brentwood HS",
-      "start": "2026-10-12T22:30:00.000Z",
-      "end": "2026-10-13T00:30:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-10-12"
-      ],
-      "location": "Brentwood High School, 5304 Murray Ln, Brentwood, TN 37027, USA"
-    },
-    {
-      "id": "257nfdm2iu9efukq6udcsan4q0@google.com-2026-10-12T22:30:00.000Z",
-      "title": "IHS Freshman Football vs Brentwood HS",
-      "start": "2026-10-12T22:30:00.000Z",
-      "end": "2026-10-13T00:30:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-10-12"
-      ],
-      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
-    },
-    {
-      "id": "30baiqig9smtjm2kfgsqk6ar0v@google.com-2026-10-13T23:00:00.000Z",
-      "title": "IHS Checkpoint Driving",
-      "start": "2026-10-13T23:00:00.000Z",
-      "end": "2026-10-14T01:00:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-10-13"
-      ],
-      "location": "Zoom"
-    },
-    {
-      "id": "0217bb58o6mfdvnc1u6o375t82@google.com-2026-10-19T00:00:00.000Z",
-      "title": "IHS Late Start",
-      "start": "2026-10-19T00:00:00.000Z",
-      "end": "2026-10-20T00:00:00.000Z",
-      "allDay": true,
-      "days": [
-        "2026-10-19"
-      ],
-      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
-    },
-    {
-      "id": "1cl09k2kl22crlp68t63p0oa92@google.com-2026-10-21T00:00:00.000Z",
-      "title": "IHS PSAT and Senior ACT",
-      "start": "2026-10-21T00:00:00.000Z",
-      "end": "2026-10-22T00:00:00.000Z",
-      "allDay": true,
-      "days": [
-        "2026-10-21"
-      ],
-      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
-    },
-    {
-      "id": "0fdl12fu5gvolnesbqo2hd2t79@google.com-2026-10-24T00:00:00.000Z",
-      "title": "IHS Varsity Football @ Brentwood HS",
-      "start": "2026-10-24T00:00:00.000Z",
-      "end": "2026-10-24T02:00:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-10-23"
-      ],
-      "location": "Brentwood High School, 5304 Murray Ln, Brentwood, TN 37027, USA"
-    },
-    {
-      "id": "3nrpjdanp09181rlbd2r9m0von@google.com-2026-10-26T00:00:00.000Z",
-      "title": "IHS Late Start",
-      "start": "2026-10-26T00:00:00.000Z",
-      "end": "2026-10-27T00:00:00.000Z",
-      "allDay": true,
-      "days": [
-        "2026-10-26"
-      ],
-      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
-    },
-    {
-      "id": "34e561d1esg3cp96vj3lrehcp6@google.com-2026-10-27T00:00:00.000Z",
-      "title": "IHS 9th-11th Picture Re-takes",
-      "start": "2026-10-27T00:00:00.000Z",
-      "end": "2026-10-28T00:00:00.000Z",
-      "allDay": true,
-      "days": [
-        "2026-10-27"
-      ],
-      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
-    },
     {
       "id": "1ahelekepr17tska9u7rr76jn3@google.com-2026-10-31T00:00:00.000Z",
       "title": "IHS Varsity Football vs Summit HS",
@@ -1576,6 +1428,306 @@
         "2027-02-03"
       ],
       "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "4e3c1i19ddmd4lei531dq3i8v3@google.com-2027-02-05T22:30:00.000Z",
+      "title": "IHS JV Boys Basketball vs Summit HS",
+      "start": "2027-02-05T22:30:00.000Z",
+      "end": "2027-02-06T00:00:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-02-05"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "5drsmkmnk923us2dgsvmkn9j1m@google.com-2027-02-05T23:30:00.000Z",
+      "title": "IHS Freshman Boys Basketball vs Summit HS",
+      "start": "2027-02-05T23:30:00.000Z",
+      "end": "2027-02-06T01:00:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-02-05"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "3v0ihh6c27prnegcurrm0s399k@google.com-2027-02-06T00:00:00.000Z",
+      "title": "IHS Girls Basketball vs Summit HS",
+      "start": "2027-02-06T00:00:00.000Z",
+      "end": "2027-02-06T01:30:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-02-05"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "7vkefjbj24lslstb1g5bo18rmb@google.com-2027-02-06T00:00:00.000Z",
+      "title": "IHS Freshman Boys Basketball Tournament @ Franklin HS",
+      "start": "2027-02-06T00:00:00.000Z",
+      "end": "2027-02-08T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2027-02-06",
+        "2027-02-07"
+      ],
+      "location": "Franklin High School, 810 Hillsboro Rd, Franklin, TN 37064, USA"
+    },
+    {
+      "id": "5qds44qobfti0dfddh4h6kef9s@google.com-2027-02-06T01:30:00.000Z",
+      "title": "IHS V Boys Basketball vs Summit HS",
+      "start": "2027-02-06T01:30:00.000Z",
+      "end": "2027-02-06T03:30:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-02-05"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "0asef4a16gnbsq0p47uf8l15gr@google.com-2027-02-06T16:30:00.000Z",
+      "title": "IHS V Wrestling Boys Regional Tournament",
+      "start": "2027-02-06T16:30:00.000Z",
+      "end": "2027-02-06T19:30:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-02-06"
+      ],
+      "location": "Page High School, 6281 Arno Rd, Franklin, TN 37064, USA"
+    },
+    {
+      "id": "IHS Late Start-2027-02-08T00:00:00.000Z",
+      "title": "IHS Late Start",
+      "start": "2027-02-08T00:00:00.000Z",
+      "end": "2027-02-09T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2027-02-08"
+      ],
+      "location": ""
+    },
+    {
+      "id": "71e7rdn49f4uqvp16fb9t40r2q@google.com-2027-02-09T22:30:00.000Z",
+      "title": "IHS JV Boys Basketball vs Columbia Central HS",
+      "start": "2027-02-09T22:30:00.000Z",
+      "end": "2027-02-10T00:00:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-02-09"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "47fm5g0p5qitsk13lh2uop4ehs@google.com-2027-02-10T00:00:00.000Z",
+      "title": "IHS Girls Basketball vs Columbia Central HS",
+      "start": "2027-02-10T00:00:00.000Z",
+      "end": "2027-02-10T01:30:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-02-09"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "5jmrrv230kc0j42dn0a2mqc5a8@google.com-2027-02-10T00:00:00.000Z",
+      "title": "IHS Checkpoint Driving",
+      "start": "2027-02-10T00:00:00.000Z",
+      "end": "2027-02-10T02:00:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-02-09"
+      ],
+      "location": "Zoom"
+    },
+    {
+      "id": "4i6deremhupb6tsv0q455cnn25@google.com-2027-02-10T01:30:00.000Z",
+      "title": "IHS V Boys Basketball vs Columbia Central HS",
+      "start": "2027-02-10T01:30:00.000Z",
+      "end": "2027-02-10T03:30:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-02-09"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "2bk64ofek40vvvacirc1tko30f@google.com-2027-02-11T22:30:00.000Z",
+      "title": "IHS JV Boys Basketball vs Page HS",
+      "start": "2027-02-11T22:30:00.000Z",
+      "end": "2027-02-12T00:00:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-02-11"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "01lcmhkalqkj02c1lvd75dum5s@google.com-2027-02-12T00:00:00.000Z",
+      "title": "IHS Girls Basketball vs Page HS",
+      "start": "2027-02-12T00:00:00.000Z",
+      "end": "2027-02-12T01:30:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-02-11"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "140jt09utkk5v7l9pfotdgcegv@google.com-2027-02-12T00:00:00.000Z",
+      "title": "IHS G Wrestling Sectional @ Shelbyville HS",
+      "start": "2027-02-12T00:00:00.000Z",
+      "end": "2027-02-13T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2027-02-12"
+      ],
+      "location": "Shelbyville High School, 2003 S Miller St, Shelbyville, IN 46176, USA"
+    },
+    {
+      "id": "7va8trrsn3doauper8l7k2agfb@google.com-2027-02-12T00:00:00.000Z",
+      "title": "IHS District PD - No Students",
+      "start": "2027-02-12T00:00:00.000Z",
+      "end": "2027-02-13T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2027-02-12"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "20kdetegv88fc9thomanuhuq4g@google.com-2027-02-12T01:30:00.000Z",
+      "title": "IHS V Boys Basketball vs Page HS",
+      "start": "2027-02-12T01:30:00.000Z",
+      "end": "2027-02-12T03:30:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-02-11"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "5d45qdls1bmp26e49vntllpr0c@google.com-2027-02-13T00:00:00.000Z",
+      "title": "IHS V Wrestling Boys Sectionals @ Wilson Central HS",
+      "start": "2027-02-13T00:00:00.000Z",
+      "end": "2027-02-14T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2027-02-13"
+      ],
+      "location": "Wilson Central High School, 419 Wildcat Way, Lebanon, TN 37090, USA"
+    },
+    {
+      "id": "56pai0mab6namkp671m4pfb9l2@google.com-2027-02-15T00:00:00.000Z",
+      "title": "IHS Mid-Winter Break - No School",
+      "start": "2027-02-15T00:00:00.000Z",
+      "end": "2027-02-16T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2027-02-15"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "0g40knplaa6fhnivv5hvscqblb@google.com-2027-02-16T22:30:00.000Z",
+      "title": "IHS JV Boys Basketball @ Summit HS",
+      "start": "2027-02-16T22:30:00.000Z",
+      "end": "2027-02-17T00:00:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-02-16"
+      ],
+      "location": "SUMMIT HIGH SCHOOL, 2830 Austins Wy, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "0f453994qfhjbpiuldooae5kpb@google.com-2027-02-17T00:00:00.000Z",
+      "title": "IHS Girls Basketball @ Summit HS",
+      "start": "2027-02-17T00:00:00.000Z",
+      "end": "2027-02-17T01:30:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-02-16"
+      ],
+      "location": "SUMMIT HIGH SCHOOL, 2830 Austins Wy, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "1fg8gfvicgsdlc9jgn6qshh3v4@google.com-2027-02-17T01:30:00.000Z",
+      "title": "IHS V Boys Basketball @ Summit HS",
+      "start": "2027-02-17T01:30:00.000Z",
+      "end": "2027-02-17T03:30:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-02-16"
+      ],
+      "location": "SUMMIT HIGH SCHOOL, 2830 Austins Wy, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "5m5em6qd4cofku3r2uo5gg1p0o@google.com-2027-02-19T00:00:00.000Z",
+      "title": "IHS V/G Wrestling State Tournament",
+      "start": "2027-02-19T00:00:00.000Z",
+      "end": "2027-02-21T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2027-02-19",
+        "2027-02-20"
+      ],
+      "location": "Williamson County AG Expo Park, 4215 Long Ln, Franklin, TN 37064, USA"
+    },
+    {
+      "id": "2emvdognbc0da11olfio8lltti@google.com-2027-02-19T22:30:00.000Z",
+      "title": "IHS JV Boys Basketball @ Columbia Central HS",
+      "start": "2027-02-19T22:30:00.000Z",
+      "end": "2027-02-20T00:00:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-02-19"
+      ],
+      "location": "Columbia Central High School, 921 Lion Parkway, Columbia, TN 38401"
+    },
+    {
+      "id": "3o1tvt3ggtjbpancs2j1lkno0u@google.com-2027-02-20T00:00:00.000Z",
+      "title": "IHS JV Boys Basketball Tournament @ Columbia Central HS",
+      "start": "2027-02-20T00:00:00.000Z",
+      "end": "2027-02-22T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2027-02-20",
+        "2027-02-21"
+      ],
+      "location": "Columbia Central High School, 921 Lion Parkway, Columbia , TN 38401"
+    },
+    {
+      "id": "5pb6hvs70u5ljoctkbie7c41rg@google.com-2027-02-20T00:00:00.000Z",
+      "title": "IHS Girls Basketball @ Columbia Central HS",
+      "start": "2027-02-20T00:00:00.000Z",
+      "end": "2027-02-20T01:30:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-02-19"
+      ],
+      "location": "Columbia Central High School, Columbia, TN 38401"
+    },
+    {
+      "id": "60fhide9k5f2dlpsm4u8krrevs@google.com-2027-02-20T01:30:00.000Z",
+      "title": "IHS V Boys Basketball @ Columbia Central HS",
+      "start": "2027-02-20T01:30:00.000Z",
+      "end": "2027-02-20T03:30:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-02-19"
+      ],
+      "location": "Columbia Central HS, Columbia, TN 38401"
+    },
+    {
+      "id": "IHS Late Start-2027-02-22T00:00:00.000Z",
+      "title": "IHS Late Start",
+      "start": "2027-02-22T00:00:00.000Z",
+      "end": "2027-02-23T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2027-02-22"
+      ],
+      "location": ""
     }
   ]
 }
