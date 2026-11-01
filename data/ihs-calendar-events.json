@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-10-31T12:36:14.316Z",
-  "lastCheckedAt": "2026-10-31T12:36:14.316Z",
-  "contentUpdatedAt": "2026-10-31T12:36:14.316Z",
+  "generatedAt": "2026-11-01T00:09:17.285Z",
+  "lastCheckedAt": "2026-11-01T00:09:17.285Z",
+  "contentUpdatedAt": "2026-11-01T00:09:17.285Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -1726,6 +1726,17 @@
       "allDay": true,
       "days": [
         "2027-02-22"
+      ],
+      "location": ""
+    },
+    {
+      "id": "IHS Late Start-2027-03-01T00:00:00.000Z",
+      "title": "IHS Late Start",
+      "start": "2027-03-01T00:00:00.000Z",
+      "end": "2027-03-02T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2027-03-01"
       ],
       "location": ""
     }
