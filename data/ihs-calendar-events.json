@@ -2,27 +2,16 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-11-01T06:10:28.308Z",
-  "lastCheckedAt": "2026-11-01T06:10:28.308Z",
-  "contentUpdatedAt": "2026-11-01T06:10:28.308Z",
+  "generatedAt": "2026-11-02T11:13:21.183Z",
+  "lastCheckedAt": "2026-11-02T11:13:21.183Z",
+  "contentUpdatedAt": "2026-11-02T11:13:21.183Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
   "timeZone": "America/Chicago",
-  "rangeStart": "2026-10-30",
-  "rangeEnd": "2027-03-01",
+  "rangeStart": "2026-10-31",
+  "rangeEnd": "2027-03-02",
   "events": [
-    {
-      "id": "1ahelekepr17tska9u7rr76jn3@google.com-2026-10-31T00:00:00.000Z",
-      "title": "IHS Varsity Football vs Summit HS",
-      "start": "2026-10-31T00:00:00.000Z",
-      "end": "2026-10-31T02:00:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-10-30"
-      ],
-      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
-    },
     {
       "id": "3ovs4k3cd6m2s0liqfnl7o038f@google.com-2026-10-31T00:00:00.000Z",
       "title": "IHS JV/V/G Wrestling Pre-season tournament",
