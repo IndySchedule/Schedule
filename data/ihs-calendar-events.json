@@ -2,27 +2,16 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-11-02T11:13:21.183Z",
-  "lastCheckedAt": "2026-11-02T11:13:21.183Z",
-  "contentUpdatedAt": "2026-11-02T11:13:21.183Z",
+  "generatedAt": "2026-11-03T06:51:44.856Z",
+  "lastCheckedAt": "2026-11-03T06:51:44.856Z",
+  "contentUpdatedAt": "2026-11-03T06:51:44.856Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
   "timeZone": "America/Chicago",
-  "rangeStart": "2026-10-31",
-  "rangeEnd": "2027-03-02",
+  "rangeStart": "2026-11-01",
+  "rangeEnd": "2027-03-03",
   "events": [
-    {
-      "id": "3ovs4k3cd6m2s0liqfnl7o038f@google.com-2026-10-31T00:00:00.000Z",
-      "title": "IHS JV/V/G Wrestling Pre-season tournament",
-      "start": "2026-10-31T00:00:00.000Z",
-      "end": "2026-11-01T00:00:00.000Z",
-      "allDay": true,
-      "days": [
-        "2026-10-31"
-      ],
-      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
-    },
     {
       "id": "IHS Late Start-2026-11-02T00:00:00.000Z",
       "title": "IHS Late Start",
