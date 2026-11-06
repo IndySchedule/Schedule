@@ -2,27 +2,16 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-11-05T06:50:55.660Z",
-  "lastCheckedAt": "2026-11-05T06:50:55.660Z",
-  "contentUpdatedAt": "2026-11-05T06:50:55.660Z",
+  "generatedAt": "2026-11-06T06:51:34.946Z",
+  "lastCheckedAt": "2026-11-06T06:51:34.946Z",
+  "contentUpdatedAt": "2026-11-06T06:51:34.946Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
   "timeZone": "America/Chicago",
-  "rangeStart": "2026-11-03",
-  "rangeEnd": "2027-03-05",
+  "rangeStart": "2026-11-04",
+  "rangeEnd": "2027-03-06",
   "events": [
-    {
-      "id": "7c314pmbi678egdkuqj1inh10h@google.com-2026-11-03T00:00:00.000Z",
-      "title": "IHS Election Day - No Students",
-      "start": "2026-11-03T00:00:00.000Z",
-      "end": "2026-11-04T00:00:00.000Z",
-      "allDay": true,
-      "days": [
-        "2026-11-03"
-      ],
-      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
-    },
     {
       "id": "0pekg1tdrqgdjq04j172eanj8n@google.com-2026-11-07T00:00:00.000Z",
       "title": "IHS JV/V/G Wrestling Nolensville Pre-season",
