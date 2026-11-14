@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-11-13T11:02:24.383Z",
-  "lastCheckedAt": "2026-11-13T11:02:24.383Z",
-  "contentUpdatedAt": "2026-11-13T11:02:24.383Z",
+  "generatedAt": "2026-11-14T01:28:19.746Z",
+  "lastCheckedAt": "2026-11-14T01:28:19.746Z",
+  "contentUpdatedAt": "2026-11-14T01:28:19.746Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -12,18 +12,6 @@
   "rangeStart": "2026-11-11",
   "rangeEnd": "2027-03-13",
   "events": [
-    {
-      "id": "0r8p4dtqptvl6he8om5m92lqo8@google.com-2026-11-10T00:00:00.000Z",
-      "title": "IHS Senior Pictures",
-      "start": "2026-11-10T00:00:00.000Z",
-      "end": "2026-11-12T00:00:00.000Z",
-      "allDay": true,
-      "days": [
-        "2026-11-10",
-        "2026-11-11"
-      ],
-      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
-    },
     {
       "id": "1uh1ceo5t6otrcsi2j2ap8dh9t@google.com-2026-11-14T00:00:00.000Z",
       "title": "IHS V Wrestling Buckhorn Border Battle Duals",
