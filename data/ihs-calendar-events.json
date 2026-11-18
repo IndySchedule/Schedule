@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-11-17T16:03:57.104Z",
-  "lastCheckedAt": "2026-11-17T16:03:57.104Z",
-  "contentUpdatedAt": "2026-11-17T16:03:57.104Z",
+  "generatedAt": "2026-11-18T00:59:04.816Z",
+  "lastCheckedAt": "2026-11-18T00:59:04.816Z",
+  "contentUpdatedAt": "2026-11-18T00:59:04.816Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -324,6 +324,50 @@
       "allDay": false,
       "days": [
         "2026-12-04"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "3qracud8e55pm7vqmdhv0l1tp2@google.com-2026-12-05T20:00:00.000Z",
+      "title": "IHS Indy Express",
+      "start": "2026-12-05T20:00:00.000Z",
+      "end": "2026-12-05T22:00:00.000Z",
+      "allDay": false,
+      "days": [
+        "2026-12-05"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "2dpencfqh5bk9v6kakqg4ld73s@google.com-2026-12-05T23:00:00.000Z",
+      "title": "IHS Indy Express",
+      "start": "2026-12-05T23:00:00.000Z",
+      "end": "2026-12-06T01:00:00.000Z",
+      "allDay": false,
+      "days": [
+        "2026-12-05"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "762f9c7ltidoldhqm3545ag6sc@google.com-2026-12-06T20:00:00.000Z",
+      "title": "IHS Indy Express",
+      "start": "2026-12-06T20:00:00.000Z",
+      "end": "2026-12-06T22:00:00.000Z",
+      "allDay": false,
+      "days": [
+        "2026-12-06"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "3h0v786jl53jb5b9gqf3qhqkgd@google.com-2026-12-06T23:00:00.000Z",
+      "title": "IHS Indy Express",
+      "start": "2026-12-06T23:00:00.000Z",
+      "end": "2026-12-07T01:00:00.000Z",
+      "allDay": false,
+      "days": [
+        "2026-12-06"
       ],
       "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     },
