@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-11-18T11:47:00.609Z",
-  "lastCheckedAt": "2026-11-18T11:47:00.609Z",
-  "contentUpdatedAt": "2026-11-18T11:47:00.609Z",
+  "generatedAt": "2026-11-19T02:36:07.242Z",
+  "lastCheckedAt": "2026-11-19T02:36:07.242Z",
+  "contentUpdatedAt": "2026-11-19T02:36:07.242Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -12,17 +12,6 @@
   "rangeStart": "2026-11-16",
   "rangeEnd": "2027-03-18",
   "events": [
-    {
-      "id": "IHS Late Start-2026-11-16T00:00:00.000Z",
-      "title": "IHS Late Start",
-      "start": "2026-11-16T00:00:00.000Z",
-      "end": "2026-11-17T00:00:00.000Z",
-      "allDay": true,
-      "days": [
-        "2026-11-16"
-      ],
-      "location": ""
-    },
     {
       "id": "1c52nmdp5oqm4tcgrk33gea505@google.com-2026-11-17T22:15:00.000Z",
       "title": "IHS JV Boys Basketball @ Rockvale HS",
