@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-11-21T11:07:47.748Z",
-  "lastCheckedAt": "2026-11-21T11:07:47.748Z",
-  "contentUpdatedAt": "2026-11-21T11:07:47.748Z",
+  "generatedAt": "2026-11-22T01:21:59.496Z",
+  "lastCheckedAt": "2026-11-22T01:21:59.496Z",
+  "contentUpdatedAt": "2026-11-22T01:21:59.496Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -1665,6 +1665,17 @@
         "2027-03-19"
       ],
       "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "IHS Late Start-2027-03-22T00:00:00.000Z",
+      "title": "IHS Late Start",
+      "start": "2027-03-22T00:00:00.000Z",
+      "end": "2027-03-23T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2027-03-22"
+      ],
+      "location": ""
     }
   ]
 }
