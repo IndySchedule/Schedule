@@ -2,27 +2,16 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-11-22T01:21:59.496Z",
-  "lastCheckedAt": "2026-11-22T01:21:59.496Z",
-  "contentUpdatedAt": "2026-11-22T01:21:59.496Z",
+  "generatedAt": "2026-11-22T11:29:13.792Z",
+  "lastCheckedAt": "2026-11-22T11:29:13.792Z",
+  "contentUpdatedAt": "2026-11-22T11:29:13.792Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
   "timeZone": "America/Chicago",
-  "rangeStart": "2026-11-19",
-  "rangeEnd": "2027-03-21",
+  "rangeStart": "2026-11-20",
+  "rangeEnd": "2027-03-22",
   "events": [
-    {
-      "id": "2r2o525f117g30g40avcllq14q@google.com-2026-11-19T23:30:00.000Z",
-      "title": "IHS JV/V/G Wrestling @ Franklin HS",
-      "start": "2026-11-19T23:30:00.000Z",
-      "end": "2026-11-20T03:30:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-11-19"
-      ],
-      "location": "Franklin High School, 810 Hillsboro Rd, Franklin, TN 37064, USA"
-    },
     {
       "id": "7qknttgnt7eo0b0la44j5qpa33@google.com-2026-11-20T22:30:00.000Z",
       "title": "IHS JV Boys Basketball vs Stewarts Creek HS",
