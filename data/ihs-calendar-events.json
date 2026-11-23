@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-11-22T11:29:13.792Z",
-  "lastCheckedAt": "2026-11-22T11:29:13.792Z",
-  "contentUpdatedAt": "2026-11-22T11:29:13.792Z",
+  "generatedAt": "2026-11-23T01:46:05.157Z",
+  "lastCheckedAt": "2026-11-23T01:46:05.157Z",
+  "contentUpdatedAt": "2026-11-23T01:46:05.157Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -12,17 +12,6 @@
   "rangeStart": "2026-11-20",
   "rangeEnd": "2027-03-22",
   "events": [
-    {
-      "id": "7qknttgnt7eo0b0la44j5qpa33@google.com-2026-11-20T22:30:00.000Z",
-      "title": "IHS JV Boys Basketball vs Stewarts Creek HS",
-      "start": "2026-11-20T22:30:00.000Z",
-      "end": "2026-11-21T00:00:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-11-20"
-      ],
-      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
-    },
     {
       "id": "2d0c17ofik2a169km9tbvfkenf@google.com-2026-11-21T00:00:00.000Z",
       "title": "IHS V Wrestling Franklin Duals @ Franklin HS",
@@ -33,17 +22,6 @@
         "2026-11-21"
       ],
       "location": "Franklin High School, 810 Hillsboro Rd, Franklin, TN 37064, USA"
-    },
-    {
-      "id": "3pt6dhn3di1rkvmr5pe6gq95ff@google.com-2026-11-21T00:00:00.000Z",
-      "title": "IHS Girls Basketball vs Stewarts Creek HS",
-      "start": "2026-11-21T00:00:00.000Z",
-      "end": "2026-11-21T01:30:00.000Z",
-      "allDay": false,
-      "days": [
-        "2026-11-20"
-      ],
-      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     },
     {
       "id": "55tg2d6f40d662ic8qdlrod7cf@google.com-2026-11-21T00:00:00.000Z",
