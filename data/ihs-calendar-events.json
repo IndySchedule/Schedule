@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-11-23T12:50:05.325Z",
-  "lastCheckedAt": "2026-11-23T12:50:05.325Z",
-  "contentUpdatedAt": "2026-11-23T12:50:05.325Z",
+  "generatedAt": "2026-11-24T02:14:53.887Z",
+  "lastCheckedAt": "2026-11-24T02:14:53.887Z",
+  "contentUpdatedAt": "2026-11-24T02:14:53.887Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -12,28 +12,6 @@
   "rangeStart": "2026-11-21",
   "rangeEnd": "2027-03-23",
   "events": [
-    {
-      "id": "2d0c17ofik2a169km9tbvfkenf@google.com-2026-11-21T00:00:00.000Z",
-      "title": "IHS V Wrestling Franklin Duals @ Franklin HS",
-      "start": "2026-11-21T00:00:00.000Z",
-      "end": "2026-11-22T00:00:00.000Z",
-      "allDay": true,
-      "days": [
-        "2026-11-21"
-      ],
-      "location": "Franklin High School, 810 Hillsboro Rd, Franklin, TN 37064, USA"
-    },
-    {
-      "id": "55tg2d6f40d662ic8qdlrod7cf@google.com-2026-11-21T00:00:00.000Z",
-      "title": "IHS G Wrestling @ Ravenwood HS",
-      "start": "2026-11-21T00:00:00.000Z",
-      "end": "2026-11-22T00:00:00.000Z",
-      "allDay": true,
-      "days": [
-        "2026-11-21"
-      ],
-      "location": "Ravenwood High School, 1724 Wilson Pike, Brentwood, TN 37027, USA"
-    },
     {
       "id": "278n549fgdi6b00ipdugigkev9@google.com-2026-11-23T00:00:00.000Z",
       "title": "IHS JV Wrestling @ Nolensville HS",
@@ -1632,6 +1610,28 @@
         "2027-03-22"
       ],
       "location": ""
+    },
+    {
+      "id": "70rj77i2q7ufrm3i4fmk9qplel@google.com-2027-03-23T23:00:00.000Z",
+      "title": "IHS Checkpoint Driving",
+      "start": "2027-03-23T23:00:00.000Z",
+      "end": "2027-03-24T01:00:00.000Z",
+      "allDay": false,
+      "days": [
+        "2027-03-23"
+      ],
+      "location": "Zoom"
+    },
+    {
+      "id": "518i99qcafc7fk086uh9fmcv7b@google.com-2027-03-24T00:00:00.000Z",
+      "title": "IHS Junior ACT",
+      "start": "2027-03-24T00:00:00.000Z",
+      "end": "2027-03-25T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2027-03-24"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     }
   ]
 }
