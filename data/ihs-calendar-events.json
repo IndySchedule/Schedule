@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-11-25T08:39:12.959Z",
-  "lastCheckedAt": "2026-11-25T08:39:12.959Z",
-  "contentUpdatedAt": "2026-11-25T08:39:12.959Z",
+  "generatedAt": "2026-11-26T03:36:03.351Z",
+  "lastCheckedAt": "2026-11-26T03:36:03.351Z",
+  "contentUpdatedAt": "2026-11-26T03:36:03.351Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -12,17 +12,6 @@
   "rangeStart": "2026-11-23",
   "rangeEnd": "2027-03-25",
   "events": [
-    {
-      "id": "278n549fgdi6b00ipdugigkev9@google.com-2026-11-23T00:00:00.000Z",
-      "title": "IHS JV Wrestling @ Nolensville HS",
-      "start": "2026-11-23T00:00:00.000Z",
-      "end": "2026-11-24T00:00:00.000Z",
-      "allDay": true,
-      "days": [
-        "2026-11-23"
-      ],
-      "location": "Nolensville High School, 1600 Summerlyn Dr, Nolensville, TN 37135, USA"
-    },
     {
       "id": "2socsb8qp1qmdmm2l4sk1d1iij@google.com-2026-11-23T00:00:00.000Z",
       "title": "IHS Thanksgiving Holiday - System Closed",
@@ -1630,6 +1619,17 @@
       "allDay": true,
       "days": [
         "2027-03-24"
+      ],
+      "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
+    },
+    {
+      "id": "1el6ffbkung9jgla9l1s83a8sv@google.com-2027-03-26T00:00:00.000Z",
+      "title": "IHS Spring Holiday - System Closed",
+      "start": "2027-03-26T00:00:00.000Z",
+      "end": "2027-03-27T00:00:00.000Z",
+      "allDay": true,
+      "days": [
+        "2027-03-26"
       ],
       "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
     }
