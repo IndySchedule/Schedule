@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "kind": "ihs-calendar-events",
   "ready": true,
-  "generatedAt": "2026-11-26T16:57:16.579Z",
-  "lastCheckedAt": "2026-11-26T16:57:16.579Z",
-  "contentUpdatedAt": "2026-11-26T16:57:16.579Z",
+  "generatedAt": "2026-11-27T01:45:34.345Z",
+  "lastCheckedAt": "2026-11-27T01:45:34.345Z",
+  "contentUpdatedAt": "2026-11-27T01:45:34.345Z",
   "refreshIntervalHours": 3,
   "staleAfterHours": 8,
   "source": "https://ihs.wcs.edu/calendar",
@@ -26,18 +26,6 @@
         "2026-11-27"
       ],
       "location": "Independence High School, 1776 Declaration Way, Thompson's Station, TN 37179, USA"
-    },
-    {
-      "id": "4ugcpp6m1qs1jdbidk13bmggp8@google.com-2026-11-23T00:00:00.000Z",
-      "title": "IHS V Boys Basketball @ Lebanon HS",
-      "start": "2026-11-23T00:00:00.000Z",
-      "end": "2026-11-25T00:00:00.000Z",
-      "allDay": true,
-      "days": [
-        "2026-11-23",
-        "2026-11-24"
-      ],
-      "location": "Lebanon High School, 500 Blue Devil Blvd, Lebanon, TN 37087, USA"
     },
     {
       "id": "0vvkcsh1c18lq51384q9r2eudt@google.com-2026-11-27T00:00:00.000Z",
